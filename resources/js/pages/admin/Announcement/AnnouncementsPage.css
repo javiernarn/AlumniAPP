@@ -1,0 +1,846 @@
+.ann-page {
+    --ann-accent: #4f46e5;
+    --ann-accent-2: #7c3aed;
+    --ann-accent-soft: rgba(79, 70, 229, 0.1);
+    --ann-accent-ring: rgba(79, 70, 229, 0.22);
+    --ann-surface: #ffffff;
+    --ann-border: #e2e8f0;
+    --ann-text: #0b1220;
+    --ann-text-muted: #5b6677;
+    --ann-shadow-sm: 0 4px 14px rgba(2, 6, 23, 0.06);
+    --ann-shadow-md: 0 14px 34px rgba(2, 6, 23, 0.1);
+
+    padding: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+[data-theme="black"] .ann-page {
+    --ann-surface: #171a23;
+    --ann-border: #2a2e3a;
+    --ann-text: #e7e9ee;
+    --ann-text-muted: #9aa3b2;
+    --ann-accent-ring: rgba(124, 58, 237, 0.3);
+}
+
+/* ===== Hero — copied verbatim from AlumniEvents.css for visual consistency ===== */
+.alumni-events-container {
+    padding: 24px;
+    padding-top: 10px;
+    min-height: 100vh;
+    position: relative;
+    z-index: 1;
+}
+
+.ae-hero {
+    --ae-ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
+    --ae-ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+    --ae-accent: #0ea5e9;
+    --ae-accent-2: #14b8a6;
+    --ae-accent-3: #6366f1;
+    --ae-accent-soft: rgba(14, 165, 233, 0.1);
+    --ae-accent-ring: rgba(14, 165, 233, 0.28);
+    --ae-surface: #ffffff;
+    --ae-border: #e2e8f0;
+    --ae-text: #0b1220;
+    --ae-text-muted: #5b6677;
+    --ae-shadow-sm: 0 4px 14px rgba(2, 6, 23, 0.06);
+    --ae-shadow-md: 0 14px 34px rgba(2, 6, 23, 0.1);
+
+    position: relative;
+    overflow: hidden;
+    border-radius: 26px;
+    background:
+        linear-gradient(180deg, var(--ae-surface), var(--ae-surface))
+            padding-box,
+        linear-gradient(
+                135deg,
+                rgba(14, 165, 233, 0.45),
+                rgba(99, 102, 241, 0.35),
+                rgba(20, 184, 166, 0.45)
+            )
+            border-box;
+    border: 1px solid transparent;
+    box-shadow: var(--ae-shadow-md);
+    opacity: 0;
+    transform: translateY(8px);
+    animation: aeFadeUp 0.7s var(--ae-ease-spring) forwards;
+}
+
+@keyframes aeFadeUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+@keyframes aeFloat {
+    0%,
+    100% {
+        transform: translateY(0) scale(1);
+    }
+    50% {
+        transform: translateY(-14px) scale(1.04);
+    }
+}
+
+.ae-hero__bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+.ae-hero__bg .blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(70px);
+    opacity: 0.5;
+    animation: aeFloat 14s ease-in-out infinite;
+}
+.ae-hero__bg .blob-1 {
+    width: 280px;
+    height: 280px;
+    background: #38bdf8;
+    top: -70px;
+    left: -50px;
+}
+.ae-hero__bg .blob-2 {
+    width: 320px;
+    height: 320px;
+    background: #6366f1;
+    bottom: -130px;
+    right: -70px;
+    animation-duration: 18s;
+}
+.ae-hero__bg .blob-3 {
+    width: 200px;
+    height: 200px;
+    background: #14b8a6;
+    top: 40%;
+    left: 55%;
+    animation-duration: 22s;
+    opacity: 0.35;
+}
+.ae-hero__bg .dot-grid {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(
+        rgba(15, 23, 42, 0.08) 1px,
+        transparent 1px
+    );
+    background-size: 18px 18px;
+    -webkit-mask-image: radial-gradient(
+        ellipse at center,
+        black 30%,
+        transparent 75%
+    );
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+}
+
+.ae-hero__content {
+    position: relative;
+    z-index: 1;
+    max-width: 1080px;
+    margin: 0 auto;
+    text-align: center;
+    /* Horizontal-only safe padding, kept >= .ae-hero's border-radius (26px
+       at base) so nothing inside — like the right-column stat tiles — ever
+       sits in the corner zone that .ae-hero's overflow:hidden rounds off
+       and visually clips. Vertical spacing is handled per breakpoint. */
+    padding: 0 28px;
+}
+
+.ae-hero__brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 14px;
+}
+.ae-hero__logo {
+    width: 56px;
+    height: 56px;
+    object-fit: contain;
+    border-radius: 14px;
+    background: var(--ae-surface);
+    padding: 6px;
+    box-shadow: var(--ae-shadow-sm);
+    animation: aeFloat 6s ease-in-out infinite;
+}
+.ae-hero__brand-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+}
+.ae-chip {
+    background: var(--ae-accent-soft) !important;
+    color: var(--ae-accent) !important;
+    border: 1px solid var(--ae-accent-ring) !important;
+    border-radius: 999px !important;
+    padding: 4px 12px !important;
+    font-weight: 700 !important;
+    font-size: 11.5px !important;
+    letter-spacing: 0.08em;
+    margin: 0 !important;
+}
+.ae-hero__eyebrow {
+    color: var(--ae-text-muted) !important;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+.ae-hero__title {
+    font-size: clamp(28px, 4.4vw, 46px) !important;
+    line-height: 1.1 !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.02em;
+    color: var(--ae-text) !important;
+    margin: 6px 0 14px !important;
+}
+.ae-hero .grad-text {
+    background: linear-gradient(
+        135deg,
+        var(--ae-accent) 0%,
+        var(--ae-accent-3) 50%,
+        var(--ae-accent-2) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+}
+.ae-hero__lead {
+    color: var(--ae-text-muted) !important;
+    font-size: 16px !important;
+    line-height: 1.7 !important;
+    max-width: 720px;
+    margin: 0 auto 28px !important;
+}
+
+/* Stat tiles */
+.ae-hero__stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+    max-width: 920px;
+    margin: 0 auto;
+}
+.ae-stat {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 18px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--ae-border);
+    border-radius: 16px;
+    box-shadow: var(--ae-shadow-sm);
+    text-align: left;
+    /* As a grid item, .ae-stat's default min-width is "auto", which floors
+       it at its content's intrinsic width regardless of the minmax(0, 1fr)
+       track it sits in. That's what was forcing the right-column tiles
+       ("Published", "Categories") past the hero card's edge and getting
+       clipped by its overflow:hidden — this lets the flexbox row (icon +
+       label) actually shrink/wrap instead of pushing the grid wider. */
+    min-width: 0;
+    transition:
+        transform 0.25s var(--ae-ease-spring),
+        box-shadow 0.25s var(--ae-ease-smooth),
+        border-color 0.25s;
+}
+.ae-stat:hover {
+    transform: translateY(-3px);
+    border-color: var(--ae-accent-ring);
+    box-shadow: var(--ae-shadow-md);
+}
+.ae-stat__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: var(--ae-accent-soft);
+    color: var(--ae-accent);
+    font-size: 18px;
+    flex-shrink: 0;
+}
+.ae-stat__icon--blue {
+    background: rgba(99, 102, 241, 0.12);
+    color: #6366f1;
+}
+.ae-stat__icon--green {
+    background: rgba(16, 185, 129, 0.12);
+    color: #10b981;
+}
+.ae-stat__icon--gray {
+    background: rgba(100, 116, 139, 0.12);
+    color: #64748b;
+}
+.ae-stat__body {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+    min-width: 0;
+}
+.ae-stat__value {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--ae-text);
+    letter-spacing: -0.01em;
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+.ae-stat__label {
+    font-size: 12px;
+    color: var(--ae-text-muted);
+    margin-top: 2px;
+    font-weight: 500;
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .ae-hero__stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+@media (max-width: 560px) {
+    .ae-hero {
+        /* Horizontal padding now lives on .ae-hero__content (see base
+           rule) so it can't fall out of sync with border-radius again;
+           this only needs to add the extra vertical breathing room. */
+        padding: 40px 0 28px;
+        border-radius: 20px;
+    }
+    .ae-hero__brand {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .ae-hero__brand-meta {
+        align-items: center;
+    }
+    .ae-hero__title {
+        font-size: 26px !important;
+    }
+    .ae-hero__lead {
+        font-size: 14.5px !important;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ae-hero,
+    .ae-hero__logo,
+    .ae-hero__bg .blob {
+        animation: none !important;
+    }
+    .ae-stat {
+        transition: none;
+    }
+}
+
+/* Dark theme — matches AlumniEvents.css black theme for the hero */
+[data-theme="black"] .ae-hero {
+    --ae-surface: #121620;
+    --ae-border: #242a36;
+    --ae-text: #e7ecf3;
+    --ae-text-muted: #9aa4b2;
+    --ae-accent-soft: rgba(14, 165, 233, 0.16);
+    --ae-shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.45);
+    --ae-shadow-md: 0 14px 34px rgba(0, 0, 0, 0.55);
+
+    background:
+        linear-gradient(180deg, #121620, #121620) padding-box,
+        linear-gradient(
+                135deg,
+                rgba(14, 165, 233, 0.55),
+                rgba(99, 102, 241, 0.45),
+                rgba(20, 184, 166, 0.55)
+            )
+            border-box;
+}
+[data-theme="black"] .ae-hero__bg .dot-grid {
+    background-image: radial-gradient(
+        rgba(255, 255, 255, 0.08) 1px,
+        transparent 1px
+    );
+}
+[data-theme="black"] .ae-stat {
+    background: rgba(26, 31, 43, 0.85);
+    border-color: #242a36;
+}
+[data-theme="black"] .ae-stat__value {
+    color: #e7ecf3;
+}
+[data-theme="black"] .ae-hero__logo {
+    background: #1a1f2b;
+}
+
+/* ===== New-announcement button, placed in the toolbar row ===== */
+.ann-new-btn {
+    border-radius: 12px !important;
+}
+
+/* ===== Toolbar ===== */
+.ann-toolbar {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.ann-search {
+    flex: 1;
+    min-width: 220px;
+    /* Without a ceiling, flex:1 lets this grow to fill whatever's left in
+       the toolbar — on the alumni view specifically, which only has one
+       filter dropdown next to it (no status filter, no New Announcement
+       button), that meant the search box stretched almost the full width
+       of the page on desktop. */
+    max-width: 420px;
+    border-radius: 10px;
+}
+
+.ann-filter {
+    min-width: 170px;
+}
+
+/* ===== Grid ===== */
+.ann-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 18px;
+    transition: opacity 0.2s ease;
+}
+
+.ann-grid-fetching {
+    opacity: 0.6;
+}
+
+.ann-loading,
+.ann-empty {
+    padding: 80px 0;
+    display: flex;
+    justify-content: center;
+}
+
+/* ===== Card ===== */
+.ann-card {
+    position: relative;
+    background: var(--ann-surface);
+    border: 1px solid var(--ann-border);
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    box-shadow: var(--ann-shadow-sm);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.ann-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--ann-shadow-md);
+}
+
+.ann-card-pinned {
+    border-color: var(--ann-accent);
+}
+
+.ann-pin-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #fff;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #f59e0b, #f97316);
+    box-shadow: 0 6px 16px rgba(245, 158, 11, 0.35);
+}
+
+/* Admin-only: flags a "published" announcement whose publish_date hasn't
+   arrived yet, so it doesn't look silently the same as one that's actually
+   visible to alumni. Sits opposite the pinned badge so the two never clash. */
+.ann-scheduled-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #fff;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #2563eb, #38bdf8);
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
+}
+
+.ann-card-image {
+    height: 150px;
+    overflow: hidden;
+    background: #f1f5f9;
+}
+
+.ann-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* ===== No-image placeholder (card + detail) ===== */
+.ann-card-image-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    color: #fff;
+    background: linear-gradient(135deg, var(--ann-accent), var(--ann-accent-2));
+}
+
+.ann-detail-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 160px;
+    border-radius: 14px;
+    margin: 16px 0;
+    font-size: 64px;
+    color: #fff;
+    background: linear-gradient(135deg, var(--ann-accent), var(--ann-accent-2));
+}
+
+/* Category-tinted gradients so placeholders aren't all identical */
+.ann-cat-general { background: linear-gradient(135deg, #64748b, #94a3b8); }
+.ann-cat-academic { background: linear-gradient(135deg, #2563eb, #60a5fa); }
+.ann-cat-event { background: linear-gradient(135deg, #7c3aed, #a78bfa); }
+.ann-cat-career { background: linear-gradient(135deg, #059669, #34d399); }
+.ann-cat-urgent { background: linear-gradient(135deg, #dc2626, #f87171); }
+.ann-cat-maintenance { background: linear-gradient(135deg, #ea580c, #fb923c); }
+.ann-cat-other { background: linear-gradient(135deg, #0891b2, #22d3ee); }
+
+.ann-card-body {
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.ann-card-tags {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+}
+
+.ann-card-title {
+    margin: 0 0 6px 0 !important;
+    color: var(--ann-text) !important;
+    font-size: 17px !important;
+}
+
+.ann-card-excerpt {
+    color: var(--ann-text-muted) !important;
+    margin-bottom: 12px !important;
+    flex: 1;
+}
+
+.ann-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+    padding-top: 10px;
+    border-top: 1px solid var(--ann-border);
+}
+
+.ann-card-date {
+    font-size: 12px;
+    color: var(--ann-text-muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.ann-card-actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.ann-views {
+    font-size: 12px;
+    color: var(--ann-text-muted);
+    margin-right: 6px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.ann-read-more {
+    padding: 0 !important;
+    font-weight: 600;
+}
+
+/* ===== Form modal ===== */
+.ann-schedule-alert {
+    margin-bottom: 16px;
+    border-radius: 10px;
+}
+
+.ann-form-row {
+    display: flex;
+    gap: 12px;
+}
+
+.ann-form-col {
+    flex: 1;
+}
+
+/* ===== Detail modal ===== */
+.ann-detail-tags {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.ann-detail-images {
+    display: flex;
+    gap: 10px;
+    margin: 16px 0;
+    flex-wrap: wrap;
+}
+
+.ann-detail-content {
+    margin-top: 16px !important;
+    white-space: pre-line;
+    color: var(--ann-text);
+}
+
+/* ======================================================================
+   MOBILE RESPONSIVENESS — portrait, landscape, and small phones
+   ====================================================================== */
+
+/* ---- Tablets / large phones, portrait ---- */
+@media (max-width: 768px) {
+    .ann-page,
+    .alumni-events-container {
+        padding: 16px;
+        padding-top: 8px;
+    }
+
+    .ann-grid {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 14px;
+    }
+}
+
+/* ---- Phones, portrait (roughly iPhone/Android widths) ---- */
+@media (max-width: 600px) {
+    .ann-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 14px;
+    }
+
+    .ann-search,
+    .ann-filter,
+    .ann-new-btn {
+        width: 100%;
+        min-width: 0;
+    }
+
+    /* Belt-and-suspenders spacing: guarantees a visible gap between the
+       search box, the category/status filters, and the New Announcement
+       button when stacked, even if something else on the page collapses
+       the flex `gap` above. :not(:last-child) means whichever control
+       ends up last (the status filter and button only render for admins)
+       never gets an unwanted trailing margin before the grid below. */
+    .ann-toolbar > *:not(:last-child) {
+        margin-bottom: 14px;
+    }
+
+    .ann-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .ae-hero__stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .ann-form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .ann-card-footer {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+}
+
+/* ---- Small / narrow phones (SE, small Android, folded devices) ---- */
+@media (max-width: 380px) {
+    .ann-page,
+    .alumni-events-container {
+        padding: 12px;
+        padding-top: 6px;
+    }
+
+    .ae-hero__stats {
+        grid-template-columns: 1fr;
+    }
+
+    .ae-hero__title {
+        font-size: 22px !important;
+    }
+
+    .ann-card-image,
+    .ann-card-image-placeholder {
+        height: 120px;
+    }
+
+    .ann-card-image-placeholder {
+        font-size: 34px;
+    }
+
+    .ann-detail-placeholder {
+        height: 120px;
+        font-size: 44px;
+    }
+}
+
+/* ---- Phones in LANDSCAPE (short viewport height, not just narrow width) ---- */
+@media (orientation: landscape) and (max-height: 500px) {
+    .ann-page,
+    .alumni-events-container {
+        padding: 10px 16px;
+        padding-top: 6px;
+    }
+
+    /* Previously this block also hid .ae-hero__bg entirely and zeroed
+       .ae-hero__content's padding, which is what caused two separate bugs:
+       (1) the hero looking flat grey/black here instead of matching the
+       gradient-glow look used everywhere else, and (2) the right-column
+       stat tiles ("Published", "Categories") getting visually clipped by
+       the hero's own rounded corners once their horizontal safe-padding
+       was zeroed out. Neither override is needed — the blobs are
+       absolutely positioned so they don't consume any vertical space, and
+       .ae-hero__content's base padding (0 28px, see base rule) already
+       has zero top/bottom padding, so there's nothing left to override
+       here for either concern. */
+
+    .ae-hero__brand {
+        margin-bottom: 8px;
+    }
+
+    .ae-hero__logo {
+        width: 40px;
+        height: 40px;
+    }
+
+    .ae-hero__title {
+        font-size: 22px !important;
+        margin: 4px 0 8px !important;
+    }
+
+    .ae-hero__lead {
+        font-size: 13px !important;
+        margin: 0 auto 14px !important;
+    }
+
+    .ae-hero__stats {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 8px;
+    }
+
+    .ae-stat {
+        padding: 8px 10px;
+        gap: 8px;
+    }
+
+    .ae-stat__icon {
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+    }
+
+    .ae-stat__value {
+        font-size: 16px;
+    }
+
+    .ae-stat__label {
+        font-size: 10px;
+    }
+
+    .ann-grid {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    }
+
+    .ann-card-image,
+    .ann-card-image-placeholder {
+        height: 100px;
+    }
+}
+
+/* ---- Modals: full-width-ish on phones, scrollable body so nothing gets
+   cut off in short landscape viewports ---- */
+.ann-modal .ant-modal-content {
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+@media (max-width: 600px) {
+    .ann-modal.ant-modal {
+        max-width: calc(100vw - 24px);
+        top: 16px;
+        padding-bottom: 16px;
+        margin: 0 auto;
+    }
+
+    .ann-modal .ant-modal-body {
+        max-height: 70vh;
+        overflow-y: auto;
+    }
+
+    .ann-form-col .ant-picker,
+    .ann-form-col .ant-select {
+        width: 100% !important;
+    }
+}
+
+@media (orientation: landscape) and (max-height: 500px) {
+    .ann-modal.ant-modal {
+        top: 8px;
+        max-width: calc(100vw - 16px);
+    }
+
+    .ann-modal .ant-modal-body {
+        max-height: 78vh;
+        overflow-y: auto;
+        padding: 14px 16px;
+    }
+
+    .ann-detail-modal .ant-modal-body {
+        max-height: 82vh;
+    }
+}
+
+/* Upload picture-card shrinks a bit on narrow screens so 2 thumbnails
+   still fit per row instead of overflowing. */
+@media (max-width: 380px) {
+    .ann-modal .ant-upload.ant-upload-select-picture-card,
+    .ann-modal .ant-upload-list-picture-card .ant-upload-list-item {
+        width: 76px !important;
+        height: 76px !important;
+    }
+}

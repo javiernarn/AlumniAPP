@@ -1,0 +1,363 @@
+/* ============================================
+   VERCEL-LIKE THEME SYSTEM
+   Themes: System (Default), Dark, Base, Mono, Violet Bloom, White
+   ============================================ */
+
+:root {
+  /* DEFAULT/SYSTEM THEME (Light) */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f9fafb;
+  --bg-tertiary: #f3f4f6;
+  --text-primary: #1a1a2e;
+  --text-secondary: #666666;
+  --text-tertiary: #999999;
+  --border-color: #e5e7eb;
+  --border-light: #f0f0f0;
+  --accent-primary: #1890ff;
+  --accent-secondary: #52c41a;
+  --accent-danger: #ff4d4f;
+  --accent-warning: #faad14;
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+/* DARK THEME */
+[data-theme="dark"] {
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #1a1a1a;
+  --bg-tertiary: #2a2a2a;
+  --text-primary: #ffffff;
+  --text-secondary: #b3b3b3;
+  --text-tertiary: #808080;
+  --border-color: #404040;
+  --border-light: #2a2a2a;
+  --accent-primary: #3b82f6;
+  --accent-secondary: #10b981;
+  --accent-danger: #f87171;
+  --accent-warning: #fbbf24;
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.8);
+}
+
+/* BASE THEME (Neutral Gray) */
+[data-theme="base"] {
+  --bg-primary: #fafafa;
+  --bg-secondary: #f5f5f5;
+  --bg-tertiary: #eeeeee;
+  --text-primary: #2a2a2a;
+  --text-secondary: #757575;
+  --text-tertiary: #9e9e9e;
+  --border-color: #d0d0d0;
+  --border-light: #e8e8e8;
+  --accent-primary: #424242;
+  --accent-secondary: #616161;
+  --accent-danger: #d32f2f;
+  --accent-warning: #f57f17;
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.12);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.16);
+}
+
+/* MONO THEME (Black & White) */
+[data-theme="mono"] {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f5f5f5;
+  --bg-tertiary: #e8e8e8;
+  --text-primary: #000000;
+  --text-secondary: #333333;
+  --text-tertiary: #666666;
+  --border-color: #cccccc;
+  --border-light: #dddddd;
+  --accent-primary: #000000;
+  --accent-secondary: #333333;
+  --accent-danger: #000000;
+  --accent-warning: #555555;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 2px 6px rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* VIOLET BLOOM THEME */
+[data-theme="violet"] {
+  --bg-primary: #faf8ff;
+  --bg-secondary: #f3f0ff;
+  --bg-tertiary: #ede9fe;
+  --text-primary: #3f0f63;
+  --text-secondary: #6b21a8;
+  --text-tertiary: #9333ea;
+  --border-color: #d8b4fe;
+  --border-light: #e9d5ff;
+  --accent-primary: #7c3aed;
+  --accent-secondary: #a78bfa;
+  --accent-danger: #c084fc;
+  --accent-warning: #e879f9;
+  --shadow-sm: 0 2px 4px rgba(124, 58, 237, 0.1);
+  --shadow-md: 0 4px 12px rgba(124, 58, 237, 0.15);
+  --shadow-lg: 0 8px 24px rgba(124, 58, 237, 0.2);
+}
+
+/* WHITE THEME (Pure White) */
+[data-theme="white"] {
+  --bg-primary: #ffffff;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f9f9f9;
+  --text-primary: #000000;
+  --text-secondary: #404040;
+  --text-tertiary: #808080;
+  --border-color: #d9d9d9;
+  --border-light: #e8e8e8;
+  --accent-primary: #1890ff;
+  --accent-secondary: #52c41a;
+  --accent-danger: #ff4d4f;
+  --accent-warning: #faad14;
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+/* ============================================
+   GLOBAL STYLES WITH THEME VARIABLES
+   ============================================ */
+
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* Card Styles */
+.card,
+.ant-card {
+  background-color: var(--bg-secondary) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+
+.ant-card-head {
+  background-color: var(--bg-tertiary) !important;
+  border-color: var(--border-color) !important;
+}
+
+/* Input Styles */
+.ant-input,
+.ant-input-number,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea {
+  background-color: var(--bg-tertiary) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border-color) !important;
+}
+
+.ant-input::placeholder,
+textarea::placeholder {
+  color: var(--text-tertiary);
+}
+
+.ant-input:hover,
+.ant-input-number:hover {
+  border-color: var(--accent-primary) !important;
+}
+
+.ant-input:focus,
+.ant-input-number:focus {
+  border-color: var(--accent-primary) !important;
+  box-shadow: 0 0 0 2px var(--bg-tertiary) !important;
+}
+
+/* Button Styles */
+.ant-btn-primary {
+  background-color: var(--accent-primary) !important;
+  border-color: var(--accent-primary) !important;
+}
+
+.ant-btn-primary:hover {
+  opacity: 0.85;
+  background-color: var(--accent-primary) !important;
+}
+
+.ant-btn-default {
+  color: var(--text-primary) !important;
+  border-color: var(--border-color) !important;
+  background-color: var(--bg-secondary) !important;
+}
+
+.ant-btn-default:hover {
+  color: var(--accent-primary) !important;
+  border-color: var(--accent-primary) !important;
+}
+
+/* Menu & Dropdown */
+.ant-menu,
+.ant-dropdown-menu {
+  background-color: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+}
+
+.ant-menu-item {
+  color: var(--text-primary) !important;
+}
+
+.ant-menu-item:hover {
+  color: var(--accent-primary) !important;
+}
+
+.ant-menu-item-selected {
+  color: var(--accent-primary) !important;
+  background-color: var(--bg-tertiary) !important;
+}
+
+/* Modal */
+.ant-modal-content {
+  background-color: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+}
+
+.ant-modal-header {
+  border-color: var(--border-color) !important;
+  background-color: var(--bg-tertiary) !important;
+}
+
+/* Table */
+.ant-table,
+.ant-table-thead > tr > th {
+  background-color: var(--bg-tertiary) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border-color) !important;
+}
+
+.ant-table-tbody > tr {
+  background-color: var(--bg-secondary) !important;
+}
+
+.ant-table-tbody > tr:hover > td {
+  background-color: var(--bg-tertiary) !important;
+}
+
+/* Badge & Status */
+.ant-badge {
+  color: var(--text-primary) !important;
+}
+
+/* Alert */
+.ant-alert {
+  background-color: var(--bg-tertiary) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border-color) !important;
+}
+
+/* Select & Picker */
+.ant-select-selector {
+  background-color: var(--bg-tertiary) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+
+.ant-select-item-option {
+  color: var(--text-primary) !important;
+}
+
+.ant-select-item-option:hover {
+  background-color: var(--bg-tertiary) !important;
+}
+
+/* Avatar */
+.ant-avatar {
+  background-color: var(--accent-primary) !important;
+}
+
+/* Pagination */
+.ant-pagination-item {
+  background-color: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border-color) !important;
+}
+
+.ant-pagination-item-active {
+  background-color: var(--accent-primary) !important;
+  color: white !important;
+}
+
+/* Divider */
+.ant-divider {
+  border-color: var(--border-color) !important;
+}
+
+/* Breadcrumb */
+.ant-breadcrumb-link {
+  color: var(--text-secondary) !important;
+}
+
+.ant-breadcrumb-link:hover {
+  color: var(--accent-primary) !important;
+}
+
+/* Progress */
+.ant-progress-bg {
+  background-color: var(--accent-primary) !important;
+}
+
+/* Slider */
+.ant-slider-track {
+  background-color: var(--accent-primary) !important;
+}
+
+.ant-slider-handle {
+  border-color: var(--accent-primary) !important;
+}
+
+/* Switch */
+.ant-switch-checked {
+  background-color: var(--accent-primary) !important;
+}
+
+/* Spin */
+.ant-spin {
+  color: var(--accent-primary) !important;
+}
+
+/* Tooltip */
+.ant-tooltip-inner {
+  background-color: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Timeline */
+.ant-timeline-item-content {
+  color: var(--text-primary) !important;
+}
+
+/* Rate */
+.ant-rate {
+  color: var(--accent-primary) !important;
+}
+
+/* Empty State */
+.ant-empty-description {
+  color: var(--text-secondary) !important;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-tertiary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-light);
+}

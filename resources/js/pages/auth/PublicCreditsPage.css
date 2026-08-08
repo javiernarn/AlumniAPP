@@ -1,0 +1,304 @@
+/* ==========================================================================
+   PublicCreditsPage.css
+   OCC Alumni — Public "Credits" page
+   Imports PublicHomePage.css for shared tokens (--ph-accent, .ph-btn,
+   .ph-card, .grad, .ph-header, .ph-footer, etc); everything here is
+   additive, namespaced with a "cred-" prefix so nothing collides with
+   the rest of the public site.
+   ========================================================================== */
+
+.cred-page {
+  min-height: 100vh;
+}
+
+/* ============ BREADCRUMB: mobile-only ============
+   This is the small "Home / CREDITS" trail above the page title —
+   NOT the header. On desktop/laptop it just repeats what's already in
+   the header nav, so it's hidden there and only shown on phones. The
+   header itself is never touched by this rule. */
+.cred-page .cred-breadcrumb {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .cred-page .cred-breadcrumb {
+    display: flex;
+  }
+}
+
+/* ============ BREADCRUMB + HERO ============ */
+.cred-hero {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 48px 32px 8px;
+  text-align: center;
+}
+
+.cred-breadcrumb {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0.55;
+  margin-bottom: 18px;
+}
+
+.cred-breadcrumb button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  opacity: 0.85;
+}
+
+.cred-breadcrumb button:hover {
+  color: var(--ph-accent);
+  opacity: 1;
+}
+
+.cred-breadcrumb-current {
+  color: var(--ph-accent);
+}
+
+.cred-hero-title {
+  font-size: 40px !important;
+  font-weight: 900 !important;
+  margin: 0 0 12px !important;
+  color: inherit !important;
+}
+
+.cred-hero-lead {
+  font-size: 15.5px !important;
+  opacity: 0.72;
+  color: inherit !important;
+  max-width: 620px;
+  margin: 0 auto !important;
+}
+
+/* ============ SECTION ============ */
+.cred-section {
+  padding-top: 12px;
+  padding-bottom: 8px;
+}
+
+/* ============ TEAM GRID ============ */
+.cred-team-grid {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 22px;
+}
+
+.cred-card {
+  border-radius: var(--ph-radius-md, 18px);
+  padding: 26px;
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.ph-page.light .cred-card {
+  background: #ffffff;
+  border: 1px solid #edf0f5;
+  box-shadow: 0 10px 30px rgba(2, 6, 23, 0.05);
+}
+
+.ph-page.dark .cred-card {
+  background: rgba(18, 22, 32, 0.75);
+  border: 1px solid #242a36;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.cred-card:hover {
+  transform: translateY(-4px);
+}
+
+.ph-page.light .cred-card:hover { box-shadow: 0 20px 40px rgba(2, 6, 23, 0.1); }
+.ph-page.dark .cred-card:hover { box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45); }
+
+/* ---- 2x2 (square, resume-style) avatar ---- */
+.cred-avatar {
+  flex-shrink: 0;
+  width: 96px;
+  height: 96px;
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--ph-accent), var(--ph-accent-3) 55%, var(--ph-accent-2));
+}
+
+.ph-page.light .cred-avatar {
+  box-shadow: 0 6px 18px rgba(2, 6, 23, 0.1);
+}
+
+.ph-page.dark .cred-avatar {
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+}
+
+.cred-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Anchored to the top, not centered — headshot-style photos already
+     frame the face near the top with the body/gown filling the rest
+     below. Centering a tall portrait photo (like a full 4:5 photo vs.
+     a square one) would crop equally off the top and bottom, which
+     clips straight into the hairline on any photo that doesn't have
+     much headroom to begin with. Anchoring top keeps the whole head
+     intact and only trims extra shoulder/gown space off the bottom
+     instead — consistent framing across every member's card
+     regardless of their original photo's aspect ratio. */
+  object-position: center top;
+  display: block;
+}
+
+.cred-avatar-fallback {
+  font-size: 30px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.02em;
+}
+
+.cred-card-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.cred-role-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  padding: 4px 11px;
+  border-radius: 999px;
+  color: var(--ph-accent);
+  margin-bottom: 10px;
+}
+
+.ph-page.light .cred-role-tag {
+  background: #f5f7fb;
+  border: 1px solid #e6eaf1;
+}
+
+.ph-page.dark .cred-role-tag {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid #242a36;
+}
+
+.cred-card-name {
+  font-size: 18px !important;
+  font-weight: 800 !important;
+  margin: 0 0 8px !important;
+  color: inherit !important;
+}
+
+.cred-card-desc {
+  font-size: 13.5px !important;
+  line-height: 1.6 !important;
+  opacity: 0.72;
+  color: inherit !important;
+  margin: 0 !important;
+}
+
+/* ============ SPECIAL THANKS ============ */
+.cred-thanks-section {
+  padding-top: 28px;
+  padding-bottom: 60px;
+}
+
+.cred-thanks-title {
+  text-align: center;
+  font-size: 24px !important;
+  font-weight: 800 !important;
+  margin: 0 0 22px !important;
+  color: inherit !important;
+}
+
+.cred-thanks-grid {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.cred-thanks-card {
+  border-radius: var(--ph-radius-md, 18px);
+  padding: 24px;
+}
+
+.ph-page.light .cred-thanks-card {
+  background: #f8f9fc;
+  border: 1px solid #edf0f5;
+}
+
+.ph-page.dark .cred-thanks-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid #242a36;
+}
+
+.cred-thanks-heading {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 15px;
+  font-weight: 800;
+  margin-bottom: 10px;
+  color: inherit;
+}
+
+.cred-thanks-heading .anticon {
+  color: var(--ph-accent);
+}
+
+.cred-thanks-p {
+  font-size: 13px !important;
+  line-height: 1.6 !important;
+  opacity: 0.68;
+  color: inherit !important;
+  margin: 0 !important;
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+@media (max-width: 900px) {
+  .cred-team-grid { grid-template-columns: 1fr; }
+  .cred-thanks-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 767px) {
+  .cred-hero { padding: 28px 20px 4px; }
+  .cred-hero-title { font-size: 27px !important; }
+  .cred-hero-lead { font-size: 14px !important; }
+
+  .cred-team-grid { padding: 0 20px; gap: 16px; }
+  .cred-card { padding: 20px; gap: 16px; }
+  .cred-avatar { width: 80px; height: 80px; border-radius: 14px; }
+  .cred-avatar-fallback { font-size: 24px; }
+
+  .cred-thanks-grid { padding: 0 20px; }
+}
+
+@media (max-width: 575px) {
+  .cred-hero-title { font-size: 23px !important; }
+  .cred-card { flex-direction: column; align-items: center; text-align: center; }
+  .cred-card-body { width: 100%; }
+}

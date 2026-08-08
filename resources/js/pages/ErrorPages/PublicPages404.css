@@ -1,0 +1,234 @@
+/* ==========================================================================
+   PublicPages404.css
+   OCC Alumni — Public "Page Not Found" screen
+   Imports PublicHomePage.css for shared tokens (--ph-accent, .ph-btn,
+   .grad, .ph-theme-btn); everything here is additive, namespaced with a
+   "pp404-" prefix so nothing collides with the rest of the public site.
+   ========================================================================== */
+
+.pp404-page {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  padding-top: calc(24px + env(safe-area-inset-top));
+  padding-bottom: calc(24px + env(safe-area-inset-bottom));
+  padding-left: calc(24px + env(safe-area-inset-left));
+  padding-right: calc(24px + env(safe-area-inset-right));
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.pp404-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(79, 70, 229, 0.08),
+    rgba(14, 165, 233, 0.08) 55%,
+    rgba(124, 58, 237, 0.08)
+  );
+}
+
+.ph-page.dark .pp404-bg {
+  background: linear-gradient(
+    135deg,
+    rgba(79, 70, 229, 0.14),
+    rgba(14, 165, 233, 0.1) 55%,
+    rgba(124, 58, 237, 0.14)
+  );
+}
+
+.pp404-theme-btn {
+  position: absolute;
+  top: calc(20px + env(safe-area-inset-top));
+  right: calc(20px + env(safe-area-inset-right));
+  z-index: 2;
+}
+
+.pp404-card {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 560px);
+  max-width: 560px;
+  box-sizing: border-box;
+  text-align: center;
+  padding: 48px 40px 40px;
+  border-radius: 24px;
+}
+
+.ph-page.light .pp404-card {
+  background: #ffffff;
+  border: 1px solid #e6eaf1;
+  box-shadow: 0 24px 60px rgba(2, 6, 23, 0.08);
+}
+
+.ph-page.dark .pp404-card {
+  background: rgba(18, 22, 32, 0.85);
+  border: 1px solid #242a36;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+}
+
+.pp404-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  margin-bottom: 28px;
+}
+
+.pp404-brand img {
+  height: 40px;
+  width: auto;
+}
+
+.pp404-brand-title {
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.pp404-code {
+  font-size: 84px;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+  color: inherit;
+}
+
+.pp404-title {
+  margin: 0 0 12px !important;
+  color: inherit !important;
+  font-size: 24px !important;
+  font-weight: 800 !important;
+}
+
+.pp404-sub {
+  opacity: 0.72;
+  color: inherit !important;
+  font-size: 14.5px !important;
+  margin: 0 auto 20px !important;
+  max-width: 440px;
+}
+
+.pp404-path {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  font-size: 13px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  margin: 0 auto 26px;
+  max-width: 100%;
+}
+
+.ph-page.light .pp404-path {
+  background: #f5f7fb;
+  border: 1px solid #e6eaf1;
+  color: #475569;
+}
+
+.ph-page.dark .pp404-path {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid #242a36;
+  color: #cbd5e1;
+}
+
+.pp404-path code {
+  background: transparent;
+  color: var(--ph-accent);
+  font-weight: 700;
+  word-break: break-all;
+}
+
+.pp404-actions {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.pp404-countdown {
+  display: block;
+  font-size: 12.5px !important;
+  opacity: 0.6;
+  color: inherit !important;
+}
+
+/* ==========================================================================
+   RESPONSIVE — tablets down to the smallest phones, portrait & landscape
+   ========================================================================== */
+
+/* Small tablets / large phones (e.g. iPad Mini portrait, phablets) */
+@media (max-width: 768px) {
+  .pp404-page { padding: 20px; }
+  .pp404-card { padding: 44px 32px 36px; border-radius: 20px; }
+  .pp404-code { font-size: 72px; }
+}
+
+/* Standard phones — portrait (iPhone 12/13/14/15, Pixel, Galaxy S-series) */
+@media (max-width: 575px) {
+  .pp404-card { padding: 40px 24px 32px; border-radius: 18px; }
+  .pp404-code { font-size: 64px; }
+  .pp404-title { font-size: 20px !important; }
+  .pp404-sub { font-size: 13.5px !important; }
+  .pp404-brand img { height: 34px; }
+  .pp404-path { font-size: 12px; padding: 7px 12px; }
+  .pp404-actions .ph-btn { width: 100%; justify-content: center; }
+}
+
+/* Compact phones (e.g. iPhone SE, older/smaller Androids) */
+@media (max-width: 400px) {
+  .pp404-page { padding: 16px; }
+  .pp404-card { padding: 36px 20px 28px; }
+  .pp404-code { font-size: 58px; }
+  .pp404-brand { margin-bottom: 22px; }
+  .pp404-brand-title { font-size: 15px; }
+}
+
+/* Smallest phones (e.g. iPhone 5/SE 1st gen, Galaxy Fold outer screen) */
+@media (max-width: 374px) {
+  .pp404-card { padding: 32px 16px 26px; border-radius: 16px; }
+  .pp404-code { font-size: 50px; }
+  .pp404-title { font-size: 18px !important; }
+  .pp404-sub { font-size: 13px !important; margin-bottom: 16px !important; }
+  .pp404-path { font-size: 11px; gap: 6px; }
+}
+
+@media (max-width: 320px) {
+  .pp404-card { padding: 28px 14px 22px; }
+  .pp404-code { font-size: 44px; }
+  .pp404-brand img { height: 30px; }
+}
+
+/* Phones — landscape (short viewport height, wide width) */
+@media (max-width: 900px) and (orientation: landscape) {
+  .pp404-page { padding: 16px; overflow-y: auto; }
+  .pp404-card { padding: 28px 32px; }
+  .pp404-brand { margin-bottom: 16px; }
+  .pp404-code { font-size: 56px; margin-bottom: 4px; }
+  .pp404-sub { margin-bottom: 14px !important; }
+  .pp404-path { margin-bottom: 16px; }
+}
+
+/* Very short landscape (e.g. small phones rotated) — trims the least
+   essential copy so the card + primary action still fit above the fold */
+@media (max-height: 400px) and (orientation: landscape) {
+  .pp404-page { align-items: flex-start; }
+  .pp404-brand { margin-bottom: 10px; }
+  .pp404-code { font-size: 42px; margin-bottom: 2px; }
+  .pp404-title { font-size: 17px !important; margin-bottom: 6px !important; }
+  .pp404-sub { display: none; }
+  .pp404-path { margin-bottom: 12px; }
+  .pp404-actions { margin-bottom: 8px; }
+}
+
+/* Foldables / narrow-but-tall screens (e.g. Galaxy Fold outer, Z Flip) */
+@media (max-width: 320px) and (min-height: 650px) {
+  .pp404-card { padding: 30px 14px 24px; }
+}

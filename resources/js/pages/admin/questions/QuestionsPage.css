@@ -1,0 +1,1206 @@
+[data-theme="black"] .qm-hero,
+ .qm-hero {
+    --qm-surface: #14161d;
+    --qm-surface-2: #1b1e27;
+    --qm-border: #262a33;
+    --qm-text: #e7e9ee;
+    --qm-text-muted: #9ba3af;
+    --qm-accent-soft: rgba(99, 102, 241, 0.14);
+    --qm-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --qm-shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.35);
+    --qm-shadow-md: 0 10px 28px rgba(0, 0, 0, 0.45);
+}
+
+@keyframes qmFadeUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes qmOrbit {
+    0%   { transform: translate(0, 0) scale(1); }
+    50%  { transform: translate(20px, -20px) scale(1.08); }
+    100% { transform: translate(0, 0) scale(1); }
+}
+@keyframes qmShine {
+    0%   { transform: translateX(-150%) skewX(-18deg); }
+    100% { transform: translateX(250%) skewX(-18deg); }
+}
+
+.alumni-questions-container{
+         padding: 24px;
+  padding-top: 10px;
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+}
+
+.qm-hero {
+    
+    --qm-ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
+    --qm-ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+    --qm-accent: #4f46e5;
+    --qm-accent-2: #7c3aed;
+    --qm-accent-3: #0ea5e9;
+    --qm-accent-soft: rgba(79, 70, 229, 0.08);
+    --qm-accent-ring: rgba(79, 70, 229, 0.22);
+    --qm-surface: #ffffff;
+    --qm-surface-2: #f3f4f6;
+    --qm-border: #e5e7eb;
+    --qm-text: #0f172a;
+    --qm-text-muted: #64748b;
+    --qm-shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.04);
+    --qm-shadow-sm: 0 2px 10px rgba(15, 23, 42, 0.06);
+    --qm-shadow-md: 0 10px 28px rgba(15, 23, 42, 0.08);
+
+     position: relative;
+  overflow: hidden;
+  margin: 0 0 24px;
+  padding: 56px 32px 40px;
+  border-radius: 26px;
+    background:
+        radial-gradient(900px 380px at -10% -20%, rgba(79, 70, 229, 0.16), transparent 60%),
+        radial-gradient(700px 320px at 110% 0%, rgba(14, 165, 233, 0.16), transparent 60%),
+        var(--qm-surface);
+    border: 1px solid var(--qm-border);
+    box-shadow: var(--qm-shadow-md);
+    animation: qmFadeUp 0.6s var(--qm-ease-spring) both;
+}
+
+.qm-hero__bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.qm-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    opacity: 0.5;
+    animation: qmOrbit 14s ease-in-out infinite;
+}
+.qm-orb-1 { width: 220px; height: 220px; background: #6366f1; top: -60px; left: -40px; }
+.qm-orb-2 { width: 260px; height: 260px; background: #06b6d4; bottom: -100px; right: -60px; animation-duration: 18s; }
+.qm-orb-3 { width: 160px; height: 160px; background: #a855f7; top: 30%; left: 55%; animation-duration: 22s; opacity: 0.3; }
+
+.qm-grid-overlay {
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(to right, rgba(15, 23, 42, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(15, 23, 42, 0.05) 1px, transparent 1px);
+    background-size: 36px 36px;
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+}
+[data-theme="black"] .qm-grid-overlay{
+    background-image:
+        linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+}
+
+.qm-hero__content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 32px;
+    flex-wrap: wrap;
+}
+
+.qm-hero__left {
+    flex: 1;
+    min-width: 320px;
+    max-width: 720px;
+}
+
+.qm-chip {
+    background: var(--qm-accent-soft) !important;
+    color: var(--qm-accent) !important;
+    border: 1px solid var(--qm-accent-ring) !important;
+    border-radius: 999px !important;
+    padding: 4px 12px !important;
+    font-weight: 600 !important;
+    font-size: 12px !important;
+    margin: 0 0 14px 0 !important;
+    display: inline-flex !important;
+    align-items: center;
+    gap: 6px;
+}
+
+.qm-hero__title {
+    font-size: clamp(24px, 3vw, 36px) !important;
+    line-height: 1.15 !important;
+    font-weight: 800 !important;
+    margin: 0 0 12px !important;
+    color: var(--qm-text) !important;
+    letter-spacing: -0.02em;
+}
+
+.qm-grad-text {
+    background: linear-gradient(135deg, var(--qm-accent) 0%, var(--qm-accent-3) 50%, var(--qm-accent-2) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+}
+
+.qm-hero__lead {
+    display: block;
+    color: var(--qm-text-muted) !important;
+    font-size: 15px !important;
+    line-height: 1.65 !important;
+    margin-bottom: 24px !important;
+    max-width: 620px;
+}
+
+.qm-hero__stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.qm-stat-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: 14px;
+    background: var(--qm-surface);
+    border: 1px solid var(--qm-border);
+    box-shadow: var(--qm-shadow-xs);
+    transition: transform 0.3s var(--qm-ease-smooth), box-shadow 0.3s var(--qm-ease-smooth), border-color 0.3s;
+    min-width: 140px;
+}
+.qm-stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--qm-shadow-md);
+    border-color: var(--qm-accent-ring);
+}
+
+.qm-stat-icon {
+    font-size: 18px;
+    width: 38px;
+    height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    color: #fff;
+    flex-shrink: 0;
+}
+.qm-stat-icon--blue   { background: linear-gradient(135deg, #4f46e5, #0ea5e9); }
+.qm-stat-icon--green  { background: linear-gradient(135deg, #10b981, #22c55e); }
+.qm-stat-icon--purple { background: linear-gradient(135deg, #7c3aed, #ec4899); }
+
+.qm-stat-meta { display: flex; flex-direction: column; line-height: 1.1; }
+.qm-stat-value {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--qm-text);
+}
+.qm-stat-label {
+    font-size: 12px;
+    color: var(--qm-text-muted);
+    margin-top: 2px;
+}
+
+.qm-hero__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.qm-btn-primary {
+    background: linear-gradient(135deg, var(--qm-accent), var(--qm-accent-2)) !important;
+    border: none !important;
+    color: #fff !important;
+    height: 46px !important;
+    padding: 0 22px !important;
+    border-radius: 12px !important;
+    font-weight: 600 !important;
+    box-shadow: 0 10px 24px var(--qm-accent-ring) !important;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s var(--qm-ease-smooth);
+}
+.qm-btn-primary::after {
+    content: "";
+    position: absolute; top: 0; left: 0; width: 60%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+    animation: qmShine 2.8s ease-in-out infinite;
+}
+.qm-btn-primary:hover { transform: translateY(-1px); }
+
+/* Keep primary action buttons the same blue in black theme, for consistency with the gallery page */
+[data-theme="black"] .qm-btn-primary {
+    background: linear-gradient(135deg, #4f46e5, #7c3aed) !important;
+    box-shadow: 0 10px 24px rgba(79, 70, 229, 0.22) !important;
+    color: #fff !important;
+}
+
+.qm-btn-ghost {
+    height: 46px !important;
+    padding: 0 20px !important;
+    border-radius: 12px !important;
+    font-weight: 600 !important;
+    background: var(--qm-surface) !important;
+    border: 1px solid var(--qm-border) !important;
+    color: var(--qm-text) !important;
+    transition: all 0.25s var(--qm-ease-smooth);
+}
+.qm-btn-ghost:hover {
+    border-color: var(--qm-accent) !important;
+    color: var(--qm-accent) !important;
+    transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+    .qm-hero { padding: 28px 20px; border-radius: 16px; }
+    .qm-hero__content { flex-direction: column; align-items: stretch; }
+    .qm-hero__actions { flex-direction: row; flex-wrap: wrap; }
+    .qm-hero__actions .ant-btn { flex: 1; min-width: 140px; }
+    .qm-stat-card { min-width: 0; flex: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .qm-hero, .qm-orb, .qm-btn-primary::after { animation: none !important; }
+}
+/* ============================================
+   /Modern Hero Header
+   ============================================ */
+
+
+/* ============ Original Styles (unchanged) ============ */
+
+/* .header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+} */
+
+.questions-tabs .ant-tabs-nav {
+    margin-bottom: 0;
+}
+
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding: 16px 0;
+}
+
+.quiz-tab-content {
+    padding: 0;
+}
+
+.quiz-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.empty-state-card {
+    text-align: center;
+    padding: 40px;
+}
+
+.empty-state-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+/* Question Modal Styles */
+.question-modal .ant-modal-body {
+    padding: 0;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.question-form {
+    padding: 0;
+}
+
+.form-sections {
+    padding: 24px;
+}
+
+
+
+.section-header {
+    margin-bottom: 20px;
+}
+
+.section-header h3 {
+    margin: 0 0 8px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #1890ff;
+}
+
+.section-divider {
+    height: 2px;
+    background: linear-gradient(90deg, #1890ff 0%, transparent 100%);
+    border-radius: 1px;
+}
+
+.section-content {
+    padding: 0 8px;
+}
+
+.form-textarea {
+    border-radius: 6px;
+}
+
+
+
+.choice-letter {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #1890ff;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.choice-item .ant-upload.ant-upload-select-picture-card {
+    width: 100px;
+    height: 100px;
+    border-radius: 8px;
+}
+
+
+
+/* Custom scrollbar */
+.question-modal .ant-modal-body::-webkit-scrollbar { width: 6px; }
+.question-modal .ant-modal-body::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 3px; }
+.question-modal .ant-modal-body::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 3px; }
+.question-modal .ant-modal-body::-webkit-scrollbar-thumb:hover { background: #a8a8a8; }
+
+/* Quiz Builder Drag & Drop Styles */
+.quiz-questions-list { padding: 0; }
+
+.quiz-question-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 16px;
+    border: 1px solid #f0f0f0;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    transition: all 0.3s;
+}
+
+.quiz-question-item.dragging {
+    background: #f0f7ff;
+    border-color: #1890ff;
+    box-shadow: 0 2px 8px rgba(24, 144, 255, 0.2);
+}
+
+.question-drag-handle {
+    padding: 8px 12px 8px 0;
+    cursor: grab;
+    color: #999;
+    font-size: 16px;
+}
+.question-drag-handle:hover { color: #1890ff; }
+
+.question-content { flex: 1; min-width: 0; }
+
+.question-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+    gap: 8px;
+    min-width: 0;
+}
+
+/* The Tag/Text/Tag group inside the header must be allowed to wrap as a
+   group, and none of its children should be force-shrunk below their
+   natural size — that's what was causing "Rating" / "Required" to
+   collapse into a vertical single-letter column on narrow screens. */
+.question-header .ant-space {
+    flex-wrap: wrap;
+    row-gap: 6px;
+    min-width: 0;
+}
+
+.question-header .ant-space-item {
+    flex-shrink: 0;
+}
+
+.question-header .ant-tag {
+    white-space: nowrap;
+}
+
+.choices-preview { margin-top: 8px; }
+
+.empty-state-card { text-align: center; padding: 60px 40px; }
+.empty-state-content { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+@media (max-width: 768px) {
+    .quiz-question-item { flex-direction: column; }
+    .question-drag-handle { align-self: flex-start; padding: 0 0 8px 0; }
+    .question-header { flex-direction: row; flex-wrap: wrap; gap: 8px; }
+    .question-header .ant-space { width: 100%; }
+}
+
+@media (max-width: 480px) {
+    .quiz-question-item { padding: 12px; }
+    .question-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .question-header > .ant-btn {
+        align-self: flex-end;
+    }
+}
+
+.quiz-drawer .ant-drawer-body { padding: 0; }
+
+.quiz-drawer-content {
+    display: flex;
+    height: 100%;
+    gap: 16px;
+}
+
+.questions-panel {
+    flex: 1;
+    min-width: 400px;
+    border-right: 1px solid #f0f0f0;
+    padding-right: 16px;
+}
+
+.quiz-builder-panel { flex: 1; min-width: 500px; }
+
+.questions-list-card,
+.quiz-builder-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.questions-list-card .ant-card-body,
+.quiz-builder-card .ant-card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.search-filters { margin-bottom: 16px; }
+
+.quiz-questions-list {
+    flex: 1;
+    overflow-y: auto;
+    max-height: 600px;
+    min-width: 0;
+}
+
+
+
+.quiz-details-content .question-number {
+    min-width: 50px;
+    padding-right: 16px;
+    border-right: 2px solid #1890ff;
+    margin-right: 16px;
+}
+
+.quiz-details-content .question-content { flex: 1; }
+.quiz-details-content .choices-preview { margin-top: 12px; }
+.quiz-details-content .choices-preview .ant-card { background: #fafafa; }
+
+@media (max-width: 1200px) {
+    .quiz-drawer-content { flex-direction: column; }
+    .questions-panel {
+        border-right: none;
+        border-bottom: 1px solid #f0f0f0;
+        padding-right: 0;
+        padding-bottom: 16px;
+        min-width: auto;
+    }
+    .quiz-builder-panel { min-width: auto; }
+}
+
+
+
+[data-theme="black"] .quiz-action-btn,
+[data-theme="black"] .quiz-action-btn .anticon {
+    color: #ffffff !important;
+}
+
+[data-theme="black"] .add-choice-btn {
+  background-color: #141414 !important;
+  color: #ffffff !important;
+  border: 1px dashed #434343 !important;
+}
+
+[data-theme="black"] .add-choice-btn:hover {
+  background-color: #1f1f1f !important;
+  border-color: #666 !important;
+}
+
+[data-theme="black"] .ant-upload.ant-upload-select {
+  background-color: #141414 !important;
+  border: 1px dashed #434343 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="black"] .ant-upload.ant-upload-select:hover {
+  background-color: #1f1f1f !important;
+  border-color: #666 !important;}
+
+  /* ============================================
+   Mobile responsive — table header / filters
+   ============================================ */
+@media (max-width: 640px) {
+  .alumni-questions-container {
+    padding: 12px;
+    padding-top: 8px;
+  }
+
+  /* Stack the "Total Results" label above the search row */
+  .table-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding: 12px 0;
+  }
+
+  .table-header > .ant-typography,
+  .table-header strong {
+    width: 100%;
+    white-space: normal;
+    word-break: normal;
+    writing-mode: horizontal-tb;
+  }
+
+  /* Make antd Space wrap and span the full row */
+  .table-header .ant-space {
+    display: flex !important;
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 8px !important;
+    row-gap: 8px !important;
+  }
+
+  .table-header .ant-space-item {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+
+  /* Kill the inline 250px / 150px widths so the inputs fit the viewport */
+  .table-header .ant-space-item > .ant-input-affix-wrapper,
+  .table-header .ant-space-item > .ant-input,
+  .table-header .ant-space-item > .ant-select {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  /* Tabs: allow horizontal scroll instead of breaking text */
+  .questions-tabs .ant-tabs-nav-wrap {
+    overflow-x: auto;
+  }
+
+  /* Same treatment for the quiz drawer search bar */
+  .search-filters .ant-space {
+    display: flex !important;
+    width: 100%;
+    flex-wrap: wrap;
+  }
+  .search-filters .ant-space-item {
+    flex: 1 1 100%;
+  }
+  .search-filters .ant-input-affix-wrapper,
+  .search-filters .ant-input,
+  .search-filters .ant-select {
+    width: 100% !important;
+  }
+
+  /* Quiz drawer body on small screens */
+  .quiz-drawer-content {
+    flex-direction: column;
+    height: auto;
+  }
+}
+
+/* Tablet portrait — give a bit more room but still stack the controls */
+@media (min-width: 641px) and (max-width: 820px) {
+  .table-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  .table-header .ant-space {
+    display: flex !important;
+    width: 100%;
+    justify-content: flex-start;
+  }
+  .table-header .ant-space-item > .ant-input-affix-wrapper,
+  .table-header .ant-space-item > .ant-select {
+    width: 100% !important;
+  }
+}
+
+/* ============================================
+   Mobile responsive — hero stats & actions
+   ============================================ */
+@media (max-width: 640px) {
+  .qm-hero {
+    padding: 24px 16px 20px;
+    border-radius: 18px;
+    margin: 0 0 16px;
+  }
+
+  .qm-hero__content {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 20px;
+  }
+
+  .qm-hero__left {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .qm-hero__title {
+    font-size: clamp(20px, 6vw, 26px) !important;
+  }
+
+  .qm-hero__lead {
+    font-size: 13px !important;
+    margin-bottom: 16px !important;
+  }
+
+  /* Stats row: 3 cards side-by-side, each shrinks to fit the viewport */
+  .qm-hero__stats {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    width: 100%;
+  }
+
+  .qm-stat-card {
+    min-width: 0 !important;
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 10px;
+    border-radius: 12px;
+  }
+
+  .qm-stat-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 15px;
+    border-radius: 8px;
+  }
+
+  .qm-stat-value {
+    font-size: 16px;
+  }
+
+  .qm-stat-label {
+    font-size: 11px;
+    line-height: 1.2;
+  }
+
+  /* Action buttons: full-width stack, no overflow */
+  .qm-hero__actions {
+    flex-direction: column !important;
+    width: 100%;
+    gap: 8px;
+  }
+
+  .qm-hero__actions .ant-btn,
+  .qm-btn-primary,
+  .qm-btn-ghost {
+    width: 100% !important;
+    flex: 1 1 100% !important;
+    min-width: 0 !important;
+    height: 42px !important;
+    padding: 0 16px !important;
+  }
+
+  /* Mute the decorative orbs so they don't bleed past the card edges */
+  .qm-orb { opacity: 0.25; filter: blur(40px); }
+}
+
+/* Extra-small phones (<= 360px): icon row instead of column inside stat card */
+@media (max-width: 380px) {
+  .qm-stat-card { padding: 8px; }
+  .qm-stat-value { font-size: 14px; }
+  .qm-stat-label { font-size: 10px; }
+}
+
+/* ============================================
+   Mobile responsive — Quiz Drawer ("Create New Quiz")
+   header, title, action buttons
+   ============================================ */
+
+/* Drawer header itself: title + extra controls collide on phones because
+   AntD lays them out on one row by default. Let them wrap and stack. */
+.quiz-drawer .ant-drawer-header {
+  flex-wrap: wrap;
+  row-gap: 10px;
+  padding: 14px 16px;
+}
+
+.quiz-drawer .ant-drawer-header-title {
+  flex: 1 1 100%;
+  min-width: 0;
+}
+
+.quiz-drawer .ant-drawer-title {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+}
+
+.qm-drawer-title {
+  flex-wrap: wrap;
+  font-size: 16px;
+  line-height: 1.3;
+}
+
+.qm-drawer-extra {
+  width: 100%;
+  justify-content: flex-start !important;
+}
+
+.qm-drawer-extra .ant-space-item {
+  min-width: 0;
+}
+
+.qm-drawer-count {
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .quiz-drawer .ant-drawer-content-wrapper {
+    width: 100vw !important;
+  }
+
+  .quiz-drawer .ant-drawer-extra {
+    width: 100%;
+    margin-top: 4px;
+  }
+
+  .qm-drawer-extra {
+    display: flex !important;
+    flex-wrap: wrap;
+    gap: 8px !important;
+    row-gap: 8px !important;
+  }
+
+  .qm-drawer-extra .ant-space-item {
+    flex: 1 1 auto;
+  }
+
+  .qm-drawer-count {
+    flex: 1 1 100%;
+    order: -1;
+    font-size: 12px;
+  }
+
+  .qm-drawer-extra .ant-btn {
+    flex: 1 1 auto;
+    min-width: 100px;
+  }
+}
+
+/* ============================================
+   Mobile responsive — Available Questions table
+   inside the Quiz Builder drawer.
+   Prevents the "Type" column tag from collapsing
+   into a single vertical letter stack.
+   ============================================ */
+.questions-panel .ant-table {
+  overflow-x: auto;
+}
+
+.questions-panel .ant-table-thead > tr > th,
+.questions-panel .ant-table-tbody > tr > td {
+  white-space: nowrap;
+}
+
+/* The "Question" column is the one column allowed to wrap text normally,
+   everything else (Type tag, Add button) must stay on one line. */
+.questions-panel .ant-table-tbody > tr > td:nth-child(2) {
+  white-space: normal;
+  min-width: 160px;
+}
+
+.qm-col-type .ant-tag {
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+@media (max-width: 768px) {
+  .quiz-drawer-content {
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .questions-panel,
+  .quiz-builder-panel {
+    padding: 0;
+  }
+
+  .questions-list-card .ant-card-body,
+  .quiz-builder-card .ant-card-body {
+    padding: 12px;
+  }
+
+  /* Card title row ("Available Questions" / count, "Quiz Builder" / order) also wraps on phones */
+  .questions-list-card .ant-card-head,
+  .quiz-builder-card .ant-card-head {
+    flex-wrap: wrap;
+    height: auto;
+    padding: 10px 12px;
+  }
+
+  .questions-list-card .ant-card-head-wrapper,
+  .quiz-builder-card .ant-card-head-wrapper {
+    flex-wrap: wrap;
+    row-gap: 6px;
+  }
+
+  .questions-list-card .ant-card-extra,
+  .quiz-builder-card .ant-card-extra {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .quiz-builder-card .ant-card-extra .ant-space {
+    flex-wrap: wrap;
+  }
+
+  .quiz-questions-list {
+    max-height: none;
+  }
+}
+
+/* ============================================
+   Mobile responsive — Add / Edit Question Modal
+   ============================================ */
+.question-modal .ant-modal-content {
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+@media (max-width: 768px) {
+  .question-modal {
+    top: 12px;
+    padding-bottom: 12px;
+  }
+
+  .question-modal .ant-modal-content {
+    border-radius: 12px;
+  }
+
+  .question-modal .ant-modal-body {
+    max-height: calc(100vh - 160px);
+  }
+
+  .form-sections {
+    padding: 16px 14px;
+  }
+
+  .section-content {
+    padding: 0;
+  }
+
+  .section-header h3 {
+    font-size: 15px;
+  }
+
+  /* Question type radio options become full-width tappable rows */
+  .qm-question-type-radio .ant-space {
+    width: 100%;
+  }
+
+  .qm-question-type-option {
+    display: flex !important;
+    align-items: center;
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    margin: 0 !important;
+  }
+
+  .qm-question-type-option .ant-radio {
+    top: 0;
+  }
+
+  [data-theme="black"] .qm-question-type-option {
+    border-color: #303030;
+  }
+
+  /* Sticky, full-width Cancel/Submit buttons so they're always reachable */
+  .form-actions {
+    position: sticky;
+    bottom: 0;
+    background: #fff;
+    padding: 12px 14px;
+    border-top: 1px solid #f0f0f0;
+    display: flex;
+    gap: 10px;
+  }
+
+  .form-actions .ant-btn {
+    flex: 1;
+    height: 42px;
+  }
+
+  [data-theme="black"] .form-actions {
+    background: #141414;
+    border-top-color: #303030;
+  }
+}
+
+/* ============================================
+   Mobile responsive — Multiple Choice option rows
+   This is the key fix: the fixed span={2}/10/10/2 grid
+   used to crush the upload box + textarea together.
+   Columns now use xs/sm/md breakpoints (set in JSX)
+   and this CSS adapts spacing/sizing per breakpoint.
+   ============================================ */
+.choice-item {
+  padding: 14px;
+  border: 1px solid #f0f0f0;
+  border-radius: 10px;
+  margin-bottom: 14px;
+}
+
+[data-theme="black"] .choice-item {
+  border-color: #303030;
+}
+
+.choice-letter {
+  width: 36px;
+  height: 36px;
+  font-size: 14px;
+}
+
+.choice-remove-col {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.choice-remove-label {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .choice-item {
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+
+  .choice-item .ant-row {
+    row-gap: 10px !important;
+  }
+
+  .choice-letter {
+    width: 32px;
+    height: 32px;
+    font-size: 13px;
+    margin-bottom: 4px;
+  }
+
+  /* Upload box: keep it compact but tappable, never crushed */
+  .choice-item .ant-upload.ant-upload-select-picture-card {
+    width: 84px;
+    height: 84px;
+  }
+
+  .choice-item .ant-form-item-label {
+    padding-bottom: 2px;
+  }
+
+  .choice-item .ant-form-item-label > label {
+    font-size: 12px;
+  }
+
+  /* Remove button becomes a full-width labeled row on its own line,
+     instead of a tiny icon squeezed into a 2-col slot */
+  .choice-remove-col {
+    justify-content: flex-start;
+    border-top: 1px dashed #e5e7eb;
+    padding-top: 8px;
+    margin-top: 2px;
+  }
+
+  [data-theme="black"] .choice-remove-col {
+    border-top-color: #303030;
+  }
+
+  .choice-remove-col .ant-btn {
+    width: 100%;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 36px;
+  }
+
+  .choice-remove-label {
+    display: inline;
+    font-size: 13px;
+  }
+
+  .add-choice-btn {
+    height: 42px;
+  }
+}
+
+@media (max-width: 380px) {
+  .choice-item .ant-upload.ant-upload-select-picture-card {
+    width: 72px;
+    height: 72px;
+  }
+}
+
+/* ============================================
+   Desktop / laptop only: Create New Quiz scroll fix
+   ------------------------------------------------
+   Scoped to (hover: hover) and (pointer: fine), which only matches
+   devices with a real mouse/trackpad. Touch devices — including
+   phones in landscape, which are wider than 768px and would
+   otherwise slip past the max-width:768px mobile rules above — are
+   guaranteed to fall outside this block and keep their original,
+   unchanged layout.
+
+   What this fixes: on desktop/laptop, the "Available Questions" and
+   "Quiz Builder" panels in the Create/Edit Quiz drawer could clip
+   content (e.g. the 10th quiz question, or lower rows in the
+   Available Questions table) with no way to scroll to it at 100%
+   browser zoom — only visible after zooming the page out. This
+   gives each panel a real, reliable scrollbar of its own.
+   ============================================ */
+@media (hover: hover) and (pointer: fine) {
+  .quiz-drawer .ant-drawer-body {
+    overflow-y: auto;
+  }
+
+  .quiz-drawer-content {
+    min-height: 0;
+  }
+
+  .questions-panel,
+  .quiz-builder-panel {
+    min-height: 0;
+  }
+
+  .questions-list-card,
+  .quiz-builder-card {
+    min-height: 0;
+  }
+
+  .quiz-builder-card .ant-card-body {
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .questions-list-card .ant-card-body {
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .search-filters {
+    flex-shrink: 0;
+  }
+
+  .quiz-questions-list {
+    /* Was a hardcoded 600px, which could render at full content
+       height and get clipped by the viewport instead of scrolling.
+       Scales with the viewport instead so it always scrolls reliably. */
+    max-height: calc(100vh - 320px);
+    min-height: 200px;
+  }
+}
+
+/* ============================================
+   Mobile responsive — "All Quizzes" table
+   ------------------------------------------------
+   Without this, the Quiz Name column had no fixed
+   width and got crushed by the other fixed-width
+   columns (Type/Active/Created/Actions) on narrow
+   screens, forcing the browser to break the quiz
+   name and meta text one character per line.
+   The Table now scrolls horizontally (scroll={{x}}
+   set in JSX) and this keeps the Quiz Name column
+   itself readable as normal, wrapping plain text.
+   ============================================ */
+.quizzes-table .ant-table-tbody > tr > td,
+.quizzes-table .ant-table-thead > tr > th {
+  white-space: nowrap;
+}
+
+.quizzes-table .ant-table-tbody > tr > td:first-child,
+.quizzes-table .ant-table-thead > tr > th:first-child {
+  white-space: normal;
+}
+
+.quiz-name-cell {
+  min-width: 150px;
+  max-width: 260px;
+}
+
+.quiz-name-cell__title {
+  display: block;
+  white-space: normal;
+  word-break: normal;
+  overflow-wrap: break-word;
+}
+
+.quiz-name-cell__meta {
+  white-space: normal;
+  word-break: normal;
+  overflow-wrap: break-word;
+  line-height: 1.4;
+}
+
+@media (max-width: 768px) {
+  .quizzes-table .ant-table-thead > tr > th,
+  .quizzes-table .ant-table-tbody > tr > td {
+    padding: 10px 8px;
+    font-size: 13px;
+  }
+
+  .quiz-name-cell {
+    min-width: 130px;
+  }
+
+  .quiz-name-cell__meta {
+    font-size: 11px !important;
+  }
+}

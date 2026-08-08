@@ -1,0 +1,3684 @@
+/* ============ Design tokens ============ */
+.messages-container,
+.alumni-messages-container {
+  --m-accent: #0ea5e9;
+  --m-accent-2: #14b8a6;
+  --m-accent-3: #6366f1;
+  --m-accent-soft: rgba(14, 165, 233, 0.10);
+  --m-accent-ring: rgba(14, 165, 233, 0.28);
+  --m-bg: #f4f7fb;
+  --m-surface: #ffffff;
+  --m-surface-2: #f1f5f9;
+  --m-border: #e2e8f0;
+  --m-border-strong: #cbd5e1;
+  --m-text: #0b1220;
+  --m-text-muted: #5b6677;
+  --m-text-subtle: #94a3b8;
+  --m-shadow-xs: 0 1px 2px rgba(2, 6, 23, 0.05);
+  --m-shadow-sm: 0 4px 14px rgba(2, 6, 23, 0.06);
+  --m-shadow-md: 0 14px 34px rgba(2, 6, 23, 0.10);
+  --m-shadow-lg: 0 28px 60px rgba(2, 6, 23, 0.18);
+  --m-radius-sm: 10px;
+  --m-radius-md: 14px;
+  --m-radius-lg: 18px;
+  --m-radius-xl: 26px;
+  --m-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ============ Layout shell ============ */
+.messages-container {
+  width: 100%;
+  min-height: calc(100vh - 100px);
+  padding: 20px;
+  box-sizing: border-box;
+  background:
+    radial-gradient(900px 500px at 100% -10%, rgba(14,165,233,0.10), transparent 60%),
+    radial-gradient(900px 500px at -10% 110%, rgba(99,102,241,0.10), transparent 60%),
+    var(--m-bg);
+  color: var(--m-text);
+  font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+}
+
+.messages-layout {
+  display: flex;
+  height: calc(100vh - 140px);
+  background: var(--m-surface);
+  border-radius: var(--m-radius-xl);
+  overflow: hidden;
+  box-shadow: var(--m-shadow-md);
+  border: 1px solid var(--m-border);
+}
+
+/* ============ Sidebar ============ */
+.conversations-sidebar {
+  width: 360px;
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, var(--m-surface) 0%, var(--m-surface-2) 100%);
+  border-right: 1px solid var(--m-border);
+  flex-shrink: 0;
+}
+
+.conversations-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 22px 18px;
+  background: linear-gradient(135deg, #0b1220 0%, var(--m-accent) 100%);
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+.conversations-header::after {
+  content: "";
+  position: absolute;
+  inset: -40% -10% auto auto;
+  width: 240px; height: 240px;
+  background: radial-gradient(closest-side, rgba(20,184,166,0.45), transparent);
+  filter: blur(20px);
+  pointer-events: none;
+}
+.conversations-header h2 {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+  z-index: 1;
+}
+
+.total-unread-badge {
+  background: #ef4444;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  box-shadow: 0 6px 18px rgba(239, 68, 68, 0.35);
+  z-index: 1;
+}
+
+.search-box {
+  padding: 14px 18px 6px;
+}
+.search-box input {
+  width: 100%;
+  padding: 11px 16px;
+  border: 1px solid var(--m-border);
+  border-radius: 12px;
+  font-size: 0.92rem;
+  outline: none;
+  background: var(--m-surface);
+  color: var(--m-text);
+  transition: border-color .2s var(--m-ease), box-shadow .2s var(--m-ease);
+  box-sizing: border-box;
+}
+.search-box input:focus {
+  border-color: var(--m-accent);
+  box-shadow: 0 0 0 4px var(--m-accent-soft);
+}
+.search-box input::placeholder { color: var(--m-text-subtle); }
+
+
+
+/* Conversation list */
+.conversations-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 6px 10px 16px;
+  scrollbar-width: thin;
+}
+.conversations-list::-webkit-scrollbar { width: 8px; }
+.conversations-list::-webkit-scrollbar-thumb {
+  background: var(--m-border-strong);
+  border-radius: 8px;
+}
+
+.no-conversations {
+  padding: 30px 16px;
+  text-align: center;
+  color: var(--m-text-subtle);
+}
+
+.conversation-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 14px;
+  cursor: pointer;
+  margin: 4px 0;
+  transition: background .15s var(--m-ease), transform .15s var(--m-ease);
+  border: 1px solid transparent;
+  position: relative;
+}
+.conversation-item:hover {
+  background: var(--m-accent-soft);
+  border-color: var(--m-accent-ring);
+}
+.conversation-item.active {
+  background: linear-gradient(135deg, rgba(14,165,233,0.12), rgba(20,184,166,0.12));
+  border-color: var(--m-accent);
+  box-shadow: var(--m-shadow-sm);
+}
+.conversation-item.unread { background: rgba(14,165,233,0.06); }
+
+.conversation-avatar,
+.conversation-avatar-img {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(2,6,23,0.10);
+}
+.conversation-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--m-accent), var(--m-accent-3));
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.conversation-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.conversation-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.conversation-top h4 {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--m-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.conversation-time {
+  font-size: 0.72rem;
+  color: var(--m-text-subtle);
+  flex-shrink: 0;
+}
+.conversation-bottom {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.alumni-employment,
+.last-message {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--m-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+  min-width: 0;
+}
+
+/* Course pills with colors */
+.course-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  color: #fff;
+  background: #64748b;
+  box-shadow: 0 2px 6px rgba(2,6,23,0.15);
+  flex-shrink: 0;
+}
+.course-pill.course-bsit { background: linear-gradient(135deg, #ef4444, #b91c1c); }
+.course-pill.course-bsed,
+.course-pill.course-beed { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+.course-pill.course-bsba { background: linear-gradient(135deg, #f59e0b, #d97706); color: #1b1300; }
+
+.unread-badge {
+  background: #ef4444;
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+.restricted-badge {
+  background: #fee2e2;
+  color: #b91c1c;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.view-details-btn {
+  background: var(--m-surface);
+  color: var(--m-accent);
+  border: 1px solid var(--m-accent-ring);
+  padding: 6px 10px;
+  border-radius: 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .15s var(--m-ease);
+}
+.view-details-btn:hover {
+  background: var(--m-accent);
+  color: #fff;
+  border-color: var(--m-accent);
+}
+
+/* Dropdown menu */
+.actions-dropdown-container { position: relative; }
+.actions-dropdown-trigger {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: var(--m-text-muted);
+  padding: 6px 10px;
+  border-radius: 8px;
+  line-height: 1;
+}
+.actions-dropdown-trigger:hover { background: var(--m-surface-2); color: var(--m-text); }
+
+.actions-dropdown-menu {
+  position: absolute;
+  top: 110%;
+  right: 0;
+  background: var(--m-surface);
+  border: 1px solid var(--m-border);
+  border-radius: 12px;
+  box-shadow: var(--m-shadow-md);
+  min-width: 200px;
+  z-index: 50;
+  overflow: hidden;
+  animation: ddIn .15s var(--m-ease);
+}
+@keyframes ddIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+
+.dropdown-menu-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 0.88rem;
+  color: var(--m-text);
+  text-align: left;
+}
+.dropdown-menu-item:hover { background: var(--m-accent-soft); }
+.dropdown-menu-item.danger { color: #dc2626; }
+.dropdown-menu-item.danger:hover { background: #fee2e2; }
+.dropdown-icon { font-size: 1rem; }
+
+/* ============ Chat area ============ */
+.chat-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--m-surface);
+  min-width: 0;
+}
+
+.chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 22px;
+  background: var(--m-surface);
+  border-bottom: 1px solid var(--m-border);
+}
+.chat-header-info {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.chat-avatar,
+.chat-avatar-img {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 2px 8px rgba(2,6,23,0.1);
+}
+.chat-avatar {
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, var(--m-accent), var(--m-accent-3));
+  color: #fff; font-weight: 700;
+}
+.chat-header-info h3 {
+  margin: 0; font-size: 1rem; font-weight: 700; color: var(--m-text);
+}
+.alumni-email {
+  margin: 0; font-size: 0.78rem; color: var(--m-text-muted);
+}
+
+.restrict-btn {
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--m-border);
+  background: var(--m-surface);
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--m-text);
+  transition: all .15s var(--m-ease);
+}
+.restrict-btn:hover { background: #fef3c7; border-color: #f59e0b; color: #92400e; }
+.restrict-btn.restricted { background: #dcfce7; border-color: #22c55e; color: #166534; }
+
+.restricted-notice {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 22px;
+  background: #fef3c7;
+  color: #92400e;
+  border-bottom: 1px solid #fde68a;
+}
+.restricted-notice p { margin: 0; font-size: 0.85rem; }
+
+/* Messages */
+.messages-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+  background:
+    radial-gradient(800px 400px at 100% 0%, rgba(14,165,233,0.05), transparent 60%),
+    var(--m-surface-2);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.loading-messages,
+.no-messages {
+  margin: auto;
+  color: var(--m-text-subtle);
+  text-align: center;
+}
+
+.date-separator {
+  text-align: center;
+  margin: 14px 0 8px;
+}
+.date-separator span {
+  display: inline-block;
+  padding: 4px 12px;
+  background: var(--m-surface);
+  border: 1px solid var(--m-border);
+  border-radius: 999px;
+  font-size: 0.72rem;
+  color: var(--m-text-muted);
+  font-weight: 600;
+}
+
+.message-wrapper {
+  display: flex;
+  width: 100%;
+}
+.message-row {
+  display: flex;
+  max-width: 70%;
+}
+.message-row.admin-side { margin-left: auto; justify-content: flex-end; }
+.message-row.alumni-side { margin-right: auto; justify-content: flex-start; }
+
+.message-bubble {
+  padding: 10px 14px;
+  border-radius: 18px;
+  position: relative;
+  word-break: break-word;
+  box-shadow: var(--m-shadow-xs);
+  transition: transform .15s var(--m-ease);
+  cursor: pointer;
+}
+.message-bubble:hover { transform: translateY(-1px); }
+.message-bubble p { margin: 0; font-size: 0.92rem; line-height: 1.5; }
+
+.admin-bubble {
+  background: linear-gradient(135deg, var(--m-accent) 0%, var(--m-accent-2) 100%);
+  color: #fff;
+  border-bottom-right-radius: 6px;
+}
+.alumni-bubble {
+  background: var(--m-surface);
+  color: var(--m-text);
+  border: 1px solid var(--m-border);
+  border-bottom-left-radius: 6px;
+}
+.message-bubble.editing { box-shadow: 0 0 0 3px var(--m-accent-ring); }
+
+.edited-indicator {
+  font-size: 0.7rem;
+  font-style: italic;
+  opacity: 0.7;
+  margin-left: 6px;
+}
+
+.message-meta,
+.alumni-message-meta {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin-top: 4px;
+  font-size: 0.7rem;
+  opacity: 0.85;
+}
+
+.message-reactions {
+  display: flex;
+  gap: 4px;
+  margin-top: 6px;
+}
+.reaction-badge {
+  background: var(--m-surface);
+  border: 1px solid var(--m-border);
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: 0.85rem;
+  box-shadow: var(--m-shadow-xs);
+}
+
+/* Message image */
+.message-image-container {
+  position: relative;
+  cursor: pointer;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 6px;
+  max-width: 280px;
+}
+.message-image {
+  width: 100%;
+  display: block;
+  border-radius: 12px;
+}
+.message-image-error {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  padding: 14px;
+  background: var(--m-surface-2);
+  color: var(--m-text-muted);
+  font-size: 0.8rem;
+  gap: 4px;
+}
+.image-overlay {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.35);
+  opacity: 0;
+  transition: opacity .2s var(--m-ease);
+  font-size: 1.5rem;
+  color: #fff;
+}
+.message-image-container:hover .image-overlay { opacity: 1; }
+
+/* Input area */
+.message-input-form,
+.alumni-message-input-form {
+  border-top: 1px solid var(--m-border);
+  background: var(--m-surface);
+  padding: 12px 16px;
+}
+.message-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--m-surface-2);
+  border: 1px solid var(--m-border);
+  border-radius: 14px;
+  padding: 6px;
+  transition: border-color .2s var(--m-ease), box-shadow .2s var(--m-ease);
+}
+.message-input-wrapper:focus-within {
+  border-color: var(--m-accent);
+  box-shadow: 0 0 0 4px var(--m-accent-soft);
+}
+.image-upload-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 8px 10px;
+  border-radius: 10px;
+  color: var(--m-text-muted);
+}
+.image-upload-btn:hover { background: var(--m-accent-soft); color: var(--m-accent); }
+
+.alumni-message-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  padding: 8px 6px;
+  font-size: 0.92rem;
+  resize: none;
+  font-family: inherit;
+  color: var(--m-text);
+  max-height: 120px;
+  min-height: 36px;
+}
+.alumni-message-input::placeholder { color: var(--m-text-subtle); }
+
+.email-checkbox-container {
+  padding: 0 8px;
+  border-left: 1px solid var(--m-border);
+  display: flex; align-items: center;
+}
+.email-checkbox-label {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 0.75rem; color: var(--m-text-muted); cursor: pointer;
+}
+.email-checkbox-label input { accent-color: var(--m-accent); }
+
+.send-btn {
+  background: linear-gradient(135deg, var(--m-accent) 0%, var(--m-accent-2) 100%);
+  color: #fff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: transform .15s var(--m-ease), box-shadow .15s var(--m-ease);
+}
+.send-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px rgba(14,165,233,0.35);
+}
+.send-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+.image-preview {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 8px;
+}
+.image-preview img {
+  max-width: 140px;
+  max-height: 140px;
+  border-radius: 10px;
+  border: 1px solid var(--m-border);
+}
+.clear-image-btn {
+  position: absolute; top: -8px; right: -8px;
+  background: #ef4444; color: #fff;
+  border: none; border-radius: 50%;
+  width: 24px; height: 24px;
+  cursor: pointer; font-size: 0.8rem;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: var(--m-shadow-sm);
+}
+
+/* Empty chat state */
+.no-chat-selected {
+  margin: auto;
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--m-text-muted);
+  max-width: 420px;
+}
+.no-chat-icon {
+  font-size: 3rem;
+  margin-bottom: 12px;
+  filter: drop-shadow(0 8px 24px rgba(14,165,233,0.25));
+}
+.no-chat-selected h3 { margin: 0 0 6px; font-weight: 600; color: var(--m-text); }
+.no-chat-selected p { margin: 0; font-size: 0.9rem; }
+
+/* ============ Alumni-side full screen view ============ */
+/* ============ Alumni-side full screen view ============ */
+.alumni-messages-container {
+  display: flex;
+  flex-direction: column;
+  /* Fit viewport exactly: account for top chrome (100px) AND the 20px*2 margin */
+  height: calc(100vh - 140px);
+  height: calc(100dvh - 140px);
+  max-height: calc(100dvh - 140px);
+  margin: 20px;
+  background: var(--m-surface);
+  border-radius: var(--m-radius-xl);
+  overflow: hidden;            /* container itself never scrolls */
+  box-shadow: var(--m-shadow-md);
+  border: 1px solid var(--m-border);
+  min-height: 0;               /* allow flex children to shrink */
+}
+
+/* Header / notices stay fixed in the column */
+.alumni-messages-header,
+.alumni-error-notice,
+.restriction-notice {
+  flex: 0 0 auto;
+}
+
+/* Only the messages area scrolls */
+.alumni-messages-area {
+  flex: 1 1 auto;
+  min-height: 0;               /* CRITICAL for inner overflow inside flex */
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+
+.alumni-messages-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 24px;
+  background: linear-gradient(135deg, #0b1220 0%, var(--m-accent) 100%);
+  color: #fff;
+}
+.alumni-header-left { display: flex; align-items: center; gap: 14px; }
+.admin-header-avatar {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255,255,255,0.4);
+}
+
+.alumni-header-info h2 {
+  color: #ffffff !important;
+}
+
+.alumni-header-info p {
+  color: #ffffff !important;
+}
+
+.alumni-header-info h2 {
+  margin: 0; font-size: 1rem; font-weight: 700;
+}
+.admin-status {
+  display: inline-block;
+  margin-top: 2px;
+  padding: 2px 8px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  background: rgba(255,255,255,0.18);
+  border-radius: 999px;
+}
+.alumni-unread-badge {
+  background: #ef4444; color: #fff;
+  padding: 4px 10px; border-radius: 999px;
+  font-size: 0.78rem; font-weight: 700;
+  box-shadow: 0 6px 18px rgba(239,68,68,0.35);
+}
+
+.alumni-error-notice,
+.restriction-notice {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 24px;
+  background: #fef3c7;
+  color: #92400e;
+  border-bottom: 1px solid #fde68a;
+}
+.alumni-error-notice p, .restriction-notice p { margin: 0; flex: 1; font-size: 0.85rem; }
+.error-dismiss { background: transparent; border: none; cursor: pointer; font-size: 1rem; color: inherit; }
+
+.alumni-messages-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+  background:
+    radial-gradient(800px 400px at 0% 0%, rgba(20,184,166,0.06), transparent 60%),
+    var(--m-surface-2);
+}
+.alumni-loading,
+.no-alumni-messages {
+  text-align: center;
+  padding: 40px 16px;
+  color: var(--m-text-muted);
+}
+.loading-spinner {
+  width: 36px; height: 36px;
+  border: 3px solid var(--m-border);
+  border-top-color: var(--m-accent);
+  border-radius: 50%;
+  margin: 0 auto 12px;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.no-messages-icon { font-size: 2.5rem; margin-bottom: 8px; }
+
+.alumni-message-wrapper {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+.alumni-message-wrapper.right { align-items: flex-end; }
+.alumni-message-wrapper.left { align-items: flex-start; }
+.alumni-message-wrapper.optimistic { opacity: 0.65; }
+
+
+
+.alumni-message-sender-header {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 4px;
+  font-size: 0.75rem;
+  color: var(--m-text-muted);
+}
+.alumni-avatar {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.alumni-message {
+  max-width: 70%;
+  padding: 10px 14px;
+  border-radius: 18px;
+  box-shadow: var(--m-shadow-xs);
+  cursor: pointer;
+}
+.alumni-message p { margin: 0; font-size: 0.92rem; line-height: 1.5; }
+.alumni-message.sent {
+  background: linear-gradient(135deg, var(--m-accent) 0%, var(--m-accent-2) 100%);
+  color: #fff;
+  border-bottom-right-radius: 6px;
+}
+.alumni-message.received {
+  background: var(--m-surface);
+  color: var(--m-text);
+  border: 1px solid var(--m-border);
+  border-bottom-left-radius: 6px;
+}
+
+/* ============ Action / delete modals ============ */
+.modal-overlay,
+.message-action-modal-overlay,
+.delete-confirm-modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(2, 6, 23, 0.55);
+  backdrop-filter: blur(6px);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1000;
+  animation: fadeIn .15s var(--m-ease);
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.modal-content,
+.message-action-modal,
+.delete-confirm-modal {
+  background: var(--m-surface);
+  border-radius: var(--m-radius-lg);
+  box-shadow: var(--m-shadow-lg);
+  max-width: 440px;
+  width: calc(100% - 32px);
+  padding: 22px;
+  animation: popIn .18s var(--m-ease);
+}
+@keyframes popIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+.modal-header {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 12px;
+}
+.modal-icon { font-size: 1.4rem; }
+.modal-header h3 { margin: 0; font-size: 1.1rem; font-weight: 700; color: var(--m-text); }
+.modal-body p { margin: 0 0 8px; font-size: 0.92rem; color: var(--m-text); }
+.modal-warning { color: #dc2626 !important; font-size: 0.85rem !important; }
+.modal-info { color: var(--m-text-muted) !important; font-size: 0.85rem !important; }
+
+.modal-actions {
+  display: flex; justify-content: flex-end; gap: 10px;
+  margin-top: 18px;
+}
+.modal-btn {
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: 1px solid var(--m-border);
+  background: var(--m-surface);
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.88rem;
+  transition: all .15s var(--m-ease);
+}
+.modal-btn.cancel { color: var(--m-text-muted); }
+.modal-btn.cancel:hover { background: var(--m-surface-2); }
+.modal-btn.danger { background: #ef4444; color: #fff; border-color: #ef4444; }
+.modal-btn.danger:hover { background: #dc2626; }
+.modal-btn.warning { background: #f59e0b; color: #fff; border-color: #f59e0b; }
+.modal-btn.success { background: #22c55e; color: #fff; border-color: #22c55e; }
+
+/* Reaction picker */
+.message-action-modal {
+  max-width: 360px;
+  padding: 16px;
+}
+.message-action-emoji-row {
+  display: flex;
+  gap: 6px;
+  padding: 6px;
+  background: var(--m-surface-2);
+  border-radius: 12px;
+  margin-bottom: 10px;
+  justify-content: space-between;
+}
+.message-action-emoji-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.4rem;
+  padding: 8px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform .15s var(--m-ease), background .15s var(--m-ease);
+}
+.message-action-emoji-btn:hover { transform: scale(1.2); background: var(--m-surface); }
+
+.message-action-buttons {
+  display: flex; flex-direction: column; gap: 6px;
+  margin-bottom: 8px;
+}
+.message-action-btn {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px;
+  border: 1px solid var(--m-border);
+  background: var(--m-surface);
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--m-text);
+  transition: all .15s var(--m-ease);
+}
+.message-action-btn:hover { background: var(--m-accent-soft); }
+.message-action-btn.delete { color: #dc2626; }
+.message-action-btn.delete:hover { background: #fee2e2; }
+
+.message-action-cancel {
+  width: 100%;
+  padding: 10px;
+  background: var(--m-surface-2);
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  color: var(--m-text);
+}
+
+/* Delete confirm modal (black-styled by user request) */
+.delete-confirm-modal {
+  text-align: center;
+  background: #0b1220;
+  color: #fff;
+}
+.delete-confirm-icon {
+  display: flex; justify-content: center;
+  margin-bottom: 10px;
+}
+.delete-confirm-title {
+  margin: 0 0 6px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #fff;
+}
+.delete-confirm-text {
+  margin: 0 0 14px;
+  font-size: 0.88rem;
+  color: rgba(255,255,255,0.75);
+}
+.delete-confirm-preview {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 14px;
+}
+.delete-confirm-preview .preview-text {
+  margin: 0; font-size: 0.85rem; color: rgba(255,255,255,0.85);
+  font-style: italic;
+}
+.delete-confirm-actions { display: flex; gap: 10px; }
+.delete-confirm-btn {
+  flex: 1;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all .15s var(--m-ease);
+}
+.delete-confirm-btn.cancel {
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+}
+.delete-confirm-btn.cancel:hover { background: rgba(255,255,255,0.18); }
+.delete-confirm-btn.delete {
+  background: #ef4444;
+  color: #fff;
+}
+.delete-confirm-btn.delete:hover { background: #dc2626; }
+.delete-loading { display: inline-flex; gap: 4px; }
+.delete-loading .dot {
+  width: 6px; height: 6px;
+  background: #fff;
+  border-radius: 50%;
+  animation: bounce 1.2s infinite ease-in-out;
+}
+.delete-loading .dot:nth-child(2) { animation-delay: .15s; }
+.delete-loading .dot:nth-child(3) { animation-delay: .3s; }
+@keyframes bounce { 0%,80%,100%{transform:scale(0.6);opacity:.5;} 40%{transform:scale(1);opacity:1;} }
+
+/* Inline edit (Messenger style) */
+.inline-edit-container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 220px;
+}
+.inline-edit-input {
+  width: 100%;
+  background: rgba(255,255,255,0.18);
+  border: 1px solid rgba(255,255,255,0.35);
+  color: #fff;
+  border-radius: 10px;
+  padding: 8px 10px;
+  font-size: 0.9rem;
+  font-family: inherit;
+  resize: vertical;
+  outline: none;
+}
+.alumni-bubble .inline-edit-input {
+  background: var(--m-surface);
+  color: var(--m-text);
+  border-color: var(--m-border);
+}
+.inline-edit-actions { display: flex; gap: 6px; justify-content: flex-end; }
+.inline-edit-btn {
+  border: none; cursor: pointer;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+.inline-edit-btn.cancel { background: rgba(0,0,0,0.15); color: inherit; }
+.inline-edit-btn.save { background: #22c55e; color: #fff; }
+.inline-edit-hint { font-size: 0.7rem; opacity: 0.75; }
+
+/* Lightbox */
+.image-lightbox {
+  position: fixed; inset: 0;
+  background: rgba(2,6,23,0.85);
+  backdrop-filter: blur(8px);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 999999;
+}
+.image-lightbox img {
+  max-width: 90vw;
+  max-height: 90vh;
+  border-radius: 14px;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+}
+.lightbox-actions {
+  position: absolute; top: 18px; right: 24px;
+  display: flex; gap: 8px;
+}
+.lightbox-close,
+.lightbox-download {
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.2);
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  font-size: 1.4rem;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .15s var(--m-ease);
+}
+.lightbox-close:hover, .lightbox-download:hover { background: rgba(255,255,255,0.25); }
+
+/* ============ Responsive ============ */
+@media (max-width: 900px) {
+  .messages-layout { flex-direction: column; height: auto; }
+  .conversations-sidebar { width: 100%; min-width: 0; max-height: 50vh; }
+  .chat-area { min-height: 60vh; }
+  .message-row { max-width: 90%; }
+}
+
+/* ============ BLACK THEME (white text everywhere) ============ */
+[data-theme="black"] .messages-container,
+[data-theme="black"] .alumni-messages-container {
+  --m-bg: #0a0c12;
+  --m-surface: #121620;
+  --m-surface-2: #1a1f2b;
+  --m-border: #242a36;
+  --m-border-strong: #303746;
+  --m-text: #ffffff;
+  --m-text-muted: #c7cfdc;
+  --m-text-subtle: #8a93a3;
+  --m-shadow-xs: 0 1px 2px rgba(0,0,0,0.5);
+  --m-shadow-sm: 0 4px 14px rgba(0,0,0,0.45);
+  --m-shadow-md: 0 14px 34px rgba(0,0,0,0.55);
+  --m-shadow-lg: 0 28px 60px rgba(0,0,0,0.65);
+}
+
+/* Force white font in black theme */
+[data-theme="black"] .messages-container,
+[data-theme="black"] .messages-container *,
+[data-theme="black"] .alumni-messages-container,
+[data-theme="black"] .alumni-messages-container *,
+[data-theme="black"] .modal-content,
+[data-theme="black"] .modal-content *,
+[data-theme="black"] .message-action-modal,
+[data-theme="black"] .message-action-modal * {
+  color: #ffffff;
+}
+
+/* Restore intentional accent colors in dark mode */
+[data-theme="black"] .dropdown-menu-item.danger,
+[data-theme="black"] .dropdown-menu-item.danger *,
+[data-theme="black"] .message-action-btn.delete,
+[data-theme="black"] .message-action-btn.delete *,
+[data-theme="black"] .modal-warning,
+[data-theme="black"] .restrict-btn { color: #fca5a5 !important; }
+
+[data-theme="black"] .restrict-btn.restricted { color: #86efac !important; }
+
+[data-theme="black"] .modal-btn.danger,
+[data-theme="black"] .modal-btn.danger *,
+[data-theme="black"] .delete-confirm-btn.delete,
+[data-theme="black"] .delete-confirm-btn.delete *,
+[data-theme="black"] .send-btn,
+[data-theme="black"] .send-btn *,
+[data-theme="black"] .unread-badge,
+[data-theme="black"] .total-unread-badge,
+[data-theme="black"] .alumni-unread-badge,
+[data-theme="black"] .course-pill,
+[data-theme="black"] .course-pill *,
+[data-theme="black"] .admin-status,
+[data-theme="black"] .conversations-header h2,
+[data-theme="black"] .conversations-header *,
+[data-theme="black"] .tab-btn.active,
+[data-theme="black"] .admin-bubble,
+[data-theme="black"] .alumni-header-info h2,
+[data-theme="black"] .chat-header-info h3,
+[data-theme="black"] .chat-header-info p,
+[data-theme="black"] .admin-bubble *,
+[data-theme="black"] .alumni-message.sent,
+[data-theme="black"] .alumni-message.sent *,
+[data-theme="black"] .alumni-messages-header,
+[data-theme="black"] .alumni-messages-header * { color: #ffffff !important; }
+
+[data-theme="black"] .course-pill.course-bsba { color: #1b1300 !important; }
+[data-theme="black"] .course-pill.course-bsba * { color: #1b1300 !important; }
+
+[data-theme="black"] .search-box input,
+[data-theme="black"] .alumni-message-input,
+[data-theme="black"] .inline-edit-input {
+  color: #ffffff !important;
+  background-color: var(--m-surface-2) !important;
+  border-color: var(--m-border) !important;
+}
+[data-theme="black"] .search-box input::placeholder,
+[data-theme="black"] .alumni-message-input::placeholder { color: #8a93a3 !important; }
+
+[data-theme="black"] .message-input-wrapper {
+  background: var(--m-surface-2);
+  border-color: var(--m-border);
+}
+[data-theme="black"] .alumni-bubble {
+  background: var(--m-surface-2);
+  border-color: var(--m-border);
+}
+[data-theme="black"] .reaction-badge {
+  background: var(--m-surface);
+  border-color: var(--m-border);
+}
+[data-theme="black"] .date-separator span {
+  background: var(--m-surface);
+  border-color: var(--m-border);
+  color: #c7cfdc;
+}
+
+[data-theme="black"] .restricted-notice,
+[data-theme="black"] .alumni-error-notice {
+  background: #2a1f0a;
+  border-bottom-color: #4a3a14;
+  color: #fde68a;
+}
+[data-theme="black"] .restricted-notice p,
+[data-theme="black"] .alumni-error-notice p { color: #fde68a !important; }
+
+[data-theme="black"] .restricted-badge {
+  background: #3b1212; color: #fca5a5;
+}
+
+[data-theme="black"] .modal-content {
+  background: var(--m-surface);
+  border: 1px solid var(--m-border);
+}
+[data-theme="black"] .modal-btn.cancel {
+  background: var(--m-surface-2);
+  border-color: var(--m-border);
+}
+/* ==============================================
+   PATCH — Employment colors, white sidebar text
+   in dark theme, and FAQ-style modal polish.
+   ============================================== */
+
+/* ---------- Employment status colors ---------- */
+.alumni-employment {
+  font-weight: 700 !important;
+}
+.alumni-employment.employment-emp     { color: #16a34a !important; }   /* Employed = green */
+.alumni-employment.employment-under   { color: #ea580c !important; }   /* Underemployed = orange */
+.alumni-employment.employment-unemp   { color: #dc2626 !important; }   /* Unemployed = red */
+
+[data-theme="black"] .alumni-employment.employment-emp   { color: #4ade80 !important; }
+[data-theme="black"] .alumni-employment.employment-under { color: #fb923c !important; }
+[data-theme="black"] .alumni-employment.employment-unemp { color: #f87171 !important; }
+
+/* ---------- BLACK THEME: force white for "All Alumni" / "Conversations" tabs + sidebar text ---------- */
+[data-theme="black"] .conversations-sidebar,
+[data-theme="black"] .conversations-sidebar *,
+[data-theme="black"] .admin-tabs,
+[data-theme="black"] .admin-tabs *,
+[data-theme="black"] .tab-btn,
+[data-theme="black"] .tab-btn *,
+[data-theme="black"] .conversation-item h4,
+[data-theme="black"] .conversation-info h4,
+[data-theme="black"] .conversation-top h4,
+[data-theme="black"] .last-message,
+[data-theme="black"] .conversation-time,
+[data-theme="black"] .no-conversations,
+[data-theme="black"] .no-conversations *,
+[data-theme="black"] .search-box,
+[data-theme="black"] .search-box * {
+  color: #ffffff !important;
+}
+
+[data-theme="black"] .tab-btn {
+  background: #1a1f2b !important;
+  border-color: #2a3140 !important;
+}
+[data-theme="black"] .tab-btn:hover {
+  border-color: #0ea5e9 !important;
+  background: rgba(14,165,233,0.10) !important;
+}
+[data-theme="black"] .tab-btn.active {
+  background: linear-gradient(135deg, #0ea5e9 0%, #14b8a6 100%) !important;
+  border-color: transparent !important;
+  color: #ffffff !important;
+}
+
+/* Keep employment colors visible even with the wildcard white override */
+[data-theme="black"] .alumni-employment.employment-emp,
+[data-theme="black"] .alumni-employment.employment-emp *   { color: #4ade80 !important; }
+[data-theme="black"] .alumni-employment.employment-under,
+[data-theme="black"] .alumni-employment.employment-under * { color: #fb923c !important; }
+[data-theme="black"] .alumni-employment.employment-unemp,
+[data-theme="black"] .alumni-employment.employment-unemp * { color: #f87171 !important; }
+
+/* ---------- FAQ-style modern modal polish ---------- */
+
+/* Overlay: deeper blur + tinted glass */
+.modal-overlay,
+.message-action-modal-overlay,
+.delete-confirm-modal-overlay {
+  background: radial-gradient(800px 400px at 0% 0%, rgba(14,165,233,0.18), transparent 60%),
+              radial-gradient(800px 400px at 100% 100%, rgba(99,102,241,0.18), transparent 60%),
+              rgba(2,6,23,0.62) !important;
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+}
+
+/* Card: gradient border, soft glow, larger radius */
+.modal-content,
+.message-action-modal {
+  background:
+    linear-gradient(var(--m-surface), var(--m-surface)) padding-box,
+    linear-gradient(135deg, rgba(14,165,233,0.55), rgba(99,102,241,0.45), rgba(20,184,166,0.55)) border-box !important;
+  border: 1px solid transparent !important;
+  border-radius: 22px !important;
+  box-shadow: 0 28px 60px rgba(2,6,23,0.35), 0 0 0 1px rgba(14,165,233,0.10) inset !important;
+  padding: 26px !important;
+  overflow: hidden;
+  position: relative;
+}
+.modal-content::before,
+.message-action-modal::before {
+  content: "";
+  position: absolute;
+  inset: -40% -20% auto auto;
+  width: 280px; height: 280px;
+  background: radial-gradient(closest-side, rgba(14,165,233,0.22), transparent 70%);
+  filter: blur(20px);
+  pointer-events: none;
+  z-index: 0;
+}
+.modal-content > *,
+.message-action-modal > * { position: relative; z-index: 1; }
+
+/* Modal header */
+.modal-header {
+  padding-bottom: 12px;
+  margin-bottom: 14px !important;
+  border-bottom: 1px dashed var(--m-border);
+}
+.modal-header h3 {
+  background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 50%, #14b8a6 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.01em;
+}
+.modal-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px; height: 38px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(14,165,233,0.18), rgba(99,102,241,0.18));
+  border: 1px solid rgba(14,165,233,0.30);
+  box-shadow: 0 6px 16px rgba(14,165,233,0.18);
+  font-size: 1.1rem !important;
+}
+
+/* Modal buttons */
+.modal-btn {
+  border-radius: 12px !important;
+  padding: 11px 20px !important;
+  letter-spacing: 0.01em;
+  transition: transform .15s var(--m-ease), box-shadow .15s var(--m-ease), background .15s;
+}
+.modal-btn:hover { transform: translateY(-1px); }
+.modal-btn.cancel {
+  background: var(--m-surface) !important;
+  border: 1px solid var(--m-border-strong) !important;
+}
+.modal-btn.danger {
+  background: linear-gradient(135deg, #ef4444, #b91c1c) !important;
+  border-color: transparent !important;
+  box-shadow: 0 10px 22px rgba(239,68,68,0.35) !important;
+}
+.modal-btn.warning {
+  background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+  border-color: transparent !important;
+  box-shadow: 0 10px 22px rgba(245,158,11,0.35) !important;
+}
+.modal-btn.success {
+  background: linear-gradient(135deg, #22c55e, #15803d) !important;
+  border-color: transparent !important;
+  box-shadow: 0 10px 22px rgba(34,197,94,0.35) !important;
+}
+
+/* Reaction picker modal */
+.message-action-emoji-row {
+  background: linear-gradient(135deg, rgba(14,165,233,0.10), rgba(20,184,166,0.10)) !important;
+  border: 1px solid var(--m-accent-ring);
+  border-radius: 14px !important;
+  padding: 8px !important;
+}
+.message-action-btn {
+  border-radius: 12px !important;
+  font-weight: 700 !important;
+  transition: transform .15s var(--m-ease), background .15s;
+}
+.message-action-btn:hover { transform: translateY(-1px); }
+.message-action-btn.edit:hover {
+  background: linear-gradient(135deg, rgba(14,165,233,0.14), rgba(99,102,241,0.14)) !important;
+  border-color: var(--m-accent) !important;
+  color: #0369a1 !important;
+}
+.message-action-cancel {
+  border-radius: 12px !important;
+  padding: 11px !important;
+  background: var(--m-surface) !important;
+  border: 1px solid var(--m-border-strong) !important;
+  transition: background .15s;
+}
+.message-action-cancel:hover { background: var(--m-surface-2) !important; }
+
+/* Delete-confirm "black" modal: cyan-glass gradient frame */
+.delete-confirm-modal {
+  background: linear-gradient(180deg, #0b1220 0%, #0f1a2e 100%) !important;
+  border: 1px solid rgba(14,165,233,0.35) !important;
+  border-radius: 22px !important;
+  box-shadow: 0 30px 70px rgba(2,6,23,0.65),
+              0 0 0 1px rgba(14,165,233,0.08) inset,
+              0 0 60px rgba(14,165,233,0.15) !important;
+  padding: 26px !important;
+  position: relative;
+  overflow: hidden;
+}
+.delete-confirm-modal::before {
+  content: "";
+  position: absolute;
+  inset: -40% -20% auto auto;
+  width: 320px; height: 320px;
+  background: radial-gradient(closest-side, rgba(14,165,233,0.30), transparent 70%);
+  filter: blur(22px);
+  pointer-events: none;
+}
+.delete-confirm-modal > * { position: relative; z-index: 1; }
+
+.delete-confirm-title {
+  background: linear-gradient(135deg, #38bdf8 0%, #a5b4fc 50%, #5eead4 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent !important;
+  letter-spacing: -0.01em;
+}
+.delete-confirm-preview {
+  background: rgba(255,255,255,0.05) !important;
+  border: 1px solid rgba(255,255,255,0.12) !important;
+  border-radius: 12px !important;
+}
+.delete-confirm-btn {
+  border-radius: 12px !important;
+  padding: 12px 14px !important;
+  letter-spacing: 0.02em;
+  transition: transform .15s var(--m-ease), box-shadow .15s var(--m-ease);
+}
+.delete-confirm-btn:hover { transform: translateY(-1px); }
+.delete-confirm-btn.delete {
+  background: linear-gradient(135deg, #ef4444, #b91c1c) !important;
+  box-shadow: 0 12px 26px rgba(239,68,68,0.45) !important;
+}
+.delete-confirm-btn.cancel {
+  background: rgba(255,255,255,0.10) !important;
+  border: 1px solid rgba(255,255,255,0.18) !important;
+}
+
+/* ---------- Sidebar header polish (FAQ vibe) ---------- */
+.conversations-header {
+  background:
+    linear-gradient(135deg, #0b1220 0%, #0ea5e9 60%, #14b8a6 100%) !important;
+}
+.conversations-header h2 {
+  background: linear-gradient(135deg, #ffffff, #e0f2fe);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent !important;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.15);
+}
+
+/* Subtle gradient border on the conversations list cards on hover */
+.conversation-item:hover {
+  background: linear-gradient(135deg, rgba(14,165,233,0.10), rgba(20,184,166,0.10)) !important;
+  border-color: var(--m-accent) !important;
+}
+
+/* Make sure send button matches FAQ primary gradient */
+.send-btn {
+  background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 60%, #14b8a6 100%) !important;
+  box-shadow: 0 10px 22px rgba(14,165,233,0.35) !important;
+}
+/* =====================================================================
+   AdminAlumniMessages.css — FINAL OVERRIDE BLOCK
+   Append this to the very END of AdminAlumniMessages.css.
+   It supersedes every earlier .bulk-* / .tab-btn / .conversation-item
+   rule and fixes:
+     1. Oversized bulk-action panel
+     2. Overlapping "Conversations (2)" tab badge
+     3. Conversation item collisions at narrow widths
+     4. Sidebar overflow at 320–1200px
+     5. Color-coded, equal-sized bulk buttons
+     6. Production breakpoints @1200/992/768/576
+   ===================================================================== */
+
+/* ---------- Color tokens for bulk actions ---------- */
+.messages-container,
+.alumni-messages-container {
+  --bulk-primary:   #0ea5e9;   /* Read   - cyan   */
+  --bulk-archive:   #475569;   /* Archive- slate  */
+  --bulk-warn:      #f59e0b;   /* Restrict-orange */
+  --bulk-danger:    #ef4444;   /* Delete - red    */
+  --bulk-ghost:     #64748b;   /* Cancel - neutral*/
+}
+
+/* ===================================================================
+   1. SIDEBAR — never overflow, scale 320 → desktop
+   =================================================================== */
+.conversations-sidebar {
+  width: clamp(280px, 28vw, 360px) !important;
+  min-width: 280px !important;
+  max-width: 100%;
+  overflow: hidden !important;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===================================================================
+   2. TABS — icon left, label center, badge right, no overlap
+   =================================================================== */
+.admin-tabs {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  gap: 6px !important;
+  padding: 10px 12px !important;
+  background: transparent;
+}
+
+.admin-tabs .tab-btn {
+  flex: 1 1 0 !important;
+  min-width: 0 !important;          /* allow shrink */
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  height: 36px !important;
+  padding: 0 8px !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  line-height: 1 !important;
+  border-radius: 10px !important;
+  border: 1px solid var(--m-border) !important;
+  background: var(--m-surface) !important;
+  color: var(--m-text-muted) !important;
+  cursor: pointer;
+  transition: transform .15s var(--m-ease),
+              border-color .2s var(--m-ease),
+              color .2s var(--m-ease),
+              background .2s var(--m-ease);
+  overflow: hidden;
+}
+
+.admin-tabs .tab-btn:hover {
+  transform: translateY(-1px);
+  border-color: var(--m-accent-ring) !important;
+  color: var(--m-text) !important;
+}
+
+.admin-tabs .tab-btn.active {
+  background: linear-gradient(135deg, var(--m-accent), var(--m-accent-2)) !important;
+  color: #fff !important;
+  border-color: transparent !important;
+  box-shadow: 0 6px 16px rgba(14,165,233,.25);
+}
+
+.tab-btn__icon  { flex: 0 0 auto; font-size: 13px; line-height: 1; }
+.tab-btn__label {
+  flex: 1 1 auto;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+}
+.tab-btn__count {
+  flex: 0 0 auto;
+  min-width: 20px;
+  height: 18px;
+  padding: 0 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10.5px;
+  font-weight: 700;
+  line-height: 1;
+  border-radius: 999px;
+  background: rgba(2,6,23,.08);
+  color: inherit;
+}
+.tab-btn.active .tab-btn__count {
+  background: rgba(255,255,255,.25);
+  color: #fff;
+}
+
+/* ===================================================================
+   3. SELECT TOGGLE (entry pill before bulk mode)
+   =================================================================== */
+.select-toggle {
+  align-self: flex-start;
+  margin: 6px 12px 0 !important;
+  height: 30px;
+  padding: 0 12px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 999px;
+  border: 1px solid var(--m-border);
+  background: var(--m-surface);
+  color: var(--m-text-muted);
+  cursor: pointer;
+  transition: all .2s var(--m-ease);
+}
+.select-toggle:hover {
+  color: var(--m-text);
+  border-color: var(--m-accent);
+  transform: translateY(-1px);
+}
+
+/* ===================================================================
+   4. BULK TOOLBAR — compact, flex-wrap, fits sidebar width
+   =================================================================== */
+.bulk-toolbar {
+  flex: 0 0 auto;
+  margin: 8px 12px 0 !important;
+  padding: 10px !important;
+  border-radius: 14px !important;
+  background: linear-gradient(135deg,
+    color-mix(in oklab, var(--m-accent) 10%, var(--m-surface)),
+    color-mix(in oklab, var(--m-accent-2) 8%, var(--m-surface))) !important;
+  border: 1px solid var(--m-accent-ring) !important;
+  box-shadow: var(--m-shadow-sm);
+  display: none !important;          /* hidden by default */
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+.bulk-toolbar.is-active {
+  display: block !important;
+  animation: bulkToolbarIn .2s var(--m-ease);
+}
+@keyframes bulkToolbarIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.bulk-toolbar__row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+}
+
+.bulk-toolbar__count {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;
+  padding: 4px 10px;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: .3px;
+  text-transform: uppercase;
+  color: var(--m-text);
+  background: var(--m-surface);
+  border: 1px solid var(--m-border);
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.bulk-toolbar__count-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--m-accent);
+  box-shadow: 0 0 0 3px var(--m-accent-soft);
+}
+
+.bulk-toolbar__actions {
+  display: flex !important;
+  flex-wrap: wrap !important;        /* KEY: wraps to fit sidebar */
+  gap: 6px !important;
+  width: 100%;
+  min-width: 0;
+}
+
+/* ---------- Buttons (equal height, equal radius, color-coded) ---------- */
+.bulk-toolbar .bulk-btn {
+  all: unset;
+  box-sizing: border-box;
+  flex: 1 1 auto;                    /* equal share, wrap when tight */
+  min-width: 64px;                   /* never crushes text */
+  max-width: 100%;
+  height: 32px;
+  padding: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+  border-radius: 999px;
+  text-align: center;
+  white-space: nowrap;
+  cursor: pointer;
+  border: 1px solid transparent;
+  background: var(--m-surface);
+  color: var(--m-text);
+  transition: transform .15s var(--m-ease),
+              filter .2s var(--m-ease),
+              box-shadow .2s var(--m-ease),
+              opacity .2s var(--m-ease);
+  user-select: none;
+}
+.bulk-toolbar .bulk-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+  box-shadow: 0 4px 12px rgba(2,6,23,.12);
+}
+.bulk-toolbar .bulk-btn:active:not(:disabled) { transform: translateY(0); filter: brightness(.96); }
+.bulk-toolbar .bulk-btn:disabled { opacity: .5; cursor: not-allowed; }
+.bulk-toolbar .bulk-btn:focus-visible {
+  outline: 2px solid var(--m-accent);
+  outline-offset: 2px;
+}
+
+/* base = Archive (slate). Variants override below for both themes. */
+.bulk-toolbar .bulk-btn                   { background: var(--bulk-archive); color: #fff; border-color: transparent; }
+.bulk-toolbar .bulk-btn.bulk-btn--primary { background: var(--bulk-primary); color: #fff; border-color: transparent; }
+.bulk-toolbar .bulk-btn.bulk-btn--warn    { background: var(--bulk-warn);    color: #1a1206; border-color: transparent; }
+.bulk-toolbar .bulk-btn.bulk-btn--danger  { background: var(--bulk-danger);  color: #fff; border-color: transparent; }
+.bulk-toolbar .bulk-btn.bulk-btn--ghost   {
+  background: var(--m-surface);
+  color: var(--m-text);
+  border: 1px solid var(--m-border-strong);
+}
+
+/* ===================================================================
+   5. CONVERSATION ITEM — checkbox / avatar / info / actions
+   =================================================================== */
+.conversation-item {
+  display: flex !important;
+  align-items: center;
+  gap: 10px !important;
+  padding: 10px 12px !important;
+  min-width: 0;
+  border-radius: 14px;
+}
+.conversation-item > .bulk-select-checkbox { flex: 0 0 auto; margin: 0; }
+.conversation-item > .conversation-avatar,
+.conversation-item > .conversation-avatar-img {
+  flex: 0 0 auto;                    /* never shrink avatar */
+  width: 42px; height: 42px;
+}
+.conversation-item > .conversation-info {
+  flex: 1 1 auto;
+  min-width: 0;                      /* enables ellipsis */
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: hidden;
+}
+.conversation-item .conversation-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 0;
+}
+.conversation-item .conversation-top h4 {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+  font-size: 13.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.conversation-item .conversation-time {
+  flex: 0 0 auto;
+  font-size: 11px;
+  color: var(--m-text-subtle);
+}
+.conversation-item .conversation-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 6px;
+  min-width: 0;
+}
+.conversation-item .last-message {
+  flex: 1 1 100%;
+  min-width: 0;
+  margin: 0;
+  font-size: 12px;
+  color: var(--m-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.conversation-item .actions-dropdown-container {
+  flex: 0 0 auto;
+  margin-left: auto;
+  align-self: center;
+}
+
+
+
+/* ===================================================================
+   7. DARK THEME parity for new controls
+   =================================================================== */
+[data-theme="black"] .admin-tabs .tab-btn {
+  background: rgba(255,255,255,.04) !important;
+  border-color: rgba(255,255,255,.10) !important;
+  color: #cbd5e1 !important;
+}
+[data-theme="black"] .admin-tabs .tab-btn.active {
+  background: linear-gradient(135deg, var(--m-accent), var(--m-accent-2)) !important;
+  color: #fff !important;
+}
+[data-theme="black"] .tab-btn__count        { background: rgba(255,255,255,.10); color: #fff; }
+[data-theme="black"] .tab-btn.active .tab-btn__count { background: rgba(255,255,255,.25); }
+
+[data-theme="black"] .select-toggle {
+  background: rgba(255,255,255,.04) !important;
+  border-color: rgba(255,255,255,.10) !important;
+  color: #cbd5e1 !important;
+}
+
+[data-theme="black"] .bulk-toolbar {
+  background: linear-gradient(135deg, rgba(14,165,233,.10), rgba(20,184,166,.08)) !important;
+  border-color: rgba(14,165,233,.35) !important;
+}
+[data-theme="black"] .bulk-toolbar__count {
+  background: rgba(255,255,255,.06) !important;
+  border-color: rgba(255,255,255,.12) !important;
+  color: #fff !important;
+}
+[data-theme="black"] .bulk-toolbar .bulk-btn--cancel {
+  background: rgba(255,255,255,.04) !important;
+  color: #fff !important;
+  border-color: rgba(255,255,255,.18) !important;
+}
+
+/* ===================================================================
+   8. KILL legacy oversized rules (defensive — overrides anything earlier)
+   =================================================================== */
+
+
+.bulk-toggle-btn:hover {
+  background: var(--m-accent-soft);
+  border-color: var(--m-accent);
+  color: var(--m-accent);
+  transform: translateY(-1px);
+}
+.bulk-toggle-btn:active { transform: translateY(0); }
+
+.bulk-actions-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 10px;
+  background: var(--m-accent-soft);
+  border: 1px solid var(--m-accent-ring);
+  border-radius: var(--m-radius-md);
+}
+
+.bulk-selected-count {
+  flex: 1 1 100%;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--m-accent);
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+
+.bulk-btn {
+  flex: 1 1 calc(50% - 4px);
+  min-width: 0;
+  padding: 9px 12px;
+  min-height: 38px;
+  border-radius: var(--m-radius-sm);
+  border: 1px solid var(--m-border-strong);
+  background: var(--m-surface);
+  color: var(--m-text);
+  font-size: clamp(12px, 1vw, 13px);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .18s var(--m-ease);
+  box-shadow: var(--m-shadow-xs);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.bulk-btn:hover { transform: translateY(-1px); box-shadow: var(--m-shadow-sm); }
+.bulk-btn:active { transform: translateY(0); }
+/* removed: legacy .bulk-btn.read/.archive/.restrict/.delete (JSX uses BEM --primary/--warn/--danger) */
+
+.bulk-select-checkbox {
+  width: 18px;
+  height: 18px;
+  margin-right: 10px;
+  accent-color: var(--m-accent);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.conversation-item.bulk-selected {
+  background: var(--m-accent-soft) !important;
+  box-shadow: inset 3px 0 0 var(--m-accent);
+}
+
+/* ============ Chat header actions ============ */
+.chat-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.chat-search-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--m-border);
+  background: var(--m-surface);
+  color: var(--m-text-muted);
+  cursor: pointer;
+  font-size: 16px;
+  transition: all .18s var(--m-ease);
+}
+.chat-search-toggle:hover {
+  background: var(--m-accent-soft);
+  border-color: var(--m-accent);
+  color: var(--m-accent);
+}
+.chat-search-toggle.active {
+  background: var(--m-accent);
+  border-color: var(--m-accent);
+  color: #fff;
+  box-shadow: 0 0 0 4px var(--m-accent-ring);
+}
+
+/* ============ In-conversation message search panel ============ */
+.message-search-panel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px clamp(10px, 1.5vw, 16px);
+  background: var(--m-surface);
+  border-bottom: 1px solid var(--m-border);
+  box-shadow: var(--m-shadow-xs);
+  animation: msPanelIn .22s var(--m-ease);
+  flex-wrap: nowrap;
+}
+@keyframes msPanelIn {
+  from { transform: translateY(-6px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+.message-search-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 9px 14px;
+  min-height: 38px;
+  border-radius: 999px;
+  border: 1px solid var(--m-border-strong);
+  background: var(--m-surface-2);
+  color: var(--m-text);
+  font-size: max(13px, 0.9rem); /* ≥16px on mobile prevents iOS zoom — see media query below */
+  outline: none;
+  transition: all .18s var(--m-ease);
+}
+.message-search-input:focus {
+  border-color: var(--m-accent);
+  background: var(--m-surface);
+  box-shadow: 0 0 0 4px var(--m-accent-ring);
+}
+
+.message-search-count {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--m-text-muted);
+  white-space: nowrap;
+  padding: 0 4px;
+  flex-shrink: 0;
+}
+
+.message-search-nav,
+.message-search-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  border-radius: 8px;
+  border: 1px solid var(--m-border);
+  background: var(--m-surface);
+  color: var(--m-text-muted);
+  cursor: pointer;
+  font-size: 14px;
+  transition: all .15s var(--m-ease);
+  flex-shrink: 0;
+}
+.message-search-nav:hover,
+.message-search-close:hover {
+  background: var(--m-accent-soft);
+  color: var(--m-accent);
+  border-color: var(--m-accent);
+}
+.message-search-nav:disabled { opacity: .4; cursor: not-allowed; }
+
+.msg-search-highlight {
+  background: #fde68a;
+  color: #78350f;
+  padding: 1px 3px;
+  border-radius: 4px;
+  font-weight: 600;
+  box-shadow: 0 0 0 1px rgba(180, 83, 9, .2);
+}
+.msg-search-highlight.is-active {
+  background: #f59e0b;
+  color: #fff;
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, .35);
+}
+
+.conversation-item.search-active {
+  outline: 2px solid var(--m-accent-ring);
+  outline-offset: -2px;
+}
+
+/* ============ Admin typing indicator ============ */
+.admin-typing-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 8px;
+  font-size: 12px;
+  font-style: italic;
+  color: var(--m-accent);
+  font-weight: 500;
+}
+.admin-typing-indicator::before {
+  content: "";
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--m-accent);
+  animation: typingPulse 1s infinite ease-in-out;
+}
+@keyframes typingPulse {
+  0%, 100% { opacity: .3; transform: scale(.8); }
+  50%      { opacity: 1;  transform: scale(1.1); }
+}
+
+/* ============ Draft preview inside modal ============ */
+.draft-preview {
+  margin-top: 10px;
+  padding: 10px 14px;
+  border-left: 3px solid var(--m-accent);
+  background: var(--m-accent-soft);
+  border-radius: 0 var(--m-radius-sm) var(--m-radius-sm) 0;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--m-text-muted);
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+/* ============ Stacked modal actions ============ */
+.modal-actions.modal-actions-stacked {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+}
+.modal-actions.modal-actions-stacked .modal-btn {
+  width: 100%;
+  justify-content: center;
+}
+
+/* ============ Send-confirm image preview ============ */
+.send-confirm-preview {
+  margin: 12px 0;
+  border-radius: var(--m-radius-md);
+  overflow: hidden;
+  border: 1px solid var(--m-border);
+  background: var(--m-surface-2);
+  display: flex;
+  justify-content: center;
+  max-height: clamp(180px, 36vh, 320px);
+}
+.send-confirm-preview img {
+  max-width: 100%;
+  max-height: clamp(180px, 36vh, 320px);
+  object-fit: contain;
+  display: block;
+}
+
+/* ============ Recovery acknowledgement label ============ */
+.recovery-ack-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 14px;
+  padding: 12px 14px;
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  border-radius: var(--m-radius-sm);
+  font-size: 13px;
+  color: #9a3412;
+  font-weight: 500;
+  cursor: pointer;
+  line-height: 1.5;
+}
+.recovery-ack-label input[type="checkbox"] {
+  margin-top: 2px;
+  width: 18px;
+  height: 18px;
+  accent-color: #ea580c;
+  flex-shrink: 0;
+}
+
+/* ============ Restrict-confirm alumni summary card ============ */
+.restrict-alumni-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 14px 0;
+  padding: 14px 16px;
+  background: var(--m-surface-2);
+  border: 1px solid var(--m-border);
+  border-radius: var(--m-radius-md);
+}
+.restrict-summary-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 4px 0;
+  border-bottom: 1px dashed var(--m-border);
+  flex-wrap: wrap;
+}
+.restrict-summary-row:last-child { border-bottom: 0; }
+.restrict-summary-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .4px;
+  color: var(--m-text-muted);
+  flex-shrink: 0;
+}
+.restrict-summary-value {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--m-text);
+  text-align: right;
+  word-break: break-word;
+  min-width: 0;
+}
+
+/* ==============================================================
+   [data-theme="black"] — dark theme overrides
+   ============================================================== */
+
+[data-theme="black"] .bulk-actions-bar {
+  background: linear-gradient(180deg, #0f1623 0%, #0b1220 100%);
+  border-bottom-color: rgba(255,255,255,.08);
+}
+[data-theme="black"] .bulk-toggle-btn {
+  background: #111827;
+  border-color: rgba(255,255,255,.14);
+  color: #f8fafc;
+}
+[data-theme="black"] .bulk-toggle-btn:hover {
+  background: rgba(14,165,233,.18);
+  border-color: var(--m-accent);
+  color: #7dd3fc;
+}
+[data-theme="black"] .bulk-actions-buttons {
+  background: rgba(14,165,233,.10);
+  border-color: rgba(14,165,233,.35);
+}
+[data-theme="black"] .bulk-selected-count { color: #7dd3fc; }
+
+[data-theme="black"] .bulk-btn {
+  background: #111827;
+  border-color: rgba(255,255,255,.14);
+  color: #f8fafc;
+}
+/* removed: legacy dark .bulk-btn.read/.archive/.restrict/.delete */
+
+[data-theme="black"] .conversation-item.bulk-selected {
+  background: rgba(14,165,233,.14) !important;
+  box-shadow: inset 3px 0 0 var(--m-accent);
+}
+
+[data-theme="black"] .chat-search-toggle {
+  background: #111827;
+  border-color: rgba(255,255,255,.14);
+  color: #cbd5e1;
+}
+[data-theme="black"] .chat-search-toggle:hover {
+  background: rgba(14,165,233,.18);
+  color: #7dd3fc;
+}
+[data-theme="black"] .chat-search-toggle.active {
+  background: var(--m-accent);
+  color: #fff;
+  border-color: var(--m-accent);
+}
+
+[data-theme="black"] .message-search-panel {
+  background: #0f1623;
+  border-bottom-color: rgba(255,255,255,.08);
+}
+[data-theme="black"] .message-search-input {
+  background: #111827;
+  border-color: rgba(255,255,255,.14);
+  color: #f8fafc;
+}
+[data-theme="black"] .message-search-input::placeholder { color: #94a3b8; }
+[data-theme="black"] .message-search-input:focus {
+  background: #0b1220;
+  border-color: var(--m-accent);
+  box-shadow: 0 0 0 4px rgba(14,165,233,.25);
+}
+[data-theme="black"] .message-search-count { color: #cbd5e1; }
+[data-theme="black"] .message-search-nav,
+[data-theme="black"] .message-search-close {
+  background: #111827;
+  border-color: rgba(255,255,255,.14);
+  color: #cbd5e1;
+}
+[data-theme="black"] .message-search-nav:hover,
+[data-theme="black"] .message-search-close:hover {
+  background: rgba(14,165,233,.18);
+  color: #7dd3fc;
+  border-color: var(--m-accent);
+}
+
+[data-theme="black"] .msg-search-highlight {
+  background: rgba(252,211,77,.30);
+  color: #fde68a;
+  box-shadow: 0 0 0 1px rgba(252,211,77,.45);
+}
+[data-theme="black"] .msg-search-highlight.is-active {
+  background: #f59e0b;
+  color: #1f1300;
+}
+
+[data-theme="black"] .conversation-item.search-active {
+  outline-color: rgba(14,165,233,.45);
+}
+
+[data-theme="black"] .admin-typing-indicator { color: #7dd3fc; }
+[data-theme="black"] .admin-typing-indicator::before { background: #7dd3fc; }
+
+[data-theme="black"] .draft-preview {
+  background: rgba(14,165,233,.10);
+  color: #cbd5e1;
+  border-left-color: var(--m-accent);
+}
+
+[data-theme="black"] .send-confirm-preview {
+  background: #0b1220;
+  border-color: rgba(255,255,255,.10);
+}
+
+[data-theme="black"] .recovery-ack-label {
+  background: rgba(234,88,12,.10);
+  border-color: rgba(234,88,12,.40);
+  color: #fdba74;
+}
+
+[data-theme="black"] .restrict-alumni-summary {
+  background: #0f1623;
+  border-color: rgba(255,255,255,.10);
+}
+[data-theme="black"] .restrict-summary-row { border-bottom-color: rgba(255,255,255,.08); }
+[data-theme="black"] .restrict-summary-label { color: #94a3b8; }
+[data-theme="black"] .restrict-summary-value { color: #f8fafc; }
+
+/* ==============================================================
+   RESPONSIVE BREAKPOINTS
+   ============================================================== */
+
+
+/* ---------- ≤480px Phones ---------- */
+@media (max-width: 480px) {
+  .bulk-actions-bar { padding: 8px; gap: 7px; }
+  .bulk-btn { font-size: 12px; padding: 10px 6px; }
+  .chat-search-toggle { width: 36px; height: 36px; min-width: 36px; font-size: 14px; }
+  .message-search-input { padding: 8px 12px; }
+  .message-search-nav,
+  .message-search-close { width: 36px; height: 36px; min-width: 36px; font-size: 13px; }
+  .send-confirm-preview { max-height: 220px; }
+  .send-confirm-preview img { max-height: 220px; }
+}
+
+/* ---------- ≤360px Small phones ---------- */
+@media (max-width: 360px) {
+  .bulk-actions-bar { padding: 7px; }
+  .bulk-actions-buttons { padding: 7px; gap: 5px; }
+  .bulk-btn {
+    flex: 1 1 100%; /* one button per row */
+    font-size: 12.5px;
+    padding: 10px 8px;
+  }
+  .bulk-selected-count { font-size: 11px; }
+
+  .chat-header-actions { gap: 4px; }
+  .chat-search-toggle { width: 34px; height: 34px; min-width: 34px; }
+
+  .message-search-panel { padding: 7px 8px; gap: 5px; }
+  .message-search-nav,
+  .message-search-close { width: 34px; height: 34px; min-width: 34px; }
+
+  .restrict-alumni-summary { padding: 11px; }
+  .recovery-ack-label { padding: 10px; font-size: 12px; }
+  .draft-preview { font-size: 12px; }
+}
+
+/* ---------- Landscape phones (short height) ---------- */
+@media (max-height: 480px) and (orientation: landscape) {
+  .send-confirm-preview { max-height: 150px; }
+  .send-confirm-preview img { max-height: 150px; }
+  .message-search-panel { padding: 6px 10px; }
+  .bulk-actions-bar { padding: 7px 10px; }
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .message-search-panel,
+  .admin-typing-indicator::before,
+  .bulk-toggle-btn,
+  .bulk-btn,
+  .chat-search-toggle {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* =====================================================================
+   CONVERSATION LIST — the ONLY scrollable region of the sidebar
+   ===================================================================== */
+.conversations-list {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: var(--m-border-strong) transparent;
+}
+.conversations-list::-webkit-scrollbar { width: 6px; }
+.conversations-list::-webkit-scrollbar-thumb {
+  background: var(--m-border-strong);
+  border-radius: 999px;
+}
+.conversations-list::-webkit-scrollbar-thumb:hover { background: var(--m-accent); }
+
+/* =====================================================================
+   CHAT AREA: flex column, only messages scroll
+   ===================================================================== */
+.chat-area {
+  flex: 1 1 auto !important;
+  min-width: 0;
+  height: 100%;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+}
+.chat-area > .chat-header        { flex: 0 0 auto; }
+.chat-area > .message-search-panel { flex: 0 0 auto; }
+.chat-area > .messages-list,
+.chat-area > .chat-messages      { flex: 1 1 auto !important; min-height: 0 !important; overflow-y: auto !important; }
+.chat-area > .chat-input,
+.chat-area > .message-input-area { flex: 0 0 auto; }
+
+/* Mobile back button — hidden on desktop */
+.chat-back-btn { display: none; }
+
+
+/* =====================================================================
+   UNIFIED BULK TOOLBAR THEME — light + dark parity (single source of truth)
+   Replaces every earlier ad-hoc .bulk-btn override.
+   ===================================================================== */
+
+/* "0 SELECTED" count pill — colored in BOTH themes */
+.bulk-toolbar__count {
+  background: linear-gradient(135deg,
+    color-mix(in oklab, var(--bulk-primary) 14%, var(--m-surface)),
+    color-mix(in oklab, #14b8a6 12%, var(--m-surface))) !important;
+  border: 1px solid var(--m-accent-ring) !important;
+  color: var(--m-text) !important;
+}
+[data-theme="black"] .bulk-toolbar__count {
+  background: linear-gradient(135deg,
+    rgba(14,165,233,0.18),
+    rgba(20,184,166,0.14)) !important;
+  border-color: rgba(14,165,233,0.45) !important;
+  color: #f1f5f9 !important;
+}
+.bulk-toolbar__count-dot {
+  background: #10b981 !important;
+  box-shadow: 0 0 0 3px rgba(16,185,129,0.20) !important;
+}
+
+/* Buttons share the same vivid color tokens in BOTH themes */
+.bulk-toolbar .bulk-btn,
+[data-theme="black"] .bulk-toolbar .bulk-btn {
+  background: var(--bulk-archive) !important;
+  color: #fff !important;
+  border: 1px solid transparent !important;
+}
+.bulk-toolbar .bulk-btn.bulk-btn--primary,
+[data-theme="black"] .bulk-toolbar .bulk-btn.bulk-btn--primary {
+  background: var(--bulk-primary) !important;
+  color: #fff !important;
+}
+.bulk-toolbar .bulk-btn.bulk-btn--warn,
+[data-theme="black"] .bulk-toolbar .bulk-btn.bulk-btn--warn {
+  background: var(--bulk-warn) !important;
+  color: #1a1206 !important;
+}
+.bulk-toolbar .bulk-btn.bulk-btn--danger,
+[data-theme="black"] .bulk-toolbar .bulk-btn.bulk-btn--danger {
+  background: var(--bulk-danger) !important;
+  color: #fff !important;
+}
+
+/* Cancel (ghost) — themed per mode for contrast */
+.bulk-toolbar .bulk-btn.bulk-btn--ghost {
+  background: var(--m-surface) !important;
+  color: var(--m-text) !important;
+  border: 1px solid var(--m-border-strong) !important;
+}
+[data-theme="black"] .bulk-toolbar .bulk-btn.bulk-btn--ghost {
+  background: rgba(255,255,255,0.06) !important;
+  color: #f1f5f9 !important;
+  border: 1px solid rgba(255,255,255,0.18) !important;
+}
+
+/* Hover lift for all variants */
+.bulk-toolbar .bulk-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  filter: brightness(1.06);
+  box-shadow: 0 6px 14px rgba(2,6,23,0.18);
+}
+
+/* Unrelated dark-mode controls that previously shared the override block */
+[data-theme="black"] .select-toggle,
+[data-theme="black"] .chat-back-btn {
+  color: #fff !important;
+  background: rgba(255,255,255,0.04) !important;
+  border-color: rgba(255,255,255,0.10) !important;
+}
+
+
+
+
+
+/* ===========================================================
+   MOBILE-FIRST RESPONSIVE TRANSFORMATION (ADMIN VIEW ONLY)
+   Appended without modifying any existing rules above.
+   Drives off existing classes:
+     .messages-layout.chat-open   → set when a conversation is selected
+     .chat-back-btn               → already in markup, hidden on desktop
+   =========================================================== */
+
+/* ---- Tablet and below: 1200px ---- */
+@media (max-width: 1200px) {
+  .messages-container { padding: 16px; }
+  .messages-layout { height: calc(100vh - 120px); }
+  .conversations-sidebar { width: 320px; min-width: 280px; }
+  .message-bubble,
+  .alumni-message-bubble { max-width: 80% !important; }
+  .message-image,
+  .alumni-message-image { max-width: 240px !important; }
+}
+
+/* ---- Mobile breakpoint: 992px - switch to single panel ---- */
+@media (max-width: 992px) {
+  .messages-container {
+    padding: 0;
+    min-height: 100dvh;
+    min-height: calc(100vh - 60px);
+  }
+  .messages-layout {
+    height: 100dvh;
+    height: calc(100vh - 60px);
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+    position: relative;
+  }
+
+  /* Sidebar takes full width by default (list view) */
+  .conversations-sidebar {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    border-right: none;
+  }
+
+  /* Chat area hidden by default, becomes full-screen overlay when open */
+  .chat-area {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--m-surface);
+    transform: translateX(100%);
+    transition: transform 0.28s var(--m-ease);
+    z-index: 30;
+    display: flex;
+    flex-direction: column;
+    will-change: transform;
+  }
+
+  /* When a conversation is selected: show chat, hide list */
+  .messages-layout.chat-open .conversations-sidebar {
+    display: none !important;
+  }
+  .messages-layout.chat-open .chat-area {
+    transform: translateX(0);
+  }
+
+  /* Sticky chat header */
+  .chat-header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    padding: 10px 12px !important;
+    gap: 10px;
+    min-height: 60px;
+  }
+
+  /* Show the back button on mobile */
+  .chat-back-btn {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 8px 12px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.12);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.18);
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+  }
+
+  .chat-header-info h3 { font-size: 1rem; line-height: 1.2; }
+  .chat-header-info .alumni-email,
+  .chat-header-info p { font-size: 0.78rem; }
+  .chat-avatar,
+  .chat-avatar-img { width: 38px !important; height: 38px !important; }
+
+  .chat-header-actions { gap: 6px; }
+  .chat-header-actions button,
+  .chat-search-toggle,
+  .restrict-btn {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  /* Messages area scroll fills space; safe-area bottom for input */
+  .messages-area,
+  .alumni-messages-area {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    padding: 12px !important;
+  }
+
+  /* Sticky composer with safe-area inset */
+  .message-input-form,
+  .alumni-message-input-form {
+    position: sticky;
+    bottom: 0;
+    background: var(--m-surface);
+    border-top: 1px solid var(--m-border);
+    padding: 8px 10px calc(8px + env(safe-area-inset-bottom)) !important;
+    z-index: 10;
+  }
+  .message-input-wrapper { gap: 6px; }
+  .alumni-message-input,
+  .message-input-wrapper textarea,
+  .message-input-wrapper input[type="text"] {
+    font-size: 16px !important; /* prevent iOS zoom */
+    min-height: 44px;
+    max-height: 120px;
+    line-height: 1.35;
+  }
+  .message-input-form button,
+  .alumni-message-input-form button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  /* Bubbles */
+  .message-bubble,
+  .alumni-message-bubble {
+    max-width: 90% !important;
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+  }
+  .message-image,
+  .alumni-message-image {
+    max-width: 200px !important;
+    width: 100%;
+    height: auto;
+  }
+
+  /* Conversations list: bigger touch targets */
+  .conversation-item,
+  .alumni-card {
+    min-height: 72px;
+    padding: 12px 14px !important;
+  }
+  .conversation-avatar,
+  .conversation-avatar-img,
+  .alumni-card__avatar {
+    width: 48px !important;
+    height: 48px !important;
+    font-size: 1.05rem;
+  }
+  .conversation-info h4,
+  .alumni-card__name { font-size: 1rem; }
+  .unread-badge,
+  .total-unread-badge { min-width: 22px; height: 22px; font-size: 0.78rem; }
+
+  /* Sticky list header + search */
+  .conversations-header {
+    position: sticky; top: 0; z-index: 15;
+    padding: 14px 16px 12px !important;
+  }
+  .search-box { padding: 10px 12px; }
+  .search-box input {
+    min-height: 44px;
+    font-size: 16px;
+    border-radius: 14px;
+  }
+  .admin-tabs { padding: 8px 10px; gap: 6px; }
+  .admin-tabs .tab-btn {
+    min-height: 40px;
+    font-size: 0.82rem;
+    padding: 8px 10px;
+    flex: 1 1 0;
+    white-space: nowrap;
+  }
+
+  /* Bulk toolbar: sticky, wrap */
+  .bulk-toolbar {
+    position: sticky;
+    top: 56px;
+    z-index: 14;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 8px 10px !important;
+  }
+  .bulk-toolbar__actions { flex-wrap: wrap; gap: 6px; }
+  .bulk-toolbar .bulk-btn { min-height: 40px; padding: 8px 12px; font-size: 0.85rem; }
+  .select-toggle { min-height: 40px; }
+
+  /* Search panel inside chat */
+  .message-search-panel {
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 8px 10px !important;
+  }
+  .message-search-panel input {
+    flex: 1 1 100%;
+    min-height: 40px;
+    font-size: 16px;
+  }
+  .message-search-panel button { min-width: 40px; min-height: 40px; }
+
+  /* Generic modal responsiveness */
+  .message-action-modal,
+  .message-action-modal-overlay > div,
+  .modal-content,
+  .alumni-details-modal,
+  .restrict-modal,
+  .delete-modal,
+  .search-modal,
+  .confirm-modal,
+  .modal {
+    width: calc(100vw - 24px) !important;
+    max-width: 100% !important;
+    max-height: 90vh !important;
+    overflow-y: auto;
+    border-radius: 18px;
+    margin: 12px;
+    box-sizing: border-box;
+  }
+  .message-action-modal-overlay,
+  .modal-overlay {
+    padding: 12px;
+    align-items: center;
+  }
+
+  /* AlumniDetails responsive — stack sections, no horizontal scroll */
+  .alumni-details-modal *,
+  .alumni-details-modal table,
+  .alumni-details-modal img { max-width: 100%; }
+  .alumni-details-modal table { display: block; overflow-x: auto; }
+  .alumni-details-modal .details-grid,
+  .alumni-details-modal .details-row,
+  .alumni-details-modal .row,
+  .alumni-details-modal [class*="grid"],
+  .alumni-details-modal [class*="row"] {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px;
+  }
+  .alumni-details-modal img { height: auto; }
+
+  /* Lightbox image fits screen */
+  .lightbox-image,
+  .lightbox img { max-width: 100vw !important; max-height: 100vh !important; }
+}
+
+/* ---- 768px ---- */
+@media (max-width: 768px) {
+  .admin-tabs .tab-btn { font-size: 0.78rem; padding: 8px 6px; }
+  .conversations-header h2 { font-size: 1.15rem; }
+  .message-bubble,
+  .alumni-message-bubble { font-size: 0.95rem; }
+}
+
+/* ---- 576px ---- */
+@media (max-width: 576px) {
+  .chat-header { padding: 8px 10px !important; }
+  .chat-header-info h3 { font-size: 0.98rem; }
+  .message-image,
+  .alumni-message-image { max-width: 200px !important; }
+  .conversation-item,
+  .alumni-card { padding: 10px 12px !important; }
+}
+
+/* ---- 480px / 430px ---- */
+@media (max-width: 480px) {
+  .messages-layout { height: 100dvh; }
+  .conversations-header { padding: 12px 14px !important; }
+  .conversations-header h2 { font-size: 1.05rem; }
+  .admin-tabs { padding: 6px 8px; gap: 4px; }
+  .admin-tabs .tab-btn { font-size: 0.72rem; padding: 8px 4px; }
+  .chat-back-btn { padding: 6px 10px; font-size: 0.85rem; min-width: 44px; }
+  .chat-avatar,
+  .chat-avatar-img { width: 34px !important; height: 34px !important; }
+  .chat-header-info h3 { font-size: 0.92rem; }
+  .chat-header-info .alumni-email { font-size: 0.72rem; }
+  .message-bubble,
+  .alumni-message-bubble { max-width: 92% !important; font-size: 0.92rem; }
+  .message-image,
+  .alumni-message-image { max-width: 180px !important; }
+  .conversation-avatar,
+  .conversation-avatar-img,
+  .alumni-card__avatar { width: 44px !important; height: 44px !important; }
+}
+
+/* ---- 390px / 375px ---- */
+@media (max-width: 414px) {
+  .message-bubble,
+  .alumni-message-bubble { max-width: 94% !important; }
+  .message-image,
+  .alumni-message-image { max-width: 170px !important; }
+  .admin-tabs .tab-btn { font-size: 0.68rem; }
+}
+
+/* ---- 360px ---- */
+@media (max-width: 360px) {
+  .message-bubble,
+  .alumni-message-bubble { max-width: 95% !important; font-size: 0.88rem; }
+  .message-image,
+  .alumni-message-image { max-width: 160px !important; }
+  .chat-header-actions button,
+  .chat-search-toggle,
+  .restrict-btn {
+    min-width: 40px;
+    min-height: 40px;
+    padding: 6px 8px;
+    font-size: 0.78rem;
+  }
+}
+
+/* ---- 320px (iPhone SE 1st gen) ---- */
+@media (max-width: 320px) {
+  .conversations-header h2 { font-size: 0.98rem; }
+  .admin-tabs .tab-btn { font-size: 0.65rem; padding: 6px 3px; }
+  .message-bubble,
+  .alumni-message-bubble { max-width: 96% !important; font-size: 0.85rem; }
+  .message-image,
+  .alumni-message-image { max-width: 150px !important; }
+  .conversation-avatar,
+  .conversation-avatar-img,
+  .alumni-card__avatar { width: 40px !important; height: 40px !important; }
+  .conversation-info h4,
+  .alumni-card__name { font-size: 0.92rem; }
+}
+
+/* ---- Accessibility: focus rings on interactive touch targets ---- */
+@media (max-width: 992px) {
+  .chat-back-btn:focus-visible,
+  .conversation-item:focus-visible,
+  .alumni-card:focus-visible,
+  .tab-btn:focus-visible,
+  .bulk-btn:focus-visible,
+  .message-input-form button:focus-visible,
+  .alumni-message-input-form button:focus-visible {
+    outline: 2px solid var(--m-accent);
+    outline-offset: 2px;
+  }
+}
+
+/* ---- Dark-theme polish for the mobile chat panel ---- */
+@media (max-width: 992px) {
+  [data-theme="black"] .chat-area,
+  [data-theme="black"] .message-input-form,
+  [data-theme="black"] .alumni-message-input-form {
+    background: #0b0f17;
+  }
+  [data-theme="black"] .chat-back-btn {
+    background: rgba(255,255,255,0.06);
+    border-color: rgba(255,255,255,0.12);
+    color: #fff;
+  }
+}
+
+/* ---- Large screens (1400px+) keep desktop unchanged ---- */
+@media (min-width: 1400px) {
+  .conversations-sidebar { width: 380px; }
+}
+/* =====================================================================
+   ADMIN CHAT — Messenger/WhatsApp-style polish (additive, mobile-first)
+   Targets ONLY the admin render. Keeps all existing classes/behavior.
+   ===================================================================== */
+
+/* --- Chat header: back btn glued to avatar -------------------------- */
+.chat-header .chat-header-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+.chat-header .chat-header-text { min-width: 0; }
+.chat-header .chat-header-text h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.chat-header .chat-header-text .alumni-email {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--m-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Back button: invisible chrome, full tap target, slot before avatar */
+.chat-back-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  margin-right: 2px;
+  border: none;
+  background: transparent;
+  color: var(--m-text);
+  font-size: 1.6rem;
+  line-height: 1;
+  border-radius: 50%;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.18s var(--m-ease), transform 0.18s var(--m-ease);
+}
+.chat-back-btn:hover  { background: var(--m-surface-2); }
+.chat-back-btn:active { transform: scale(0.92); }
+
+/* --- Composer v2: textarea on top, actions row below ---------------- */
+.message-input-form.composer-v2 {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+  background: var(--m-surface);
+  border-top: 1px solid var(--m-border);
+}
+.composer-v2 .composer-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--m-surface-2);
+  border: 1px solid var(--m-border);
+  border-radius: 18px;
+  padding: 10px 12px;
+  transition: border-color 0.18s var(--m-ease), box-shadow 0.18s var(--m-ease);
+}
+.composer-v2 .composer-stack:focus-within {
+  border-color: var(--m-accent);
+  box-shadow: 0 0 0 3px var(--m-accent-ring);
+}
+.composer-v2 .composer-textarea {
+  width: 100%;
+  min-height: 40px;
+  max-height: 140px;
+  padding: 6px 4px;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--m-text);
+  font-size: 16px;   /* prevents iOS auto-zoom */
+  line-height: 1.4;
+  resize: none;
+  font-family: inherit;
+}
+.composer-v2 .composer-textarea::placeholder { color: var(--m-text-subtle); }
+
+.composer-v2 .composer-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-top: 1px dashed var(--m-border);
+  padding-top: 8px;
+}
+.composer-v2 .composer-icon-btn {
+  width: 38px;
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  font-size: 1.15rem;
+  color: var(--m-text-muted);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.18s var(--m-ease), color 0.18s var(--m-ease);
+}
+.composer-v2 .composer-icon-btn:hover { background: var(--m-accent-soft); color: var(--m-accent); }
+
+.composer-v2 .composer-email-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 6px 10px;
+  background: transparent;
+  border-radius: 999px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 0.82rem;
+  color: var(--m-text-muted);
+}
+.composer-v2 .composer-email-toggle input { accent-color: var(--m-accent); }
+.composer-v2 .composer-email-toggle .email-checkbox-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.composer-v2 .composer-email-toggle:has(input:checked) {
+  background: var(--m-accent-soft);
+  color: var(--m-accent);
+  font-weight: 600;
+}
+
+.composer-v2 .composer-send-btn {
+  width: 42px;
+  height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, var(--m-accent), var(--m-accent-3));
+  box-shadow: 0 6px 16px -6px var(--m-accent-ring);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: transform 0.18s var(--m-ease), box-shadow 0.18s var(--m-ease), opacity 0.18s var(--m-ease);
+}
+.composer-v2 .composer-send-btn:hover:not(:disabled) { transform: translateY(-1px); }
+.composer-v2 .composer-send-btn:active:not(:disabled) { transform: scale(0.94); }
+.composer-v2 .composer-send-btn:disabled { opacity: 0.45; cursor: not-allowed; box-shadow: none; }
+
+/* --- Mobile: show back btn, tighter header, sticky composer --------- */
+@media (max-width: 992px) {
+  .chat-back-btn { display: inline-flex; }
+
+  .chat-header {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    padding: 10px 12px !important;
+    background: var(--m-surface);
+    border-bottom: 1px solid var(--m-border);
+  }
+  .chat-header .chat-avatar-img,
+  .chat-header .chat-avatar {
+    width: 38px !important;
+    height: 38px !important;
+    font-size: 0.95rem;
+  }
+  .chat-header-actions { gap: 4px; }
+  .chat-header-actions .restrict-btn { font-size: 0.75rem; padding: 6px 10px; }
+
+  .message-input-form.composer-v2 {
+    position: sticky;
+    bottom: 0;
+    z-index: 5;
+  }
+}
+
+/* --- Very narrow: collapse "Notify via email" label to icon-only ---- */
+@media (max-width: 420px) {
+  .composer-v2 .composer-email-toggle .composer-email-label { display: none; }
+  .composer-v2 .composer-email-toggle {
+    flex: 0 0 auto;
+    padding: 6px 8px;
+  }
+  .composer-v2 .composer-actions { justify-content: space-between; }
+  .composer-v2 .composer-actions > .composer-icon-btn { order: 1; }
+  .composer-v2 .composer-actions > .composer-email-toggle { order: 2; margin-left: auto; }
+  .composer-v2 .composer-actions > .composer-send-btn { order: 3; }
+}
+
+/* --- Dark theme passthrough ---------------------------------------- */
+[data-theme="black"] .composer-v2 .composer-stack {
+  background: #111827;
+  border-color: #1f2937;
+}
+[data-theme="black"] .composer-v2 .composer-textarea { color: #e5e7eb; }
+[data-theme="black"] .chat-back-btn { color: #e5e7eb; }
+[data-theme="black"] .chat-back-btn:hover { background: #1f2937; }
+
+
+/* ========================================================================
+   ALUMNI MESSAGING — MOBILE PORTRAIT-LOCKED LAYOUT
+   Scope: .alumni-messages-container and its children ONLY.
+   Admin messaging (.messages-container) and desktop (≥769px) untouched.
+   ======================================================================== */
+
+/* Fallback custom prop — overridden at runtime by JS using visualViewport.
+   Using 100dvh handles browser chrome on iOS Safari / Android Chrome. */
+.alumni-messages-container {
+  --app-vh: 100dvh;
+}
+
+/* ---------- MOBILE (≤768px): force portrait-style stacked chat ---------- */
+@media (max-width: 768px) {
+  /* Full-bleed shell — no outer padding stealing height,
+     fixed viewport height so internal flex children can scroll. */
+  .alumni-messages-container {
+    width: 100%;
+    height: var(--app-vh, 100dvh);
+    min-height: 0;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;          /* prevent double scrollbar on body+list */
+    display: flex;
+    flex-direction: column;
+    background: var(--m-bg);
+  }
+
+  /* Hide the conversation list sidebar on mobile so the chat takes 100% width.
+     (Admin uses .conversations-sidebar inside .messages-container, NOT here.) */
+  .alumni-messages-container .conversations-sidebar {
+    display: none !important;
+  }
+
+  /* Remove the desktop card chrome that constrains height to calc(100vh-140px). */
+  .alumni-messages-container .messages-layout,
+  .alumni-messages-container .alumni-messages-layout {
+    height: 100%;
+    min-height: 0;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Chat column = full available height, vertical stack: header / body / input. */
+  .alumni-chat-container {
+    flex: 1 1 auto;
+    min-height: 0;             /* CRITICAL: allows inner scroll in flex column */
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+  }
+
+  /* Scrollable message region. min-height:0 is the flexbox scroll fix. */
+  .alumni-chat-body,
+  .alumni-chat-messages {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;  /* stop scroll chaining to page */
+    padding: 12px;
+  }
+
+  /* Sticky input bar — always pinned above keyboard / bottom edge. */
+  .alumni-chat-input {
+    flex: 0 0 auto;
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
+    width: 100%;
+    background: var(--m-surface);
+    border-top: 1px solid var(--m-border);
+    padding: 8px 10px calc(8px + env(safe-area-inset-bottom));
+  }
+
+  /* Input field: 16px prevents iOS auto-zoom on focus. */
+  .alumni-chat-input textarea,
+  .alumni-chat-input input[type="text"] {
+    font-size: 16px;
+    max-height: 96px;
+  }
+
+  /* Hide site footer beneath the chat on mobile so it can't steal height. */
+  .alumni-messages-container ~ footer,
+  .alumni-messages-container ~ .app-footer,
+  body:has(.alumni-messages-container) > footer {
+    display: none !important;
+  }
+}
+
+/* ---------- LANDSCAPE on phones: full-bleed, compact header, max message area ----
+   Targets phones in landscape (short viewport ~360-414px tall).
+   Overrides the desktop base styles (height: calc(100dvh-140px), margin: 20px)
+   and targets the correct alumni-side class names used in the JSX. */
+@media (max-width: 992px) and (orientation: landscape) {
+  /* Override desktop card styles — go full-bleed, use the real viewport height */
+  .alumni-messages-container {
+    width: 100%;
+    height: var(--app-vh, 100dvh) !important;
+    max-height: var(--app-vh, 100dvh) !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background: var(--m-bg);
+  }
+
+  .alumni-messages-container .conversations-sidebar {
+    display: none !important;
+  }
+
+  .alumni-messages-container .messages-layout,
+  .alumni-messages-container .alumni-messages-layout {
+    height: 100%;
+    min-height: 0;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Compact the header so it doesn't eat landscape vertical space */
+  .alumni-messages-container .alumni-messages-header {
+    flex: 0 0 auto;
+    padding: 6px 14px;
+    min-height: 0;
+  }
+  .alumni-messages-container .alumni-messages-header .admin-header-avatar {
+    width: 32px;
+    height: 32px;
+  }
+  .alumni-messages-container .alumni-header-info h2 {
+    font-size: 0.88rem;
+  }
+  /* Hide subtitle/status line in landscape to save space */
+  .alumni-messages-container .alumni-header-info p,
+  .alumni-messages-container .alumni-header-info .admin-status {
+    display: none;
+  }
+
+  /* Error / restriction notice — slim it down */
+  .alumni-messages-container .alumni-error-notice,
+  .alumni-messages-container .restriction-notice {
+    padding: 6px 14px;
+    font-size: 0.8rem;
+  }
+
+  /* THE SCROLL AREA — must flex-grow to fill all remaining height */
+  .alumni-messages-container .alumni-messages-area {
+    flex: 1 1 auto;
+    min-height: 0;               /* CRITICAL: allows overflow-y to work inside flex */
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    padding: 6px 12px;
+  }
+
+  /* Input form — stays pinned at the bottom, slim padding */
+  .alumni-messages-container .alumni-message-input-form {
+    flex: 0 0 auto;
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
+    width: 100%;
+    background: var(--m-surface);
+    border-top: 1px solid var(--m-border);
+    padding: 4px 10px calc(4px + env(safe-area-inset-bottom));
+    box-sizing: border-box;
+  }
+
+  /* Keep textarea from growing too tall and eating message space */
+  .alumni-messages-container .alumni-message-input-form .alumni-message-input,
+  .alumni-messages-container .alumni-message-input-form textarea {
+    font-size: 16px;   /* prevent iOS auto-zoom */
+    min-height: 32px;
+    max-height: 72px;
+  }
+
+  /* Also cover the chat-container / chat-body aliases used in admin-side sub-views */
+  .alumni-chat-container {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+  }
+  .alumni-chat-body,
+  .alumni-chat-messages {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    padding: 6px 12px;
+  }
+  .alumni-chat-input {
+    flex: 0 0 auto;
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
+    width: 100%;
+    background: var(--m-surface);
+    border-top: 1px solid var(--m-border);
+    padding: 4px 10px calc(4px + env(safe-area-inset-bottom));
+  }
+
+  /* Hide the site footer so it can't steal height */
+  .alumni-messages-container ~ footer,
+  .alumni-messages-container ~ .app-footer,
+  body:has(.alumni-messages-container) > footer {
+    display: none !important;
+  }
+}
+
+
+/* =====================================================================
+   RESPONSIVE FIX PACK — Messenger/WhatsApp-style mobile chat
+   Placed at the END of the file so it wins the cascade over the older
+   mobile rules. Desktop (>= 993px) is intentionally untouched.
+   ===================================================================== */
+
+/* Fallback for browsers without JS-set --app-vh (uses dynamic vh) */
+:root { --app-vh: 100dvh; }
+
+/* ---------- TABLET & MOBILE (<= 992px) ---------- */
+@media (max-width: 992px) {
+
+  /* Container fills the *real* viewport, not the static 100vh which
+     iOS/Android miscalculate when the URL bar or keyboard appears. */
+  .messages-container {
+    min-height: var(--app-vh, 100dvh);
+    height: var(--app-vh, 100dvh);
+    padding: 0;                       /* edge-to-edge like WhatsApp */
+    overflow: hidden;                 /* prevent double scrollbars   */
+  }
+
+  /* The chat shell becomes a vertical flex stack: header / list / input */
+  .messages-layout {
+    height: var(--app-vh, 100dvh);
+    border-radius: 0;                 /* full-bleed on phones        */
+    border: 0;
+    box-shadow: none;
+    flex-direction: column;
+  }
+
+  /* When a conversation is open, hide the sidebar and let chat take all space */
+  .messages-layout.chat-open .conversations-sidebar { display: none; }
+  .messages-layout.chat-open .chat-area             { display: flex; }
+
+  /* Chat area itself is the flex column the user described */
+  .chat-area {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;                    /* critical: allow children to shrink */
+    flex: 1 1 auto;
+  }
+
+  /* Header: compact and pinned at the top, does not scroll */
+  .chat-area > .chat-header {
+    flex: 0 0 auto;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    padding: 10px 12px;
+  }
+
+  /* Messages list: the ONLY scrollable region */
+  .chat-area > .messages-list,
+  .chat-area > .chat-messages {
+    flex: 1 1 auto;
+    min-height: 0;                    /* required for flex overflow */
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;     /* stops body bounce-scrolling */
+    padding: 12px 12px 16px;
+  }
+
+  /* Input docked to the bottom; sticky keeps it visible above the keyboard
+     because the parent height is driven by visualViewport (--app-vh). */
+  .chat-area > .chat-input,
+  .chat-area > .message-input-area,
+  .message-input-form,
+  .alumni-message-input-form {
+    flex: 0 0 auto;
+    position: sticky;
+    bottom: 0;
+    z-index: 5;
+    padding: 8px 10px calc(8px + env(safe-area-inset-bottom));
+    background: var(--m-surface);
+    border-top: 1px solid var(--m-border);
+  }
+}
+
+/* ---------- MOBILE PORTRAIT (<= 576px) ---------- */
+@media (max-width: 576px) {
+  .chat-area > .chat-header        { padding: 8px 10px; }
+  .chat-header-info h3             { font-size: 0.98rem; line-height: 1.15; }
+  .chat-header-info p,
+  .chat-header-info .alumni-email  { font-size: 0.76rem; }
+
+  .messages-list, .chat-messages   { padding: 10px 10px 12px; gap: 6px; }
+  .alumni-message-input,
+  .message-input-wrapper textarea,
+  .message-input-wrapper input[type="text"] {
+    font-size: 16px;                /* prevents iOS auto-zoom on focus */
+    min-height: 40px;
+  }
+}
+
+/* ---------- MOBILE LANDSCAPE — the most important fix ---------- */
+/* Short viewport regardless of width: ultra-compact header, max chat area */
+@media (max-height: 500px) and (orientation: landscape) {
+  .messages-container,
+  .messages-layout         { height: var(--app-vh, 100dvh); min-height: 0; }
+
+  /* Shrink the header so the message list gets the room */
+  .chat-area > .chat-header {
+    padding: 4px 10px;
+    min-height: 40px;
+  }
+  .chat-header-info h3     { font-size: 0.9rem; }
+  .chat-header-info p,
+  .chat-header-info .alumni-email { display: none; }   /* hide secondary line */
+  .chat-header-info img,
+  .chat-header-info .avatar { width: 28px; height: 28px; }
+
+  /* Tighter message padding so more lines fit */
+  .messages-list, .chat-messages { padding: 6px 10px 8px; gap: 4px; }
+
+  /* Slim input row */
+  .message-input-form,
+  .alumni-message-input-form { padding: 4px 8px calc(4px + env(safe-area-inset-bottom)); }
+  .alumni-message-input,
+  .message-input-wrapper textarea {
+    min-height: 36px;
+    max-height: 88px;                /* never let textarea eat the chat */
+  }
+}
+
+/* ---------- TINY PHONES (320px) ---------- */
+@media (max-width: 360px) {
+  .chat-header-info h3     { font-size: 0.9rem; }
+  .chat-header-actions     { gap: 4px; }
+  .messages-list, .chat-messages { padding: 8px; }
+}
+
+/* ---------- FOOTER: collapse on mobile so it never steals chat height ---- */
+@media (max-width: 992px) {
+  /* Adjust the selector to match your real footer class/element */
+  footer,
+  .app-footer,
+  .site-footer {
+    display: none !important;        /* hide entirely on phones/tablets */
+  }
+}
+
+
+/* =========================================================
+   MOBILE FIXES — Lightbox visibility + Landscape sidebar
+   Appended overrides. Do not modify rules above.
+   ========================================================= */
+
+/* ---------- Lightbox: buttons always above image ---------- */
+.image-lightbox {
+  /* Column stack so image never overlaps action bar */
+  flex-direction: column;
+  padding:
+    calc(env(safe-area-inset-top, 0px) + 12px)
+    calc(env(safe-area-inset-right, 0px) + 12px)
+    calc(env(safe-area-inset-bottom, 0px) + 12px)
+    calc(env(safe-area-inset-left, 0px) + 12px);
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.image-lightbox .lightbox-actions {
+  position: fixed;
+  top: calc(env(safe-area-inset-top, 0px) + 12px);
+  right: calc(env(safe-area-inset-right, 0px) + 12px);
+  z-index: 1000000;              /* strictly above image and MainLayout header */
+  display: flex;
+  gap: 10px;
+  pointer-events: auto;
+}
+
+.image-lightbox .lightbox-close,
+.image-lightbox .lightbox-download {
+  position: relative;            /* override any inherited absolute */
+  z-index: 1000001;
+  background: rgba(15, 23, 42, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  color: #fff;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(6px);
+}
+
+/* Image wrapper reserves space for the action bar so it can NEVER cover it */
+.image-lightbox .lightbox-image-wrap {
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Top padding = safe-area + button height + gap */
+  padding-top: calc(env(safe-area-inset-top, 0px) + 64px);
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 8px);
+  box-sizing: border-box;
+}
+
+.image-lightbox .lightbox-image-wrap img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 12px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  display: block;
+}
+
+/* Neutralize the older mobile rule that let the image span the full viewport */
+@media (max-width: 992px) {
+  .image-lightbox .lightbox-image-wrap img,
+  .image-lightbox img.lightbox-image,
+  .image-lightbox .lightbox img {
+    max-width: 100% !important;
+    max-height: 100% !important;
+  }
+}
+
+/* Landscape phones: shorter safe zone, keep buttons visible */
+@media (orientation: landscape) and (max-height: 500px) {
+  .image-lightbox .lightbox-actions {
+    top: calc(env(safe-area-inset-top, 0px) + 6px);
+    right: calc(env(safe-area-inset-right, 0px) + 8px);
+  }
+  .image-lightbox .lightbox-close,
+  .image-lightbox .lightbox-download {
+    width: 38px;
+    height: 38px;
+  }
+  .image-lightbox .lightbox-image-wrap {
+    padding-top: calc(env(safe-area-inset-top, 0px) + 52px);
+  }
+}
+
+/* ---------- Sidebar height fix (portrait + landscape mobile) ---------- */
+/* Root cause: on mobile the .messages-layout is a column flex container,
+   but .conversations-sidebar had no flex sizing, so it collapsed to the
+   natural height of its children — leaving a blank background below and
+   preventing the internal list from scrolling normally. */
+@media (max-width: 992px) {
+  .messages-layout:not(.chat-open) .conversations-sidebar {
+    flex: 1 1 auto;
+    height: 100%;
+    min-height: 0;                 /* allow inner list to overflow */
+    max-height: none;              /* neutralize legacy max-height: 50vh */
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* The list itself is the ONLY scrollable region inside the sidebar */
+  .messages-layout:not(.chat-open) .conversations-sidebar .conversations-list,
+  .messages-layout:not(.chat-open) .conversations-sidebar .alumni-list,
+  .messages-layout:not(.chat-open) .conversations-sidebar .archive-list {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
+  }
+
+  /* Sticky sub-headers so they don't scroll with the list */
+  .messages-layout:not(.chat-open) .conversations-sidebar .conversations-header,
+  .messages-layout:not(.chat-open) .conversations-sidebar .search-box,
+  .messages-layout:not(.chat-open) .conversations-sidebar .admin-tabs {
+    flex: 0 0 auto;
+  }
+}
+
+/* Landscape phones: header/search/tabs get compressed so more list rows fit */
+@media (orientation: landscape) and (max-height: 500px) {
+  .messages-container,
+  .messages-layout {
+    height: var(--app-vh, 100dvh) !important;
+    min-height: 0 !important;
+    max-height: var(--app-vh, 100dvh) !important;
+    overflow: hidden;
+  }
+
+  .messages-layout:not(.chat-open) .conversations-sidebar {
+    flex: 1 1 auto;
+    height: 100%;
+    max-height: none;
+  }
+
+  .conversations-header {
+    padding: 8px 14px !important;
+  }
+  .conversations-header h2 {
+    font-size: 1rem !important;
+  }
+  .search-box {
+    padding: 6px 10px !important;
+  }
+  .admin-tabs {
+    padding: 4px 8px !important;
+  }
+}
+/* =====================================================================
+   BULK TOOLBAR — FINAL COMPACT REDESIGN (single source of truth)
+   Placed last so it wins over every earlier ad-hoc rule/media-query
+   above. Fixes: oversized pill buttons, uneven wrapping, misaligned
+   count/cancel row.
+   ===================================================================== */
+.messages-container .bulk-toolbar,
+.messages-container .conversations-sidebar .bulk-toolbar {
+  display: none;
+  flex-direction: column;
+  gap: 8px !important;
+  margin: 8px 12px 0 !important;
+  padding: 8px 10px !important;
+  border-radius: 12px !important;
+  background: color-mix(in oklab, var(--m-accent) 8%, var(--m-surface)) !important;
+  border: 1px solid var(--m-accent-ring) !important;
+  box-shadow: none !important;
+  box-sizing: border-box;
+}
+.messages-container .bulk-toolbar.is-active {
+  display: flex !important;
+  animation: bulkToolbarIn .16s var(--m-ease);
+}
+
+/* ---- header row: count (left) + cancel (right), same baseline ---- */
+.messages-container .bulk-toolbar__header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 8px;
+  width: 100%;
+}
+.messages-container .bulk-toolbar__count {
+  display: inline-flex !important;
+  align-items: center;
+  height: 24px !important;
+  padding: 0 10px !important;
+  margin: 0 !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: .3px;
+  text-transform: uppercase;
+  color: var(--m-accent) !important;
+  background: var(--m-surface) !important;
+  border: 1px solid var(--m-border) !important;
+  border-radius: 999px !important;
+  white-space: nowrap;
+  line-height: 1;
+}
+.messages-container .bulk-toolbar__cancel {
+  all: unset;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 24px;
+  padding: 0 10px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--m-text-muted);
+  cursor: pointer;
+  border-radius: 999px;
+  transition: color .15s var(--m-ease), background .15s var(--m-ease);
+}
+.messages-container .bulk-toolbar__cancel:hover {
+  color: var(--m-text);
+  background: var(--m-border);
+}
+
+/* ---- action row: 4 equal-width compact buttons, always aligned ---- */
+.messages-container .bulk-toolbar__actions {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 6px !important;
+  width: 100%;
+  flex-wrap: initial !important;
+}
+.messages-container .bulk-toolbar__actions .bulk-btn {
+  all: unset;
+  box-sizing: border-box !important;
+  width: 100% !important;
+  height: 32px !important;
+  min-height: 32px !important;
+  max-height: 32px !important;
+  padding: 0 4px !important;
+  margin: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  line-height: 1 !important;
+  border-radius: 8px !important;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  border: 1px solid transparent !important;
+  transition: filter .15s var(--m-ease), transform .15s var(--m-ease);
+}
+.messages-container .bulk-toolbar__actions .bulk-btn:hover:not(:disabled) {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+}
+.messages-container .bulk-toolbar__actions .bulk-btn:active:not(:disabled) {
+  transform: translateY(0);
+  filter: brightness(.96);
+}
+.messages-container .bulk-toolbar__actions .bulk-btn.bulk-btn--primary,
+[data-theme="black"] .messages-container .bulk-toolbar__actions .bulk-btn.bulk-btn--primary {
+  background: var(--bulk-primary) !important;
+  color: #fff !important;
+}
+.messages-container .bulk-toolbar__actions .bulk-btn:not(.bulk-btn--primary):not(.bulk-btn--warn):not(.bulk-btn--danger),
+[data-theme="black"] .messages-container .bulk-toolbar__actions .bulk-btn:not(.bulk-btn--primary):not(.bulk-btn--warn):not(.bulk-btn--danger) {
+  background: var(--bulk-archive) !important;
+  color: #fff !important;
+}
+.messages-container .bulk-toolbar__actions .bulk-btn.bulk-btn--warn,
+[data-theme="black"] .messages-container .bulk-toolbar__actions .bulk-btn.bulk-btn--warn {
+  background: var(--bulk-warn) !important;
+  color: #1a1206 !important;
+}
+.messages-container .bulk-toolbar__actions .bulk-btn.bulk-btn--danger,
+[data-theme="black"] .messages-container .bulk-toolbar__actions .bulk-btn.bulk-btn--danger {
+  background: var(--bulk-danger) !important;
+  color: #fff !important;
+}
+
+/* ---- narrow sidebar / mobile: 2 columns instead of 4 ---- */
+@media (max-width: 420px) {
+  .messages-container .bulk-toolbar__actions {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  .messages-container .bulk-toolbar__actions .bulk-btn {
+    height: 34px !important;
+    min-height: 34px !important;
+    max-height: 34px !important;
+    font-size: 12.5px !important;
+  }
+}
+
+/* ---- select-toggle entry pill: keep it small too ---- */
+.messages-container .select-toggle {
+  height: 26px !important;
+  min-height: 26px !important;
+  padding: 0 10px !important;
+  font-size: 11.5px !important;
+  display: inline-flex;
+  align-items: center;
+}

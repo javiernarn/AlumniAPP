@@ -1,0 +1,1 @@
+export { default as FacultyDashboardPage} from "./DashboardPage";

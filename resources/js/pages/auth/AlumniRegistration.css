@@ -1,0 +1,1657 @@
+/* ============ Design Tokens (mirror of FormLogin) ============ */
+.alumni-registration {
+  --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+
+  --accent:        #4f46e5;
+  --accent-2:      #0ea5e9;
+  --accent-3:      #7c3aed;
+  --accent-soft:   rgba(79, 70, 229, 0.10);
+  --accent-ring:   rgba(79, 70, 229, 0.26);
+
+  --bg:            #f4f7fb;
+  --surface:       #ffffff;
+  --surface-2:     #f1f5f9;
+  --border:        #e2e8f0;
+  --border-strong: #cbd5e1;
+
+  --text:         #0b1220;
+  --text-muted:   #5b6677;
+  --text-subtle:  #94a3b8;
+
+  --shadow-xs: 0 1px 2px  rgba(2, 6, 23, 0.05);
+  --shadow-sm: 0 4px 14px rgba(2, 6, 23, 0.06);
+  --shadow-md: 0 14px 34px rgba(2, 6, 23, 0.10);
+  --shadow-lg: 0 28px 60px rgba(2, 6, 23, 0.18);
+
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 26px;
+
+  min-height: 100vh;
+  width: 100%;
+  padding: 32px 20px 64px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  position: relative;
+  z-index: 10;
+
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto,
+               "Helvetica Neue", Arial, sans-serif;
+
+  background:
+    radial-gradient(900px 500px at 100% -10%, rgba(14, 165, 233, 0.10), transparent 60%),
+    radial-gradient(900px 500px at -10% 110%, rgba(124, 58, 237, 0.10), transparent 60%),
+    var(--bg);
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* ============ Dark theme (mirror of FormLogin) ============ */
+[data-theme="black"] .alumni-registration {
+  --bg:            #0a0c12;
+  --surface:       #121620;
+  --surface-2:     #1a1f2b;
+  --border:        #242a36;
+  --border-strong: #303746;
+
+  --text:          #e7ecf3;
+  --text-muted:    #9aa4b2;
+  --text-subtle:   #6b7280;
+
+  --accent-soft:   rgba(99, 102, 241, 0.16);
+  --accent-ring:   rgba(99, 102, 241, 0.30);
+
+  --shadow-xs: 0 1px 2px  rgba(0, 0, 0, 0.5);
+  --shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.45);
+  --shadow-md: 0 14px 34px rgba(0, 0, 0, 0.55);
+  --shadow-lg: 0 28px 60px rgba(0, 0, 0, 0.65);
+
+  background:
+    radial-gradient(900px 500px at 100% -10%, rgba(14, 165, 233, 0.10), transparent 60%),
+    radial-gradient(900px 500px at -10% 110%, rgba(124, 58, 237, 0.12), transparent 60%),
+    var(--bg);
+}
+
+/* ============ Keyframes ============ */
+@keyframes regFadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes regFloat {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
+}
+@keyframes regShine {
+  0%   { transform: translateX(-150%) skewX(-18deg); }
+  100% { transform: translateX(250%) skewX(-18deg); }
+}
+@keyframes regSlideIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ============ Card Shell ============ */
+.registration-card {
+  width: 100%;
+  max-width: 1040px;
+  margin: 16px 0;
+  background:
+    linear-gradient(180deg, var(--surface), var(--surface)) padding-box,
+    linear-gradient(135deg,
+      rgba(79, 70, 229, 0.45),
+      rgba(14, 165, 233, 0.35),
+      rgba(124, 58, 237, 0.45)) border-box !important;
+  border: 1px solid transparent !important;
+  border-radius: var(--radius-xl) !important;
+  box-shadow: var(--shadow-lg) !important;
+  color: var(--text);
+  animation: regFadeUp 0.6s var(--ease-spring) both;
+  overflow: hidden;
+  position: relative;
+}
+.registration-card .ant-card-body {
+  padding: 36px 40px !important;
+  background: transparent !important;
+}
+[data-theme="black"] .registration-card,
+[data-theme="black"] .registration-card .ant-card-body {
+  background: var(--surface) !important;
+  color: var(--text) !important;
+}
+[data-theme="black"] .registration-card {
+  background:
+    linear-gradient(180deg, var(--surface), var(--surface)) padding-box,
+    linear-gradient(135deg,
+      rgba(99, 102, 241, 0.55),
+      rgba(14, 165, 233, 0.45),
+      rgba(168, 85, 247, 0.55)) border-box !important;
+}
+
+/* ============ Back Button ============ */
+.back-to-login-section { margin-bottom: 8px; text-align: left; }
+.back-to-login-btn {
+  color: var(--text-muted) !important;
+  font-weight: 600 !important;
+  padding: 4px 10px !important;
+  border-radius: 10px !important;
+  transition: all 0.25s var(--ease-smooth);
+}
+.back-to-login-btn:hover,
+.back-to-login-btn:focus {
+  color: var(--accent) !important;
+  background: var(--accent-soft) !important;
+}
+
+/* ============ Company Hero Header ============ */
+.company-header {
+  position: relative;
+  overflow: hidden;
+  margin: 8px 0 20px;
+  padding: 32px 28px;
+  border-radius: var(--radius-lg);
+  background:
+    radial-gradient(700px 320px at -10% -10%, rgba(79, 70, 229, 0.14), transparent 60%),
+    radial-gradient(700px 320px at 110% 0%,  rgba(14, 165, 233, 0.14), transparent 60%),
+    var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+}
+.company-header::after {
+  content: "";
+  position: absolute; inset: 0;
+  background-image:
+    radial-gradient(rgba(15, 23, 42, 0.08) 1px, transparent 1px);
+  background-size: 18px 18px;
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+  pointer-events: none;
+}
+[data-theme="black"] .company-header::after {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+}
+
+.company-logo-section {
+  position: relative; z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 4px 0;
+}
+.company-logo {
+  flex-shrink: 0;
+  background: var(--surface) !important;
+  padding: 6px;
+  border-radius: 16px !important;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+  animation: regFloat 6s ease-in-out infinite;
+}
+.company-info { flex: 1; min-width: 0; }
+.company-name {
+  margin: 0 0 6px !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.015em;
+  font-size: clamp(20px, 2.6vw, 28px) !important;
+  background: linear-gradient(135deg,
+              var(--accent) 0%,
+              var(--accent-3) 50%,
+              var(--accent-2) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent !important;
+}
+.company-slogan {
+  display: block;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: var(--text-muted) !important;
+  margin-bottom: 12px;
+}
+.company-details { margin-top: 8px; }
+.company-details .ant-space,
+.company-details .ant-typography {
+  color: var(--text-muted) !important;
+  font-size: 13px;
+}
+.company-details .anticon { color: var(--accent); }
+.company-header .ant-divider { display: none; }
+
+/* ============ Registration Header ============ */
+.registration-header {
+  text-align: center;
+  padding: 4px 0 8px;
+}
+.registration-header h3.ant-typography,
+.registration-header h3 {
+  margin: 0 0 8px !important;
+  color: var(--text) !important;
+  font-weight: 800 !important;
+  font-size: clamp(22px, 3vw, 30px) !important;
+  letter-spacing: -0.015em;
+}
+.registration-header .ant-typography-secondary {
+  color: var(--text-muted) !important;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+
+
+/* ============ Progress ============ */
+.progress-section {
+  margin: 20px auto 8px;
+  max-width: 720px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.progress-section .ant-progress-line { width: 100%; }
+.progress-section .ant-progress-bg {
+  background: linear-gradient(90deg, var(--accent), var(--accent-2)) !important;
+  height: 8px !important;
+  border-radius: 999px !important;
+}
+.progress-section .ant-progress-inner {
+  background: var(--surface-2) !important;
+  border-radius: 999px !important;
+}
+.progress-section .ant-typography,
+.progress-section .ant-progress-text {
+  color: var(--text-muted) !important;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+/* ============ Steps ============ */
+.registration-steps { margin: 28px 0 8px; }
+.registration-steps .ant-steps-item-title {
+  font-weight: 600 !important;
+  color: var(--text-muted) !important;
+}
+.registration-steps .ant-steps-item-process .ant-steps-item-title,
+.registration-steps .ant-steps-item-finish .ant-steps-item-title {
+  color: var(--text) !important;
+}
+.registration-steps .ant-steps-item-description {
+  color: var(--text-subtle) !important;
+}
+.registration-steps .ant-steps-item-icon {
+  background: var(--surface) !important;
+  border-color: var(--border-strong) !important;
+  transition: all 0.25s var(--ease-smooth);
+}
+.registration-steps .ant-steps-item-icon .ant-steps-icon {
+  color: var(--text-muted) !important;
+}
+.registration-steps .ant-steps-item-process .ant-steps-item-icon {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2)) !important;
+  border-color: transparent !important;
+  box-shadow: 0 0 0 6px var(--accent-soft);
+}
+.registration-steps .ant-steps-item-process .ant-steps-item-icon .ant-steps-icon { color: #fff !important; }
+.registration-steps .ant-steps-item-finish .ant-steps-item-icon {
+  background: var(--surface) !important;
+  border-color: var(--accent) !important;
+}
+.registration-steps .ant-steps-item-finish .ant-steps-item-icon .ant-steps-icon { color: var(--accent) !important; }
+.registration-steps .ant-steps-item-tail::after {
+  background-color: var(--border) !important;
+}
+.registration-steps .ant-steps-item-finish > .ant-steps-item-container > .ant-steps-item-tail::after {
+  background-color: var(--accent) !important;
+}
+
+/* ============ Form Step ============ */
+.form-step {
+  padding: 8px 0;
+  animation: regSlideIn 0.35s var(--ease-smooth);
+}
+.form-step h3,
+.form-step .ant-typography h3 {
+  margin-bottom: 8px !important;
+  color: var(--text) !important;
+  font-weight: 700;
+}
+.form-step .ant-typography-secondary {
+  color: var(--text-muted) !important;
+}
+
+/* ============ Form fields (Ant Design) ============ */
+.alumni-registration .ant-form-item-label > label,
+.registration-form .ant-form-item-label > label {
+  font-weight: 600 !important;
+  color: var(--text) !important;
+  font-size: 13.5px !important;
+}
+.alumni-registration .ant-form-item-label > label.ant-form-item-required::before {
+  color: #ef4444 !important;
+}
+.alumni-registration .ant-form-item-explain-error {
+  color: #ef4444 !important;
+  font-size: 12.5px;
+}
+
+/* ============ Multi-select / Tags fields (e.g. Honors/Awards) ============
+   By default, antd's tag-mode Select should grow its own height to fit
+   wrapped tag rows. On narrow single-column mobile layouts this can fail
+   silently (tags wrap but the box height doesn't follow), so the extra
+   rows spill outside the field and visually overlap whatever comes next.
+   Force the selector to size itself to its content in every case. */
+.alumni-registration .ant-select-selector {
+  height: auto !important;
+}
+.alumni-registration .ant-select-multiple .ant-select-selector,
+.alumni-registration .ant-select-selector .ant-select-selection-overflow {
+  flex-wrap: wrap !important;
+  align-items: flex-start !important;
+  row-gap: 6px !important;
+}
+.alumni-registration .ant-select-multiple .ant-select-selection-overflow-item {
+  max-width: 100% !important;
+  flex: none !important;
+}
+.alumni-registration .ant-select-multiple .ant-select-selection-item {
+  max-width: 100% !important;
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
+}
+.alumni-registration .ant-select-multiple .ant-select-selection-search {
+  min-width: 60px !important;
+}
+
+.alumni-registration .ant-input,
+.alumni-registration .ant-input-affix-wrapper,
+.alumni-registration .ant-input-password,
+.alumni-registration .ant-input-number,
+.alumni-registration .ant-input-number-input,
+.alumni-registration .ant-picker,
+.alumni-registration .ant-select-selector,
+.alumni-registration textarea.ant-input {
+  border-radius: 12px !important;
+  border: 1px solid var(--border-strong) !important;
+  background: var(--surface) !important;
+  color: var(--text) !important;
+  transition: border-color 0.2s var(--ease-smooth),
+              box-shadow 0.2s var(--ease-smooth) !important;
+}
+.alumni-registration .ant-input,
+.alumni-registration .ant-input-affix-wrapper {
+  padding: 8px 12px !important;
+}
+.alumni-registration .ant-input-affix-wrapper .ant-input {
+  border: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+}
+.alumni-registration .ant-input::placeholder,
+.alumni-registration .ant-input-affix-wrapper input::placeholder,
+.alumni-registration .ant-picker-input input::placeholder,
+.alumni-registration .ant-select-selection-placeholder {
+  color: var(--text-subtle) !important;
+}
+.alumni-registration .ant-input-prefix .anticon,
+.alumni-registration .ant-input-suffix .anticon,
+.alumni-registration .ant-picker-suffix {
+  color: var(--text-subtle) !important;
+}
+
+/* Hover / focus rings (matches FormLogin) */
+.alumni-registration .ant-input:hover,
+.alumni-registration .ant-input-affix-wrapper:hover,
+.alumni-registration .ant-input-password:hover,
+.alumni-registration .ant-input-number:hover,
+.alumni-registration .ant-picker:hover,
+.alumni-registration .ant-select:not(.ant-select-disabled):hover .ant-select-selector {
+  border-color: var(--accent) !important;
+}
+.alumni-registration .ant-input:focus,
+.alumni-registration .ant-input-focused,
+.alumni-registration .ant-input-affix-wrapper-focused,
+.alumni-registration .ant-input-number-focused,
+.alumni-registration .ant-picker-focused,
+.alumni-registration .ant-select-focused .ant-select-selector {
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 4px var(--accent-soft) !important;
+  outline: none !important;
+}
+
+/* Dark theme inputs (surface-2 fill for separation) */
+[data-theme="black"] .alumni-registration .ant-input,
+[data-theme="black"] .alumni-registration .ant-input-affix-wrapper,
+[data-theme="black"] .alumni-registration .ant-input-password,
+[data-theme="black"] .alumni-registration .ant-input-number,
+[data-theme="black"] .alumni-registration .ant-input-number-input,
+[data-theme="black"] .alumni-registration .ant-picker,
+[data-theme="black"] .alumni-registration .ant-select-selector,
+[data-theme="black"] .alumni-registration textarea.ant-input {
+  background: var(--surface-2) !important;
+  color: var(--text) !important;
+  border-color: var(--border-strong) !important;
+}
+[data-theme="black"] .alumni-registration .ant-input::placeholder,
+[data-theme="black"] .alumni-registration .ant-input-affix-wrapper input::placeholder,
+[data-theme="black"] .alumni-registration .ant-picker-input input::placeholder,
+[data-theme="black"] .alumni-registration .ant-select-selection-placeholder {
+  color: #6b7280 !important;
+}
+[data-theme="black"] .alumni-registration .ant-input-password-icon {
+  color: var(--text-muted) !important;
+}
+[data-theme="black"] .alumni-registration .ant-input-password-icon:hover {
+  color: var(--accent) !important;
+}
+/* ============ Portal-rendered popups (Select/DatePicker dropdowns) ============
+   These render at <body>, OUTSIDE .alumni-registration, so CSS variables from
+   the component scope are NOT available. Use explicit colors so the default
+   (light) theme gets a solid white fill instead of falling back to transparent. */
+
+/* Select dropdown */
+.ant-select-dropdown {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 14px 34px rgba(2, 6, 23, 0.10) !important;
+}
+.ant-select-item {
+  color: #0b1220 !important;
+  background: #ffffff !important;
+  border-radius: 8px !important;
+  margin: 2px 4px !important;
+}
+.ant-select-item-option-active:not(.ant-select-item-option-disabled) {
+  background: rgba(79, 70, 229, 0.10) !important;
+  color: #0b1220 !important;
+}
+.ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+  background: rgba(79, 70, 229, 0.10) !important;
+  color: #4f46e5 !important;
+  font-weight: 600;
+}
+
+/* Dark theme overrides for Select dropdown */
+[data-theme="black"] .ant-select-dropdown,
+.ant-select-dropdown[data-theme="black"] {
+  background: #121620 !important;
+  border-color: #242a36 !important;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.55) !important;
+}
+[data-theme="black"] .ant-select-item,
+.ant-select-dropdown[data-theme="black"] .ant-select-item {
+  color: #e7ecf3 !important;
+  background: #121620 !important;
+}
+[data-theme="black"] .ant-select-item-option-active:not(.ant-select-item-option-disabled),
+.ant-select-dropdown[data-theme="black"] .ant-select-item-option-active:not(.ant-select-item-option-disabled) {
+  background: rgba(99, 102, 241, 0.16) !important;
+  color: #e7ecf3 !important;
+}
+[data-theme="black"] .ant-select-item-option-selected:not(.ant-select-item-option-disabled),
+.ant-select-dropdown[data-theme="black"] .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+  background: rgba(99, 102, 241, 0.16) !important;
+  color: #a5b4fc !important;
+  font-weight: 600;
+}
+
+/* DatePicker panel (Date of Birth, etc.) */
+.ant-picker-dropdown .ant-picker-panel-container,
+.ant-picker-dropdown .ant-picker-panel,
+.ant-picker-dropdown .ant-picker-date-panel,
+.ant-picker-dropdown .ant-picker-month-panel,
+.ant-picker-dropdown .ant-picker-year-panel,
+.ant-picker-dropdown .ant-picker-decade-panel {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 14px !important;
+  box-shadow: 0 14px 34px rgba(2, 6, 23, 0.10) !important;
+}
+.ant-picker-dropdown .ant-picker-header,
+.ant-picker-dropdown .ant-picker-content,
+.ant-picker-dropdown .ant-picker-content th,
+.ant-picker-dropdown .ant-picker-cell,
+.ant-picker-dropdown .ant-picker-footer {
+  background: #ffffff !important;
+  color: #0b1220 !important;
+}
+.ant-picker-dropdown .ant-picker-header button,
+.ant-picker-dropdown .ant-picker-header-view {
+  color: #0b1220 !important;
+}
+.ant-picker-dropdown .ant-picker-cell-in-view.ant-picker-cell-today .ant-picker-cell-inner::before {
+  border-color: #4f46e5 !important;
+}
+.ant-picker-dropdown .ant-picker-cell-in-view.ant-picker-cell-selected .ant-picker-cell-inner {
+  background: linear-gradient(135deg, #4f46e5, #0ea5e9) !important;
+  color: #fff !important;
+}
+
+/* Dark theme overrides for DatePicker panel */
+[data-theme="black"] .ant-picker-dropdown .ant-picker-panel-container,
+[data-theme="black"] .ant-picker-dropdown .ant-picker-panel,
+[data-theme="black"] .ant-picker-dropdown .ant-picker-date-panel,
+[data-theme="black"] .ant-picker-dropdown .ant-picker-month-panel,
+[data-theme="black"] .ant-picker-dropdown .ant-picker-year-panel,
+[data-theme="black"] .ant-picker-dropdown .ant-picker-decade-panel {
+  background: #121620 !important;
+  border-color: #242a36 !important;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.55) !important;
+}
+[data-theme="black"] .ant-picker-dropdown .ant-picker-header,
+[data-theme="black"] .ant-picker-dropdown .ant-picker-content,
+[data-theme="black"] .ant-picker-dropdown .ant-picker-content th,
+[data-theme="black"] .ant-picker-dropdown .ant-picker-cell,
+[data-theme="black"] .ant-picker-dropdown .ant-picker-footer {
+  background: #121620 !important;
+  color: #e7ecf3 !important;
+}
+[data-theme="black"] .ant-picker-dropdown .ant-picker-header button,
+[data-theme="black"] .ant-picker-dropdown .ant-picker-header-view {
+  color: #e7ecf3 !important;
+}
+
+/* Radio */
+.alumni-registration .ant-radio-wrapper { color: var(--text) !important; }
+.alumni-registration .ant-radio-inner {
+  border-color: var(--border-strong) !important;
+  background: var(--surface) !important;
+}
+.alumni-registration .ant-radio-checked .ant-radio-inner {
+  background: var(--accent) !important;
+  border-color: var(--accent) !important;
+}
+.alumni-registration .ant-radio:hover .ant-radio-inner {
+  border-color: var(--accent) !important;
+}
+
+/* Checkbox */
+.alumni-registration .ant-checkbox-wrapper { color: var(--text) !important; }
+.alumni-registration .ant-checkbox-inner {
+  border-color: var(--border-strong) !important;
+  background: var(--surface) !important;
+  border-radius: 6px !important;
+}
+.alumni-registration .ant-checkbox-checked .ant-checkbox-inner {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2)) !important;
+  border-color: var(--accent) !important;
+}
+.alumni-registration .ant-checkbox:hover .ant-checkbox-inner {
+  border-color: var(--accent) !important;
+}
+
+/* Switch */
+.alumni-registration .ant-switch-checked {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2)) !important;
+}
+
+/* ============ Buttons ============ */
+.alumni-registration .ant-btn {
+  border-radius: 12px !important;
+  font-weight: 600 !important;
+  height: auto;
+  padding: 8px 18px;
+  transition: transform 0.2s var(--ease-smooth),
+              box-shadow 0.2s var(--ease-smooth),
+              border-color 0.2s, color 0.2s;
+}
+.alumni-registration .ant-btn-primary {
+  border: none !important;
+  color: #fff !important;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2)) !important;
+  box-shadow: 0 10px 24px var(--accent-ring) !important;
+  position: relative;
+  overflow: hidden;
+}
+.alumni-registration .ant-btn-primary::after {
+  content: ""; position: absolute; top: 0; left: 0;
+  width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.30), transparent);
+  animation: regShine 3.2s ease-in-out infinite;
+  pointer-events: none;
+}
+.alumni-registration .ant-btn-primary:hover,
+.alumni-registration .ant-btn-primary:focus {
+  transform: translateY(-1px);
+  color: #fff !important;
+  background: linear-gradient(135deg, var(--accent), var(--accent-3)) !important;
+}
+.alumni-registration .ant-btn-primary[disabled],
+.alumni-registration .ant-btn-primary[disabled]:hover {
+  background: linear-gradient(135deg, #9ca3af, #94a3b8) !important;
+  box-shadow: none !important;
+  color: #fff !important;
+  cursor: not-allowed;
+}
+.alumni-registration .ant-btn-primary[disabled]::after { display: none; }
+
+.alumni-registration .ant-btn-default {
+  background: var(--surface) !important;
+  border: 1px solid var(--border-strong) !important;
+  color: var(--text) !important;
+}
+.alumni-registration .ant-btn-default:hover {
+  color: var(--accent) !important;
+  border-color: var(--accent) !important;
+  background: var(--surface) !important;
+  transform: translateY(-1px);
+}
+.alumni-registration .ant-btn-link {
+  color: var(--accent) !important;
+  font-weight: 600 !important;
+}
+.alumni-registration .ant-btn-link:hover { color: var(--accent-2) !important; }
+.alumni-registration .ant-btn-dangerous.ant-btn-link {
+  color: #ef4444 !important;
+}
+
+/* ============ Avatar / Profile Upload ============ */
+.avatar-upload-section {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+.avatar-upload { text-align: center; }
+.avatar-upload-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+}
+.avatar-uploader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 16px 0;
+}
+.avatar-uploader .ant-upload {
+  width: 128px !important;
+  height: 128px !important;
+  border-radius: 50% !important;
+  border: 2px dashed var(--border-strong) !important;
+  background: var(--surface-2) !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s var(--ease-smooth);
+}
+.avatar-uploader .ant-upload:hover {
+  border-color: var(--accent) !important;
+  background: var(--accent-soft) !important;
+  transform: scale(1.02);
+}
+.avatar-preview {
+  position: relative;
+  width: 100%; height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+}
+.avatar-preview img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+.avatar-edit-overlay {
+  position: absolute; inset: 0;
+  background: rgba(2, 6, 23, 0.6);
+  backdrop-filter: blur(2px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  opacity: 0;
+  transition: opacity 0.3s var(--ease-smooth);
+  font-size: 12px;
+  gap: 4px;
+}
+.avatar-preview:hover .avatar-edit-overlay { opacity: 1; }
+
+.upload-button,
+.id-upload-button,
+.document-upload-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  transition: color 0.3s var(--ease-smooth);
+  font-size: 13px;
+  text-align: center;
+  padding: 8px;
+}
+.upload-button .anticon,
+.id-upload-button .anticon,
+.document-upload-button .anticon {
+  font-size: 22px;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+.avatar-uploader:hover .upload-button,
+.id-upload-button:hover,
+.profile-uploader:hover .document-upload-button { color: var(--accent); }
+
+.remove-photo-btn { margin-top: 8px; text-align: center; }
+.upload-hint {
+  display: block;
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--text-muted) !important;
+}
+
+/* ============ Documents ============ */
+.document-card {
+  margin-bottom: 16px;
+  background: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius-md) !important;
+  box-shadow: var(--shadow-xs);
+}
+.document-card .ant-card-body { padding: 16px !important; }
+
+.document-upload-section {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+.upload-instructions { flex: 1; color: var(--text-muted); }
+.upload-instructions ul {
+  margin: 8px 0;
+  padding-left: 18px;
+}
+.upload-instructions li {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+  line-height: 1.55;
+}
+
+.upload-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.profile-uploader .ant-upload {
+  width: 150px !important;
+  height: 150px !important;
+  border: 2px dashed var(--border-strong) !important;
+  border-radius: 12px !important;
+  background: var(--surface-2) !important;
+  transition: all 0.3s var(--ease-smooth);
+}
+.profile-uploader .ant-upload:hover {
+  border-color: var(--accent) !important;
+  background: var(--accent-soft) !important;
+}
+
+.document-preview {
+  position: relative;
+  width: 100%; height: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+}
+.document-preview img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+.document-overlay {
+  position: absolute; inset: 0;
+  background: rgba(2, 6, 23, 0.6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  opacity: 0;
+  transition: opacity 0.3s var(--ease-smooth);
+  font-size: 12px;
+  gap: 4px;
+}
+.document-preview:hover .document-overlay { opacity: 1; }
+
+/* ID cards */
+.id-card {
+  transition: all 0.3s var(--ease-smooth);
+  background: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius-md) !important;
+  box-shadow: var(--shadow-xs);
+}
+.id-card:hover {
+  border-color: var(--accent-ring) !important;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+.id-card.uploaded {
+  border-color: rgba(34, 197, 94, 0.40) !important;
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.08), transparent) !important;
+}
+[data-theme="black"] .id-card.uploaded {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.18), transparent) !important;
+}
+.id-card-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.id-icon {
+  font-size: 22px;
+  color: var(--accent);
+  width: 40px; height: 40px;
+  display: inline-flex;
+  align-items: center; justify-content: center;
+  background: var(--accent-soft);
+  border-radius: 10px;
+}
+.id-info { flex: 1; color: var(--text); }
+.id-info .ant-typography { color: var(--text) !important; }
+.id-info .ant-typography-secondary { color: var(--text-muted) !important; }
+.upload-status { margin-top: 4px; }
+.document-actions {
+  margin-top: 8px;
+  display: flex;
+  gap: 6px;
+}
+
+/* Document status check panel */
+.document-status-check {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  padding: 16px;
+  border-radius: var(--radius-md);
+  margin-bottom: 16px;
+}
+.status-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text);
+}
+
+/* ============ Review section ============ */
+.review-section {
+  text-align: center;
+  padding: 24px 0;
+}
+
+/* ============ Navigation Buttons ============ */
+.navigation-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  padding: 20px 0 4px;
+  flex-wrap: wrap;
+}
+
+/* ============ Tags ============ */
+.alumni-registration .ant-tag {
+  border-radius: 999px !important;
+  padding: 2px 12px !important;
+  font-weight: 600;
+  font-size: 12px;
+  border: 1px solid var(--border) !important;
+  background: var(--surface-2) !important;
+  color: var(--text) !important;
+}
+.honor-tag {
+  border: 1px solid var(--accent-ring) !important;
+  background: var(--accent-soft) !important;
+  color: var(--accent) !important;
+  border-radius: 999px !important;
+  padding: 2px 10px !important;
+  font-size: 11.5px !important;
+}
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+/* ============ Dividers ============ */
+.alumni-registration .ant-divider {
+  border-color: var(--border) !important;
+}
+.alumni-registration .ant-divider-inner-text {
+  color: var(--text-muted) !important;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+/* ============ Modal (Preview) ============
+   Modals portal outside .alumni-registration scope, so use absolute colors. */
+.preview-modal .ant-modal-content {
+  background: #ffffff !important;
+  color: #0b1220 !important;
+  border-radius: 22px !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 28px 60px rgba(2, 6, 23, 0.25) !important;
+  padding: 0 !important;
+  overflow: hidden;
+}
+[data-theme="black"] .preview-modal .ant-modal-content {
+  background: #121620 !important;
+  color: #e7ecf3 !important;
+  border: 1px solid #242a36 !important;
+  box-shadow: 0 28px 60px rgba(0, 0, 0, 0.7) !important;
+}
+.preview-modal .ant-modal-mask {
+  background: rgba(2, 6, 23, 0.78) !important;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+[data-theme="black"] .preview-modal .ant-modal-mask {
+  background: rgba(0, 0, 0, 0.82) !important;
+}
+.preview-modal .ant-modal-header {
+  background: linear-gradient(135deg, #4f46e5, #7c3aed 50%, #0ea5e9) !important;
+  border-bottom: none !important;
+  padding: 20px 24px !important;
+}
+.preview-modal .ant-modal-title {
+  color: #fff !important;
+  font-size: 18px !important;
+  font-weight: 700;
+}
+.preview-modal .ant-modal-close,
+.preview-modal .ant-modal-close-x {
+  color: #fff !important;
+}
+.preview-modal .ant-modal-close:hover { color: rgba(255, 255, 255, 0.85) !important; }
+.preview-modal .ant-modal-body {
+  padding: 0 !important;
+  max-height: 80vh;
+  overflow-y: auto;
+  background: #f1f5f9;
+}
+[data-theme="black"] .preview-modal .ant-modal-body { background: #0a0c12; }
+
+
+/* Preview content */
+.preview-content {
+  background: transparent;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+/* Preview header (gradient hero) */
+.preview-header {
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #0ea5e9 100%);
+  color: #fff;
+  padding: 40px 32px;
+  position: relative;
+  overflow: hidden;
+}
+.preview-header::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 320px; height: 320px;
+  background: rgba(255, 255, 255, 0.10);
+  border-radius: 50%;
+  transform: translate(30%, -30%);
+}
+.preview-profile-section {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  position: relative;
+  z-index: 2;
+}
+.profile-image-container { flex-shrink: 0; }
+.profile-image-wrapper {
+  position: relative;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid rgba(255, 255, 255, 0.35);
+  transition: all 0.3s var(--ease-smooth);
+}
+.profile-image-wrapper:hover {
+  border-color: rgba(255, 255, 255, 0.7);
+  transform: scale(1.04);
+}
+.preview-profile-img {
+  width: 140px; height: 140px;
+  object-fit: cover;
+  display: block;
+}
+.image-zoom-overlay {
+  position: absolute; inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  opacity: 0;
+  transition: opacity 0.3s var(--ease-smooth);
+  cursor: pointer;
+}
+.profile-image-wrapper:hover .image-zoom-overlay { opacity: 1; }
+.image-zoom-overlay .anticon { font-size: 24px; margin-bottom: 8px; }
+.default-avatar {
+  background: rgba(255, 255, 255, 0.20);
+  border: 4px solid rgba(255, 255, 255, 0.35);
+}
+.profile-info { flex: 1; }
+.preview-name {
+  color: #fff !important;
+  margin-bottom: 8px !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.01em;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+.preview-title {
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 18px;
+  display: block;
+  margin-bottom: 16px;
+  font-weight: 500;
+}
+.preview-contact-info { margin-top: 20px; }
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 0;
+  color: rgba(255, 255, 255, 0.92);
+}
+.contact-item .anticon,
+.contact-icon {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.85);
+  width: 20px;
+}
+.contact-details { display: flex; flex-direction: column; }
+.contact-label {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 12px;
+  font-weight: 500;
+}
+.contact-value {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Preview body */
+.preview-body { padding: 32px; }
+.company-header-preview {
+  padding: 16px;
+  background: var(--surface-2);
+  border-radius: var(--radius-md);
+  margin-bottom: 16px;
+  border: 1px solid var(--border);
+}
+
+.preview-card {
+  margin-bottom: 24px;
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 14px !important;
+  box-shadow: 0 4px 14px rgba(2, 6, 23, 0.08) !important;
+  transition: box-shadow 0.3s var(--ease-smooth);
+}
+.preview-card:hover { box-shadow: 0 14px 34px rgba(2, 6, 23, 0.12) !important; }
+.preview-card .ant-card-body { padding: 24px !important; background: transparent !important; }
+[data-theme="black"] .preview-card {
+  background: #121620 !important;
+  border: 1px solid #242a36 !important;
+  color: #e7ecf3 !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45) !important;
+}
+
+
+/* Section headers (inside preview) */
+.preview-section { margin-bottom: 32px; }
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--border);
+}
+.section-icon {
+  color: var(--accent);
+  font-size: 22px;
+}
+.section-title.ant-typography,
+.section-title {
+  margin: 0 !important;
+  color: var(--text) !important;
+  font-weight: 700;
+}
+
+/* Detail rows / items */
+.detail-row,
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+}
+.detail-row:last-child,
+.detail-item:last-child { border-bottom: none; }
+
+.subsection {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+.subsection-title {
+  display: block;
+  margin-bottom: 12px;
+  color: var(--text);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+/* Bio / text blocks */
+.preview-bio {
+  color: var(--text-muted);
+  line-height: 1.7;
+  font-size: 14.5px;
+  margin: 0;
+  text-align: justify;
+}
+.preview-text {
+  color: var(--text-muted);
+  line-height: 1.65;
+  font-size: 14px;
+  margin: 8px 0 0 0;
+  background: var(--surface-2);
+  padding: 14px 16px;
+  border-radius: 10px;
+  border-left: 3px solid var(--accent);
+}
+
+/* Info card */
+.info-card {
+  background: var(--surface-2) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius-md) !important;
+}
+.info-card .ant-card-body { padding: 20px !important; }
+.info-section { margin-bottom: 24px; }
+.info-section:last-child { margin-bottom: 0; }
+.info-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px !important;
+  color: var(--text) !important;
+  font-weight: 700;
+}
+.info-items {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  color: var(--text-muted);
+}
+.info-item .anticon {
+  color: var(--accent);
+  margin-top: 2px;
+  font-size: 16px;
+}
+
+/* Sidebar card */
+.sidebar-card {
+  position: sticky;
+  top: 20px;
+  background: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius-md) !important;
+  box-shadow: var(--shadow-xs) !important;
+}
+.sidebar-card .ant-card-body { padding: 20px !important; }
+.sidebar-section { margin-bottom: 28px; }
+.sidebar-section:last-child { margin-bottom: 0; }
+.sidebar-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px !important;
+  color: var(--text) !important;
+  font-weight: 700;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.sidebar-items {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.sidebar-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  transition: background-color 0.25s var(--ease-smooth);
+}
+.sidebar-item:hover { background: var(--surface-2); }
+.sidebar-item.clickable { cursor: pointer; }
+.sidebar-item.clickable:hover { background: var(--accent-soft); }
+.sidebar-icon {
+  font-size: 16px;
+  color: var(--accent);
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+.sidebar-icon.linkedin  { color: #0a66c2; }
+.sidebar-icon.github    { color: var(--text); }
+.sidebar-icon.portfolio { color: var(--accent-2); }
+.sidebar-content { flex: 1; min-width: 0; }
+.sidebar-label {
+  color: var(--text-subtle);
+  font-size: 12px;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.sidebar-value {
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 600;
+  display: block;
+  word-break: break-word;
+}
+
+/* Document status (in sidebar / review) */
+.document-status,
+.document-status-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.document-item,
+.document-status-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.08), transparent);
+  border: 1px solid rgba(34, 197, 94, 0.30);
+  border-radius: 10px;
+  position: relative;
+  color: var(--text);
+}
+[data-theme="black"] .document-item,
+[data-theme="black"] .document-status-item {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.18), transparent);
+  border-color: rgba(34, 197, 94, 0.45);
+}
+
+.doc-icon { color: #22c55e; font-size: 16px; }
+.doc-view-btn {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--accent) !important;
+}
+.document-preview-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  color: var(--text);
+}
+
+/* Preferences */
+.preference-items {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.preference-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  color: var(--text);
+}
+.pref-icon { color: #22c55e; font-size: 14px; }
+
+/* Honors */
+.honors-container { margin-top: 16px; }
+.honor-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.10), transparent);
+  border: 1px solid rgba(245, 158, 11, 0.30);
+  border-radius: 10px;
+  transition: all 0.3s var(--ease-smooth);
+  color: var(--text);
+}
+.honor-item:hover {
+  transform: translateY(-2px);
+  border-color: rgba(245, 158, 11, 0.55);
+}
+.honor-icon { color: #f59e0b; font-size: 16px; }
+
+/* Agreement section */
+.agreement-section {
+  background: var(--surface-2);
+  padding: 16px;
+  border-radius: var(--radius-md);
+  margin-top: 24px;
+  border: 1px solid var(--border);
+}
+.agreement-status { text-align: center; color: var(--text); }
+.agreement-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--text);
+}
+
+/* Image zoom modal */
+.image-zoom-modal .ant-modal-content {
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+}
+.image-zoom-modal .ant-modal-body {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--surface);
+}
+.zoom-container {
+  padding: 20px;
+  text-align: center;
+}
+.zoom-actions {
+  margin-top: 16px;
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+/* ============ Alerts ============ */
+.alumni-registration .ant-alert {
+  border-radius: 12px !important;
+  border: 1px solid var(--border) !important;
+  background: var(--surface-2) !important;
+}
+.alumni-registration .ant-alert-info {
+  border-color: var(--accent-ring) !important;
+  background: var(--accent-soft) !important;
+}
+.alumni-registration .ant-alert-info .ant-alert-message,
+.alumni-registration .ant-alert-info .ant-alert-icon { color: var(--accent) !important; }
+.alumni-registration .ant-alert-warning {
+  border-color: rgba(245, 158, 11, 0.40) !important;
+  background: rgba(245, 158, 11, 0.10) !important;
+}
+.alumni-registration .ant-alert-warning .ant-alert-message,
+.alumni-registration .ant-alert-warning .ant-alert-icon { color: #d97706 !important; }
+.alumni-registration .ant-alert-success {
+  border-color: rgba(34, 197, 94, 0.40) !important;
+  background: rgba(34, 197, 94, 0.10) !important;
+}
+.alumni-registration .ant-alert-success .ant-alert-message,
+.alumni-registration .ant-alert-success .ant-alert-icon { color: #16a34a !important; }
+.alumni-registration .ant-alert-error {
+  border-color: rgba(239, 68, 68, 0.40) !important;
+  background: rgba(239, 68, 68, 0.10) !important;
+}
+.alumni-registration .ant-alert-error .ant-alert-message,
+.alumni-registration .ant-alert-error .ant-alert-icon { color: #dc2626 !important; }
+[data-theme="black"] .alumni-registration .ant-alert-error .ant-alert-message { color: #fecaca !important; }
+
+/* ============ Success state ============ */
+.registration-success {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text);
+}
+.registration-success > .anticon {
+  font-size: 64px;
+  color: #22c55e;
+  margin-bottom: 16px;
+}
+
+/* ============ Registration Footer ============ */
+.registration-footer {
+  text-align: center;
+  padding: 20px 0 4px;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+.registration-footer a {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+.registration-footer a:hover { color: var(--accent-2); text-decoration: underline; }
+
+/* ============ Scrollbars ============ */
+.preview-content::-webkit-scrollbar,
+.preview-modal .ant-modal-body::-webkit-scrollbar {
+  width: 8px;
+}
+.preview-content::-webkit-scrollbar-track,
+.preview-modal .ant-modal-body::-webkit-scrollbar-track {
+  background: var(--surface-2);
+  border-radius: 4px;
+}
+.preview-content::-webkit-scrollbar-thumb,
+.preview-modal .ant-modal-body::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 4px;
+}
+.preview-content::-webkit-scrollbar-thumb:hover,
+.preview-modal .ant-modal-body::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+/* ============ Responsive ============ */
+@media (max-width: 1200px) {
+  .preview-body { padding: 24px; }
+}
+@media (max-width: 992px) {
+  .registration-card .ant-card-body { padding: 28px 24px !important; }
+}
+@media (max-width: 768px) {
+  .alumni-registration { padding: 16px 12px 48px; }
+  .registration-card { margin: 12px 0; }
+  .registration-card .ant-card-body { padding: 22px 18px !important; }
+
+  .company-header { padding: 22px 18px; }
+  .company-logo-section {
+    flex-direction: column;
+    text-align: center;
+    gap: 14px;
+  }
+
+  .registration-steps .ant-steps-item-title {
+    font-size: 13px !important;
+    line-height: 1.3 !important;
+    padding-inline-end: 0 !important;
+  }
+  .registration-steps.ant-steps-vertical .ant-steps-item-icon {
+    width: 28px !important;
+    height: 28px !important;
+    line-height: 26px !important;
+  }
+  .registration-steps.ant-steps-vertical .ant-steps-item-content {
+    min-height: auto !important;
+  }
+  .registration-steps.ant-steps-vertical .ant-steps-item-container {
+    display: flex !important;
+    align-items: center !important;
+  }
+
+  .document-upload-section { flex-direction: column; gap: 16px; }
+  .avatar-uploader .ant-upload { width: 110px !important; height: 110px !important; }
+  .profile-uploader .ant-upload { width: 130px !important; height: 130px !important; }
+
+  .navigation-buttons { flex-direction: column-reverse; gap: 10px; }
+  .navigation-buttons .ant-btn { width: 100%; }
+
+  .preview-profile-section { flex-direction: column; text-align: center; gap: 20px; }
+  .preview-header { padding: 28px 20px; }
+  .preview-profile-img { width: 120px; height: 120px; }
+  .profile-image-wrapper { margin: 0 auto; }
+  .preview-body { padding: 20px; }
+  .detail-row, .detail-item { flex-direction: column; align-items: flex-start; gap: 4px; }
+  .sidebar-card { position: static; margin-top: 20px; }
+}
+@media (max-width: 576px) {
+  .registration-header h3 { font-size: 20px !important; }
+  .company-name { font-size: 20px !important; }
+  .avatar-uploader .ant-upload { width: 96px !important; height: 96px !important; }
+  .preview-modal .ant-modal-body { max-height: 72vh; }
+  .preview-name { font-size: 22px !important; }
+  .preview-title { font-size: 15px; }
+  .preview-header { padding: 22px 16px; }
+  .preview-body { padding: 16px; }
+  .section-header { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .preview-card .ant-card-body { padding: 16px !important; }
+
+  .alumni-registration .ant-select-multiple .ant-select-selector {
+    padding: 6px 8px !important;
+  }
+  .alumni-registration .ant-form-item {
+    margin-bottom: 20px !important;
+  }
+}
+
+/* ============ Reduced motion ============ */
+@media (prefers-reduced-motion: reduce) {
+  .alumni-registration,
+  .registration-card,
+  .form-step,
+  .company-logo,
+  .ant-btn-primary::after,
+  .id-card,
+  .honor-item,
+  .profile-image-wrapper { animation: none !important; transition: none !important; }
+}
+
+
+
+/* ============ Important Notice (Email / Student ID) ============ */
+.alumni-important-notice {
+  position: relative;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 16px 44px 16px 16px;
+  margin-bottom: 18px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  background:
+    linear-gradient(180deg, rgba(254, 243, 199, 0.85), rgba(254, 243, 199, 0.55));
+  color: #78350f;
+  box-shadow: var(--shadow-sm);
+  animation: regFadeUp 0.45s var(--ease-spring) both;
+}
+
+.alumni-important-notice__icon {
+  flex: 0 0 auto;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: rgba(245, 158, 11, 0.18);
+  color: #b45309;
+  font-size: 18px;
+}
+
+.alumni-important-notice__body { flex: 1 1 auto; min-width: 0; }
+
+.alumni-important-notice__title {
+  font-weight: 700;
+  font-size: 15px;
+  margin-bottom: 4px;
+  color: #92400e;
+  letter-spacing: 0.1px;
+}
+
+.alumni-important-notice__text {
+  margin: 4px 0;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: #78350f;
+}
+
+.alumni-important-notice__list {
+  margin: 6px 0 4px;
+  padding-left: 20px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #78350f;
+}
+.alumni-important-notice__list li { margin: 2px 0; }
+
+.alumni-important-notice__link {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.alumni-important-notice__link:hover { color: var(--accent-3); }
+
+.alumni-important-notice__close {
+  position: absolute;
+  top: 8px; right: 10px;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: #92400e;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.alumni-important-notice__close:hover {
+  background: rgba(146, 64, 14, 0.12);
+  transform: rotate(90deg);
+}
+
+/* Dark theme variant */
+[data-theme="black"] .alumni-important-notice {
+  border-color: rgba(251, 191, 36, 0.30);
+  background:
+    linear-gradient(180deg, rgba(120, 53, 15, 0.35), rgba(120, 53, 15, 0.18));
+  color: #fde68a;
+}
+[data-theme="black"] .alumni-important-notice__icon {
+  background: rgba(251, 191, 36, 0.18);
+  color: #fbbf24;
+}
+[data-theme="black"] .alumni-important-notice__title { color: #fde68a; }
+[data-theme="black"] .alumni-important-notice__text,
+[data-theme="black"] .alumni-important-notice__list { color: #fcd34d; }
+[data-theme="black"] .alumni-important-notice__close { color: #fde68a; }
+[data-theme="black"] .alumni-important-notice__close:hover {
+  background: rgba(253, 230, 138, 0.14);
+}
+[data-theme="black"] .alumni-important-notice__link { color: #93c5fd; }
+[data-theme="black"] .alumni-important-notice__link:hover { color: #bfdbfe; }

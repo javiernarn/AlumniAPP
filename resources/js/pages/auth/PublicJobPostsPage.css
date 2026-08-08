@@ -1,0 +1,293 @@
+/* ==========================================================================
+   PublicJobPostsPage.css
+   OCC Alumni — Public Job Posts Page (Full-time / Part-time / Contract)
+   Imports PublicHomePage.css for shared tokens/header/footer/.ph-card/.ph-btn;
+   everything here is additive, namespaced with a "pjp-" prefix so nothing
+   collides with the homepage's or events page's own rules.
+   ========================================================================== */
+
+/* ============ PAGE HERO / JUMP-TO + SORT CONTROLS ============ */
+.pjp-hero {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 48px 32px 8px;
+  text-align: center;
+}
+
+.pjp-hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  background: rgba(79, 70, 229, 0.1);
+  color: var(--ph-accent);
+  margin-bottom: 18px;
+}
+
+.pjp-hero-title {
+  font-size: 40px !important;
+  font-weight: 900 !important;
+  margin: 0 0 12px !important;
+  color: inherit !important;
+}
+
+.pjp-hero-lead {
+  font-size: 15.5px !important;
+  opacity: 0.7;
+  color: inherit !important;
+  max-width: 640px;
+  margin: 0 auto 28px !important;
+}
+
+
+
+/* ============ SECTION spacing tweak ============ */
+.pjp-section {
+  scroll-margin-top: calc(var(--ph-header-h) + 16px);
+}
+
+.pjp-section + .pjp-section {
+  border-top: 1px solid transparent;
+}
+
+.ph-page.light .pjp-section + .pjp-section {
+  border-top-color: #edf0f5;
+}
+
+.ph-page.dark .pjp-section + .pjp-section {
+  border-top-color: #1d2230;
+}
+
+/* ============ JOB CARD ============ */
+/* Overrides .ph-card's row layout (icon + text side by side) with a
+   stacked card: banner on top, full details below — there is simply
+   more content per card here than the homepage teaser cards. */
+.pjp-card {
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
+  gap: 0;
+  cursor: default;
+}
+
+.pjp-card:hover {
+  transform: translateY(-4px);
+}
+
+/* ---- Banner image ---- */
+.pjp-media {
+  position: relative;
+  width: 100%;
+  height: 190px;
+  overflow: hidden;
+  background: linear-gradient(135deg, rgba(79, 70, 229, 0.12), rgba(14, 165, 233, 0.12));
+}
+
+.pjp-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.pjp-media-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pjp-media-empty .anticon {
+  font-size: 34px;
+  color: var(--ph-accent);
+}
+
+/* ---- Body ---- */
+.pjp-card-body {
+  padding: 18px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.pjp-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.pjp-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+  line-height: 1.4;
+}
+
+.pjp-badge.is-fulltime {
+  background: rgba(16, 185, 129, 0.14);
+  color: #0ea973;
+}
+
+.pjp-badge.is-parttime {
+  background: rgba(14, 165, 233, 0.12);
+  color: var(--ph-accent-2);
+}
+
+.pjp-badge.is-contract {
+  background: rgba(245, 158, 11, 0.14);
+  color: var(--ph-warm);
+}
+
+.pjp-badge.is-general {
+  background: rgba(124, 58, 237, 0.1);
+  color: var(--ph-accent-3);
+}
+
+.pjp-badge.is-closed {
+  background: rgba(107, 114, 128, 0.16);
+  color: #6b7280;
+}
+
+.pjp-card-title {
+  font-size: 17px !important;
+  font-weight: 800 !important;
+  margin: 0 0 8px !important;
+  color: inherit !important;
+}
+
+.pjp-card-company {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13.5px;
+  margin-bottom: 10px;
+}
+
+.pjp-card-company .anticon {
+  color: var(--ph-accent);
+}
+
+.pjp-card-desc {
+  font-size: 13.5px !important;
+  opacity: 0.72;
+  margin: 0 0 14px !important;
+  color: inherit !important;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.pjp-card-facts {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 12px;
+  margin-bottom: 14px;
+}
+
+.ph-page.light .pjp-card-facts {
+  border-top: 1px dashed #e6eaf1;
+}
+
+.ph-page.dark .pjp-card-facts {
+  border-top: 1px dashed #242a36;
+}
+
+.pjp-fact {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 13px;
+  opacity: 0.85;
+}
+
+.pjp-fact .anticon {
+  color: var(--ph-accent);
+  flex-shrink: 0;
+}
+
+/* ---- Footer: status message + actions ---- */
+.pjp-card-footer {
+  margin-top: auto;
+}
+
+.pjp-status-msg {
+  font-size: 12.5px !important;
+  opacity: 0.65;
+  margin: 0 0 12px !important;
+  line-height: 1.5;
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.pjp-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.pjp-card-actions .ph-btn {
+  flex: 1 1 auto;
+  justify-content: center;
+  font-size: 13.5px;
+  padding: 9px 16px;
+}
+
+/* ==========================================================================
+   RESPONSIVE — mobile portrait & landscape
+   ========================================================================== */
+
+/* Tablets / small laptops */
+@media (max-width: 1199px) {
+  .pjp-hero { padding: 42px 24px 8px; }
+}
+
+@media (max-width: 991px) {
+  .pjp-hero-title { font-size: 32px !important; }
+}
+
+/* Phones — portrait */
+@media (max-width: 767px) {
+  .pjp-hero { padding: 32px 20px 4px; }
+  .pjp-hero-title { font-size: 26px !important; }
+  .pjp-hero-lead { font-size: 14px !important; }
+
+  .pjp-media { height: 170px; }
+
+  .pjp-card-body { padding: 16px 16px 18px; }
+  .pjp-card-actions { flex-direction: column; }
+  .pjp-card-actions .ph-btn { width: 100%; }
+}
+
+@media (max-width: 575px) {
+  .pjp-hero-eyebrow { font-size: 12px; }
+  .pjp-hero-title { font-size: 23px !important; }
+  .pjp-card-title { font-size: 16px !important; }
+}
+
+@media (max-width: 374px) {
+  .pjp-hero { padding: 26px 16px 4px; }
+  .pjp-card-facts { gap: 6px; }
+}
+
+/* Phones — landscape (short viewport height, wide width) */
+@media (max-width: 900px) and (orientation: landscape) {
+  .pjp-hero { padding: 20px 24px 4px; }
+  .pjp-hero-title { font-size: 24px !important; margin-bottom: 6px !important; }
+  .pjp-hero-lead { margin-bottom: 16px !important; }
+
+  .pjp-media { height: 150px; }
+
+  .pjp-card-actions { flex-direction: row; }
+  .pjp-card-actions .ph-btn { width: auto; }
+}

@@ -1,0 +1,711 @@
+/* ============ Keyframes ============ */
+@keyframes dhFadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes dhFloatY {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
+}
+@keyframes dhOrbit {
+  0%   { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(20px, -20px) scale(1.08); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+@keyframes dhShine {
+  0%   { transform: translateX(-150%) skewX(-18deg); }
+  100% { transform: translateX(250%) skewX(-18deg); }
+}
+
+/* ============ HERO HEADER ============ */
+.dashboard-hero {
+   --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --dh-accent: #4f46e5;
+  --dh-accent-2: #7c3aed;
+  --dh-accent-3: #0ea5e9;
+  --dh-accent-soft: rgba(79, 70, 229, 0.08);
+  --dh-accent-ring: rgba(79, 70, 229, 0.22);
+  --dh-surface: #ffffff;
+  --dh-border: #e5e7eb;
+  --dh-border-strong: #d1d5db;
+  --dh-text: #0f172a;
+  --dh-text-muted: #64748b;
+  --dh-shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --dh-shadow-sm: 0 2px 10px rgba(15, 23, 42, 0.06);
+  --dh-shadow-md: 0 10px 28px rgba(15, 23, 42, 0.08);
+  --dh-radius-md: 14px;
+  --dh-radius-lg: 18px;
+  --dh-radius-xl: 24px;
+
+  position: relative;
+  overflow: hidden;
+  padding: 36px 32px !important;
+  border-radius: var(--dh-radius-xl);
+  background:
+    radial-gradient(1200px 500px at -10% -20%, rgba(79, 70, 229, 0.18), transparent 60%),
+    radial-gradient(900px 400px at 110% 0%, rgba(14, 165, 233, 0.18), transparent 60%),
+    linear-gradient(180deg, var(--dh-surface) 0%, var(--dh-surface) 100%);
+  border: 1px solid var(--dh-border);
+  box-shadow: var(--dh-shadow-md);
+  animation: dhFadeUp 0.7s var(--ease-spring) both;
+  font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+}
+
+
+.alumni-dashboard-container{
+     padding: 24px;
+     padding-bottom: 48px;
+     padding-top: 12px;
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+}
+.dashboard-hero__bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.dashboard-hero__bg .orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.55;
+  animation: dhOrbit 14s ease-in-out infinite;
+  
+}
+.dashboard-hero .orb-1 { width: 240px; height: 240px; background: #6366f1; top: -60px; left: -40px; }
+.dashboard-hero .orb-2 { width: 300px; height: 300px; background: #06b6d4; bottom: -120px; right: -60px; animation-duration: 18s; }
+.dashboard-hero .orb-3 { width: 180px; height: 180px; background: #a855f7; top: 40%; left: 50%; animation-duration: 22s; opacity: 0.32; }
+
+.dashboard-hero .grid-overlay {
+  position: absolute;
+  inset: 0;
+  
+  background-image:
+    linear-gradient(to right, rgba(15, 23, 42, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(15, 23, 42, 0.06) 1px, transparent 1px);
+  background-size: 36px 36px;
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+}
+
+.dashboard-hero__content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.dashboard-hero__left {
+  flex: 1 1 420px;
+  min-width: 0;
+}
+
+.dashboard-hero__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+.dashboard-hero__logo {
+  height: 52px;
+  width: 52px;
+  object-fit: contain;
+  border-radius: 12px;
+  background: var(--dh-surface);
+  padding: 6px;
+  box-shadow: var(--dh-shadow-sm);
+  animation: dhFloatY 6s ease-in-out infinite;
+}
+.dashboard-hero__brand-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+.dashboard-chip {
+  background: var(--dh-accent-soft) !important;
+  color: var(--dh-accent) !important;
+  border: 1px solid var(--dh-accent-ring) !important;
+  border-radius: 999px !important;
+  padding: 4px 12px !important;
+  font-weight: 600 !important;
+  font-size: 12px !important;
+  margin: 0 !important;
+}
+.dashboard-hero__eyebrow {
+  color: var(--dh-text-muted) !important;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.dashboard-hero__title {
+  font-size: clamp(26px, 3.4vw, 38px) !important;
+  line-height: 1.1 !important;
+  font-weight: 800 !important;
+  margin: 4px 0 8px !important;
+  color: var(--dh-text) !important;
+  letter-spacing: -0.02em;
+}
+.dashboard-hero .grad-text {
+  background: linear-gradient(135deg, var(--dh-accent) 0%, var(--dh-accent-3) 50%, var(--dh-accent-2) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.dashboard-hero__lead {
+  color: var(--dh-text-muted) !important;
+  font-size: 15px !important;
+  line-height: 1.65 !important;
+  max-width: 620px;
+  margin: 0 !important;
+}
+
+/* Controls (Select + Print) */
+.dashboard-hero__controls {
+  display: flex;
+  align-items: center;
+  align-self: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.dashboard-hero__select.ant-select {
+  height: 44px;
+}
+.dashboard-hero__select .ant-select-selector {
+  height: 44px !important;
+  min-width: 140px;
+  border-radius: 12px !important;
+  border: 1px solid var(--dh-border-strong) !important;
+  background: var(--dh-surface) !important;
+  display: flex !important;
+  align-items: center;
+  font-weight: 600;
+  box-shadow: var(--dh-shadow-xs);
+  transition: border-color 0.25s var(--ease-smooth), box-shadow 0.25s var(--ease-smooth);
+}
+.dashboard-hero__select .ant-select-selector:hover {
+  border-color: var(--dh-accent) !important;
+}
+.dashboard-hero__select .ant-select-selection-item,
+.dashboard-hero__select .ant-select-selection-placeholder {
+  display: flex !important;
+  align-items: center;
+  line-height: normal !important;
+}
+.dashboard-hero__select .ant-select-arrow {
+  display: flex;
+  align-items: center;
+  color: var(--dh-text-muted);
+}
+
+.dashboard-hero__print-btn.ant-btn {
+  height: 44px !important;
+  padding: 0 22px !important;
+  border-radius: 12px !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  border: none !important;
+  color: #fff !important;
+  background: linear-gradient(135deg, var(--dh-accent), var(--dh-accent-2)) !important;
+  box-shadow: 0 10px 24px var(--dh-accent-ring) !important;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.25s var(--ease-smooth), box-shadow 0.25s var(--ease-smooth);
+}
+.dashboard-hero__print-btn.ant-btn::after {
+  content: "";
+  position: absolute; top: 0; left: 0; width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+  animation: dhShine 3s ease-in-out infinite;
+  pointer-events: none;
+}
+.dashboard-hero__print-btn.ant-btn:hover,
+.dashboard-hero__print-btn.ant-btn:focus {
+  transform: translateY(-2px);
+  color: #fff !important;
+  box-shadow: 0 14px 30px var(--dh-accent-ring) !important;
+}
+.dashboard-hero__print-btn.ant-btn .anticon {
+  color: #fff !important;
+}
+
+/* Hero responsive */
+@media (max-width: 768px) {
+  .dashboard-hero { padding: 28px 20px; border-radius: 18px; }
+  .dashboard-hero__content { flex-direction: column; align-items: flex-start; }
+  .dashboard-hero__left {
+    flex: 0 1 auto;   /* was "1 1 420px" — in column layout that read as a 420px MIN-HEIGHT, causing the huge gap */
+    width: 100%;
+    min-width: 0;
+  }
+  .dashboard-hero__controls {
+    width: 100%;
+    margin-top: 16px; /* small breathing room instead of the old forced gap */
+  }
+  .dashboard-hero__select,
+  .dashboard-hero__select .ant-select-selector { width: 100% !important; }
+  .dashboard-hero__print-btn { flex: 1; }
+}
+
+/* ============ Dark theme for hero ============ */
+[data-theme="black"] .dashboard-hero {
+  background:
+    radial-gradient(1200px 500px at -10% -20%, rgba(99, 102, 241, 0.22), transparent 60%),
+    radial-gradient(900px 400px at 110% 0%, rgba(14, 165, 233, 0.18), transparent 60%),
+    #14161d !important;
+  border-color: #262a33 !important;
+}
+[data-theme="black"] .dashboard-hero .grid-overlay {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+}
+[data-theme="black"] .dashboard-hero__title { color: #e7e9ee !important; }
+[data-theme="black"] .dashboard-hero__lead,
+[data-theme="black"] .dashboard-hero__eyebrow { color: #9ba3af !important; }
+[data-theme="black"] .dashboard-hero__logo { background: #1b1e27; }
+[data-theme="black"] .dashboard-hero__select .ant-select-selector {
+  background: #1b1e27 !important;
+  border-color: #2f3440 !important;
+  color: #e7e9ee !important;
+}
+[data-theme="black"] .dashboard-hero__select .ant-select-selection-item {
+  color: #e7e9ee !important;
+}
+[data-theme="black"] .dashboard-hero__select .ant-select-arrow {
+  color: #9ba3af;
+}
+
+/* Print button keeps the same blue/violet gradient + shine in black theme — never goes flat */
+[data-theme="black"] .dashboard-hero__print-btn.ant-btn {
+  background: linear-gradient(135deg, var(--dh-accent), var(--dh-accent-2)) !important;
+  box-shadow: 0 10px 24px var(--dh-accent-ring) !important;
+  color: #fff !important;
+}
+[data-theme="black"] .dashboard-hero__print-btn.ant-btn:hover,
+[data-theme="black"] .dashboard-hero__print-btn.ant-btn:focus {
+  box-shadow: 0 14px 30px var(--dh-accent-ring) !important;
+}
+
+/* ==============================================
+   ⬇️  EVERYTHING BELOW IS YOUR ORIGINAL CSS, INTACT
+   (metric cards, dashboard cards, charts, lists,
+    tables, badges, scrollbars, dark theme, print modal)
+   ============================================== */
+
+/* Metric Cards */
+.metrics-row { margin-top: 24px; margin-bottom: 24px; }
+.metric-card {
+  border-radius: 12px;
+  text-align: center;
+  transition: all 0.3s ease;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+.metric-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1); }
+.metric-card .ant-statistic-title { font-size: 14px; color: #666; margin-bottom: 8px; }
+.metric-card .ant-statistic-content { font-size: 28px; font-weight: 600; }
+
+/* Dashboard Cards */
+.dashboard-card {
+  border-radius: 12px; border: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+.dashboard-card:hover { box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1); }
+.dashboard-card .ant-card-head { border-bottom: 1px solid #f0f0f0; padding: 16px 24px; }
+.dashboard-card .ant-card-body { padding: 24px; }
+
+/* Chart Containers */
+.chart-container { width: 100%; }
+.chart-container .ant-typography { margin-bottom: 16px; color: #1a1a1a; font-weight: 600; }
+.chart-legend { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; margin-top: 16px; }
+.legend-item { display: flex; align-items: center; gap: 8px; padding: 4px 8px; background: #fafafa; border-radius: 6px; }
+.legend-color { width: 12px; height: 12px; border-radius: 2px; }
+
+/* List Styles */
+.dashboard-card .ant-list-item { padding: 16px 0; border-bottom: 1px solid #f0f0f0; }
+.dashboard-card .ant-list-item:last-child { border-bottom: none; }
+.dashboard-card .ant-avatar { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+
+/* Progress Bars */
+.dashboard-card .ant-progress-line { line-height: 1; }
+
+/* Status Tags */
+.ant-tag { border: none; border-radius: 12px; font-size: 11px; padding: 2px 8px; font-weight: 500; }
+
+/* Responsive (non-header) */
+@media (max-width: 768px) {
+  .alumni-dashboard { padding: 16px; }
+  .metrics-row .ant-col { margin-bottom: 16px; }
+  .chart-container { overflow-x: auto; }
+}
+@media (max-width: 576px) {
+  .dashboard-card .ant-card-body { padding: 16px; }
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.metric-card, .dashboard-card { animation: fadeInUp 0.5s ease; }
+
+/* Scrollbar for charts */
+.chart-container::-webkit-scrollbar { height: 6px; }
+.chart-container::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 3px; }
+.chart-container::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 3px; }
+.chart-container::-webkit-scrollbar-thumb:hover { background: #a8a8a8; }
+
+/* Table */
+.dashboard-card .ant-table { background: transparent; }
+.dashboard-card .ant-table-thead > tr > th { background: #fafafa; border-bottom: 2px solid #f0f0f0; font-weight: 600; }
+.dashboard-card .ant-table-tbody > tr > td { border-bottom: 1px solid #f8f8f8; }
+.dashboard-card .ant-table-tbody > tr:hover > td { background: #fafafa; }
+
+/* Badges & Rate */
+.ant-badge-count { font-size: 10px; font-weight: 600; box-shadow: 0 0 0 1px #fff; }
+.ant-rate { font-size: 14px; }
+.ant-rate-star:not(:last-child) { margin-right: 4px; }
+
+/* ==================== DARK THEME ==================== */
+
+
+
+
+[data-theme="black"] .legend-item { background: #2a2a2a !important; }
+[data-theme="black"] .legend-item .ant-typography { color: #fff !important; }
+
+/* ==================================================
+   PRINT PREVIEW & PRINTABLE AREA — ALWAYS WHITE / DEFAULT
+   These rules are unconditional (no [data-theme] selector at all),
+   so the preview modal and the printable report always render on
+   a plain white background with dark, legible text — regardless
+   of whether the rest of the app is in light or dark/black theme.
+   ================================================== */
+
+/* Modal shell */
+.print-preview-modal .ant-modal-content,
+.print-preview-modal .ant-modal-header,
+.print-preview-modal .ant-modal-body,
+.print-preview-modal .ant-modal-footer {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #e5e7eb !important;
+}
+.print-preview-modal .ant-modal-title,
+.print-preview-modal .ant-modal-close-x {
+  color: #0f172a !important;
+}
+
+/* Override app dark theme inside preview + printable area (belt-and-suspenders:
+   same effect as the unconditional rules above, kept explicit for dark theme
+   in case a more specific app-wide dark-modal rule loads after this file). */
+[data-theme="black"] .print-preview-modal .ant-modal-content,
+[data-theme="black"] .print-preview-modal .ant-modal-header,
+[data-theme="black"] .print-preview-modal .ant-modal-body,
+[data-theme="black"] .print-preview-modal .ant-modal-footer,
+[data-theme="black"] #printable-area,
+[data-theme="black"] #printable-area * {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #d9d9d9 !important;
+}
+[data-theme="black"] #printable-area .ant-table-thead > tr > th {
+  background: #f5f7fa !important;
+}
+
+/* ==================================================
+   PRINT PREVIEW HEADER — READABLE TITLE & CLOSE BUTTON
+   The title text and close (X) button must always read as
+   dark text on the white preview header, in every app theme,
+   and regardless of any gradient/opacity styling used
+   elsewhere in the app. Also normalizes the modal body's
+   scrollbar so it never renders as a dark/black bar.
+   ================================================== */
+.print-preview-modal .ant-modal-header .ant-modal-title,
+.print-preview-modal .ant-modal-title {
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+  opacity: 1 !important;
+  font-weight: 600 !important;
+}
+.print-preview-modal .ant-modal-close,
+.print-preview-modal .ant-modal-close-x {
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+  opacity: 1 !important;
+}
+.print-preview-modal .ant-modal-close .anticon,
+.print-preview-modal .ant-modal-close-x .anticon,
+.print-preview-modal .ant-modal-close svg {
+  color: #0f172a !important;
+  fill: #0f172a !important;
+}
+.print-preview-modal .ant-modal-close:hover,
+.print-preview-modal .ant-modal-close:hover .ant-modal-close-x {
+  color: #000000 !important;
+  background: rgba(15, 23, 42, 0.06) !important;
+}
+[data-theme="black"] .print-preview-modal .ant-modal-header .ant-modal-title,
+[data-theme="black"] .print-preview-modal .ant-modal-title,
+[data-theme="black"] .print-preview-modal .ant-modal-close,
+[data-theme="black"] .print-preview-modal .ant-modal-close-x {
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+  opacity: 1 !important;
+}
+[data-theme="black"] .print-preview-modal .ant-modal-close .anticon,
+[data-theme="black"] .print-preview-modal .ant-modal-close-x .anticon,
+[data-theme="black"] .print-preview-modal .ant-modal-close svg {
+  color: #0f172a !important;
+  fill: #0f172a !important;
+}
+
+/* Scrollbar inside the print preview modal — always light, never the
+   app's dark-theme scrollbar, so it doesn't look like a black bar
+   cutting through the white page. */
+.print-preview-modal .ant-modal-body {
+  scrollbar-color: #c1c1c1 #f1f1f1;
+}
+.print-preview-modal .ant-modal-body::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+.print-preview-modal .ant-modal-body::-webkit-scrollbar-track {
+  background: #f1f1f1 !important;
+  border-radius: 6px;
+}
+.print-preview-modal .ant-modal-body::-webkit-scrollbar-thumb {
+  background: #c1c1c1 !important;
+  border-radius: 6px;
+}
+.print-preview-modal .ant-modal-body::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8 !important;
+}
+
+/* Printable surface — light theme always */
+#printable-area,
+#printable-area * {
+  color: #0f172a !important;
+  border-color: #d9d9d9;
+}
+#printable-area {
+  background: #ffffff !important;
+}
+
+/* ==================================================
+   WYSIWYG PRINT PREVIEW
+   #printable-area is the exact same element that gets printed.
+   It now carries ONE fixed size (real A4 minus real @page margins)
+   and ONE set of spacing/typography rules that apply on screen and
+   on paper alike. Nothing about size, spacing or font-size changes
+   between "preview" and "print" any more — @media print (in
+   DashboardPage.js) only handles page mechanics (visibility,
+   absolute positioning, hiding the modal chrome), never appearance.
+   That's what keeps the admin's preview and the printed page
+   identical. ================================================== */
+.printable-area-surface {
+  width: 190mm;      /* A4 210mm minus the 10mm @page margin on each side */
+  min-height: 277mm; /* A4 297mm minus the 10mm @page margin on each side */
+  padding: 8mm;
+  box-sizing: border-box;
+}
+
+/* Screen-only "paper on a tray" wrapper so the fixed-size page reads as
+   a page, not a stretched block. Purely cosmetic — never printed. */
+.print-preview-canvas {
+  background: #e9edf2;
+  padding: 24px 12px;
+  overflow-x: auto; /* narrow screens scroll sideways instead of squashing
+                        the page — squashing would break the WYSIWYG promise */
+}
+.print-preview-canvas .printable-area-surface {
+  margin: 0 auto;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.18);
+}
+@media (max-width: 768px) {
+  .print-preview-canvas { padding: 16px 8px; }
+}
+
+/* Responsive modal shell for the print preview */
+@media (max-width: 768px) {
+  .print-preview-modal .ant-modal {
+    max-width: calc(100vw - 16px);
+    margin: 8px auto;
+  }
+  .print-preview-modal .ant-modal-header,
+  .print-preview-modal .ant-modal-footer {
+    padding: 12px 16px;
+  }
+}
+#printable-area .ant-card,
+#printable-area .ant-card-body,
+#printable-area .ant-card-head {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #d9d9d9 !important;
+}
+#printable-area .ant-typography,
+#printable-area .ant-typography-secondary {
+  color: #0f172a !important;
+}
+#printable-area .print-muted {
+  color: #64748b !important;
+}
+#printable-area .ant-table,
+#printable-area .ant-table-container,
+#printable-area .ant-table-content,
+#printable-area .ant-table-tbody > tr > td,
+#printable-area .ant-table-thead > tr > th {
+  background: #ffffff !important;
+  color: #0f172a !important;
+}
+#printable-area .ant-table-thead > tr > th {
+  background: #f5f7fa !important;
+  border-bottom: 1px solid #d9d9d9 !important;
+}
+#printable-area .ant-table-tbody > tr:hover > td {
+  background: #fafafa !important;
+}
+
+/* ==================================================
+   PRINT-ACCURATE SPACING & TYPOGRAPHY
+   These used to live only inside @media print, which is exactly
+   why the on-screen preview didn't match the printed page — cards
+   were 24px-padded and 16px apart on screen but 10px/8px the
+   moment you printed. Applying the same numbers always means the
+   preview shows precisely what will come out of the printer.
+   ================================================== */
+.print-block {
+  margin-bottom: 8mm;
+  border: 1px solid #d9d9d9;
+  background: #ffffff;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+#printable-area .ant-card-body {
+  padding: 10px 12px;
+}
+.print-report-header {
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+}
+#printable-area .ant-table {
+  font-size: 10px;
+}
+#printable-area .ant-table-thead > tr > th {
+  padding: 8px 6px;
+  font-weight: 600;
+  font-size: 10px;
+}
+#printable-area .ant-table-tbody > tr > td {
+  padding: 6px;
+  font-size: 9px;
+}
+.print-chart-box {
+  height: 210px;
+}
+#printable-area .recharts-wrapper,
+#printable-area .recharts-surface {
+  width: 100%;
+  height: auto;
+}
+#printable-area svg {
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  overflow: visible;
+}
+#printable-area .recharts-legend-item-text {
+  font-size: 10px;
+}
+#printable-area .recharts-cartesian-axis-tick-value {
+  font-size: 9px;
+}
+#printable-area .recharts-text,
+#printable-area .recharts-legend-item-text,
+#printable-area .recharts-cartesian-axis-tick-value {
+  fill: #0f172a !important;
+  color: #0f172a !important;
+}
+
+/* Enhanced print report blocks */
+.print-section-title {
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  color: #0f172a !important;
+  margin: 0 0 10px 0 !important;
+  padding-bottom: 6px;
+  border-bottom: 2px solid #1890ff;
+}
+.print-insight-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 8px;
+}
+.print-insight-item {
+  border: 1px solid #e5e7eb;
+  background: #fafbfc !important;
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+.print-insight-label {
+  font-size: 11px;
+  color: #64748b !important;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+.print-insight-value {
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f172a !important;
+  margin-top: 2px;
+}
+.print-signature {
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+  margin-top: 40px;
+}
+.print-signature .sig-block {
+  flex: 1;
+  text-align: center;
+}
+.print-signature .sig-line {
+  border-top: 1px solid #0f172a;
+  margin-top: 40px;
+  padding-top: 4px;
+  font-size: 11px;
+}
+
+/* ==================================================
+   WHERE PRINT RULES LIVE NOW
+   - Appearance (size, padding, margins, font-size, chart height) is
+     defined ONCE, above, unconditionally — it applies identically
+     on screen and on paper. Never duplicate an appearance rule
+     inside @media print again; that duplication is exactly what
+     caused preview/print drift before.
+   - @media print, inside the `<style jsx global>` block in
+     DashboardPage.js, is reserved strictly for page MECHANICS:
+     hiding everything except #printable-area, switching it to
+     position:absolute so it fills the physical page, hiding the
+     modal chrome, and the @page size/margin rule itself.
+   ================================================== */

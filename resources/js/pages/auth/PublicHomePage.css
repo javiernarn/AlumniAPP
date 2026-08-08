@@ -1,0 +1,1825 @@
+/* ==========================================================================
+   PublicHomePage.css
+   OCC Alumni — Public Landing Page
+   Design tokens shared with MainPage.js / AboutPage.css (indigo / cyan / purple)
+   ========================================================================== */
+
+:root {
+  --ph-accent: #4f46e5;
+  --ph-accent-2: #0ea5e9;
+  --ph-accent-3: #7c3aed;
+  --ph-warm: #f59e0b;
+  --ph-radius-lg: 26px;
+  --ph-radius-md: 18px;
+  --ph-radius-sm: 12px;
+  /* Real header height, measured live in JS (ResizeObserver) and written
+     onto :root as --ph-header-h. The value below is only a fallback for
+     the very first paint before JS measures it. Everything that needs to
+     sit exactly under the floating header (page content, mobile panel)
+     reads this single variable, so there is never a guessed pixel value
+     to fall out of sync with the real header. */
+  --ph-header-h: 72px;
+}
+
+.ph-page {
+  min-height: 100vh;
+  width: 100%;
+  max-width: 100vw;
+  font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  transition: background 0.4s ease, color 0.4s ease;
+  /* IMPORTANT: no overflow-x (or any overflow) rule here. .ph-header is
+     position: fixed, and on iOS Safari a fixed-position descendant of an
+     ancestor with any `overflow` set (even just overflow-x: hidden) can
+     make the browser miscalculate the page's total scrollable height,
+     silently cutting scrolling short right before the real bottom of the
+     document — the footer would be the first casualty since it's last.
+     Desktop/Chrome don't have this bug, which is why it only shows up on
+     phones. Horizontal bleed is instead clipped per-section below
+     (.ph-hero, .ph-cta-banner, .ph-gallery-item already do this), and
+     max-width: 100vw above stops the page itself from ever being wider
+     than the viewport. Do not re-add overflow-x: hidden here. */
+  /* The header is now position: fixed (see .ph-header) so it no longer
+     takes up space in normal document flow. This padding pushes all page
+     content down by exactly the header's real height so nothing sits
+     underneath it, on desktop, laptop, and every mobile orientation. */
+  padding-top: var(--ph-header-h);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+.ph-page.light {
+  color: #0b1220;
+  background: #f4f7fb;
+}
+
+.ph-page.dark {
+  color: #e7ecf3;
+  background: #0a0c12;
+}
+
+.ph-page * {
+  box-sizing: border-box;
+}
+
+.ph-container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+/* ============ HEADER ============ */
+/* position: fixed (not sticky) — sticky breaks whenever an ancestor has
+   any overflow rule (here .ph-page has overflow-x: hidden), which was
+   why the header could scroll away instead of staying visible. Fixed is
+   immune to that and truly floats on top of the page at all times, on
+   desktop, laptop, and every mobile size/orientation. */
+.ph-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 32px;
+  /* iOS notch safe area: in portrait this just adds a few px of top
+     padding (notch sits top-center); in landscape safe-area-inset-top
+     is 0 but left/right become real values since the notch shifts to
+     whichever side it lands on. Since this header's real height is
+     measured live via ResizeObserver into --ph-header-h, growing the
+     header here automatically pushes .ph-page's content down to
+     match — no separate fix needed anywhere else for this part.
+     env() is 0 on Android/non-notched devices, so this is a no-op
+     there. */
+  padding-top: calc(14px + env(safe-area-inset-top));
+  padding-left: calc(32px + env(safe-area-inset-left));
+  padding-right: calc(32px + env(safe-area-inset-right));
+  box-sizing: border-box;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid transparent;
+  transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.ph-page.light .ph-header {
+  background: rgba(255, 255, 255, 0.82);
+  border-bottom-color: #e6eaf1;
+}
+
+.ph-page.dark .ph-header {
+  background: rgba(10, 12, 18, 0.82);
+  border-bottom-color: #1d2230;
+}
+
+.ph-header.scrolled.light {
+  box-shadow: 0 8px 24px rgba(2, 6, 23, 0.06);
+}
+
+.ph-header.scrolled.dark {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.ph-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.ph-brand img {
+  height: 34px;
+  width: 34px;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.ph-brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+.ph-brand-title {
+  font-weight: 800;
+  font-size: 16px;
+  letter-spacing: -0.01em;
+  color: inherit;
+}
+
+.ph-brand-title .grad {
+  background: linear-gradient(135deg, var(--ph-accent), var(--ph-accent-3) 55%, var(--ph-accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.ph-brand-sub {
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.55;
+  font-weight: 600;
+}
+
+.ph-nav {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.ph-nav-link {
+  font-size: 14.5px;
+  font-weight: 600;
+  opacity: 0.8;
+  cursor: pointer;
+  background: none;
+  border: none;
+  color: inherit;
+  padding: 6px 2px;
+  position: relative;
+  transition: opacity 0.2s ease, color 0.2s ease;
+  font-family: inherit;
+}
+
+.ph-nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 0%;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--ph-accent), var(--ph-accent-2));
+  transition: width 0.25s ease;
+}
+
+.ph-nav-link:hover {
+  opacity: 1;
+}
+
+.ph-nav-link:hover::after {
+  width: 100%;
+}
+
+/* "Events" nav dropdown trigger — same look as the plain nav links,
+   plus a small caret so it reads as a dropdown, not a scroll link. */
+.ph-nav-link-dropdown {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.ph-nav-link-caret {
+  font-size: 10px;
+  opacity: 0.7;
+  transition: transform 0.2s ease;
+}
+
+.ph-nav-link-dropdown:hover .ph-nav-link-caret {
+  transform: translateY(1px);
+}
+
+/* Dropdown menu overlay — matches the site's card surface so it
+   doesn't look like a generic default AntD popup. */
+.ph-events-dropdown-overlay .ant-dropdown-menu {
+  border-radius: var(--ph-radius-sm);
+  padding: 6px;
+  min-width: 170px;
+}
+
+.ph-events-dropdown-overlay .ant-dropdown-menu-item {
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 13.5px;
+  padding: 9px 12px;
+}
+
+.ph-events-dropdown-overlay .ant-dropdown-menu-item .anticon {
+  color: var(--ph-accent);
+  margin-right: 4px;
+}
+
+.ph-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.ph-theme-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: var(--ph-accent);
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s ease, border-color 0.2s;
+  flex-shrink: 0;
+}
+
+.ph-theme-btn:hover {
+  transform: rotate(-10deg) scale(1.06);
+  box-shadow: 0 0 0 6px rgba(79, 70, 229, 0.1);
+}
+
+.ph-page.dark .ph-theme-btn {
+  background: #121620;
+  border-color: #303746;
+  color: #60a5fa;
+}
+
+.ph-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 9px 20px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  white-space: nowrap;
+  font-family: inherit;
+}
+
+.ph-btn:active {
+  transform: scale(0.97);
+}
+
+.ph-btn-ghost {
+  background: transparent;
+  border-color: var(--ph-accent);
+  color: var(--ph-accent);
+}
+
+.ph-page.dark .ph-btn-ghost {
+  border-color: #6d68f2;
+  color: #a5a1f7;
+}
+
+.ph-btn-ghost:hover {
+  background: rgba(79, 70, 229, 0.08);
+}
+
+.ph-btn-solid {
+  background: linear-gradient(135deg, var(--ph-accent), var(--ph-accent-3));
+  color: #fff;
+  box-shadow: 0 10px 24px rgba(79, 70, 229, 0.28);
+}
+
+.ph-btn-solid:hover {
+  box-shadow: 0 14px 30px rgba(79, 70, 229, 0.38);
+  transform: translateY(-1px);
+}
+
+.ph-btn-warm {
+  background: linear-gradient(135deg, var(--ph-warm), #fb923c);
+  color: #fff;
+  box-shadow: 0 10px 24px rgba(245, 158, 11, 0.28);
+}
+
+.ph-btn-warm:hover {
+  box-shadow: 0 14px 30px rgba(245, 158, 11, 0.38);
+  transform: translateY(-1px);
+}
+
+.ph-btn-lg {
+  padding: 13px 26px;
+  font-size: 15px;
+}
+
+.ph-burger {
+  display: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  background: transparent;
+  color: inherit;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.ph-page.dark .ph-burger {
+  border-color: #303746;
+}
+
+.ph-burger.open {
+  background: var(--ph-accent);
+  border-color: var(--ph-accent);
+  color: #fff;
+  transform: rotate(90deg);
+}
+
+/* ============ MOBILE NAV PANEL (floats fixed under the header) ============ */
+/* Replaces the old full-screen slide-in drawer. This panel floats
+   (position: fixed) directly under the header, like a dropdown, so it
+   never pushes the rest of the page (hero, sections, footer) down and
+   adds no dead space — the page underneath stays reachable by
+   scrolling while the panel is open, in both portrait and landscape. */
+.ph-mobile-panel {
+  /* fixed + var(--ph-header-h), same fix as the header above: sits
+     exactly flush under the real header on every screen, in both
+     portrait and landscape, with no hardcoded/guessed offset and no
+     gap or overlap. Because it's fixed (not in normal flow) it overlays
+     the hero instead of pushing the page content down, so opening it
+     never adds dead space. */
+  position: fixed;
+  top: var(--ph-header-h);
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 480;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  /* iOS notch safe area: the header (above) already reserves this
+     space via padding-left/right, but this panel is a separate fixed
+     element and never inherited it — so in landscape its links sat
+     flush against the edge, right under the camera/notch cutout.
+     env() is 0 on Android/non-notched devices, so this is a no-op
+     there. */
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+  box-sizing: border-box;
+}
+
+.ph-mobile-panel.open {
+  /* Capped to whichever is smaller: the space left under the header, or
+     60% of the viewport. With the links now wrapped horizontally the
+     panel is short enough that this cap is rarely hit, but on very
+     short landscape phones it stops the open panel from ever filling
+     the whole screen and blocking the hero/footer beneath it. Scrolls
+     internally if its content is taller than the cap. */
+  max-height: min(calc(100vh - var(--ph-header-h)), 60vh);
+  overflow-y: auto;
+}
+
+.ph-page.light .ph-mobile-panel {
+  background: #ffffff;
+  border-bottom: 1px solid #e6eaf1;
+  box-shadow: 0 14px 28px rgba(2, 6, 23, 0.08);
+}
+
+.ph-page.dark .ph-mobile-panel {
+  background: #10131c;
+  border-bottom: 1px solid #1d2230;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.4);
+}
+
+.ph-mobile-panel-inner {
+  padding: 16px 20px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Horizontal, wrapping row of chips — same idea as the desktop .ph-nav
+   row, just allowed to wrap onto a 2nd/3rd line instead of a single
+   line. This is what actually removes the dead space: 6 links stacked
+   one-per-row (the old layout) run ~330px tall; wrapped into rows of
+   2-3 they run ~90-110px tall, so the whole panel — and the gap before
+   the footer becomes reachable — shrinks dramatically, in both
+   portrait and landscape. */
+.ph-mobile-panel-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.ph-mobile-panel-link {
+  flex: 0 0 auto;
+  padding: 9px 16px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 700;
+  border: 1.5px solid transparent;
+  background: none;
+  color: inherit;
+  text-align: center;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.ph-page.light .ph-mobile-panel-link {
+  background: #f4f6fb;
+  border-color: #e6eaf1;
+}
+
+.ph-page.dark .ph-mobile-panel-link {
+  background: #171b26;
+  border-color: #242a36;
+}
+
+.ph-mobile-panel-link:active,
+.ph-mobile-panel-link:hover {
+  border-color: var(--ph-accent);
+  color: var(--ph-accent);
+}
+
+.ph-page.dark .ph-mobile-panel-link:active,
+.ph-page.dark .ph-mobile-panel-link:hover {
+  color: #a5a1f7;
+}
+
+/* Events sub-group inside the mobile panel — the label and the row of
+   4 section buttons each force a full-width flex line (flex-basis:
+   100%) so they break onto their own rows inside the wrapping
+   .ph-mobile-panel-links row, instead of getting squeezed in beside
+   the other pill buttons. */
+.ph-mobile-panel-group-label {
+  flex: 1 0 100%;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.5;
+  margin-top: 10px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(148, 163, 184, 0.25);
+}
+
+.ph-mobile-panel-events-group {
+  flex: 1 0 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.ph-mobile-panel-event-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ============ HERO ============ */
+/* Top padding kept modest — .ph-page already pushes everything below
+   the fixed header via padding-top: var(--ph-header-h), so this value
+   is purely the breathing room under the header, not a second offset.
+   (Previously 64px, which combined with the header push made the gap
+   look much bigger than intended.) */
+.ph-hero {
+  position: relative;
+  padding: 28px 32px 40px;
+  overflow: hidden;
+}
+
+.ph-hero-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.ph-page.light .ph-hero-bg {
+  background:
+    radial-gradient(900px 500px at 100% -10%, rgba(14, 165, 233, 0.12), transparent 60%),
+    radial-gradient(900px 500px at -10% 110%, rgba(124, 58, 237, 0.1), transparent 60%);
+}
+
+.ph-page.dark .ph-hero-bg {
+  background:
+    radial-gradient(900px 500px at 100% -10%, rgba(14, 165, 233, 0.16), transparent 60%),
+    radial-gradient(900px 500px at -10% 110%, rgba(124, 58, 237, 0.18), transparent 60%);
+}
+
+.ph-hero-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 1240px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 48px;
+  align-items: center;
+}
+
+.ph-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  background: rgba(79, 70, 229, 0.1);
+  border: 1px solid rgba(79, 70, 229, 0.25);
+  color: var(--ph-accent);
+  margin-bottom: 18px;
+}
+
+.ph-page.dark .ph-hero-badge {
+  color: #a5a1f7;
+  background: rgba(99, 102, 241, 0.14);
+  border-color: rgba(99, 102, 241, 0.32);
+}
+
+.ph-hero-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  opacity: 0.65;
+  margin-bottom: 14px;
+}
+
+.ph-hero-rotator {
+  display: inline-flex;
+  align-items: center;
+  height: 34px;
+  padding: 0 16px;
+  border-radius: 999px;
+  border: 1.5px solid var(--ph-accent);
+  color: var(--ph-accent);
+  font-weight: 800;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.ph-page.dark .ph-hero-rotator {
+  border-color: #6d68f2;
+  color: #a5a1f7;
+}
+
+.ph-hero-rotator .caret {
+  display: inline-block;
+  width: 2px;
+  height: 16px;
+  margin-left: 3px;
+  background: currentColor;
+  animation: ph-blink 1s steps(1) infinite;
+}
+
+@keyframes ph-blink {
+  50% { opacity: 0; }
+}
+
+.ph-hero-title {
+  font-size: clamp(34px, 4.4vw, 54px) !important;
+  font-weight: 800 !important;
+  line-height: 1.08 !important;
+  letter-spacing: -0.01em !important;
+  margin: 0 0 18px !important;
+  color: inherit !important;
+}
+
+.ph-hero-title .grad {
+  background: linear-gradient(135deg, var(--ph-accent), var(--ph-accent-3) 55%, var(--ph-accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.ph-hero-lead {
+  font-size: 16.5px !important;
+  line-height: 1.65 !important;
+  opacity: 0.78;
+  max-width: 520px;
+  margin: 0 0 30px !important;
+  color: inherit !important;
+}
+
+.ph-hero-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 34px;
+}
+
+.ph-hero-stats {
+  display: flex;
+  gap: 28px;
+  flex-wrap: wrap;
+}
+
+.ph-hero-stat {
+  display: flex;
+  flex-direction: column;
+}
+
+.ph-hero-stat-value {
+  font-size: 22px;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--ph-accent), var(--ph-accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.ph-hero-stat-label {
+  font-size: 12.5px;
+  opacity: 0.6;
+  font-weight: 600;
+}
+
+/* Hero visual composition (illustration substitute) — a 2x2 showcase
+   of the app's four core features (Events, Alumni Directory, Job
+   Posts, Gallery), with the "Where Legacy Lives" pill and a small
+   floating accent badge layered on top. Grid-based rather than
+   hand-placed absolute percentages, so it stays balanced at every
+   size instead of leaving empty corners or stray floating icons. */
+.ph-hero-visual {
+  position: relative;
+  height: 460px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 16px;
+}
+
+.ph-visual-block {
+  position: relative;
+  border-radius: 28px;
+  overflow: hidden;
+  box-shadow: 0 14px 30px rgba(2, 6, 23, 0.14);
+}
+
+.ph-visual-block img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: inherit;
+  user-select: none;
+  pointer-events: none;
+}
+
+.ph-visual-events {
+  animation: ph-float-a 7s ease-in-out infinite;
+}
+
+.ph-visual-1 {
+  animation: ph-float-b 8s ease-in-out infinite;
+}
+
+.ph-visual-2 {
+  animation: ph-float-a 7.5s ease-in-out infinite;
+}
+
+.ph-visual-gallery {
+  animation: ph-float-b 8.5s ease-in-out infinite;
+}
+
+/* The "Job Posts" and "Photo Gallery" source images have their icon
+   badge sitting closer to the top edge of the artwork than the
+   "Events" / "Alumni" images do. With the default center-anchored
+   object-fit: cover crop, that icon was getting sliced off by the
+   tile's top edge on every layout (desktop 2x2 grid, tablet/landscape
+   4-across row, and mobile stacked square tiles). Anchoring the crop
+   to the top keeps the icon fully in frame — this single rule covers
+   every breakpoint since object-position isn't overridden anywhere
+   else in this file. */
+.ph-visual-2 img,
+.ph-visual-gallery img {
+  object-position: top;
+}
+
+.ph-visual-3 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  width: auto;
+  max-width: 64%;
+  padding: 10px 16px;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ph-page.light .ph-visual-3 {
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 22px 48px rgba(2, 6, 23, 0.22);
+  border: 1px solid #eef1f6;
+}
+
+.ph-page.dark .ph-visual-3 {
+  background: rgba(18, 22, 32, 0.96);
+  box-shadow: 0 22px 48px rgba(0, 0, 0, 0.6);
+  border: 1px solid #242a36;
+}
+
+.ph-avatar-stack {
+  display: flex;
+  flex-shrink: 0;
+}
+
+.ph-avatar-stack span {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  margin-left: -9px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10.5px;
+  font-weight: 800;
+  color: #fff;
+  box-shadow: 0 3px 8px rgba(2, 6, 23, 0.18);
+}
+
+.ph-page.dark .ph-avatar-stack span {
+  border-color: #121620;
+}
+
+.ph-avatar-stack span:first-child {
+  margin-left: 0;
+}
+
+.ph-visual-3-text-wrap {
+  position: relative;
+  display: block;
+  width: 150px;
+  min-height: 28px;
+}
+
+.ph-visual-3-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: inherit;
+  opacity: 0;
+  animation: ph-tagline-cycle 15s ease-in-out infinite;
+}
+
+@keyframes ph-tagline-cycle {
+  0% { opacity: 0; transform: translateY(5px); }
+  3% { opacity: 1; transform: translateY(0); }
+  17% { opacity: 1; transform: translateY(0); }
+  20% { opacity: 0; transform: translateY(-5px); }
+  100% { opacity: 0; }
+}
+
+.ph-float-badge {
+  position: absolute;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  z-index: 4;
+}
+
+.ph-page.light .ph-float-badge {
+  background: #ffffff;
+  box-shadow: 0 14px 30px rgba(2, 6, 23, 0.12);
+  color: var(--ph-accent);
+}
+
+.ph-page.dark .ph-float-badge {
+  background: #161a24;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.5);
+  color: #a5a1f7;
+}
+
+.ph-badge-1 { top: -14px; right: 8%; animation: ph-float-c 5s ease-in-out infinite; }
+
+@keyframes ph-float-a {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+@keyframes ph-float-b {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(8px); }
+}
+@keyframes ph-float-c {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+/* ============ SECTION shared ============ */
+.ph-section {
+  padding: 56px 32px;
+  max-width: 1240px;
+  margin: 0 auto;
+  /* Offsets scrollIntoView()/anchor jumps by the real fixed-header
+     height plus a little breathing room, so nav clicks never land a
+     section title half-hidden under the floating header. */
+  scroll-margin-top: calc(var(--ph-header-h) + 16px);
+}
+
+.ph-section-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+
+.ph-section-title {
+  font-size: 28px !important;
+  font-weight: 800 !important;
+  margin: 0 0 6px !important;
+  color: inherit !important;
+}
+
+.ph-section-sub {
+  font-size: 14.5px !important;
+  opacity: 0.65;
+  margin: 0 !important;
+  color: inherit !important;
+  max-width: 560px;
+}
+
+/* ============ CARD GRID ============ */
+.ph-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 22px;
+}
+
+.ph-card {
+  border-radius: var(--ph-radius-md);
+  padding: 22px;
+  display: flex;
+  gap: 16px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  cursor: pointer;
+  height: 100%;
+}
+
+.ph-page.light .ph-card {
+  background: #ffffff;
+  border: 1px solid #edf0f5;
+  box-shadow: 0 10px 30px rgba(2, 6, 23, 0.05);
+}
+
+.ph-page.dark .ph-card {
+  background: rgba(18, 22, 32, 0.75);
+  border: 1px solid #242a36;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.ph-card:hover {
+  transform: translateY(-4px);
+}
+
+.ph-page.light .ph-card:hover {
+  box-shadow: 0 20px 40px rgba(2, 6, 23, 0.1);
+}
+
+.ph-page.dark .ph-card:hover {
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
+}
+
+.ph-card-icon-wrap {
+  flex-shrink: 0;
+  width: 76px;
+  height: 76px;
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(79, 70, 229, 0.12), rgba(14, 165, 233, 0.12));
+}
+
+.ph-card-icon-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ph-card-icon-wrap .anticon {
+  font-size: 26px;
+  color: var(--ph-accent);
+}
+
+.ph-card-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.ph-card-title {
+  font-size: 16px !important;
+  font-weight: 800 !important;
+  margin: 0 0 6px !important;
+  color: inherit !important;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.ph-card-desc {
+  font-size: 13.5px !important;
+  opacity: 0.68;
+  margin: 0 0 12px !important;
+  color: inherit !important;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.5;
+}
+
+.ph-card-foot {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.ph-card-date {
+  font-size: 12px;
+  opacity: 0.55;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.ph-card-published {
+  display: block;
+  font-size: 11.5px;
+  font-weight: 600;
+  opacity: 0.5;
+  margin: -4px 0 10px;
+  letter-spacing: 0.01em;
+}
+
+.ph-card-link {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ph-accent);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+.ph-page.dark .ph-card-link {
+  color: #a5a1f7;
+}
+
+/* Job specific chip */
+.ph-job-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.ph-chip {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(79, 70, 229, 0.1);
+  color: var(--ph-accent);
+}
+
+.ph-page.dark .ph-chip {
+  background: rgba(99, 102, 241, 0.16);
+  color: #a5a1f7;
+}
+
+/* ============ GALLERY GRID ============ */
+.ph-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+}
+
+.ph-gallery-item {
+  position: relative;
+  border-radius: var(--ph-radius-sm);
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  cursor: zoom-in;
+}
+
+.ph-gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+  display: block;
+  /* Best-effort save/drag deterrents — see guardImageEvents in JS.
+     Nothing stops a screenshot, but this removes the one-click
+     "Save Image As…" / long-press-save paths on desktop and mobile. */
+  -webkit-user-drag: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.ph-gallery-item:hover img {
+  transform: scale(1.06);
+}
+
+.ph-gallery-count-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(2, 6, 23, 0.72);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 3px 9px;
+  border-radius: 999px;
+  backdrop-filter: blur(4px);
+  letter-spacing: 0.01em;
+  z-index: 2;
+}
+
+.ph-gallery-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: 3px;
+  padding: 14px;
+  background: linear-gradient(180deg, transparent 40%, rgba(2, 6, 23, 0.75) 100%);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.ph-gallery-item:hover .ph-gallery-overlay {
+  opacity: 1;
+}
+
+.ph-gallery-overlay-title {
+  color: #fff;
+  font-weight: 700;
+  font-size: 13.5px;
+}
+
+.ph-gallery-overlay-date {
+  color: rgba(255, 255, 255, 0.78);
+  font-weight: 600;
+  font-size: 11px;
+}
+
+/* ============ GALLERY LIGHTBOX ============ */
+.ph-lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: rgba(2, 6, 23, 0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  animation: ph-lightbox-fade 0.18s ease;
+}
+
+@keyframes ph-lightbox-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.ph-lightbox-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 2001;
+}
+
+.ph-lightbox-content {
+  max-width: min(92vw, 980px);
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.ph-lightbox-img {
+  max-width: 100%;
+  max-height: 74vh;
+  object-fit: contain;
+  border-radius: 10px;
+  cursor: zoom-in;
+  transition: transform 0.25s ease;
+  -webkit-user-drag: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.ph-lightbox-img.is-zoomed {
+  transform: scale(1.55);
+  cursor: zoom-out;
+}
+
+.ph-lightbox-caption {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  text-align: center;
+}
+
+.ph-lightbox-title {
+  color: #fff;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.ph-lightbox-date {
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.ph-lightbox-hint {
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 12px;
+}
+
+/* ============ CENTER ACTION ============ */
+.ph-center-action {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+/* ============ EMPTY / LOADING ============ */
+.ph-state-box {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 50px 20px;
+  opacity: 0.6;
+  gap: 10px;
+  text-align: center;
+}
+
+/* ============ COMING SOON CARD (E-Newsletter / Announcements) ============ */
+.ph-soon-card {
+  max-width: 1240px;
+  margin: 0 auto;
+  border-radius: var(--ph-radius-lg);
+  padding: 48px 40px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.ph-page.light .ph-soon-card {
+  background: linear-gradient(180deg, #ffffff, #f4f7fb);
+  border: 1px solid #e6eaf1;
+  box-shadow: 0 20px 50px rgba(2, 6, 23, 0.06);
+}
+
+.ph-page.dark .ph-soon-card {
+  background: linear-gradient(180deg, #12151f, #0d0f16);
+  border: 1px solid #242a36;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+}
+
+.ph-soon-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.32);
+  color: var(--ph-warm);
+  margin-bottom: 20px;
+}
+
+.ph-soon-pulse {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ph-warm);
+  box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.6);
+  animation: ph-soon-ping 1.8s ease-in-out infinite;
+}
+
+@keyframes ph-soon-ping {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.55); }
+  50%      { box-shadow: 0 0 0 9px rgba(245, 158, 11, 0); }
+}
+
+.ph-soon-title {
+  font-size: 28px !important;
+  font-weight: 800 !important;
+  margin: 0 0 12px !important;
+  color: inherit !important;
+}
+
+.ph-soon-sub {
+  font-size: 14.5px !important;
+  opacity: 0.7;
+  max-width: 560px;
+  margin: 0 auto 30px !important;
+  color: inherit !important;
+}
+
+.ph-soon-actions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.ph-soon-btn {
+  cursor: not-allowed;
+  opacity: 0.85;
+}
+
+.ph-soon-btn:hover {
+  transform: none !important;
+}
+
+.ph-soon-chip {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--ph-warm);
+  color: #fff;
+  margin-left: 2px;
+}
+
+@media (max-width: 767px) {
+  .ph-soon-card { padding: 36px 22px; }
+  .ph-soon-title { font-size: 22px !important; }
+}
+
+/* ============ CTA BANNER ============ */
+.ph-cta-banner {
+  margin: 20px 32px 70px;
+  max-width: 1176px;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 30px;
+  padding: 54px 40px;
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  background: linear-gradient(135deg, var(--ph-accent), var(--ph-accent-3) 55%, var(--ph-accent-2));
+}
+
+.ph-cta-banner::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(300px 200px at 10% 0%, rgba(255, 255, 255, 0.18), transparent 60%),
+    radial-gradient(300px 200px at 90% 100%, rgba(255, 255, 255, 0.14), transparent 60%);
+}
+
+.ph-cta-content {
+  position: relative;
+  z-index: 1;
+}
+
+.ph-cta-title {
+  color: #fff !important;
+  font-size: 30px !important;
+  font-weight: 800 !important;
+  margin: 0 0 10px !important;
+}
+
+.ph-cta-sub {
+  color: rgba(255, 255, 255, 0.88) !important;
+  font-size: 15px !important;
+  max-width: 520px;
+  margin: 0 auto 26px !important;
+}
+
+.ph-cta-actions {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.ph-btn-white {
+  background: #fff;
+  color: var(--ph-accent);
+  box-shadow: 0 10px 24px rgba(2, 6, 23, 0.2);
+}
+
+.ph-btn-white:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 30px rgba(2, 6, 23, 0.28);
+}
+
+.ph-btn-outline-white {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.7);
+  color: #fff;
+}
+
+.ph-btn-outline-white:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* ============ FOOTER ============ */
+/* display/visibility/width forced defensively: this makes the footer
+   immune to any broad, non-scoped `footer { display:none }` rule that
+   might come from elsewhere (a browser extension, a leftover template
+   stylesheet, etc.) — nothing legitimate in this app ever needs to
+   hide it, on any breakpoint or orientation. */
+.ph-footer {
+  display: block !important;
+  visibility: visible !important;
+  width: 100% !important;
+  padding: 54px 32px 24px;
+  padding-bottom: calc(24px + env(safe-area-inset-bottom));
+  padding-left: calc(32px + env(safe-area-inset-left));
+  padding-right: calc(32px + env(safe-area-inset-right));
+  box-sizing: border-box;
+  border-top: 1px solid transparent;
+}
+
+.ph-page.light .ph-footer { background: #0f1420; }
+.ph-page.dark .ph-footer { background: #05070c; }
+
+.ph-footer-inner {
+  max-width: 1240px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.3fr 1fr 1fr;
+  gap: 40px;
+}
+
+.ph-footer * {
+  color: #cbd5e1;
+}
+
+.ph-footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.ph-footer-brand img {
+  height: 40px;
+  width: 40px;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.ph-footer-brand-title {
+  font-weight: 800;
+  font-size: 16px;
+  color: #fff;
+}
+
+.ph-footer-desc {
+  font-size: 13.5px;
+  line-height: 1.7;
+  opacity: 0.75;
+  max-width: 320px;
+  margin-bottom: 18px;
+}
+
+.ph-footer-social {
+  display: flex;
+  gap: 10px;
+}
+
+.ph-footer-social a {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease, transform 0.2s ease;
+  color: #fff !important;
+}
+
+.ph-footer-social a:hover {
+  background: linear-gradient(135deg, var(--ph-accent), var(--ph-accent-2));
+  transform: translateY(-2px);
+}
+
+.ph-footer-heading {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  color: #93c5fd !important;
+}
+
+.ph-footer-links {
+  display: grid;
+  grid-template-columns: repeat(2, auto);
+  column-gap: 28px;
+  row-gap: 11px;
+  justify-content: start;
+}
+
+.ph-footer-links button,
+.ph-footer-links a {
+  background: none;
+  border: none;
+  padding: 0;
+  text-align: left;
+  font-size: 13.5px;
+  opacity: 0.78;
+  cursor: pointer;
+  font-family: inherit;
+  transition: opacity 0.2s ease, color 0.2s ease;
+}
+
+.ph-footer-links button:hover,
+.ph-footer-links a:hover {
+  opacity: 1;
+  color: #a5a1f7 !important;
+}
+
+.ph-footer-contact-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13.5px;
+  opacity: 0.8;
+  margin-bottom: 14px;
+  line-height: 1.5;
+}
+
+.ph-footer-contact-item .anticon {
+  margin-top: 2px;
+  color: #93c5fd;
+}
+
+.ph-footer-bottom {
+  max-width: 1240px;
+  margin: 36px auto 0;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 12.5px;
+  opacity: 0.55;
+}
+
+/* ============ FOOTER CREDIT (highlighted developer line) ============ */
+.ph-footer-credit {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  opacity: 1 !important;
+}
+
+.ph-footer-tag {
+  font-family: "SFMono-Regular", Menlo, Monaco, Consolas, monospace;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 6px;
+  color: #93c5fd !important;
+  background: rgba(147, 197, 253, 0.12);
+  border: 1px solid rgba(147, 197, 253, 0.25);
+}
+
+.ph-footer-dev-name {
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--ph-accent-2), var(--ph-accent), var(--ph-accent-3));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  padding: 0 1px;
+}
+
+.ph-footer-dot {
+  opacity: 0.4;
+  margin: 0 1px;
+}
+
+.ph-footer-heart {
+  display: inline-block;
+  animation: ph-heart-beat 1.6s ease-in-out infinite;
+}
+
+@keyframes ph-heart-beat {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.25); }
+}
+
+@media (max-width: 575px) {
+  .ph-footer-bottom { flex-direction: column; align-items: flex-start; }
+  .ph-footer-credit { font-size: 12px; }
+}
+
+/* ============ REVEAL ANIMATION ============ */
+.ph-reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1), transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.ph-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   Breakpoints: >=1200 desktop, 992-1199 small desktop/large tablet landscape,
+   768-991 tablet, 576-767 mobile landscape, <576 mobile portrait
+   ========================================================================== */
+
+@media (max-width: 1199px) {
+  .ph-container, .ph-section { padding-left: 24px; padding-right: 24px; }
+  .ph-header { padding: 12px 24px; }
+  .ph-hero { padding: 22px 24px 30px; }
+  .ph-footer { padding: 46px 24px 22px; }
+  .ph-cta-banner { margin-left: 24px; margin-right: 24px; }
+  .ph-nav { gap: 20px; }
+}
+
+@media (max-width: 991px) {
+  .ph-nav { display: none; }
+  .ph-burger { display: inline-flex; }
+
+  /* Sign In stays visible in the header on phones/tablets, right next
+     to the theme toggle. Sign Up is hidden here by default (mobile
+     portrait); the landscape override below brings it back. */
+  .ph-header-signup { display: none; }
+
+  .ph-hero-inner {
+    grid-template-columns: 1fr;
+    gap: 36px;
+    text-align: left;
+  }
+
+  /* Portrait now matches landscape's order: the welcome copy ("Main
+     Campus... Welcome home") comes first, the visual block sits below
+     it — previously order: -1 put the visual on top in portrait only,
+     which was inconsistent with landscape. */
+  .ph-hero-copy { order: 0; }
+
+  .ph-hero-visual {
+    height: auto;
+    order: 1;
+  }
+
+  .ph-visual-block { aspect-ratio: 1 / 1; }
+
+  .ph-hero-lead { max-width: 100%; }
+
+  .ph-grid { grid-template-columns: repeat(2, 1fr); }
+  .ph-gallery-grid { grid-template-columns: repeat(3, 1fr); }
+
+  .ph-footer-inner {
+    grid-template-columns: 1fr 1fr;
+    row-gap: 32px;
+  }
+
+  .ph-footer-brand-col { grid-column: 1 / -1; }
+}
+
+@media (max-width: 767px) {
+  .ph-hero-title { font-size: clamp(28px, 7vw, 38px) !important; }
+  .ph-hero-visual { height: auto; }
+  .ph-section { padding: 42px 20px; }
+  .ph-hero { padding: 18px 20px 24px; }
+  .ph-header { padding: 12px 18px; }
+  .ph-container { padding: 0 18px; }
+
+  .ph-grid { grid-template-columns: 1fr; }
+  .ph-gallery-grid { grid-template-columns: repeat(2, 1fr); }
+
+  .ph-section-head { flex-direction: column; align-items: flex-start; }
+
+  .ph-footer { padding: 40px 18px 20px; }
+  .ph-footer-inner { grid-template-columns: 1fr; gap: 30px; }
+  .ph-cta-banner { padding: 40px 22px; margin: 16px 18px 54px; border-radius: 22px; }
+  .ph-cta-title { font-size: 24px !important; }
+
+  .ph-card { flex-direction: column; }
+  .ph-card-icon-wrap { width: 100%; height: 150px; }
+}
+
+@media (max-width: 575px) {
+  /* "Opol Community College" stays visible in the header on mobile
+     portrait — sized down a touch so it fits comfortably next to the
+     theme toggle, Sign In button, and burger icon. */
+  .ph-brand-sub { font-size: 9px; letter-spacing: 0.05em; }
+  .ph-hero-badge { font-size: 11px; }
+  .ph-hero-stats { gap: 18px; }
+  .ph-hero-cta .ph-btn { flex: 1 1 auto; }
+  .ph-gallery-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .ph-header-actions .ph-btn-lg { padding: 9px 16px; }
+  .ph-header-actions .ph-header-signin { padding: 8px 14px; font-size: 13px; }
+}
+
+/* Smallest phones (iPhone SE / older Android, ~320-374px wide), both
+   portrait and landscape — tighten the footer a bit further so nothing
+   overflows or feels cramped at the very bottom of the width range. */
+@media (max-width: 374px) {
+  .ph-footer { padding: 34px 14px 18px; }
+  .ph-footer-inner { gap: 24px; }
+  .ph-footer-links { column-gap: 18px; }
+  .ph-footer-bottom { flex-direction: column; align-items: flex-start; gap: 6px; }
+}
+
+
+@media (max-width: 900px) and (orientation: landscape) {
+  /* Mobile landscape: Sign Up rejoins Sign In in the header, beside
+     the theme toggle — there's enough width here for both. */
+  .ph-header-signup { display: inline-flex; }
+
+  .ph-hero-inner { grid-template-columns: 1fr; }
+  .ph-hero-copy { order: 0; }
+  .ph-hero-visual {
+    grid-template-columns: repeat(4, 1fr);
+    /* extra auto row up top so the badge has its own row to sit in,
+       instead of the images having to make room underneath it */
+    grid-template-rows: auto 1fr;
+    height: auto;
+    order: 1;
+    margin-top: 6px;
+    row-gap: 10px;
+  }
+  .ph-visual-block { aspect-ratio: 1 / 1; }
+  .ph-hero { padding: 12px 24px 18px; }
+
+  /* Was position: absolute, centered on top of the images (covering
+     the two middle ones). In landscape it now becomes a normal grid
+     item pinned to its own row above the images — spans the full
+     width, but only takes up as much of it as its content needs,
+     centered like a small title over the row instead of sitting on
+     top of it. */
+  .ph-visual-3 {
+    position: static;
+    top: auto;
+    left: auto;
+    transform: none;
+    grid-row: 1;
+    grid-column: 1 / -1;
+    justify-self: center;
+    margin: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ph-visual-events, .ph-visual-1, .ph-visual-2, .ph-visual-gallery, .ph-badge-1, .ph-reveal {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* ============ ZOOM WARNING MODAL ============
+   Same component/markup as FormLogin's zoom-warning-modal. AntD Modals
+   portal to document.body, outside .ph-page, so this can't be scoped
+   under .ph-page.dark — it has to key off the global [data-theme]
+   attribute, same as FormLogin.css does. Light theme uses the plain
+   antd Modal defaults (no overrides needed). */
+[data-theme="black"] .zoom-warning-modal .ant-modal-content {
+    background: #0f172a !important;
+    border: 1px solid rgba(245, 158, 11, 0.45) !important;
+}
+
+[data-theme="black"] .zoom-warning-modal .ant-modal-body {
+    background: transparent !important;
+    color: #f1f5f9 !important;
+}
+
+[data-theme="black"] .zoom-warning-modal .ant-modal-body p {
+    background: transparent !important;
+    color: #f1f5f9 !important;
+    margin: 0 0 10px 0;
+}
+
+[data-theme="black"] .zoom-warning-modal .ant-modal-body p:last-child {
+    margin-bottom: 0;
+}
+
+[data-theme="black"] .zoom-warning-modal .ant-modal-body strong {
+    color: #fbbf24 !important;
+}
+
+[data-theme="black"] .zoom-warning-modal .ant-modal-title,
+[data-theme="black"] .zoom-warning-modal .ant-modal-title span {
+    color: #f59e0b !important;
+    font-weight: 700;
+    text-shadow:
+        0 0 8px rgba(245, 158, 11, 0.45),
+        0 0 16px rgba(245, 158, 11, 0.25);
+}
+
+[data-theme="black"] .zoom-warning-modal .ant-modal-header {
+    background: #0f172a !important;
+    border-bottom: 1px solid rgba(245, 158, 11, 0.3) !important;
+}
+
+[data-theme="black"] .zoom-warning-modal .ant-modal-footer {
+    background: #0f172a !important;
+    border-top: none !important;
+    padding-top: 12px !important;
+}
+
+[data-theme="black"] .zoom-warning-modal .ant-modal-close {
+    color: #f59e0b !important;
+}
+
+[data-theme="black"] .zoom-warning-modal .ant-modal-close:hover {
+    color: #fbbf24 !important;
+}
+
+[data-theme="black"] .zoom-warning-modal.ant-modal-wrap .ant-modal-mask,
+[data-theme="black"] .zoom-warning-modal .ant-modal-mask {
+    background: rgba(0, 0, 0, 0.65) !important;
+}

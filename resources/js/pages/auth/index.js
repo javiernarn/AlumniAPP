@@ -1,0 +1,13 @@
+export { default as LoginPage } from "./LoginPage";
+export { default as AlumniRegistration } from "./AlumniRegistration";
+export { default as AnswerQuizPage } from "./AnswerQuizPage";
+export { default as ImageQuizPage } from "./ImageQuizPage";
+export { default as PublicHomePage } from "./PublicHomePage";
+export { default as PublicEventsPage } from "./PublicEventsPage";
+export { default as PublicGalleryPage } from "./PublicGalleryPage";
+export { default as PublicJobPostsPage } from "./PublicJobPostsPage";
+export { default as PublicOccServicesPage } from "./PublicOccServicesPage";
+export { default as PublicAnnouncementsPage } from "./PublicAnnouncementsPage";
+export { default as InstallPwaPage } from "./InstallPwaPage";
+export { default as PublicContactPage } from "./PublicContactPage";
+export { default as PublicCreditsPage } from "./PublicCreditsPage";

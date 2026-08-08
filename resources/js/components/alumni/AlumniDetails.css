@@ -1,0 +1,318 @@
+/* ==============================================
+   AlumniDetails.css — Modern header card + dark theme
+   Aligned with FaqPage design tokens (cyan/teal glass)
+   ============================================== */
+
+/* ============ Design tokens scoped to drawer ============ */
+.preview-drawer {
+ --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+
+  --accent:        #4f46e5;
+  --accent-2:      #0ea5e9;
+  --accent-3:      #7c3aed;
+  --accent-soft:   rgba(79, 70, 229, 0.10);
+  --accent-ring:   rgba(79, 70, 229, 0.26);
+
+  --bg:            #f4f7fb;
+  --surface:       #ffffff;
+  --surface-2:     #f1f5f9;
+  --border:        #e2e8f0;
+  --border-strong: #cbd5e1;
+
+  --text:         #0b1220;
+  --text-muted:   #5b6677;
+  --text-subtle:  #94a3b8;
+
+  --shadow-xs: 0 1px 2px  rgba(2, 6, 23, 0.05);
+  --shadow-sm: 0 4px 14px rgba(2, 6, 23, 0.06);
+  --shadow-md: 0 14px 34px rgba(2, 6, 23, 0.10);
+  --shadow-lg: 0 28px 60px rgba(2, 6, 23, 0.18);
+
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 26px;
+/* 
+  min-height: 100vh;
+  width: 100%;
+  padding: 32px 20px 64px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  position: relative;
+  z-index: 10; */
+
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto,
+               "Helvetica Neue", Arial, sans-serif;
+
+  background:
+    radial-gradient(900px 500px at 100% -10%, rgba(14, 165, 233, 0.10), transparent 60%),
+    radial-gradient(900px 500px at -10% 110%, rgba(124, 58, 237, 0.10), transparent 60%),
+    var(--bg);
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* ============ Drawer header (title + Close/Submit buttons) ============
+   antd's default Drawer header keeps title and extra actions on one row
+   with no wrapping and a fixed height. When the title text is long
+   (company name appended) and the viewport is narrow, the title wraps
+   onto multiple lines but the header height doesn't grow to match, so
+   the Close/Submit buttons end up floating on top of the wrapped text.
+   Force the header to size to its content and stack on small screens. */
+.preview-drawer .ant-drawer-header {
+    height: auto !important;
+    flex-wrap: wrap !important;
+    row-gap: 10px;
+}
+.preview-drawer .ant-drawer-header-title {
+    min-width: 0;
+    flex: 1 1 260px;
+}
+.preview-drawer .ant-drawer-title {
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: unset !important;
+    line-height: 1.35 !important;
+}
+.preview-drawer .ant-drawer-extra {
+    flex: 0 0 auto;
+}
+
+@media (max-width: 576px) {
+    .preview-drawer .ant-drawer-header {
+        flex-direction: column;
+        align-items: flex-start !important;
+        padding: 12px 16px !important;
+    }
+    .preview-drawer .ant-drawer-header-title {
+        width: 100%;
+        flex-basis: auto;
+    }
+    .preview-drawer .ant-drawer-title {
+        font-size: 15px !important;
+    }
+    .preview-drawer .ant-drawer-extra {
+        width: 100%;
+    }
+    .preview-drawer .ant-drawer-extra .ant-space {
+        width: 100%;
+    }
+    .preview-drawer .ant-drawer-extra .ant-space-item {
+        flex: 1;
+    }
+    .preview-drawer .ant-drawer-extra .ant-btn {
+        width: 100%;
+    }
+}
+
+/* ============ Header card extras (works with inline styles) ============ */
+.preview-drawer .preview-header.preview-header--modern {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    isolation: isolate;
+}
+
+.preview-drawer .preview-header__shape {
+    z-index: 0;
+}
+
+.preview-drawer .preview-profile-section {
+    z-index: 1;
+}
+
+/* Make the header readable on every theme */
+.preview-drawer .preview-header .ant-typography {
+    color: #ffffff !important;
+}
+
+/* Smooth focus rings on chips */
+.preview-drawer .contact-item.contact-item--chip:focus-within {
+    outline: 2px solid rgba(255, 255, 255, 0.4);
+    outline-offset: 2px;
+}
+
+
+
+/* ============ BLACK THEME (data-theme="black") ============ */
+[data-theme="black"] .preview-drawer .ant-drawer-body {
+    background: #0a0a0a !important;
+}
+
+[data-theme="black"] .preview-drawer .ant-drawer-header {
+    background: #111418 !important;
+    border-bottom: 1px solid #242a36 !important;
+}
+
+[data-theme="black"] .preview-drawer .ant-drawer-title,
+[data-theme="black"] .preview-drawer .ant-drawer-close {
+    color: #ffffff !important;
+}
+
+[data-theme="black"] .preview-drawer .drawer-content {
+    background: #0a0a0a !important;
+}
+
+/* Header card: deeper background, keep accents */
+[data-theme="black"] .preview-drawer .preview-header.preview-header--modern {
+    background:
+        radial-gradient(820px 360px at 112% -12%, rgba(37, 99, 235, 0.40), transparent 60%),
+        radial-gradient(680px 360px at -10% 120%, rgba(193, 18, 31, 0.30), transparent 60%),
+        linear-gradient(135deg, #050b1c 0%, #0b1f4d 40%, #14306e 100%) !important;
+    border-bottom: 2px solid rgba(193, 18, 31, 0.55) !important;
+}
+
+[data-theme="black"] .preview-drawer .preview-header * {
+    color: #ffffff !important;
+}
+
+[data-theme="black"] .preview-drawer .preview-name {
+    color: #ffffff !important;
+}
+
+[data-theme="black"] .preview-drawer .preview-title,
+[data-theme="black"] .preview-drawer .contact-label {
+    color: rgba(255, 255, 255, 0.78) !important;
+}
+
+[data-theme="black"] .preview-drawer .contact-item.contact-item--chip {
+    background: rgba(11, 31, 77, 0.55) !important;
+    border-color: rgba(193, 18, 31, 0.45) !important;
+}
+
+/* Keep OCC toga/emblem accents in black theme */
+[data-theme="black"] .preview-drawer .profile-status-dot {
+    border-color: #0b1f4d !important;
+}
+
+[data-theme="black"] .preview-drawer .profile-status-dot {
+    border-color: #05070d !important;
+}
+
+/* ============ Cards (body sections) — preserve original behavior ============ */
+[data-theme="black"] .preview-drawer .preview-card,
+[data-theme="black"] .preview-drawer .ant-card,
+[data-theme="black"] .preview-drawer .sidebar-card {
+    background: #121620 !important;
+    border-color: #242a36 !important;
+}
+
+[data-theme="black"] .preview-drawer .ant-card-body {
+    background: #121620 !important;
+}
+
+[data-theme="black"] .preview-drawer .ant-typography,
+[data-theme="black"] .preview-drawer .section-title,
+[data-theme="black"] .preview-drawer .sidebar-title,
+[data-theme="black"] .preview-drawer .subsection-title,
+[data-theme="black"] .preview-drawer .detail-item span,
+[data-theme="black"] .preview-drawer .preview-text,
+[data-theme="black"] .preview-drawer .preview-bio,
+[data-theme="black"] .preview-drawer .sidebar-label,
+[data-theme="black"] .preview-drawer .sidebar-value,
+[data-theme="black"] .preview-drawer .preference-item span,
+[data-theme="black"] .preview-drawer .document-item span,
+[data-theme="black"] .preview-drawer .honor-item span {
+    color: #ffffff !important;
+}
+
+[data-theme="black"] .preview-drawer h1,
+[data-theme="black"] .preview-drawer h2,
+[data-theme="black"] .preview-drawer h3,
+[data-theme="black"] .preview-drawer h4,
+[data-theme="black"] .preview-drawer h5,
+[data-theme="black"] .preview-drawer h6,
+[data-theme="black"] .preview-drawer .ant-typography-secondary {
+    color: #ffffff !important;
+}
+
+[data-theme="black"] .preview-body {
+    background: #0a0a0a !important;
+}
+
+[data-theme="black"] .preview-drawer .subsection {
+    border-color: #242a36 !important;
+}
+
+[data-theme="black"] .preview-drawer .subsection .preview-text {
+    background: #1a1f2b !important;
+    color: #ffffff !important;
+    border-color: #242a36 !important;
+}
+
+[data-theme="black"] .preview-drawer .sidebar-item:hover {
+    background: #1a1f2b !important;
+}
+
+[data-theme="black"] .preview-drawer .sidebar-icon {
+    color: #aaaaaa !important;
+}
+
+[data-theme="black"] .preview-drawer .sidebar-icon.linkedin {
+    color: #0a66c2 !important;
+}
+
+[data-theme="black"] .preview-drawer .sidebar-icon.github {
+    color: #ffffff !important;
+}
+
+[data-theme="black"] .preview-drawer .honor-item {
+    background: #1a1f2b !important;
+    border-color: #242a36 !important;
+}
+
+[data-theme="black"] .preview-drawer .document-item.pending span {
+    color: #8c8c8c !important;
+}
+
+[data-theme="black"] .preview-drawer .document-item.uploaded span {
+    color: #52c41a !important;
+}
+
+[data-theme="black"] .image-zoom-modal .ant-modal-content,
+[data-theme="black"] .image-zoom-modal .ant-modal-header {
+    background: #121620 !important;
+}
+
+[data-theme="black"] .image-zoom-modal .ant-modal-header {
+    border-bottom: 1px solid #242a36 !important;
+}
+
+[data-theme="black"] .image-zoom-modal .ant-modal-title,
+[data-theme="black"] .image-zoom-modal .ant-modal-close {
+    color: #ffffff !important;
+}
+
+[data-theme="black"] .image-zoom-modal .zoom-container {
+    background: #121620 !important;
+}
+
+[data-theme="black"] .preview-drawer .ant-divider {
+    border-color: #242a36 !important;
+}
+
+[data-theme="black"] .preview-drawer .ant-btn-default {
+    background: #1a1f2b !important;
+    border-color: #303746 !important;
+    color: #ffffff !important;
+}
+
+[data-theme="black"] .preview-drawer .ant-btn-default:hover {
+    background: #242a36 !important;
+    border-color: #3a4252 !important;
+    color: #ffffff !important;
+}
+
+[data-theme="black"] .preview-drawer .ant-row {
+    background: transparent !important;
+}
+
+[data-theme="black"] .preview-drawer .career-details,
+[data-theme="black"] .preview-drawer .academic-details {
+    background: transparent !important;
+}
+
+[data-theme="black"] .preview-drawer .preview-card[style*="border-color: red"] {
+    background: #121620 !important;
+}

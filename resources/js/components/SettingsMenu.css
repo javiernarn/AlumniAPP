@@ -1,0 +1,143 @@
+/* ============ Settings Menu (replaces old floating theme toggle) ============ */
+.settings-menu {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.settings-menu__btn {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: 1px solid var(--border-strong);
+    background: var(--surface);
+    color: var(--accent);
+    box-shadow: var(--shadow-sm);
+    transition:
+        transform 0.25s var(--ease-spring),
+        box-shadow 0.25s var(--ease-smooth),
+        border-color 0.2s;
+}
+
+.settings-menu__btn:hover {
+    transform: rotate(-8deg) scale(1.05);
+    border-color: var(--accent);
+    box-shadow:
+        0 0 0 6px var(--accent-soft),
+        var(--shadow-md);
+}
+
+.settings-menu__btn.is-open {
+    transform: rotate(90deg);
+    border-color: var(--accent);
+    box-shadow:
+        0 0 0 6px var(--accent-soft),
+        var(--shadow-md);
+}
+
+.settings-menu__btn .anticon {
+    font-size: 20px;
+}
+
+[data-theme="black"] .settings-menu__btn {
+    color: #60a5fa;
+}
+
+/* Dropdown panel */
+.settings-menu__dropdown {
+    position: absolute;
+    top: 58px;
+    right: 0;
+    min-width: 190px;
+    padding: 8px;
+    border-radius: 14px;
+    border: 1px solid var(--border-strong);
+    background: var(--surface);
+    box-shadow: var(--shadow-md);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    transform-origin: top right;
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0.9) translateY(-8px);
+    pointer-events: none;
+    transition:
+        opacity 0.2s var(--ease-smooth),
+        transform 0.25s var(--ease-spring),
+        visibility 0.25s;
+}
+
+.settings-menu__dropdown.is-open {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1) translateY(0);
+    pointer-events: auto;
+}
+
+.settings-menu__item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: none;
+    background: transparent;
+    color: #1f2937;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: left;
+    transition:
+        background 0.15s ease,
+        color 0.15s ease;
+}
+
+.settings-menu__item:hover,
+.settings-menu__item:focus-visible {
+    background: var(--accent-soft);
+    color: var(--accent);
+    outline: none;
+}
+
+.settings-menu__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    width: 18px;
+}
+
+[data-theme="black"] .settings-menu__item {
+    color: #e5e7eb;
+}
+
+[data-theme="black"] .settings-menu__item:hover,
+[data-theme="black"] .settings-menu__item:focus-visible {
+    color: #60a5fa;
+}
+
+@media (max-width: 720px) {
+    .settings-menu {
+        top: 14px;
+        right: 14px;
+    }
+
+    .settings-menu__dropdown {
+        min-width: 170px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .settings-menu__btn,
+    .settings-menu__dropdown {
+        transition: opacity 0.01s linear !important;
+        transform: none !important;
+    }
+}

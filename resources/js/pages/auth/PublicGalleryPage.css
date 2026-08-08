@@ -1,0 +1,494 @@
+/* ==========================================================================
+   PublicGalleryPage.css
+   OCC Alumni — Public Gallery Page (Latest Published / Ongoing / Completed)
+   Imports PublicHomePage.css for shared tokens/header/footer/.ph-card/.ph-btn;
+   everything here is additive, namespaced with a "pgal-" prefix so nothing
+   collides with the homepage's or events page's own rules.
+   ========================================================================== */
+
+/* ============ PAGE HERO / JUMP-TO DROPDOWN ============ */
+.pgal-hero {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 48px 32px 8px;
+  text-align: center;
+}
+
+.pgal-hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  background: rgba(79, 70, 229, 0.1);
+  color: var(--ph-accent);
+  margin-bottom: 18px;
+}
+
+.pgal-hero-title {
+  font-size: 40px !important;
+  font-weight: 900 !important;
+  margin: 0 0 12px !important;
+  color: inherit !important;
+}
+
+.pgal-hero-lead {
+  font-size: 15.5px !important;
+  opacity: 0.7;
+  color: inherit !important;
+  max-width: 640px;
+  margin: 0 auto 28px !important;
+}
+
+/* ============ SECTION spacing tweak ============ */
+.pgal-section {
+  scroll-margin-top: calc(var(--ph-header-h) + 16px);
+}
+
+.pgal-section + .pgal-section {
+  border-top: 1px solid transparent;
+}
+
+.ph-page.light .pgal-section + .pgal-section {
+  border-top-color: #edf0f5;
+}
+
+.ph-page.dark .pgal-section + .pgal-section {
+  border-top-color: #1d2230;
+}
+
+/* ============ YEAR / MONTH TIMELINE ============ */
+.pgal-month-group {
+  margin-bottom: 36px;
+}
+
+.pgal-month-group:last-child {
+  margin-bottom: 0;
+}
+
+.pgal-month-heading {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+}
+
+.ph-page.light .pgal-month-heading {
+  border-bottom: 1px solid #edf0f5;
+}
+
+.ph-page.dark .pgal-month-heading {
+  border-bottom: 1px solid #1d2230;
+}
+
+.pgal-month-label {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--ph-accent);
+}
+
+.pgal-month-count {
+  font-size: 12.5px;
+  font-weight: 600;
+  opacity: 0.55;
+}
+
+/* ============ GALLERY CARD ============ */
+/* Overrides .ph-card's row layout (icon + text side by side) with a
+   stacked card: media on top, full details below — there is simply
+   more content per card here than the homepage teaser cards. */
+.pgal-card {
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
+  gap: 0;
+  cursor: default;
+}
+
+.pgal-card:hover {
+  transform: translateY(-4px);
+}
+
+/* ---- Media / image swapper ---- */
+.pgal-media {
+  position: relative;
+  width: 100%;
+  height: 190px;
+  overflow: hidden;
+  background: linear-gradient(135deg, rgba(79, 70, 229, 0.12), rgba(14, 165, 233, 0.12));
+  cursor: pointer;
+}
+
+.pgal-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.pgal-media:hover img {
+  transform: scale(1.06);
+}
+
+.pgal-media-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: default;
+}
+
+.pgal-media-empty .anticon {
+  font-size: 34px;
+  color: var(--ph-accent);
+}
+
+.pgal-media-carousel .ant-carousel,
+.pgal-media-carousel .slick-slider,
+.pgal-media-carousel .slick-list,
+.pgal-media-carousel .slick-track,
+.pgal-media-carousel .slick-slide > div {
+  height: 190px;
+}
+
+.pgal-slide {
+  height: 190px;
+}
+
+.pgal-media-carousel .slick-dots {
+  bottom: 8px;
+}
+
+.pgal-media-carousel .slick-dots li button {
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.pgal-media-carousel .slick-dots li.slick-active button {
+  background: #ffffff;
+}
+
+.pgal-media-count {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.55);
+  color: #ffffff;
+  pointer-events: none;
+}
+
+/* ---- Body ---- */
+.pgal-card-body {
+  padding: 18px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.pgal-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.pgal-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+  line-height: 1.4;
+}
+
+.pgal-card-title {
+  font-size: 17px !important;
+  font-weight: 800 !important;
+  margin: 0 0 6px !important;
+  color: inherit !important;
+}
+
+.pgal-card-facts {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 12px;
+  margin-bottom: 14px;
+}
+
+.ph-page.light .pgal-card-facts {
+  border-top: 1px dashed #e6eaf1;
+}
+
+.ph-page.dark .pgal-card-facts {
+  border-top: 1px dashed #242a36;
+}
+
+.pgal-fact {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 13px;
+  opacity: 0.85;
+}
+
+.pgal-fact .anticon {
+  color: var(--ph-accent);
+  flex-shrink: 0;
+}
+
+/* ---- Footer: status message + actions ---- */
+.pgal-card-footer {
+  margin-top: auto;
+}
+
+.pgal-status-msg {
+  font-size: 12.5px !important;
+  opacity: 0.65;
+  margin: 0 0 12px !important;
+  line-height: 1.5;
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.pgal-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.pgal-card-actions .ph-btn {
+  flex: 1 1 auto;
+  justify-content: center;
+  font-size: 13.5px;
+  padding: 9px 16px;
+}
+
+/* ==========================================================================
+   FULL-ALBUM LIGHTBOX
+   Full-screen overlay for stepping through every photo in one album,
+   opened via "View All Photos" or by tapping a card's image.
+   ========================================================================== */
+.pgal-lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  background: rgba(4, 8, 16, 0.88);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  animation: pgal-lightbox-fade 0.18s ease;
+}
+
+@keyframes pgal-lightbox-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.pgal-lightbox-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 1210;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.pgal-lightbox-close:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.pgal-lightbox-content {
+  position: relative;
+  width: 100%;
+  max-width: 900px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pgal-lightbox-carousel {
+  width: 100%;
+  border-radius: var(--ph-radius-md);
+  overflow: hidden;
+}
+
+.pgal-lightbox-slide {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: min(70vh, 640px);
+  background: #05070d;
+}
+
+.pgal-lightbox-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.pgal-lightbox-carousel .slick-dots li button {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.pgal-lightbox-carousel .slick-dots li.slick-active button {
+  background: #ffffff;
+}
+
+.pgal-lightbox-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 5;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.pgal-lightbox-nav:hover {
+  background: rgba(255, 255, 255, 0.26);
+}
+
+.pgal-lightbox-prev { left: -8px; }
+.pgal-lightbox-next { right: -8px; }
+
+.pgal-lightbox-caption {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+}
+
+.pgal-lightbox-title {
+  color: #fff;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.pgal-lightbox-date {
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 12.5px;
+}
+
+.pgal-lightbox-hint {
+  margin-top: 10px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 12px;
+}
+
+/* ==========================================================================
+   RESPONSIVE — mobile portrait & landscape
+   ========================================================================== */
+
+/* Tablets / small laptops */
+@media (max-width: 1199px) {
+  .pgal-hero { padding: 42px 24px 8px; }
+}
+
+@media (max-width: 991px) {
+  .pgal-hero-title { font-size: 32px !important; }
+  .pgal-lightbox-prev { left: 6px; }
+  .pgal-lightbox-next { right: 6px; }
+}
+
+/* Phones — portrait */
+@media (max-width: 767px) {
+  .pgal-hero { padding: 32px 20px 4px; }
+  .pgal-hero-title { font-size: 26px !important; }
+  .pgal-hero-lead { font-size: 14px !important; }
+
+  .pgal-media,
+  .pgal-media-carousel .ant-carousel,
+  .pgal-media-carousel .slick-slider,
+  .pgal-media-carousel .slick-list,
+  .pgal-media-carousel .slick-track,
+  .pgal-media-carousel .slick-slide > div,
+  .pgal-slide {
+    height: 170px;
+  }
+
+  .pgal-card-body { padding: 16px 16px 18px; }
+  .pgal-card-actions { flex-direction: column; }
+  .pgal-card-actions .ph-btn { width: 100%; }
+
+  .pgal-lightbox-overlay { padding: 12px; }
+  .pgal-lightbox-slide { height: min(48vh, 420px); }
+  .pgal-lightbox-nav { width: 38px; height: 38px; font-size: 15px; }
+  .pgal-lightbox-prev { left: 2px; }
+  .pgal-lightbox-next { right: 2px; }
+  .pgal-lightbox-close { top: 12px; right: 12px; width: 36px; height: 36px; }
+}
+
+@media (max-width: 575px) {
+  .pgal-hero-eyebrow { font-size: 12px; }
+  .pgal-hero-title { font-size: 23px !important; }
+  .pgal-card-title { font-size: 16px !important; }
+}
+
+@media (max-width: 374px) {
+  .pgal-hero { padding: 26px 16px 4px; }
+  .pgal-card-facts { gap: 6px; }
+  .pgal-lightbox-slide { height: min(40vh, 340px); }
+}
+
+/* Phones — landscape (short viewport height, wide width) */
+@media (max-width: 900px) and (orientation: landscape) {
+  .pgal-hero { padding: 20px 24px 4px; }
+  .pgal-hero-title { font-size: 24px !important; margin-bottom: 6px !important; }
+  .pgal-hero-lead { margin-bottom: 16px !important; }
+
+  .pgal-media,
+  .pgal-media-carousel .ant-carousel,
+  .pgal-media-carousel .slick-slider,
+  .pgal-media-carousel .slick-list,
+  .pgal-media-carousel .slick-track,
+  .pgal-media-carousel .slick-slide > div,
+  .pgal-slide {
+    height: 150px;
+  }
+
+  .pgal-card-actions { flex-direction: row; }
+  .pgal-card-actions .ph-btn { width: auto; }
+
+  .pgal-lightbox-slide { height: min(58vh, 360px); }
+  .pgal-lightbox-content { max-width: 640px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pgal-badge.is-ongoing::before { animation: none; }
+  .pgal-media img { transition: none; }
+}

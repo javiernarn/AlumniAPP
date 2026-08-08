@@ -1,0 +1,1 @@
+export { default as AdminAlumniJobPostPage } from "./AdminAlumniJobPostPage"

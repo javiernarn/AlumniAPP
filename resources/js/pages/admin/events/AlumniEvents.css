@@ -1,0 +1,3168 @@
+/* ============ Global primary-button tokens ============
+   Kept separate from --ae-accent (the page's own cyan/teal hero
+   identity) so every primary button matches the blue/violet
+   gradient + shine used across the rest of the app (gallery,
+   dashboard, department-heads), in both light and black theme. */
+:root {
+    --btn-accent: #4f46e5;
+    --btn-accent-2: #7c3aed;
+    --btn-accent-ring: rgba(79, 70, 229, 0.22);
+}
+[data-theme="black"] {
+    --btn-accent-ring: rgba(99, 102, 241, 0.30);
+}
+
+@keyframes aeBtnShine {
+    0%   { transform: translateX(-150%) skewX(-18deg); }
+    100% { transform: translateX(250%) skewX(-18deg); }
+}
+
+/* Unscoped so it also reaches Modal / Drawer footer buttons, which AntD
+   portals to document.body — outside .alumni-events-container in the DOM. */
+.ant-btn-primary {
+    background: linear-gradient(135deg, var(--btn-accent), var(--btn-accent-2)) !important;
+    border: none !important;
+    color: #fff !important;
+    font-weight: 600 !important;
+    border-radius: 12px !important;
+    box-shadow: 0 10px 24px var(--btn-accent-ring) !important;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.ant-btn-primary::after {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; width: 60%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+    animation: aeBtnShine 2.8s ease-in-out infinite;
+    pointer-events: none;
+}
+.ant-btn-primary:hover:not(:disabled) {
+    transform: translateY(-1px);
+    color: #fff !important;
+}
+.ant-btn-primary:disabled,
+.ant-btn-primary[disabled] {
+    background: #e2e8f0 !important;
+    color: #94a3b8 !important;
+    box-shadow: none !important;
+}
+.ant-btn-primary:disabled::after,
+.ant-btn-primary[disabled]::after { display: none; }
+
+[data-theme="black"] .ant-btn-primary:disabled,
+[data-theme="black"] .ant-btn-primary[disabled] {
+    background: #1b1e27 !important;
+    color: #5b6472 !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ant-btn-primary::after { animation: none !important; }
+}
+
+.ae-hero {
+    --ae-ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
+    --ae-ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+    --ae-accent: #0ea5e9;
+    --ae-accent-2: #14b8a6;
+    --ae-accent-3: #6366f1;
+    --ae-accent-soft: rgba(14, 165, 233, 0.1);
+    --ae-accent-ring: rgba(14, 165, 233, 0.28);
+    --ae-surface: #ffffff;
+    --ae-border: #e2e8f0;
+    --ae-text: #0b1220;
+    --ae-text-muted: #5b6677;
+    --ae-shadow-sm: 0 4px 14px rgba(2, 6, 23, 0.06);
+    --ae-shadow-md: 0 14px 34px rgba(2, 6, 23, 0.1);
+
+    position: relative;
+    overflow: hidden;
+    border-radius: 26px;
+    background:
+        linear-gradient(180deg, var(--ae-surface), var(--ae-surface))
+            padding-box,
+        linear-gradient(
+                135deg,
+                rgba(14, 165, 233, 0.45),
+                rgba(99, 102, 241, 0.35),
+                rgba(20, 184, 166, 0.45)
+            )
+            border-box;
+    border: 1px solid transparent;
+    box-shadow: var(--ae-shadow-md);
+    opacity: 0;
+    transform: translateY(8px);
+    animation: aeFadeUp 0.7s var(--ae-ease-spring) forwards;
+}
+
+@keyframes aeFadeUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+@keyframes aeFloat {
+    0%,
+    100% {
+        transform: translateY(0) scale(1);
+    }
+    50% {
+        transform: translateY(-14px) scale(1.04);
+    }
+}
+
+.ae-hero__bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+.ae-hero__bg .blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(70px);
+    opacity: 0.5;
+    animation: aeFloat 14s ease-in-out infinite;
+}
+.ae-hero__bg .blob-1 {
+    width: 280px;
+    height: 280px;
+    background: #38bdf8;
+    top: -70px;
+    left: -50px;
+}
+.ae-hero__bg .blob-2 {
+    width: 320px;
+    height: 320px;
+    background: #6366f1;
+    bottom: -130px;
+    right: -70px;
+    animation-duration: 18s;
+}
+.ae-hero__bg .blob-3 {
+    width: 200px;
+    height: 200px;
+    background: #14b8a6;
+    top: 40%;
+    left: 55%;
+    animation-duration: 22s;
+    opacity: 0.35;
+}
+.ae-hero__bg .dot-grid {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(
+        rgba(15, 23, 42, 0.08) 1px,
+        transparent 1px
+    );
+    background-size: 18px 18px;
+    -webkit-mask-image: radial-gradient(
+        ellipse at center,
+        black 30%,
+        transparent 75%
+    );
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+}
+
+.alumni-events-container {
+    padding: 24px;
+    padding-top: 10px;
+    min-height: 100vh;
+    position: relative;
+    z-index: 1;
+}
+.ae-hero__content {
+    position: relative;
+    z-index: 1;
+    max-width: 1080px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.ae-hero__brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 14px;
+}
+.ae-hero__logo {
+    width: 56px;
+    height: 56px;
+    object-fit: contain;
+    border-radius: 14px;
+    background: var(--ae-surface);
+    padding: 6px;
+    box-shadow: var(--ae-shadow-sm);
+    animation: aeFloat 6s ease-in-out infinite;
+}
+.ae-hero__brand-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+}
+.ae-chip {
+    background: var(--ae-accent-soft) !important;
+    color: var(--ae-accent) !important;
+    border: 1px solid var(--ae-accent-ring) !important;
+    border-radius: 999px !important;
+    padding: 4px 12px !important;
+    font-weight: 700 !important;
+    font-size: 11.5px !important;
+    letter-spacing: 0.08em;
+    margin: 0 !important;
+}
+.ae-hero__eyebrow {
+    color: var(--ae-text-muted) !important;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+.ae-hero__title {
+    font-size: clamp(28px, 4.4vw, 46px) !important;
+    line-height: 1.1 !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.02em;
+    color: var(--ae-text) !important;
+    margin: 6px 0 14px !important;
+}
+.ae-hero .grad-text {
+    background: linear-gradient(
+        135deg,
+        var(--ae-accent) 0%,
+        var(--ae-accent-3) 50%,
+        var(--ae-accent-2) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+}
+.ae-hero__lead {
+    color: var(--ae-text-muted) !important;
+    font-size: 16px !important;
+    line-height: 1.7 !important;
+    max-width: 720px;
+    margin: 0 auto 28px !important;
+}
+
+/* Stat tiles */
+.ae-hero__stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+    max-width: 920px;
+    margin: 0 auto;
+}
+.ae-stat {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 18px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--ae-border);
+    border-radius: 16px;
+    box-shadow: var(--ae-shadow-sm);
+    text-align: left;
+    transition:
+        transform 0.25s var(--ae-ease-spring),
+        box-shadow 0.25s var(--ae-ease-smooth),
+        border-color 0.25s;
+}
+.ae-stat:hover {
+    transform: translateY(-3px);
+    border-color: var(--ae-accent-ring);
+    box-shadow: var(--ae-shadow-md);
+}
+.ae-stat__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: var(--ae-accent-soft);
+    color: var(--ae-accent);
+    font-size: 18px;
+    flex-shrink: 0;
+}
+.ae-stat__icon--blue {
+    background: rgba(99, 102, 241, 0.12);
+    color: #6366f1;
+}
+.ae-stat__icon--green {
+    background: rgba(16, 185, 129, 0.12);
+    color: #10b981;
+}
+.ae-stat__icon--gray {
+    background: rgba(100, 116, 139, 0.12);
+    color: #64748b;
+}
+.ae-stat__body {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+    min-width: 0;
+}
+.ae-stat__value {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--ae-text);
+    letter-spacing: -0.01em;
+}
+.ae-stat__label {
+    font-size: 12px;
+    color: var(--ae-text-muted);
+    margin-top: 2px;
+    font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .ae-hero__stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media (max-width: 560px) {
+    .ae-hero {
+        padding: 40px 18px 28px;
+        border-radius: 20px;
+    }
+    .ae-hero__brand {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .ae-hero__brand-meta {
+        align-items: center;
+    }
+    .ae-hero__title {
+        font-size: 26px !important;
+    }
+    .ae-hero__lead {
+        font-size: 14.5px !important;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ae-hero,
+    .ae-hero__logo,
+    .ae-hero__bg .blob {
+        animation: none !important;
+    }
+    .ae-stat {
+        transition: none;
+    }
+}
+
+/* Quick Stats */
+.quick-stats {
+    margin-top: 16px;
+}
+
+/* Tabs Card */
+.tabs-card {
+    border-radius: 12px;
+    margin-bottom: 24px;
+    border: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.status-tabs .ant-tabs-tab {
+    padding: 16px 24px;
+    font-weight: 500;
+}
+
+.status-tabs .ant-tabs-tab-active {
+    background: #f0f7ff;
+    border-radius: 8px;
+}
+
+/* Controls Card */
+.controls-card {
+    border-radius: 12px;
+    margin-bottom: 24px;
+    border: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.controls-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.controls-left {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.controls-right {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.advanced-filters {
+    border-top: 1px solid #f0f0f0;
+    padding-top: 16px;
+}
+
+.filter-row {
+    align-items: flex-end;
+}
+
+/* Event Card Styles */
+.event-card {
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid #f0f0f0;
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.event-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.event-cover {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+    background: #f0f2f5;
+}
+
+/* Single image (one url) */
+.event-cover-img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    object-position: center center;
+    display: block;
+    transition: transform 0.3s ease;
+    visibility: visible;
+    opacity: 1;
+}
+
+.event-card:hover .event-cover-img {
+    transform: scale(1.05);
+}
+
+/* No-image placeholder */
+.event-cover-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #e8f4fd 0%, #f0e6ff 100%);
+}
+
+.event-card-carousel,
+.event-card-carousel .slick-list,
+.event-card-carousel .slick-track {
+    height: 200px !important;
+}
+
+/* slick's per-slide inner <div> — safe to size */
+.event-card-carousel .slick-slide > div {
+    height: 200px !important;
+}
+
+.event-card-carousel-slide {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+}
+
+.event-card-carousel-slide .event-cover-img {
+    width: 100% !important;
+    height: 200px !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    transition: transform 0.3s ease;
+}
+
+.event-card:hover .event-card-carousel-slide .event-cover-img {
+    transform: scale(1.05);
+}
+
+.event-cover-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.1),
+        rgba(0, 0, 0, 0.3)
+    );
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 16px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.event-card:hover .event-cover-overlay {
+    opacity: 1;
+}
+
+.event-type-tag {
+    margin-top: 8px;
+}
+
+.event-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.action-btn {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 6px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.action-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    color: #fff;
+}
+
+.event-status-badge {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+}
+
+/* Event Card Content */
+.event-card-content {
+    padding: 0;
+}
+
+.event-header {
+    padding: 20px 20px 0 20px;
+    margin-bottom: 12px;
+}
+
+.event-title {
+    margin-bottom: 8px !important;
+    font-weight: 600;
+    color: #1a1a1a;
+    line-height: 1.4;
+}
+
+.event-rating {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.rating-text {
+    color: #666;
+    font-size: 12px;
+}
+
+.event-organizer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 20px;
+    margin-bottom: 12px;
+}
+
+.event-description {
+    padding: 0 20px;
+    margin-bottom: 16px;
+    color: #666;
+    line-height: 1.5;
+}
+
+.event-details {
+    padding: 0 20px;
+    margin-bottom: 16px;
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    color: #555;
+}
+
+.detail-item:last-child {
+    margin-bottom: 0;
+}
+
+.detail-item .anticon {
+    color: #999;
+    font-size: 14px;
+}
+
+/* Pricing styles */
+.event-pricing {
+    padding: 0 20px;
+    margin-bottom: 16px;
+}
+
+.pricing-earlybird {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.original-price {
+    color: #999;
+    font-size: 14px;
+}
+
+.earlybird-price {
+    color: #52c41a;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.earlybird-tag {
+    margin-left: 4px;
+    font-size: 11px;
+    border: none;
+}
+
+.regular-price {
+    font-size: 18px;
+    color: #1a1a1a;
+    font-weight: 600;
+}
+
+.regular-price.large {
+    font-size: 24px;
+}
+
+/* Registration styles */
+.event-registration {
+    padding: 0 20px;
+    margin-bottom: 16px;
+}
+
+.registration-stats {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+/* Tags styles */
+.event-tags {
+    padding: 0 20px 20px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.event-tag {
+    border: none;
+    background: #f5f5f5;
+    color: #666;
+    border-radius: 12px;
+    font-size: 11px;
+    padding: 2px 8px;
+    margin: 0;
+}
+
+/* Register button */
+/* .register-btn {
+  margin: 0 20px 20px 20px;
+  border-radius: 8px;
+  height: 40px;
+  font-weight: 600;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+} */
+
+/* List View Styles */
+.events-list {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.event-list-item {
+    padding: 24px;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background-color 0.3s ease;
+}
+
+.event-list-item:hover {
+    background-color: #fafafa;
+}
+
+.event-list-item:last-child {
+    border-bottom: none;
+}
+
+.list-item-content {
+    display: flex;
+    gap: 24px;
+    width: 100%;
+}
+
+.list-item-image {
+    position: relative;
+    flex-shrink: 0;
+    width: 200px;
+    height: 120px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.list-item-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.image-overlay {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+}
+
+.list-item-details {
+    flex: 1;
+    min-width: 0;
+}
+
+.list-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+}
+
+.header-main {
+    flex: 1;
+}
+
+.list-item-title {
+    margin: 0 !important;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.featured-icon {
+    color: #faad14;
+}
+
+.event-meta {
+    margin-top: 8px;
+}
+
+.organizer-info {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.event-rating-small {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.header-actions {
+    flex-shrink: 0;
+}
+
+.list-item-description {
+    color: #666;
+    margin-bottom: 12px;
+    line-height: 1.5;
+}
+
+.list-item-meta {
+    margin-bottom: 12px;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #555;
+    font-size: 13px;
+}
+
+.meta-item .anticon {
+    color: #999;
+    font-size: 12px;
+}
+
+.original-price-small {
+    font-size: 11px;
+    margin-left: 4px;
+}
+
+.list-item-progress {
+    margin-bottom: 12px;
+}
+
+.list-item-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: 12px;
+}
+
+.event-tag-small {
+    border: none;
+    background: #f5f5f5;
+    color: #666;
+    border-radius: 10px;
+    font-size: 10px;
+    padding: 1px 6px;
+    margin: 0;
+}
+
+.list-item-actions {
+    display: flex;
+    justify-content: flex-start;
+}
+
+/* No Events State */
+.no-events-card {
+    text-align: center;
+    padding: 48px 24px;
+    border-radius: 12px;
+}
+
+.no-events-content {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+/* Modal Styles */
+.create-event-modal .ant-modal-content {
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.create-event-steps {
+    margin-bottom: 32px;
+}
+
+.form-step {
+    min-height: 300px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid #f0f0f0;
+}
+
+/* Event Details Modal */
+.event-details-modal .ant-modal-content {
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.event-details-content {
+    max-height: 70dvh;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.event-gallery {
+    margin-bottom: 24px;
+}
+
+.main-image {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 12px;
+}
+
+.image-thumbnails {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+}
+
+.image-thumbnails img {
+    width: 80px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.event-description-section,
+.event-agenda,
+.event-speakers {
+    margin-bottom: 24px;
+}
+
+.event-sidebar {
+    position: sticky;
+    top: 0;
+}
+
+.meta-item {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+    align-items: flex-start;
+}
+
+.meta-item:last-child {
+    margin-bottom: 0;
+}
+
+.meta-item .anticon {
+    color: #1890ff;
+    font-size: 16px;
+    margin-top: 2px;
+}
+
+.pricing-section {
+    text-align: center;
+}
+
+.tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 8px;
+}
+
+/* Custom animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.event-card,
+.event-list-item {
+    animation: fadeInUp 0.5s ease;
+}
+
+/* Card actions */
+.event-card .ant-card-actions {
+    background: #fafafa;
+    border-top: 1px solid #f0f0f0;
+}
+
+.event-card .ant-card-actions > li {
+    margin: 12px 0;
+}
+
+.event-card .ant-card-actions .anticon {
+    color: #666;
+    transition: color 0.3s ease;
+}
+
+.event-card .ant-card-actions .anticon:hover {
+    color: #1890ff;
+}
+
+/* Badge and Tag Styles */
+.ant-badge-count {
+    font-size: 10px;
+    font-weight: 600;
+    box-shadow: 0 0 0 1px #fff;
+}
+
+.ant-tag {
+    border-radius: 12px;
+    font-size: 11px;
+    padding: 2px 8px;
+    font-weight: 500;
+}
+
+/* Upload Styles */
+.ant-upload.ant-upload-select-picture-card {
+    border-radius: 8px;
+    border: 2px dashed #d9d9d9;
+}
+
+.ant-upload.ant-upload-select-picture-card:hover {
+    border-color: #1890ff;
+}
+
+/* Progress Bar Styles */
+.ant-progress-line {
+    line-height: 1;
+}
+
+.ant-progress-text {
+    font-size: 12px;
+}
+
+.create-event-modal .ant-modal-body {
+    padding: 0;
+    max-height: 70dvh;
+    overflow-y: auto;
+}
+
+.event-form-container {
+    padding: 0;
+}
+
+.form-sections {
+    padding: 24px;
+}
+
+.form-section {
+    margin-bottom: 32px;
+    background: #fafafa;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid #f0f0f0;
+}
+
+.section-header {
+    margin-bottom: 20px;
+}
+
+.section-header h3 {
+    margin: 0 0 8px 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #1890ff;
+}
+
+.section-divider {
+    height: 2px;
+    background: linear-gradient(90deg, #1890ff 0%, transparent 100%);
+    border-radius: 1px;
+}
+
+.section-content {
+    padding: 0 8px;
+}
+
+/* .form-input, .form-select, .form-textarea, .form-datepicker, .form-timepicker {
+    border-radius: 8px;
+} */
+
+.form-input-number .ant-input-number-input {
+    border-radius: 8px;
+}
+
+.form-tags .ant-select-selector {
+    border-radius: 8px;
+}
+
+.featured-switch-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.switch-label {
+    font-size: 12px;
+    color: #666;
+    line-height: 1.4;
+}
+
+.event-images-upload .ant-upload.ant-upload-select-picture-card {
+    width: 120px;
+    height: 120px;
+    border-radius: 8px;
+    border: 2px dashed #d9d9d9;
+    transition: all 0.3s;
+}
+
+.event-images-upload .ant-upload.ant-upload-select-picture-card:hover {
+    border-color: #1890ff;
+}
+
+.upload-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+}
+
+.form-actions-full {
+    position: sticky;
+    bottom: 0;
+    background: white;
+    padding: 16px 24px;
+    border-top: 1px solid #f0f0f0;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.cancel-btn {
+    border-radius: 6px;
+    padding: 0 24px;
+    height: 40px;
+}
+
+.submit-btn {
+    border-radius: 6px;
+    padding: 0 32px;
+    height: 40px;
+    font-weight: 500;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .create-event-modal {
+        width: 95% !important;
+        margin: 10px;
+    }
+
+    .form-section {
+        padding: 16px;
+    }
+
+    .form-sections {
+        padding: 16px;
+    }
+
+    .featured-switch-container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+}
+
+/* Small / portrait phones: go edge-to-edge and make every field full width */
+@media (max-width: 480px) {
+    .create-event-modal {
+        width: 100% !important;
+        max-width: 100vw;
+        margin: 0;
+        top: 0;
+        padding: 0;
+    }
+
+    .create-event-modal .ant-modal-content {
+        border-radius: 0;
+    }
+
+    .create-event-modal .ant-modal-body {
+        max-height: calc(100dvh - 110px);
+        padding-bottom: 8px;
+    }
+
+    .form-sections {
+        padding: 12px;
+    }
+
+    .form-section {
+        padding: 14px;
+        margin-bottom: 20px;
+    }
+
+    .section-content {
+        padding: 0;
+    }
+
+    /* Force every input/select/picker in the form to use the full row width,
+       regardless of which Col it sits in, so fields never get squeezed. */
+    .event-form-full .ant-form-item-control-input-content > .ant-input,
+    .event-form-full .ant-form-item-control-input-content > .ant-input-number,
+    .event-form-full .ant-input-number,
+    .event-form-full .ant-select,
+    .event-form-full .ant-picker,
+    .event-form-full .ant-picker-range {
+        width: 100% !important;
+    }
+
+    .section-header h3 {
+        font-size: 16px;
+    }
+
+    .form-actions-full {
+        padding: 12px 16px;
+        flex-wrap: wrap;
+    }
+
+    .form-actions-full .ant-btn {
+        flex: 1 1 auto;
+    }
+
+    .event-images-upload .ant-upload.ant-upload-select-picture-card {
+        width: 96px;
+        height: 96px;
+    }
+}
+
+/* Landscape phones: viewport height is short, so keep the modal close to the
+   top and make sure the scrollable body still leaves room for the sticky
+   footer buttons. */
+@media (max-height: 480px) and (orientation: landscape) {
+    .create-event-modal {
+        top: 8px !important;
+    }
+
+    .create-event-modal .ant-modal-body {
+        max-height: calc(100dvh - 90px);
+    }
+
+    .form-section {
+        margin-bottom: 16px;
+        padding: 12px;
+    }
+}
+
+/* Custom scrollbar for modal */
+.create-event-modal .ant-modal-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.create-event-modal .ant-modal-body::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.create-event-modal .ant-modal-body::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+.create-event-modal .ant-modal-body::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* Event Details Modal Styles */
+.event-details-modal .ant-modal-body {
+    padding: 0;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.event-detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-right: 8px;
+}
+
+.event-header-actions {
+    display: flex;
+    gap: 4px;
+}
+
+.event-details-content {
+    padding: 0;
+}
+/* Image Gallery */
+.event-gallery-section {
+    position: relative;
+    height: 400px;
+    background: #1f1f1f;
+    overflow: hidden;
+}
+
+.event-carousel,
+.event-carousel .slick-list,
+.event-carousel .slick-track {
+    height: 100%;
+}
+
+.event-carousel .slick-slide > div {
+    width: 100%;
+    height: 100%;
+}
+
+/* FIX: "black slide" on Next/Prev in mobile portrait.
+   react-slick's fade effect positions each .slick-slide independently via
+   its own absolute inline offset, but the parent .slick-track ALSO keeps
+   receiving a transform/left positioning update on every slide change.
+   On narrow viewports — where our breakpoints below force fixed pixel
+   widths/heights — that extra track-level offset stacks with the slide's
+   own offset and pushes the incoming slide outside the visible .slick-list
+   clipping area. The image is still there and still clickable (which is
+   why tapping the blank area opened the preview correctly); it just isn't
+   painted in the visible viewport. Pinning the track removes the double
+   offset — fade doesn't need the track to move, only each slide's opacity. */
+.event-carousel .slick-track,
+.event-card-carousel .slick-track {
+    transform: none !important;
+    -webkit-transform: none !important;
+    left: 0 !important;
+}
+
+/* Give each slide its own compositing layer. Mobile Safari/Chrome can
+   occasionally finish an opacity transition without actually painting the
+   <img> underneath it, leaving a blank frame until something else forces a
+   repaint. Forcing a layer here (paired with the JS nudge in afterChange)
+   prevents that stuck blank paint. */
+.event-carousel .slick-slide,
+.event-card-carousel .slick-slide {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+}
+
+.carousel-slide {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    display: block;
+    background: #1f1f1f;
+    overflow: hidden;
+    cursor: zoom-in;
+}
+
+/* Plain <img> inside the slide — fills the slide on every viewport,
+   including mobile portrait where Antd <Image> wrapper used to collapse. */
+.carousel-slide .event-detail-image {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100% !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Hover overlay (desktop) / tap target (mobile) for opening preview */
+.event-detail-image-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: #fff;
+    font-weight: 600;
+    background: linear-gradient(
+        180deg,
+        rgba(0, 0, 0, 0) 40%,
+        rgba(0, 0, 0, 0.45) 100%
+    );
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    pointer-events: none;
+}
+.carousel-slide:hover .event-detail-image-overlay {
+    opacity: 1;
+}
+.event-detail-image-overlay .anticon {
+    font-size: 22px;
+}
+
+.image-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 400px;
+    color: #999;
+    font-size: 16px;
+    background: #1f1f1f;
+}
+
+.image-placeholder--empty .anticon {
+    font-size: 48px;
+    margin-bottom: 8px;
+    opacity: 0.6;
+}
+
+.image-placeholder--empty .anticon {
+    font-size: 48px;
+    margin-bottom: 8px;
+    opacity: 0.6;
+}
+
+.custom-dots {
+    position: absolute;
+    bottom: 16px;
+    z-index: 2;
+}
+
+/* Event Details Body */
+.event-details-body {
+    padding: 24px;
+}
+
+.event-status-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.event-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.event-description-detailed {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #333;
+    margin-bottom: 0;
+}
+
+/* Details Grid */
+.event-details-grid {
+    margin: 20px 0;
+}
+
+.detail-item-large {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 0;
+}
+
+.detail-icon {
+    font-size: 20px;
+    color: #1890ff;
+    margin-top: 2px;
+}
+
+.detail-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+/* Registration Progress */
+.registration-progress {
+    margin-top: 20px;
+    padding: 16px;
+    background: #fafafa;
+    border-radius: 8px;
+}
+
+.registration-progress .ant-progress {
+    margin: 8px 0;
+}
+
+.registration-progress .ant-progress-text {
+    font-size: 12px;
+}
+
+/* Agenda */
+.agenda-item {
+    padding: 12px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.agenda-item:last-child {
+    border-bottom: none;
+}
+
+.agenda-time {
+    min-width: 100px;
+}
+
+.agenda-content {
+    flex: 1;
+}
+
+/* Speakers */
+.speaker-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 16px;
+    border: 1px solid #f0f0f0;
+    border-radius: 8px;
+    transition: all 0.3s;
+}
+
+.speaker-card:hover {
+    border-color: #1890ff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.speaker-info {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+/* Pricing Card */
+.pricing-card {
+    position: sticky;
+    top: 24px;
+}
+
+.pricing-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.early-bird-pricing {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+/* Register button styles */
+.register-btn {
+    margin-top: 16px;
+    border-radius: 8px;
+    height: 48px;
+    font-weight: 600;
+    font-size: 16px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+}
+
+.register-btn:hover {
+    background: linear-gradient(135deg, #5a6fd6 0%, #6a4190 100%);
+}
+
+.register-btn:disabled {
+    background: #d9d9d9;
+}
+
+/* Organizer */
+.event-organizer-detailed {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.organizer-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.organizer-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.organizer-actions {
+    display: flex;
+    gap: 4px;
+}
+
+/* Tags */
+.event-tags-detailed {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.event-tag-detailed {
+    margin: 0;
+    padding: 4px 8px;
+    border-radius: 6px;
+}
+/* Responsive Design */
+@media (max-width: 768px) {
+    .event-details-modal {
+        width: 95% !important;
+        margin: 10px;
+    }
+
+    .event-details-body {
+        padding: 16px;
+    }
+
+    .event-details-body .ant-col-16,
+    .event-details-body .ant-col-8 {
+        width: 100%;
+    }
+
+    .event-status-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .event-organizer-detailed {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .organizer-actions {
+        align-self: flex-end;
+    }
+
+    /* FIX: Featured tags wrap on mobile instead of getting cut off */
+    .event-meta {
+        flex-wrap: wrap;
+        gap: 6px;
+        max-width: 100%;
+        overflow-x: auto;
+    }
+
+    .event-tags-detailed {
+        flex-wrap: wrap;
+        gap: 6px;
+        max-width: 100%;
+    }
+
+    .event-tag-detailed {
+        font-size: 11px;
+        padding: 2px 6px;
+    }
+}
+
+/* Custom scrollbar for modal */
+.event-details-modal .ant-modal-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.event-details-modal .ant-modal-body::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.event-details-modal .ant-modal-body::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+.event-details-modal .ant-modal-body::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* Enhanced Safety & Guidelines Styles */
+.safety-card,
+.tags-card,
+.agenda-card {
+    margin-top: 16px;
+}
+
+.guideline-category {
+    padding: 12px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.guideline-category:last-child {
+    border-bottom: none;
+}
+
+.category-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.category-header .ant-typography {
+    font-size: 14px;
+    margin: 0;
+}
+
+.guideline-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 6px 0;
+    margin-left: 8px;
+}
+
+.guideline-item .ant-typography {
+    font-size: 13px;
+    line-height: 1.4;
+    margin: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .guideline-item {
+        margin-left: 4px;
+    }
+
+    .category-header {
+        gap: 6px;
+    }
+}
+
+/* Custom colors for different guideline types */
+.health-guideline {
+    border-left: 3px solid #ff4d4f;
+    padding-left: 8px;
+}
+
+.security-guideline {
+    border-left: 3px solid #1890ff;
+    padding-left: 8px;
+}
+
+.accessibility-guideline {
+    border-left: 3px solid #722ed1;
+    padding-left: 8px;
+}
+
+.conduct-guideline {
+    border-left: 3px solid #fa8c16;
+    padding-left: 8px;
+}
+
+.emergency-guideline {
+    border-left: 3px solid #fa541c;
+    padding-left: 8px;
+}
+
+.prohibited-guideline {
+    border-left: 3px solid #f5222d;
+    padding-left: 8px;
+}
+
+/* ==================================================
+   PRINT PREVIEW — FORCE LIGHT THEME (on screen)
+   Overrides app dark mode so the preview modal and the
+   printable report always render on a white background
+   with dark, legible text, regardless of the active
+   app theme.
+   ================================================== */
+
+/* Modal shell */
+.print-preview-modal .ant-modal-content,
+.print-preview-modal .ant-modal-header,
+.print-preview-modal .ant-modal-body,
+.print-preview-modal .ant-modal-footer {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    border-color: #e5e7eb !important;
+}
+.print-preview-modal .ant-modal-title,
+.print-preview-modal .ant-modal-close-x {
+    color: #0f172a !important;
+}
+
+/* Printable surface — light theme always */
+#printable-area,
+#printable-area * {
+    color: #0f172a !important;
+    border-color: #d9d9d9;
+    /* Lock accent/status colors so they don't shift with the app theme */
+    --accent: #4f46e5;
+    --danger: #ef4444;
+    --success: #22c55e;
+    --warning: #f59e0b;
+}
+#printable-area {
+    background: #ffffff !important;
+}
+#printable-area .ant-card,
+#printable-area .ant-card-body,
+#printable-area .ant-card-head {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    border-color: #d9d9d9 !important;
+}
+#printable-area .ant-typography,
+#printable-area .ant-typography-secondary {
+    color: #0f172a !important;
+}
+#printable-area .ant-table,
+#printable-area .ant-table-container,
+#printable-area .ant-table-content,
+#printable-area .ant-table-tbody > tr > td,
+#printable-area .ant-table-thead > tr > th {
+    background: #ffffff !important;
+    color: #0f172a !important;
+}
+#printable-area .ant-table-thead > tr > th {
+    background: #f5f7fa !important;
+    border-bottom: 1px solid #d9d9d9 !important;
+}
+#printable-area .ant-table-tbody > tr:hover > td {
+    background: #fafafa !important;
+}
+
+/* Override app dark theme inside preview + printable area */
+[data-theme="black"] .print-preview-modal .ant-modal-content,
+[data-theme="black"] .print-preview-modal .ant-modal-header,
+[data-theme="black"] .print-preview-modal .ant-modal-body,
+[data-theme="black"] .print-preview-modal .ant-modal-footer,
+[data-theme="black"] #printable-area,
+[data-theme="black"] #printable-area * {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+    border-color: #d9d9d9 !important;
+}
+[data-theme="black"] #printable-area .ant-table-thead > tr > th {
+    background: #f5f7fa !important;
+}
+
+/* ==================================================
+     PRINT PREVIEW HEADER — READABLE TITLE & CLOSE BUTTON
+     The title text and close (X) button must always read as
+     dark text on the white preview header, in every app theme,
+     and regardless of any gradient/opacity styling used
+     elsewhere in the app. Also normalizes the modal body's
+     scrollbar so it never renders as a dark/black bar.
+     ================================================== */
+.print-preview-modal .ant-modal-header .ant-modal-title,
+.print-preview-modal .ant-modal-title {
+    color: #0f172a !important;
+    -webkit-text-fill-color: #0f172a !important;
+    opacity: 1 !important;
+    font-weight: 600 !important;
+}
+.print-preview-modal .ant-modal-close,
+.print-preview-modal .ant-modal-close-x {
+    color: #0f172a !important;
+    -webkit-text-fill-color: #0f172a !important;
+    opacity: 1 !important;
+}
+.print-preview-modal .ant-modal-close .anticon,
+.print-preview-modal .ant-modal-close-x .anticon,
+.print-preview-modal .ant-modal-close svg {
+    color: #0f172a !important;
+    fill: #0f172a !important;
+}
+.print-preview-modal .ant-modal-close:hover,
+.print-preview-modal .ant-modal-close:hover .ant-modal-close-x {
+    color: #000000 !important;
+    background: rgba(15, 23, 42, 0.06) !important;
+}
+[data-theme="black"] .print-preview-modal .ant-modal-header .ant-modal-title,
+[data-theme="black"] .print-preview-modal .ant-modal-title,
+[data-theme="black"] .print-preview-modal .ant-modal-close,
+[data-theme="black"] .print-preview-modal .ant-modal-close-x {
+    color: #0f172a !important;
+    -webkit-text-fill-color: #0f172a !important;
+    opacity: 1 !important;
+}
+[data-theme="black"] .print-preview-modal .ant-modal-close .anticon,
+[data-theme="black"] .print-preview-modal .ant-modal-close-x .anticon,
+[data-theme="black"] .print-preview-modal .ant-modal-close svg {
+    color: #0f172a !important;
+    fill: #0f172a !important;
+}
+
+/* Scrollbar inside the print preview modal — always light, never the
+     app's dark-theme scrollbar, so it doesn't look like a black bar
+     cutting through the white page. */
+.print-preview-modal .ant-modal-body {
+    scrollbar-color: #c1c1c1 #f1f1f1;
+}
+.print-preview-modal .ant-modal-body::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+.print-preview-modal .ant-modal-body::-webkit-scrollbar-track {
+    background: #f1f1f1 !important;
+    border-radius: 6px;
+}
+.print-preview-modal .ant-modal-body::-webkit-scrollbar-thumb {
+    background: #c1c1c1 !important;
+    border-radius: 6px;
+}
+.print-preview-modal .ant-modal-body::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8 !important;
+}
+
+/* Print styles */
+@media print {
+    /* Belt-and-suspenders: also reset here in case this stylesheet loads
+       without index.css's global print reset — keeps the printed page
+       white even if the app is in black theme. */
+    html,
+    body {
+        background: #ffffff !important;
+        color: #0f172a !important;
+    }
+
+    .ant-modal-mask,
+    .ant-modal-wrap {
+        position: static !important;
+    }
+
+    .ant-modal {
+        position: static !important;
+        width: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .ant-modal-content {
+        box-shadow: none !important;
+    }
+
+    .ant-modal-footer,
+    .ant-modal-close {
+        display: none !important;
+    }
+}
+
+/* Registration count badge in card */
+.event-card .ant-card-actions .ant-badge {
+    cursor: pointer;
+}
+
+.event-card .ant-card-actions .ant-badge .anticon {
+    font-size: 16px;
+}
+
+.event-card.has-featured .event-status-badge {
+    top: 16px !important; /* Same height as featured ribbon */
+    left: 50% !important; /* Move to horizontal center */
+    right: auto !important;
+    transform: translateX(-50%); /* Perfect center */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .event-details-modal {
+        width: 95% !important;
+        margin: 10px;
+    }
+
+    .event-details-body {
+        padding: 16px;
+    }
+
+    /* Make the two-column layout stack vertically on mobile */
+    .event-details-body .ant-row {
+        flex-direction: column;
+    }
+
+    .event-details-body .ant-col-16,
+    .event-details-body .ant-col-8 {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 0 0 100% !important;
+    }
+
+    /* Make the details grid inside the card stack on mobile */
+    .event-details-grid .ant-col-12 {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 0 0 100% !important;
+    }
+
+    /* Reduce spacing for detail items on mobile */
+    .detail-item-large {
+        padding: 8px 0;
+    }
+
+    /* Stack registration progress text on mobile */
+    .registration-progress > div {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 4px;
+    }
+
+    /* Reduce gallery height on mobile/tablet */
+    .event-gallery-section {
+        height: 280px;
+    }
+
+    .carousel-slide {
+        height: 280px;
+    }
+
+    .event-detail-image,
+    .carousel-slide .ant-image,
+    .carousel-slide .ant-image-img {
+        height: 280px !important;
+        width: 100% !important;
+        display: block !important;
+        object-fit: cover;
+    }
+
+    .image-placeholder {
+        height: 280px;
+    }
+
+    /* Speakers grid responsive */
+    .speakers-card .ant-col-8 {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 0 0 100% !important;
+    }
+
+    /* Remove sticky positioning on mobile */
+    .pricing-card {
+        position: static;
+        margin-top: 16px;
+    }
+
+    .event-sidebar {
+        position: static;
+    }
+
+    /* Adjust event info card spacing */
+    .event-info-card {
+        margin-bottom: 16px;
+    }
+
+    /* Stack organizer section on mobile */
+    .event-status-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .event-organizer-detailed {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .organizer-actions {
+        align-self: flex-start;
+        margin-top: 8px;
+    }
+
+    /* Tags card margin */
+    .tags-card {
+        margin-top: 16px;
+    }
+
+    /* Safety card margin */
+    .safety-card {
+        margin-top: 16px;
+    }
+
+    /* Agenda card responsive */
+    .agenda-card {
+        margin-top: 16px;
+    }
+
+    .agenda-item {
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .agenda-time {
+        min-width: auto;
+    }
+
+    /* Guideline items responsive */
+    .guideline-item {
+        margin-left: 4px;
+    }
+
+    .category-header {
+        gap: 6px;
+    }
+
+    /* Early bird pricing responsive */
+    .early-bird-pricing {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    /* Modal header title responsive */
+    .event-detail-header {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 8px;
+        padding-right: 24px !important;
+    }
+
+    .event-detail-header .ant-typography {
+        font-size: 18px !important;
+    }
+}
+/* Extra small screens */
+@media (max-width: 480px) {
+    .event-details-modal {
+        width: 100% !important;
+        margin: 0;
+        top: 0;
+        padding: 0;
+        max-width: 100vw;
+    }
+
+    .event-details-modal .ant-modal-content {
+        border-radius: 0;
+    }
+
+    .event-details-body {
+        padding: 12px;
+    }
+
+    .event-gallery-section {
+        height: 240px;
+        min-height: 240px;
+        width: 100%;
+    }
+
+    .event-carousel .slick-slide > div {
+        height: 240px !important;
+    }
+
+    .carousel-slide {
+        height: 240px;
+        width: 100%;
+    }
+
+    .event-detail-image-root,
+    .event-detail-image-wrapper,
+    .carousel-slide .ant-image {
+        display: block !important;
+        width: 100% !important;
+        height: 240px !important;
+    }
+
+    .event-detail-image,
+    .carousel-slide .ant-image-img {
+        display: block !important;
+        width: 100% !important;
+        height: 240px !important;
+        max-width: 100% !important;
+        object-fit: cover !important;
+        object-position: center center;
+    }
+
+    .image-placeholder {
+        height: 240px;
+        width: 100%;
+    }
+
+    .detail-item-large {
+        gap: 8px;
+    }
+
+    .detail-icon {
+        font-size: 16px;
+    }
+
+    .pricing-header .ant-typography {
+        font-size: 20px !important;
+    }
+
+    .register-btn {
+        height: 44px;
+        font-size: 14px;
+    }
+
+    /* Contact modals footer buttons stack on small screens */
+    .ant-modal-footer {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .ant-modal-footer .ant-btn {
+        flex: 1 1 auto;
+        min-width: 100px;
+    }
+}
+
+/* ============ BLACK THEME STYLES FOR ALUMNI EVENTS ============ */
+/* ============================================
+   Dark Theme — Header Hero
+   ============================================ */
+[data-theme="black"] .ae-hero {
+    --ae-surface: #121620;
+    --ae-border: #242a36;
+    --ae-text: #e7ecf3;
+    --ae-text-muted: #9aa4b2;
+    --ae-accent-soft: rgba(14, 165, 233, 0.16);
+    --ae-shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.45);
+    --ae-shadow-md: 0 14px 34px rgba(0, 0, 0, 0.55);
+
+    background:
+        linear-gradient(180deg, #121620, #121620) padding-box,
+        linear-gradient(
+                135deg,
+                rgba(14, 165, 233, 0.55),
+                rgba(99, 102, 241, 0.45),
+                rgba(20, 184, 166, 0.55)
+            )
+            border-box;
+}
+[data-theme="black"] .ae-hero__bg .dot-grid {
+    background-image: radial-gradient(
+        rgba(255, 255, 255, 0.08) 1px,
+        transparent 1px
+    );
+}
+[data-theme="black"] .ae-stat {
+    background: rgba(26, 31, 43, 0.85);
+    border-color: #242a36;
+}
+[data-theme="black"] .ae-stat__value {
+    color: #e7ecf3;
+}
+[data-theme="black"] .ae-hero__logo {
+    background: #1a1f2b;
+}
+
+/* Black theme - Tabs Card */
+[data-theme="black"] .tabs-card {
+    background: #0a0a0a !important;
+    border-color: #333 !important;
+}
+
+[data-theme="black"] .tabs-card .ant-card-body {
+    background: #0a0a0a !important;
+}
+
+[data-theme="black"] .status-tabs .ant-tabs-tab {
+    color: #ffffff !important;
+}
+
+[data-theme="black"] .status-tabs .ant-tabs-tab-active {
+    background: #1a1a1a !important;
+    color: #60a5fa !important;
+}
+
+[data-theme="black"] .status-tabs .ant-tabs-tab-active .ant-tabs-tab-btn {
+    color: #60a5fa !important;
+}
+
+[data-theme="black"] .status-tabs .ant-tabs-ink-bar {
+    background: #60a5fa !important;
+}
+
+[data-theme="black"] .status-tabs .ant-tabs-nav::before {
+    border-color: #333 !important;
+}
+
+/* Black theme - Controls Card */
+[data-theme="black"] .controls-card {
+    background: #0a0a0a !important;
+    border-color: #333 !important;
+}
+
+[data-theme="black"] .controls-card .ant-card-body {
+    background: #0a0a0a !important;
+}
+
+[data-theme="black"] .advanced-filters {
+    border-color: #333 !important;
+}
+
+/* Black theme - Input fields */
+[data-theme="black"] .controls-card .ant-input {
+    background: #1a1a1a !important;
+    border-color: #333 !important;
+    color: #ffffff !important;
+}
+
+[data-theme="black"] .controls-card .ant-input::placeholder {
+    color: #a0a0a0 !important;
+}
+
+[data-theme="black"] .controls-card .ant-input-prefix .anticon {
+    color: #a0a0a0 !important;
+}
+
+/* Black theme - Event Card */
+[data-theme="black"] .event-card {
+    background: #0a0a0a !important;
+    border-color: #333 !important;
+}
+
+[data-theme="black"] .event-card .ant-card-body {
+    background: #0a0a0a !important;
+    color: #ffffff !important;
+}
+
+[data-theme="black"] .event-card .event-title {
+    color: #ffffff !important;
+}
+
+[data-theme="black"] .event-card .ant-typography,
+[data-theme="black"] .event-card h1,
+[data-theme="black"] .event-card h2,
+[data-theme="black"] .event-card h3,
+[data-theme="black"] .event-card h4,
+[data-theme="black"] .event-card span,
+[data-theme="black"] .event-card p {
+    color: #ffffff !important;
+}
+
+[data-theme="black"] .event-card .ant-typography-secondary {
+    color: #a0a0a0 !important;
+}
+
+[data-theme="black"] .event-card .event-description {
+    color: #a0a0a0 !important;
+}
+
+[data-theme="black"] .event-card .rating-text {
+    color: #a0a0a0 !important;
+}
+
+[data-theme="black"] .event-card .detail-item {
+    color: #a0a0a0 !important;
+}
+
+[data-theme="black"] .event-card .detail-item .anticon {
+    color: #666 !important;
+}
+
+[data-theme="black"] .event-card .regular-price {
+    color: #ffffff !important;
+}
+
+/* Black theme - Event Tags */
+[data-theme="black"] .event-tag {
+    background: #1a1a1a !important;
+    color: #a0a0a0 !important;
+    border-color: #333 !important;
+}
+
+[data-theme="black"] .event-tag-small {
+    background: #1a1a1a !important;
+    color: #a0a0a0 !important;
+}
+
+/* Black theme - Card Actions */
+[data-theme="black"] .event-card .ant-card-actions {
+    background: #1a1a1a !important;
+    border-color: #333 !important;
+}
+
+[data-theme="black"] .event-card .ant-card-actions > li {
+    border-color: #333 !important;
+}
+
+[data-theme="black"] .event-card .ant-card-actions .anticon {
+    color: #a0a0a0 !important;
+}
+
+[data-theme="black"] .event-card .ant-card-actions .anticon:hover {
+    color: #60a5fa !important;
+}
+
+/* Black theme - Card Hover */
+[data-theme="black"] .event-card:hover {
+    box-shadow: 0 8px 30px rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Black theme - List View */
+[data-theme="black"] .events-list {
+    background: #0a0a0a !important;
+    border-color: #333 !important;
+}
+
+[data-theme="black"] .event-list-item {
+    border-color: #333 !important;
+    background: #0a0a0a !important;
+}
+
+[data-theme="black"] .event-list-item:hover {
+    background: #1a1a1a !important;
+}
+
+[data-theme="black"] .list-item-title {
+    color: #ffffff !important;
+}
+
+[data-theme="black"] .list-item-description {
+    color: #a0a0a0 !important;
+}
+
+[data-theme="black"] .meta-item {
+    color: #a0a0a0 !important;
+}
+
+/* Black theme - No Events Card */
+[data-theme="black"] .no-events-card {
+    background: #0a0a0a !important;
+    border-color: #333 !important;
+}
+
+[data-theme="black"] .no-events-card .ant-typography {
+    color: #ffffff !important;
+}
+
+[data-theme="black"] .no-events-card .ant-typography-secondary {
+    color: #a0a0a0 !important;
+}
+
+/* Black theme - Create Event Modal */
+[data-theme="black"] .create-event-modal .ant-modal-content {
+    background: #0a0a0a !important;
+}
+
+[data-theme="black"] .create-event-modal .ant-modal-header {
+    background: #0a0a0a !important;
+    border-color: #333 !important;
+}
+
+[data-theme="black"] .create-event-modal .ant-modal-title {
+    color: #ffffff !important;
+}
+
+[data-theme="black"] .create-event-modal .ant-modal-body {
+    background: #0a0a0a !important;
+    color: #ffffff !important;
+}
+
+[data-theme="black"] .create-event-modal .ant-modal-footer {
+    background: #0a0a0a !important;
+    border-color: #333 !important;
+}
+
+/* Black theme - Form Sections */
+[data-theme="black"] .form-section {
+    background: #1a1a1a !important;
+    border-color: #333 !important;
+}
+
+[data-theme="black"] .section-header h3 {
+    color: #60a5fa !important;
+}
+
+[data-theme="black"] .form-actions-full {
+    background: #0a0a0a !important;
+    border-color: #333 !important;
+}
+
+/* Black theme - Form Inputs */
+[data-theme="black"] .ant-form-item-label > label {
+    color: #ffffff !important;
+}
+
+[data-theme="black"] .ant-input,
+[data-theme="black"] .ant-input-affix-wrapper {
+    background: #1a1a1a !important;
+    border-color: #333 !important;
+    color: #ffffff !important;
+}
+
+[data-theme="black"] .ant-input::placeholder {
+    color: #a0a0a0 !important;
+}
+
+[data-theme="black"] textarea.ant-input {
+    background: #1a1a1a !important;
+    border-color: #333 !important;
+    color: #ffffff !important;
+}
+/* Input field */
+[data-theme="black"] .ant-picker {
+    background: #1a1a1a !important;
+    border-color: #333 !important;
+}
+
+[data-theme="black"] .ant-picker-input > input {
+    color: #ffffff !important;
+}
+
+[data-theme="black"] .ant-picker-suffix,
+[data-theme="black"] .ant-picker-clear {
+    color: #a0a0a0 !important;
+}
+
+/* ===== DROPDOWN PANEL ===== */
+[data-theme="black"] .ant-picker-dropdown {
+    background: #1a1a1a !important;
+}
+
+/* Panel wrapper */
+[data-theme="black"] .ant-picker-panel {
+    background: #1a1a1a !important;
+    border-color: #333 !important;
+}
+
+/* Time columns */
+[data-theme="black"] .ant-picker-time-panel-column > li {
+    color: #ffffff !important;
+}
+
+/* Hover state */
+[data-theme="black"] .ant-picker-time-panel-column > li:hover {
+    background: #2a2a2a !important;
+}
+
+/* Selected time */
+[data-theme="black"]
+    .ant-picker-time-panel-column
+    > li.ant-picker-time-panel-cell-selected {
+    background: #333 !important;
+    color: #ffffff !important;
+}
+
+/* Header */
+[data-theme="black"] .ant-picker-header {
+    background: #1a1a1a !important;
+    border-bottom: 1px solid #333 !important;
+}
+
+[data-theme="black"] .ant-picker-header button {
+    color: #ffffff !important;
+}
+
+/* AM / PM */
+[data-theme="black"] .ant-picker-time-panel-cell-inner {
+    color: #ffffff !important;
+}
+
+/* Black theme - Upload */
+[data-theme="black"] .ant-upload.ant-upload-select-picture-card {
+    background: #1a1a1a !important;
+    border-color: #333 !important;
+}
+
+[data-theme="black"] .upload-placeholder {
+    color: #a0a0a0 !important;
+}
+
+[data-theme="black"] .switch-label {
+    color: #a0a0a0 !important;
+}
+
+/* Black theme - Event Details Modal */
+[data-theme="black"] .event-details-modal .ant-modal-content {
+    background: #0a0a0a !important;
+}
+
+[data-theme="black"] .event-details-modal .ant-modal-header {
+    background: #0a0a0a !important;
+    border-color: #333 !important;
+}
+
+[data-theme="black"] .event-details-modal .ant-modal-title {
+    color: #ffffff !important;
+}
+
+[data-theme="black"] .event-details-modal .ant-modal-body {
+    background: #0a0a0a !important;
+    color: #ffffff !important;
+}
+
+[data-theme="black"] .event-details-modal .ant-modal-footer {
+    background: #0a0a0a !important;
+    border-color: #333 !important;
+}
+
+/* Black theme - Event Details Body */
+[data-theme="black"] .event-details-body {
+    background: #0a0a0a !important;
+    color: #ffffff !important;
+}
+
+[data-theme="black"] .event-details-body .ant-typography {
+    color: #ffffff !important;
+}
+
+[data-theme="black"] .event-details-body .ant-typography-secondary {
+    color: #a0a0a0 !important;
+}
+
+[data-theme="black"] .event-description-detailed {
+    color: #a0a0a0 !important;
+}
+
+/* Black theme - Detail Items */
+[data-theme="black"] .detail-item-large {
+    color: #ffffff !important;
+}
+
+[data-theme="black"] .detail-content .ant-typography {
+    color: #ffffff !important;
+}
+
+[data-theme="black"] .detail-content .ant-typography-secondary {
+    color: #a0a0a0 !important;
+}
+
+/* Black theme - Registration Progress */
+[data-theme="black"] .registration-progress {
+    background: #1a1a1a !important;
+}
+
+[data-theme="black"] .registration-progress .ant-typography {
+    color: #ffffff !important;
+}
+
+/* Black theme - Progress bar trail (the unfilled track).
+   Without this override the inner track is too dark to see on a black background. */
+[data-theme="black"] .ant-progress-inner,
+[data-theme="black"] .ant-progress .ant-progress-inner {
+    background-color: #3a3a3a !important;
+}
+
+/* Keep the filled bar and percentage text readable */
+[data-theme="black"] .ant-progress-text {
+    color: #e0e0e0 !important;
+}
+
+/* Ensure the active-status animated stripe is visible */
+[data-theme="black"] .ant-progress-bg {
+    position: relative;
+}
+
+/* Black theme - Pricing Card */
+[data-theme="black"] .pricing-card {
+    background: #0a0a0a !important;
+    border-color: #333 !important;
+}
+
+[data-theme="black"] .pricing-card .ant-card-body {
+    background: #0a0a0a !important;
+}
+
+[data-theme="black"] .pricing-header .ant-typography {
+    color: #ffffff !important;
+}
+
+/* Black theme - Speaker Card */
+[data-theme="black"] .speaker-card {
+    background: #1a1a1a !important;
+    border-color: #333 !important;
+}
+
+[data-theme="black"] .speaker-card:hover {
+    border-color: #60a5fa !important;
+}
+
+[data-theme="black"] .speaker-info .ant-typography {
+    color: #ffffff !important;
+}
+
+/* Black theme - Agenda */
+[data-theme="black"] .agenda-item {
+    border-color: #333 !important;
+}
+
+[data-theme="black"] .agenda-time .ant-typography {
+    color: #60a5fa !important;
+}
+
+[data-theme="black"] .agenda-content .ant-typography {
+    color: #ffffff !important;
+}
+
+/* Black theme - Safety, Tags, Agenda Cards */
+[data-theme="black"] .safety-card,
+[data-theme="black"] .tags-card,
+[data-theme="black"] .agenda-card {
+    background: #0a0a0a !important;
+    border-color: #333 !important;
+}
+
+[data-theme="black"] .safety-card .ant-card-head,
+[data-theme="black"] .tags-card .ant-card-head,
+[data-theme="black"] .agenda-card .ant-card-head {
+    background: #0a0a0a !important;
+    border-color: #333 !important;
+    color: #ffffff !important;
+}
+
+[data-theme="black"] .safety-card .ant-card-body,
+[data-theme="black"] .tags-card .ant-card-body,
+[data-theme="black"] .agenda-card .ant-card-body {
+    background: #0a0a0a !important;
+}
+
+/* Black theme - Guideline */
+[data-theme="black"] .guideline-category {
+    border-color: #333 !important;
+}
+
+[data-theme="black"] .category-header {
+    border-color: #333 !important;
+}
+
+[data-theme="black"] .category-header .ant-typography {
+    color: #ffffff !important;
+}
+
+[data-theme="black"] .guideline-item .ant-typography {
+    color: #a0a0a0 !important;
+}
+
+/* Black theme - Scrollbar */
+[data-theme="black"]
+    .create-event-modal
+    .ant-modal-body::-webkit-scrollbar-track,
+[data-theme="black"]
+    .event-details-modal
+    .ant-modal-body::-webkit-scrollbar-track {
+    background: #1a1a1a !important;
+}
+
+[data-theme="black"]
+    .create-event-modal
+    .ant-modal-body::-webkit-scrollbar-thumb,
+[data-theme="black"]
+    .event-details-modal
+    .ant-modal-body::-webkit-scrollbar-thumb {
+    background: #333 !important;
+}
+
+[data-theme="black"]
+    .create-event-modal
+    .ant-modal-body::-webkit-scrollbar-thumb:hover,
+[data-theme="black"]
+    .event-details-modal
+    .ant-modal-body::-webkit-scrollbar-thumb:hover {
+    background: #555 !important;
+}
+
+/* Black theme - Image Placeholder */
+[data-theme="black"] .image-placeholder {
+    background: #1a1a1a !important;
+    color: #a0a0a0 !important;
+}
+
+/* Black theme - Dividers */
+[data-theme="black"] .ant-divider {
+    border-color: #333 !important;
+}
+
+/* Black theme - Statistic */
+[data-theme="black"] .ant-statistic-title {
+    color: #a0a0a0 !important;
+}
+
+[data-theme="black"] .ant-statistic-content {
+    color: #ffffff !important;
+}
+
+/* Black theme - Alert */
+[data-theme="black"] .ant-alert {
+    background: #1a1a1a !important;
+    border-color: #333 !important;
+}
+
+[data-theme="black"] .TimePicker.RangePicker.ant-alert-message {
+    color: #ffffff !important;
+}
+
+[data-theme="black"] .ant-alert-description {
+    color: #a0a0a0 !important;
+}
+
+/* Black theme - Steps */
+[data-theme="black"] .ant-steps-item-title {
+    color: #ffffff !important;
+}
+
+[data-theme="black"] .ant-steps-item-description {
+    color: #a0a0a0 !important;
+}
+
+/* Black theme - Event Info Card */
+[data-theme="black"] .event-info-card {
+    background: #0a0a0a !important;
+    border-color: #333 !important;
+}
+
+[data-theme="black"] .event-info-card .ant-card-head {
+    background: #0a0a0a !important;
+    border-color: #333 !important;
+}
+
+[data-theme="black"] .event-info-card .ant-card-body {
+    background: #0a0a0a !important;
+}
+
+/* Black theme - Organizer */
+[data-theme="black"] .organizer-info .ant-typography {
+    color: #ffffff !important;
+}
+
+/* Black theme - Tags Detailed */
+[data-theme="black"] .event-tag-detailed {
+    background: #1a1a1a !important;
+    border-color: #333 !important;
+}
+
+/* ============ END BLACK THEME STYLES FOR ALUMNI EVENTS ============ */
+/* Responsive Design */
+@media (max-width: 768px) {
+    .event-details-modal {
+        width: 95% !important;
+        margin: 10px;
+    }
+
+    .event-details-body {
+        padding: 16px;
+    }
+
+    .event-details-body .ant-col-16,
+    .event-details-body .ant-col-8 {
+        width: 100%;
+    }
+
+    .event-status-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .event-organizer-detailed {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .organizer-actions {
+        align-self: flex-end;
+    }
+
+    /* FIX: Featured tags wrap on mobile - target Ant Design Space component */
+    .event-info-card .ant-space {
+        flex-wrap: wrap !important;
+        gap: 6px !important;
+        max-width: 100% !important;
+    }
+
+    .event-info-card .ant-space-item {
+        margin-right: 0 !important;
+    }
+
+    .event-info-card .ant-tag {
+        font-size: 11px;
+        padding: 2px 6px;
+        margin-bottom: 4px;
+    }
+
+    .event-meta {
+        flex-wrap: wrap;
+        gap: 6px;
+        max-width: 100%;
+    }
+
+    .event-tags-detailed {
+        flex-wrap: wrap;
+        gap: 6px;
+        max-width: 100%;
+    }
+
+    .event-tag-detailed {
+        font-size: 11px;
+        padding: 2px 6px;
+    }
+}
+
+/* Alumni Details - Contact Actions */
+[data-theme="black"] .preview-contact-info .ant-btn {
+    color: #ffffff !important;
+    border-color: #444 !important;
+}
+
+[data-theme="black"] .preview-contact-info .ant-btn .anticon {
+    color: #ffffff !important;
+}
+
+/* Event Header Actions */
+[data-theme="black"] .event-header-actions .ant-btn {
+    color: #ffffff !important;
+}
+
+[data-theme="black"] .event-header-actions .ant-btn .anticon {
+    color: #ffffff !important;
+}
+/* InputNumber Dark Theme */
+[data-theme="black"] .ant-input-number {
+    background: #1a1a1a !important;
+    border-color: #333 !important;
+}
+
+[data-theme="black"] .ant-input-number-input {
+    background: #1a1a1a !important;
+    color: #ffffff !important;
+}
+
+[data-theme="black"] .ant-input-number-group-addon {
+    background: #1a1a1a !important;
+    color: #ffffff !important;
+    border-color: #333 !important;
+}
+
+[data-theme="black"] .ant-input-number-handler-wrap {
+    background: #1a1a1a !important;
+}
+
+[data-theme="black"] .ant-input-number-handler {
+    border-color: #333 !important;
+}
+
+[data-theme="black"] .ant-input-number-handler-up-inner,
+[data-theme="black"] .ant-input-number-handler-down-inner {
+    color: #ffffff !important;
+}
+
+/* Organizer Actions */
+[data-theme="black"] .organizer-actions .ant-btn {
+    color: #ffffff !important;
+    border-color: #444 !important;
+}
+
+[data-theme="black"] .organizer-actions .ant-btn .anticon {
+    color: #ffffff !important;
+}
+
+[data-theme="black"] .organizer-actions a {
+    color: #ffffff !important;
+}
+
+[data-theme="black"] .organizer-actions .anticon {
+    color: #ffffff !important;
+}
+
+/* DatePicker & TimePicker placeholder text */
+[data-theme="black"] .ant-picker-input input::placeholder {
+    color: #ffffff !important;
+    opacity: 1 !important;
+}
+
+/* Actual input text */
+[data-theme="black"] .ant-picker-input > input {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+}
+
+@media (max-width: 480px) {
+    /* ---- Details-modal carousel (event-gallery-section) ---- */
+    .event-gallery-section,
+    .event-carousel,
+    .event-carousel .slick-list,
+    .event-carousel .slick-track {
+        height: 240px !important;
+        min-height: 240px !important;
+    }
+
+    .event-gallery-section {
+        width: 100% !important;
+    }
+
+    /* Slick's per-slide inner wrapper — safe to size */
+    .event-carousel .slick-slide > div {
+        height: 240px !important;
+    }
+
+    .carousel-slide {
+        position: relative !important;
+        display: block !important;
+        overflow: hidden !important;
+        width: 100% !important;
+        height: 240px !important;
+    }
+
+    .carousel-slide .event-detail-image,
+    .carousel-slide img {
+        display: block !important;
+        width: 100% !important;
+        height: 240px !important;
+        object-fit: cover !important;
+        object-position: center center !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+
+    /* Hover overlay never triggers on touch — keep hidden so it doesn't cover image */
+    .event-detail-image-overlay {
+        opacity: 0 !important;
+    }
+
+    /* ---- Event-card cover (portrait card grid view) ---- */
+    .event-cover {
+        height: 185px !important;
+        min-height: 185px !important;
+    }
+
+    .event-cover-img {
+        height: 185px !important;
+        width: 100% !important;
+        object-fit: cover !important;
+        object-position: center center !important;
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+
+    .event-cover-placeholder {
+        height: 185px !important;
+    }
+
+    /* Event-card carousel on mobile portrait */
+    .event-card-carousel,
+    .event-card-carousel .slick-list,
+    .event-card-carousel .slick-track {
+        height: 185px !important;
+        min-height: 185px !important;
+    }
+
+    .event-card-carousel .slick-slide > div {
+        height: 185px !important;
+    }
+
+    .event-card-carousel-slide {
+        height: 185px !important;
+    }
+
+    .event-card-carousel-slide .event-cover-img {
+        height: 185px !important;
+        width: 100% !important;
+        object-fit: cover !important;
+        object-position: center center !important;
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+}
+
+/* ============================================================
+   MOBILE PORTRAIT FIXES
+   1) Event Tags select overflowing outside its bordered box
+   2) Spacing between Event Type / Category dropdown options
+   3) Gap between "Create Event" button and the category/type
+      filters on the events toolbar (mobile portrait)
+   4) Gap between Cancel / Create Event buttons in the modal
+      footer on mobile portrait
+   ============================================================ */
+
+/* ---- 1) Event Tags: force the selector box to grow with
+   wrapped tags instead of letting the second row spill out
+   underneath, on top of the Event Agenda field below it. ---- */
+.form-tags.ant-select-multiple .ant-select-selector {
+    height: auto !important;
+    min-height: 40px;
+    overflow: visible !important;
+    flex-wrap: wrap;
+    padding: 4px 8px !important;
+}
+
+.form-tags .ant-select-selection-overflow {
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.form-tags .ant-select-selection-overflow-item {
+    max-width: 100%;
+}
+
+.form-tags .ant-select-selection-search {
+    max-width: 100%;
+}
+
+.form-tags .ant-select-selection-search-input {
+    width: 100% !important;
+}
+
+@media (max-width: 480px) {
+    .form-tags .ant-select-selection-overflow-item .ant-select-selection-item {
+        max-width: calc(100% - 8px);
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+/* ---- 2) Event Type / Category select dropdown (both the
+   Create Event form and the toolbar filters use this same
+   dropdown markup): add breathing room between each colored
+   option row so they don't look like one solid touching
+   block. Dropdown is portaled to <body>, so this is
+   intentionally unscoped to the modal/card. ---- */
+.ant-select-dropdown .ant-select-item {
+    margin: 4px 6px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    width: auto;
+}
+
+.ant-select-dropdown .ant-select-item-option-content {
+    display: flex;
+    align-items: center;
+}
+
+.ant-select-dropdown .ant-select-item-option-content .ant-tag {
+    margin: 0;
+    padding: 4px 10px;
+    border-radius: 8px;
+    width: 100%;
+    text-align: left;
+    box-sizing: border-box;
+}
+
+/* ---- 3) Events toolbar (search + Event Type + Category +
+   Create Event button): on mobile portrait these were flex
+   children with fixed pixel widths (300px / 180px / 200px)
+   that don't fit a phone screen, so they crowded together
+   with no visible gap once wrapped. Stack them full width
+   with a consistent vertical gap instead. ---- */
+@media (max-width: 576px) {
+    .controls-section {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+
+    .controls-left {
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+        gap: 12px;
+    }
+
+    .controls-left .ant-input,
+    .controls-left .ant-input-affix-wrapper,
+    .controls-left .ant-select {
+        width: 100% !important;
+    }
+
+    .controls-right {
+        width: 100%;
+    }
+
+    .controls-right .ant-btn {
+        width: 100%;
+    }
+}
+
+/* ---- 4) Cancel / Create Event modal footer buttons: make sure
+   they keep a real gap and don't get squeezed edge-to-edge when
+   they wrap to full width on very small screens. ---- */
+@media (max-width: 480px) {
+    .form-actions-full {
+        gap: 10px;
+    }
+
+    .form-actions-full .ant-btn {
+        margin: 0;
+    }
+}

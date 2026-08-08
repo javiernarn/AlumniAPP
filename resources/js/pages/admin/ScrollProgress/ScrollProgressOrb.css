@@ -1,0 +1,258 @@
+
+
+.scroll-orb-wrap {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 999999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  pointer-events: auto;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.scroll-orb-wrap.is-dragging {
+  cursor: grabbing;
+}
+
+.scroll-orb-wrap.is-dragging .scroll-orb {
+  transition: none;
+}
+
+/* ---------- The circle button itself ---------- */
+.scroll-orb {
+  position: relative;
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  border: none;
+  padding: 0;
+  cursor: inherit;
+  background: var(--surface, #ffffff);
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.18),
+    0 0 0 1px var(--border, #e5e7eb);
+  transition: transform 0.25s var(--ease-spring, cubic-bezier(0.22, 1, 0.36, 1)),
+    box-shadow 0.25s ease;
+  animation: orbPopIn 0.5s var(--ease-spring, cubic-bezier(0.22, 1, 0.36, 1));
+}
+
+.scroll-orb:hover {
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.24),
+    0 0 0 1px var(--accent, #4f46e5);
+}
+
+.scroll-orb:active {
+  transform: scale(0.97);
+}
+
+@keyframes orbPopIn {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ---------- Progress ring ---------- */
+.scroll-orb__ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+  pointer-events: none;
+}
+
+.scroll-orb__ring-track {
+  fill: none;
+  stroke: var(--border, #e5e7eb);
+  stroke-width: 5;
+}
+
+.scroll-orb__ring-fill {
+  fill: none;
+  stroke: url(#scroll-orb-gradient);
+  stroke: var(--accent, #4f46e5);
+  stroke-width: 5;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.15s linear;
+}
+
+/* ---------- Circle body: logo + water ---------- */
+.scroll-orb__body {
+  position: absolute;
+  inset: 7px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--surface-2, #f3f4f6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scroll-orb__logo {
+  position: relative;
+  z-index: 2;
+  width: 62%;
+  height: 62%;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(15, 23, 42, 0.25));
+  pointer-events: none;
+}
+
+/* Rising water fill */
+.scroll-orb__water {
+  position: absolute;
+  left: -5%;
+  width: 110%;
+  bottom: 0;
+  z-index: 1;
+  background: linear-gradient(
+    180deg,
+    rgba(14, 165, 233, 0.55) 0%,
+    rgba(79, 70, 229, 0.65) 100%
+  );
+  transition: height 0.35s var(--ease-smooth, cubic-bezier(0.4, 0, 0.2, 1));
+  min-height: 6%;
+}
+
+.scroll-orb__wave {
+  position: absolute;
+  top: -14px;
+  left: -25%;
+  width: 150%;
+  height: 28px;
+  background: rgba(255, 255, 255, 0.35);
+  border-radius: 45%;
+  animation: orbWave 3.2s linear infinite;
+}
+
+.scroll-orb__wave--2 {
+  top: -9px;
+  opacity: 0.6;
+  animation: orbWave 4.4s linear infinite reverse;
+}
+
+@keyframes orbWave {
+  from {
+    transform: rotate(0deg) translateX(0);
+  }
+  to {
+    transform: rotate(360deg) translateX(0);
+  }
+}
+
+/* ---------- Percentage badge ---------- */
+.scroll-orb__percent {
+  position: absolute;
+  z-index: 3;
+  bottom: 3px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  padding: 3px 7px;
+  border-radius: 999px;
+  color: #ffffff;
+  background: var(--accent, #4f46e5);
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.3);
+  white-space: nowrap;
+}
+
+/* ---------- Popup jump-arrow ---------- */
+.scroll-orb-popup {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface, #ffffff);
+  color: var(--accent, #4f46e5);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.18),
+    0 0 0 1px var(--border, #e5e7eb);
+  font-size: 16px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px) scale(0.7);
+  transition: opacity 0.2s var(--ease-spring, cubic-bezier(0.22, 1, 0.36, 1)),
+    transform 0.2s var(--ease-spring, cubic-bezier(0.22, 1, 0.36, 1)),
+    visibility 0.2s;
+}
+
+.scroll-orb-popup.is-open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+  animation: orbPopupBob 1.6s ease-in-out infinite;
+}
+
+.scroll-orb-popup:hover {
+  color: #ffffff;
+  background: var(--accent, #4f46e5);
+}
+
+@keyframes orbPopupBob {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-4px) scale(1);
+  }
+}
+
+/* Dark theme support (matches the [data-theme="black"] tokens already
+   defined on .about-page) */
+[data-theme="black"] .scroll-orb,
+[data-theme="black"] .scroll-orb-popup {
+  background: var(--surface, #14161d);
+}
+
+[data-theme="black"] .scroll-orb__body {
+  background: var(--surface-2, #1b1e27);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+  .scroll-orb-wrap {
+    right: 14px;
+    bottom: 14px;
+    gap: 8px;
+  }
+  .scroll-orb {
+    width: 68px;
+    height: 68px;
+  }
+  .scroll-orb-popup {
+    width: 34px;
+    height: 34px;
+    font-size: 14px;
+  }
+  .scroll-orb__percent {
+    font-size: 10px;
+    padding: 2px 6px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-orb,
+  .scroll-orb-popup,
+  .scroll-orb__wave,
+  .scroll-orb-popup.is-open {
+    animation: none !important;
+    transition: none !important;
+  }
+}

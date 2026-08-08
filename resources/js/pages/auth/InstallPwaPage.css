@@ -1,0 +1,298 @@
+/* ==========================================================================
+   InstallPwaPage.css
+   OCC Alumni — Public "Install PWA" guide page
+   Imports PublicHomePage.css for shared tokens (--ph-accent, .ph-btn,
+   .ph-card, .grad, .ph-header, .ph-footer, etc); everything here is
+   additive, namespaced with a "pwa-" prefix so nothing collides with
+   the rest of the public site.
+   ========================================================================== */
+
+.pwa-page {
+  min-height: 100vh;
+}
+
+/* ============ BREADCRUMB: mobile-only ============
+   This is the small "Home / INSTALL PWA" trail above the page title —
+   NOT the header. On desktop/laptop it just repeats what's already in
+   the header nav, so it's hidden there and only shown on phones. The
+   header itself is never touched by this rule. */
+.pwa-page .pwa-breadcrumb {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .pwa-page .pwa-breadcrumb {
+    display: flex;
+  }
+}
+
+/* ============ BREADCRUMB + HERO ============ */
+.pwa-hero {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 32px 8px;
+}
+
+.pwa-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0.55;
+  margin-bottom: 18px;
+}
+
+.pwa-breadcrumb button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  opacity: 0.85;
+}
+
+.pwa-breadcrumb button:hover {
+  color: var(--ph-accent);
+  opacity: 1;
+}
+
+.pwa-breadcrumb-current {
+  color: var(--ph-accent);
+}
+
+.pwa-hero-title {
+  font-size: 40px !important;
+  font-weight: 900 !important;
+  margin: 0 0 12px !important;
+  color: inherit !important;
+}
+
+.pwa-hero-lead {
+  font-size: 15.5px !important;
+  opacity: 0.72;
+  color: inherit !important;
+  max-width: 640px;
+  margin: 0 !important;
+}
+
+/* ============ SECTION / CARD SHELL ============ */
+.pwa-section {
+  padding-top: 8px;
+  padding-bottom: 20px;
+}
+
+.pwa-card {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 28px 30px;
+  border-radius: var(--ph-radius-md, 18px);
+}
+
+.ph-page.light .pwa-card {
+  background: #ffffff;
+  border: 1px solid #edf0f5;
+  box-shadow: 0 10px 30px rgba(2, 6, 23, 0.05);
+}
+
+.ph-page.dark .pwa-card {
+  background: rgba(18, 22, 32, 0.75);
+  border: 1px solid #242a36;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.pwa-card-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: 4px;
+  color: inherit;
+}
+
+.pwa-card-heading .anticon {
+  color: var(--ph-accent);
+}
+
+.pwa-card-sub {
+  display: block;
+  font-size: 13px;
+  opacity: 0.55;
+  margin-bottom: 14px;
+}
+
+.pwa-p {
+  font-size: 14.5px !important;
+  line-height: 1.7 !important;
+  opacity: 0.82;
+  color: inherit !important;
+  margin: 0 0 12px !important;
+}
+
+.pwa-p:last-child {
+  margin-bottom: 0 !important;
+}
+
+.pwa-p a {
+  color: var(--ph-accent);
+  font-weight: 600;
+}
+
+.pwa-link-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--ph-accent);
+  text-decoration: none;
+}
+
+.ph-page.light .pwa-link-chip {
+  background: #f5f7fb;
+  border: 1px solid #e6eaf1;
+}
+
+.ph-page.dark .pwa-link-chip {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid #242a36;
+}
+
+.pwa-link-chip:hover {
+  transform: translateY(-1px);
+}
+
+/* ============ OVERVIEW ============ */
+.pwa-overview-body {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 32px;
+  align-items: center;
+  margin-top: 18px;
+}
+
+.pwa-overview-mockup {
+  display: flex;
+  justify-content: center;
+}
+
+.pwa-overview-mockup img {
+  width: 100%;
+  max-width: 240px;
+  height: auto;
+  display: block;
+  border-radius: 22px;
+}
+
+/* ============ iOS STEPS ============ */
+.pwa-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  align-items: start;
+  margin-top: 18px;
+}
+
+.pwa-step-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.pwa-step-card-shot {
+  border-radius: 16px;
+  overflow: hidden;
+  line-height: 0;
+  max-width: 190px;
+  margin: 0 auto;
+}
+
+.ph-page.light .pwa-step-card-shot {
+  border: 1px solid #e6eaf1;
+  box-shadow: 0 8px 20px rgba(2, 6, 23, 0.08);
+}
+
+.ph-page.dark .pwa-step-card-shot {
+  border: 1px solid #242a36;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+}
+
+.pwa-step-card-shot img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.pwa-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.pwa-step-num {
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  color: #ffffff;
+  background: linear-gradient(135deg, var(--ph-accent), var(--ph-accent-2));
+}
+
+.pwa-step strong {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 2px;
+}
+
+.pwa-step p {
+  margin: 0;
+  font-size: 13px;
+  opacity: 0.65;
+  line-height: 1.5;
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+@media (max-width: 767px) {
+  .pwa-hero { padding: 28px 20px 4px; }
+  .pwa-hero-title { font-size: 27px !important; }
+  .pwa-hero-lead { font-size: 14px !important; }
+
+  .pwa-card { padding: 22px 20px; }
+
+  .pwa-overview-body {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    text-align: center;
+  }
+
+  .pwa-steps {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .pwa-step-card-shot {
+    max-width: 280px;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 575px) {
+  .pwa-hero-title { font-size: 23px !important; }
+  .pwa-card-heading { font-size: 18px; }
+}

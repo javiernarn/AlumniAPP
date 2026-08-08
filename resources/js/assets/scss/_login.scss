@@ -1,0 +1,33 @@
+
+
+.login-container img{
+    width: 100px;
+    margin-bottom: 23px;
+}
+
+.login-form{
+    width: 400px;
+    background: #FFFFFF;
+    padding: 30px !important;
+}
+
+// .login-container input{
+//     height: 40px !important;
+//     max-height: 40px !important;
+// }
+
+.login-container button{
+    // height: 40px !important;
+    // box-shadow: 0px 10px 20px rgba(58, 137, 255, 0.3) !important;
+    border-radius: 50px !important;
+    width:  100% !important;
+}
+
+.logo-login{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 27px;
+}
+

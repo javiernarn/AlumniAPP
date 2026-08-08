@@ -1,0 +1,1135 @@
+.ae-hero {
+  --ae-ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
+  --ae-ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --ae-accent: #0ea5e9;
+  --ae-accent-2: #14b8a6;
+  --ae-accent-3: #6366f1;
+  --ae-accent-soft: rgba(14, 165, 233, 0.10);
+  --ae-accent-ring: rgba(14, 165, 233, 0.28);
+  --ae-surface: #ffffff;
+  --ae-border: #e2e8f0;
+  --ae-text: #0b1220;
+  --ae-text-muted: #5b6677;
+  --ae-shadow-sm: 0 4px 14px rgba(2, 6, 23, 0.06);
+  --ae-shadow-md: 0 14px 34px rgba(2, 6, 23, 0.10);
+
+  position: relative;
+  overflow: hidden;
+  border-radius: 26px;
+  background:
+    linear-gradient(180deg, var(--ae-surface), var(--ae-surface)) padding-box,
+    linear-gradient(135deg, rgba(14,165,233,0.45), rgba(99,102,241,0.35), rgba(20,184,166,0.45)) border-box;
+  border: 1px solid transparent;
+  box-shadow: var(--ae-shadow-md);
+  opacity: 0;
+  transform: translateY(8px);
+  animation: aeFadeUp 0.7s var(--ae-ease-spring) forwards;
+}
+
+@keyframes aeFadeUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes aeFloat {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50%      { transform: translateY(-14px) scale(1.04); }
+}
+
+.ae-hero__bg { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.ae-hero__bg .blob {
+  position: absolute; border-radius: 50%;
+  filter: blur(70px); opacity: 0.5;
+  animation: aeFloat 14s ease-in-out infinite;
+}
+.ae-hero__bg .blob-1 { width: 280px; height: 280px; background: #38bdf8; top: -70px; left: -50px; }
+.ae-hero__bg .blob-2 { width: 320px; height: 320px; background: #6366f1; bottom: -130px; right: -70px; animation-duration: 18s; }
+.ae-hero__bg .blob-3 { width: 200px; height: 200px; background: #14b8a6; top: 40%; left: 55%; animation-duration: 22s; opacity: 0.35; }
+.ae-hero__bg .dot-grid {
+  position: absolute; inset: 0;
+  background-image: radial-gradient(rgba(15,23,42,0.08) 1px, transparent 1px);
+  background-size: 18px 18px;
+  -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+          mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+}
+
+.alumni-list-container{
+     padding: 24px;
+  padding-top: 10px;
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+}
+
+.ae-hero__content {
+  position: relative; z-index: 1;
+  max-width: 1080px; margin: 0 auto; text-align: center;
+}
+
+.ae-hero__brand {
+  display: inline-flex; align-items: center; gap: 14px; margin-bottom: 14px;
+}
+.ae-hero__logo {
+  width: 56px; height: 56px; object-fit: contain;
+  border-radius: 14px; background: var(--ae-surface); padding: 6px;
+  box-shadow: var(--ae-shadow-sm);
+  animation: aeFloat 6s ease-in-out infinite;
+}
+.ae-hero__brand-meta {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 4px;
+}
+.ae-chip {
+  background: var(--ae-accent-soft) !important;
+  color: var(--ae-accent) !important;
+  border: 1px solid var(--ae-accent-ring) !important;
+  border-radius: 999px !important;
+  padding: 4px 12px !important;
+  font-weight: 700 !important;
+  font-size: 11.5px !important;
+  letter-spacing: 0.08em;
+  margin: 0 !important;
+}
+.ae-hero__eyebrow {
+  color: var(--ae-text-muted) !important;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.ae-hero__title {
+  font-size: clamp(28px, 4.4vw, 46px) !important;
+  line-height: 1.1 !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.02em;
+  color: var(--ae-text) !important;
+  margin: 6px 0 14px !important;
+}
+.ae-hero .grad-text {
+  background: linear-gradient(135deg, var(--ae-accent) 0%, var(--ae-accent-3) 50%, var(--ae-accent-2) 100%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+}
+.ae-hero__lead {
+  color: var(--ae-text-muted) !important;
+  font-size: 16px !important;
+  line-height: 1.7 !important;
+  max-width: 720px; margin: 0 auto 28px !important;
+}
+
+/* Stat tiles */
+.ae-hero__stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  max-width: 920px;
+  margin: 0 auto;
+}
+.ae-stat {
+  display: flex; align-items: center; gap: 14px;
+  padding: 16px 18px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--ae-border);
+  border-radius: 16px;
+  box-shadow: var(--ae-shadow-sm);
+  text-align: left;
+  transition: transform 0.25s var(--ae-ease-spring), box-shadow 0.25s var(--ae-ease-smooth), border-color 0.25s;
+}
+.ae-stat:hover {
+  transform: translateY(-3px);
+  border-color: var(--ae-accent-ring);
+  box-shadow: var(--ae-shadow-md);
+}
+.ae-stat__icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 42px; height: 42px;
+  border-radius: 12px;
+  background: var(--ae-accent-soft);
+  color: var(--ae-accent);
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.ae-stat__icon--blue  { background: rgba(99,102,241,0.12); color: #6366f1; }
+.ae-stat__icon--green { background: rgba(16,185,129,0.12); color: #10b981; }
+.ae-stat__icon--gray  { background: rgba(100,116,139,0.12); color: #64748b; }
+.ae-stat__body { display: flex; flex-direction: column; line-height: 1.2; min-width: 0; }
+.ae-stat__value { font-size: 22px; font-weight: 800; color: var(--ae-text); letter-spacing: -0.01em; }
+.ae-stat__label { font-size: 12px; color: var(--ae-text-muted); margin-top: 2px; font-weight: 500; }
+
+
+@media (max-width: 900px) {
+  .ae-hero__stats { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 560px) {
+  .ae-hero { padding: 40px 18px 28px; border-radius: 20px; }
+  .ae-hero__brand { flex-direction: column; gap: 10px; }
+  .ae-hero__brand-meta { align-items: center; }
+  .ae-hero__title { font-size: 26px !important; }
+  .ae-hero__lead { font-size: 14.5px !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ae-hero, .ae-hero__logo, .ae-hero__bg .blob { animation: none !important; }
+  .ae-stat { transition: none; }
+}
+
+
+/* Tabs Card */
+.tabs-card {
+  border-radius: 12px;
+  margin-bottom: 24px;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.status-tabs .ant-tabs-tab {
+  padding: 16px 24px;
+  font-weight: 500;
+}
+
+.status-tabs .ant-tabs-tab-active {
+  background: #f0f7ff;
+  border-radius: 8px;
+}
+
+/* Controls Card */
+.controls-card {
+  border-radius: 12px;
+  margin-bottom: 24px;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.controls-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.controls-left {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.controls-right {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.select-mode-controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* Alumni Card Styles */
+.alumni-card {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid #f0f0f0;
+  transition: all 0.3s ease;
+  height: 100%;
+}
+
+.alumni-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.alumni-card-content {
+  padding: 0;
+}
+
+.alumni-header {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.alumni-basic-info {
+  flex: 1;
+}
+
+.alumni-name {
+  margin-bottom: 4px !important;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.alumni-rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.rating-text {
+  color: #666;
+  font-size: 12px;
+}
+
+.alumni-details {
+  margin-bottom: 16px;
+}
+
+.detail-item-alumini {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.detail-item-alumini:last-child {
+  margin-bottom: 0;
+}
+
+.detail-item-alumini .anticon {
+  color: #999;
+  font-size: 14px;
+}
+
+.alumni-skills {
+  margin-bottom: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.skill-tag {
+  border: none;
+  background: #f0f0f0;
+  color: #666;
+  border-radius: 12px;
+  font-size: 11px;
+  padding: 2px 8px;
+  margin: 0;
+}
+
+.alumni-bio {
+  color: #666;
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+.alumni-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+}
+
+/* List View Styles */
+.alumni-list-item {
+  padding: 20px 0;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.3s ease;
+}
+
+.alumni-list-item:hover {
+  background-color: #fafafa;
+}
+
+.alumni-list-item:last-child {
+  border-bottom: none;
+}
+
+.list-item-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.list-item-main {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  flex: 1;
+}
+
+.list-item-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.list-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.list-item-name {
+  margin: 0 !important;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.list-item-details {
+  margin-bottom: 8px;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #555;
+  font-size: 13px;
+}
+
+.meta-item .anticon {
+  color: #999;
+  font-size: 12px;
+}
+
+.list-item-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.skill-tag-small {
+  border: none;
+  background: #f5f5f5;
+  color: #666;
+  border-radius: 10px;
+  font-size: 10px;
+  padding: 1px 6px;
+  margin: 0;
+}
+
+.list-item-actions {
+  flex-shrink: 0;
+}
+
+/* No Alumni State */
+.no-alumni-card {
+  text-align: center;
+  padding: 48px 24px;
+  border-radius: 12px;
+}
+
+.no-alumni-content {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+/* Badge and Tag Styles */
+.ant-badge-count {
+  font-size: 10px;
+  font-weight: 600;
+  box-shadow: 0 0 0 1px #fff;
+}
+
+.ant-tag {
+  border-radius: 12px;
+  font-size: 11px;
+  padding: 2px 8px;
+  font-weight: 500;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .alumni-list-container {
+    padding: 16px;
+  }
+  
+  .header-content {
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .controls-section {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .controls-left,
+  .controls-right {
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+  }
+
+  /* Explicit margins instead of relying only on flexbox `gap`,
+     since some mobile WebViews don't support gap on flex containers
+     and were rendering these items with zero spacing. */
+  .controls-left > *,
+  .controls-right > * {
+    margin: 0 0 12px 0 !important;
+  }
+  .controls-left > *:last-child,
+  .controls-right > *:last-child {
+    margin-bottom: 0 !important;
+  }
+  
+  .controls-left .ant-input,
+  .controls-left .ant-select {
+    width: 100% !important;
+  }
+
+  .select-mode-controls {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .select-mode-controls .ant-btn {
+    width: 100%;
+    margin: 0 0 10px 0 !important;
+  }
+
+  .select-mode-controls .ant-btn:last-child {
+    margin-bottom: 0 !important;
+  }
+  
+  .list-item-content {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+  
+  .list-item-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .list-item-details .ant-space {
+    flex-direction: column;
+    gap: 8px !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .alumni-header {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .alumni-actions {
+    flex-direction: column;
+  }
+  
+  .list-item-main {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+/* Custom animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.alumni-card,
+.alumni-list-item {
+  animation: fadeInUp 0.5s ease;
+}
+
+/* Card actions */
+.alumni-card .ant-card-actions {
+  background: #fafafa;
+  border-top: 1px solid #f0f0f0;
+}
+
+.alumni-card .ant-card-actions > li {
+  margin: 12px 0;
+}
+
+.alumni-card .ant-card-actions .anticon {
+  color: #666;
+  transition: color 0.3s ease;
+}
+
+.alumni-card .ant-card-actions .anticon:hover {
+  color: #1890ff;
+}
+
+/* ============================================
+   Dark Theme — Header Hero
+   ============================================ */
+[data-theme="black"] .ae-hero {
+  --ae-surface: #121620;
+  --ae-border: #242a36;
+  --ae-text: #e7ecf3;
+  --ae-text-muted: #9aa4b2;
+  --ae-accent-soft: rgba(14, 165, 233, 0.16);
+  --ae-shadow-sm: 0 4px 14px rgba(0,0,0,0.45);
+  --ae-shadow-md: 0 14px 34px rgba(0,0,0,0.55);
+
+  background:
+    linear-gradient(180deg, #121620, #121620) padding-box,
+    linear-gradient(135deg, rgba(14,165,233,0.55), rgba(99,102,241,0.45), rgba(20,184,166,0.55)) border-box;
+}
+[data-theme="black"] .ae-hero__bg .dot-grid {
+  background-image: radial-gradient(rgba(255,255,255,0.08) 1px, transparent 1px);
+}
+[data-theme="black"] .ae-stat {
+  background: rgba(26, 31, 43, 0.85);
+  border-color: #242a36;
+}
+[data-theme="black"] .ae-stat__value { color: #e7ecf3; }
+[data-theme="black"] .ae-hero__logo { background: #1a1f2b; }
+
+
+/* Black theme - Skill Tags */
+[data-theme="black"] .skill-tag {
+  background: #1a1a1a !important;
+  color: #a0a0a0 !important;
+  border-color: #333 !important;
+}
+
+[data-theme="black"] .skill-tag-small {
+  background: #1a1a1a !important;
+  color: #a0a0a0 !important;
+}
+
+/* Black theme - Card Actions */
+[data-theme="black"] .alumni-card .ant-card-actions {
+  background: #1a1a1a !important;
+  border-color: #333 !important;
+}
+
+[data-theme="black"] .alumni-card .ant-card-actions > li {
+  border-color: #333 !important;
+}
+
+[data-theme="black"] .alumni-card .ant-card-actions .anticon {
+  color: #a0a0a0 !important;
+}
+
+[data-theme="black"] .alumni-card .ant-card-actions .anticon:hover {
+  color: #60a5fa !important;
+}
+
+/* Black theme - Card Hover */
+[data-theme="black"] .alumni-card:hover {
+  box-shadow: 0 8px 24px rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Black theme - List View Items */
+[data-theme="black"] .alumni-list-item {
+  border-color: #333 !important;
+  background: #0a0a0a !important;
+}
+
+[data-theme="black"] .alumni-list-item:hover {
+  background: #1a1a1a !important;
+}
+
+[data-theme="black"] .list-item-name {
+  color: #ffffff !important;
+}
+
+/* Black theme - Divider */
+[data-theme="black"] .alumni-card .ant-divider {
+  border-color: #333 !important;
+}
+
+/* Black theme - No Alumni Card */
+[data-theme="black"] .no-alumni-card {
+  background: #0a0a0a !important;
+  border-color: #333 !important;
+}
+
+[data-theme="black"] .no-alumni-card .ant-typography {
+  color: #ffffff !important;
+}
+
+[data-theme="black"] .no-alumni-card .ant-typography-secondary {
+  color: #a0a0a0 !important;
+}
+
+/* Black theme - Form Items in Modal */
+[data-theme="black"] .ant-form-item-label > label {
+  color: #ffffff !important;
+}
+
+[data-theme="black"] .ant-input,
+[data-theme="black"] .ant-input-affix-wrapper {
+  background: #1a1a1a !important;
+  border-color: #333 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="black"] .ant-input::placeholder {
+  color: #a0a0a0 !important;
+}
+
+[data-theme="black"] textarea.ant-input {
+  background: #1a1a1a !important;
+  border-color: #333 !important;
+  color: #ffffff !important;
+}
+
+/* Black theme - Statistic */
+[data-theme="black"] .ant-statistic-title {
+  color: #a0a0a0 !important;
+}
+
+[data-theme="black"] .ant-statistic-content {
+  color: #ffffff !important;
+}
+
+/* Black theme - Course Folder Modal */
+[data-theme="black"] .ant-modal-content .ant-list-item {
+  background: #0a0a0a !important;
+  border-color: #333 !important;
+}
+
+[data-theme="black"] .ant-modal-content .ant-list-item:hover {
+  background: #1a1a1a !important;
+}
+
+[data-theme="black"] .ant-modal-content .ant-list-item-meta-title {
+  color: #ffffff !important;
+}
+
+[data-theme="black"] .ant-modal-content .ant-list-item-meta-description {
+  color: #a0a0a0 !important;
+}
+
+/* Black theme - Empty State */
+[data-theme="black"] .ant-empty-description {
+  color: #a0a0a0 !important;
+}
+
+
+/* Black theme - Status Description Box (inline styled) */
+[data-theme="black"] .ant-modal-content div[style*="background-color"],
+[data-theme="black"] .ant-modal-content div[style*="backgroundColor"] {
+  background-color: #1a1a1a !important;
+  color: #a0a0a0 !important;
+}
+
+[data-theme="black"] .ant-modal-content div[style*="background-color"] .ant-typography,
+[data-theme="black"] .ant-modal-content div[style*="backgroundColor"] .ant-typography,
+[data-theme="black"] .ant-modal-content div[style*="background-color"] span,
+[data-theme="black"] .ant-modal-content div[style*="backgroundColor"] span {
+  color: #a0a0a0 !important;
+}
+
+/* Alternative: Target by padding pattern commonly used for info boxes */
+[data-theme="black"] .ant-modal-body > .ant-form div[style*="padding: 12px"],
+[data-theme="black"] .ant-modal-body .ant-form div[style*="padding: 12px"] {
+  background-color: #1a1a1a !important;
+}
+
+[data-theme="black"] .ant-modal-body > .ant-form div[style*="padding: 12px"] .ant-typography-secondary,
+[data-theme="black"] .ant-modal-body .ant-form div[style*="padding: 12px"] .ant-typography-secondary {
+  color: #a0a0a0 !important;
+}
+
+/* ============ END BLACK THEME STYLES FOR ALUMNI LIST ============ */
+
+/* ============ DARK THEME - SELECT DROPDOWN FIX ============ */
+/* Fixes unreadable dark/black text on the dark selector background
+   (e.g. "Current Employment Status" select in Edit Status modals) */
+[data-theme="black"] .ant-select-selector {
+  background-color: #1a1a1a !important;
+  border-color: #333 !important;
+}
+
+[data-theme="black"] .ant-select-selection-item,
+[data-theme="black"] .ant-select-selection-search-input {
+  color: #ffffff !important;
+}
+
+[data-theme="black"] .ant-select-selection-placeholder {
+  color: #8c8c8c !important;
+}
+
+[data-theme="black"] .ant-select-arrow,
+[data-theme="black"] .ant-select-clear {
+  color: #a0a0a0 !important;
+  background: transparent !important;
+}
+
+[data-theme="black"] .ant-select-disabled .ant-select-selector {
+  background-color: #141414 !important;
+  color: #666 !important;
+}
+
+/* Dropdown panel (the list of options that pops open) */
+[data-theme="black"] .ant-select-dropdown {
+  background-color: #1a1a1a !important;
+  border: 1px solid #333 !important;
+}
+
+[data-theme="black"] .ant-select-item {
+  color: #ffffff !important;
+}
+
+[data-theme="black"] .ant-select-item-option-content {
+  color: #ffffff !important;
+}
+
+[data-theme="black"] .ant-select-item-option-active:not(.ant-select-item-option-disabled) {
+  background-color: #262626 !important;
+}
+
+[data-theme="black"] .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+  background-color: #2a2a3d !important;
+  color: #ffffff !important;
+  font-weight: 600;
+}
+
+[data-theme="black"] .ant-select-item-empty {
+  color: #a0a0a0 !important;
+}
+/* ============ END DARK THEME SELECT FIX ============ */
+
+
+/* ============ LAST ACTIVE STATUS STYLES ============ */
+.last-active-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.status-dot.active {
+  background-color: #52c41a;
+  box-shadow: 0 0 8px #52c41a, 0 0 12px #52c41a;
+  animation: pulse-green 2s infinite;
+}
+
+.status-dot.offline {
+  background-color: #ff4d4f;
+}
+
+@keyframes pulse-green {
+  0% {
+    box-shadow: 0 0 0 0 rgba(82, 196, 26, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(82, 196, 26, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(82, 196, 26, 0);
+  }
+}
+
+/* Dark theme support */
+[data-theme="black"] .last-active-indicator .ant-typography {
+  color: inherit !important;
+}
+
+[data-theme="black"] .status-dot.active {
+  background-color: #52c41a;
+  box-shadow: 0 0 10px #52c41a, 0 0 20px #52c41a;
+}
+
+[data-theme="black"] .status-dot.offline {
+  background-color: #ff4d4f;
+  box-shadow: 0 0 6px #ff4d4f;
+}
+/* ============ END LAST ACTIVE STATUS STYLES ============ */
+
+
+/* ============ NEW REGISTERED CARD ============ */
+
+/* Make the card a flex column so body + actions tile perfectly */
+.new-registered-card {
+  display: flex;
+  flex-direction: column;
+  height: auto !important;          /* override the 100% from .alumni-card     */
+  overflow: hidden;
+  border: 1.5px solid #1890ff44;
+  box-shadow: 0 4px 16px rgba(24, 144, 255, 0.10);
+}
+
+.new-registered-card:hover {
+  border-color: #1890ff;
+  box-shadow: 0 8px 28px rgba(24, 144, 255, 0.18);
+}
+
+/* The AntD card body — make it flex so nothing overflows */
+.new-registered-card .ant-card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  overflow: hidden;               /* clip any accidental overflow              */
+}
+
+/* The wrapper we put around card body content */
+.new-registered-card .alumni-card-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+/* Header row: avatar + name */
+.new-registered-card .alumni-header {
+  margin-bottom: 0;
+  flex-shrink: 0;
+}
+
+/* Quiz status badge area — never grows, wraps naturally */
+.new-registered-card .nr-quiz-status {
+  flex-shrink: 0;
+}
+
+/* Details section — constrain so it doesn't push the card open */
+.new-registered-card .alumni-details {
+  margin-bottom: 8px;
+  flex-shrink: 0;
+}
+
+.new-registered-card .alumni-details .detail-item-alumini {
+  margin-bottom: 6px;
+}
+
+/* Bio — clamp to 2 lines max, then ellipsis; grows into remaining space */
+.new-registered-card .alumni-bio {
+  flex: 1;
+  margin-bottom: 0 !important;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  font-size: 13px;
+  color: #888;
+  min-height: 0;
+}
+
+/* Ribbon wrapper must be position:relative so AntD ribbon clips correctly */
+.new-registered-card-ribbon-wrap {
+  position: relative;
+  height: 100%;
+}
+
+/* Push the ribbon down so it sits at the quiz-status level (right edge) */
+.new-registered-card .ant-ribbon {
+  top: 52px;          /* clears the avatar+name header (~48px) + small gap  */
+}
+
+/* Actions row — always hugs the bottom */
+.new-registered-card .ant-card-actions {
+  flex-shrink: 0;
+  background: #fafafa;
+  border-top: 1px solid #f0f0f0;
+  margin-top: auto;
+}
+
+/* Dark theme support */
+[data-theme="black"] .new-registered-card {
+  border-color: #1890ff66;
+  box-shadow: 0 4px 16px rgba(24, 144, 255, 0.15);
+}
+
+[data-theme="black"] .new-registered-card:hover {
+  border-color: #1890ff;
+  box-shadow: 0 8px 28px rgba(24, 144, 255, 0.28);
+}
+
+[data-theme="black"] .new-registered-card .ant-card-actions {
+  background: #1a1a1a !important;
+  border-color: #333 !important;
+}
+
+[data-theme="black"] .new-registered-card .ant-card-actions > li {
+  border-color: #333 !important;
+}
+
+[data-theme="black"] .new-registered-card .ant-card-actions .anticon {
+  color: #a0a0a0 !important;
+}
+
+[data-theme="black"] .new-registered-card .ant-card-actions .anticon:hover {
+  color: #60a5fa !important;
+}
+
+[data-theme="black"] .new-registered-card .ant-divider {
+  border-color: #333 !important;
+}
+
+[data-theme="black"] .new-registered-card .alumni-bio {
+  color: #a0a0a0;
+}
+
+
+/* ==================================================
+   PRINT PREVIEW — FORCE LIGHT THEME (on screen)
+   Overrides app dark mode so the preview modal and the
+   printable report always render on a white background
+   with dark, legible text, regardless of the active
+   app theme.
+   ================================================== */
+
+/* Modal shell */
+.print-preview-modal .ant-modal-content,
+.print-preview-modal .ant-modal-header,
+.print-preview-modal .ant-modal-body,
+.print-preview-modal .ant-modal-footer {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #e5e7eb !important;
+}
+.print-preview-modal .ant-modal-title,
+.print-preview-modal .ant-modal-close-x {
+  color: #0f172a !important;
+}
+
+/* Printable surface — light theme always */
+#printable-area,
+#printable-area * {
+  color: #0f172a !important;
+  border-color: #d9d9d9;
+}
+#printable-area {
+  background: #ffffff !important;
+}
+#printable-area .ant-card,
+#printable-area .ant-card-body,
+#printable-area .ant-card-head {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #d9d9d9 !important;
+}
+#printable-area .ant-typography,
+#printable-area .ant-typography-secondary {
+  color: #0f172a !important;
+}
+#printable-area .ant-table,
+#printable-area .ant-table-container,
+#printable-area .ant-table-content,
+#printable-area .ant-table-tbody > tr > td,
+#printable-area .ant-table-thead > tr > th {
+  background: #ffffff !important;
+  color: #0f172a !important;
+}
+#printable-area .ant-table-thead > tr > th {
+  background: #f5f7fa !important;
+  border-bottom: 1px solid #d9d9d9 !important;
+}
+#printable-area .ant-table-tbody > tr:hover > td {
+  background: #fafafa !important;
+}
+#printable-area .ant-tag {
+  background: #f5f7fa !important;
+  color: #0f172a !important;
+  border-color: #d9d9d9 !important;
+}
+
+/* Override app dark theme inside preview + printable area */
+[data-theme="black"] .print-preview-modal .ant-modal-content,
+[data-theme="black"] .print-preview-modal .ant-modal-header,
+[data-theme="black"] .print-preview-modal .ant-modal-body,
+[data-theme="black"] .print-preview-modal .ant-modal-footer,
+[data-theme="black"] #printable-area,
+[data-theme="black"] #printable-area * {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #d9d9d9 !important;
+}
+[data-theme="black"] #printable-area .ant-table-thead > tr > th {
+  background: #f5f7fa !important;
+}
+
+/* ==================================================
+   PRINT PREVIEW HEADER — READABLE TITLE & CLOSE BUTTON
+   The title text and close (X) button must always read as
+   dark text on the white preview header, in every app theme,
+   and regardless of any gradient/opacity styling used
+   elsewhere in the app. Also normalizes the modal body's
+   scrollbar so it never renders as a dark/black bar.
+   ================================================== */
+.print-preview-modal .ant-modal-header .ant-modal-title,
+.print-preview-modal .ant-modal-title {
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+  opacity: 1 !important;
+  font-weight: 600 !important;
+}
+.print-preview-modal .ant-modal-close,
+.print-preview-modal .ant-modal-close-x {
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+  opacity: 1 !important;
+}
+.print-preview-modal .ant-modal-close .anticon,
+.print-preview-modal .ant-modal-close-x .anticon,
+.print-preview-modal .ant-modal-close svg {
+  color: #0f172a !important;
+  fill: #0f172a !important;
+}
+.print-preview-modal .ant-modal-close:hover,
+.print-preview-modal .ant-modal-close:hover .ant-modal-close-x {
+  color: #000000 !important;
+  background: rgba(15, 23, 42, 0.06) !important;
+}
+[data-theme="black"] .print-preview-modal .ant-modal-header .ant-modal-title,
+[data-theme="black"] .print-preview-modal .ant-modal-title,
+[data-theme="black"] .print-preview-modal .ant-modal-close,
+[data-theme="black"] .print-preview-modal .ant-modal-close-x {
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+  opacity: 1 !important;
+}
+[data-theme="black"] .print-preview-modal .ant-modal-close .anticon,
+[data-theme="black"] .print-preview-modal .ant-modal-close-x .anticon,
+[data-theme="black"] .print-preview-modal .ant-modal-close svg {
+  color: #0f172a !important;
+  fill: #0f172a !important;
+}
+
+/* Scrollbar inside the print preview modal — always light, never the
+   app's dark-theme scrollbar, so it doesn't look like a black bar
+   cutting through the white page. */
+.print-preview-modal .ant-modal-body {
+  scrollbar-color: #c1c1c1 #f1f1f1;
+}
+.print-preview-modal .ant-modal-body::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+.print-preview-modal .ant-modal-body::-webkit-scrollbar-track {
+  background: #f1f1f1 !important;
+  border-radius: 6px;
+}
+.print-preview-modal .ant-modal-body::-webkit-scrollbar-thumb {
+  background: #c1c1c1 !important;
+  border-radius: 6px;
+}
+.print-preview-modal .ant-modal-body::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8 !important;
+}
+
+/* Belt-and-suspenders: also reset html/body here in case this stylesheet
+   loads without the inline print styles in AlumniList.js — keeps the
+   printed page white even if the app is in black theme. */
+@media print {
+  html,
+  body {
+    background: #ffffff !important;
+    color: #0f172a !important;
+  }
+}

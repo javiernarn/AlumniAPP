@@ -1,0 +1,4989 @@
+/* ==============================================
+   AdminAlumniJobPostPage.css - Professional Enhanced Styles
+   With Animations Like ProfilePage.css
+   ============================================== */
+
+/* ============ Keyframe Animations ============ */
+
+/* Fade in from bottom */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Fade in from left */
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Fade in from right */
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Scale in animation */
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Subtle float animation */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+/* Pulse glow animation */
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 20px 5px rgba(102, 126, 234, 0.2);
+  }
+}
+
+/* Shimmer loading effect */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Border glow animation */
+@keyframes borderGlow {
+  0%, 100% {
+    border-color: transparent;
+  }
+  50% {
+    border-color: rgba(102, 126, 234, 0.3);
+  }
+}
+
+/* Slide down for content reveal */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    max-height: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    max-height: 1000px;
+    transform: translateY(0);
+  }
+}
+
+/* Gradient animation */
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Rainbow Light Animation - Like ProfilePage */
+@keyframes rainbowShimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+/* ============ Main Container ============ */
+
+
+
+
+/* Rainbow Light Bar at Top */
+/* .job-post-page-container::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(
+    90deg,
+    #1890ff 0%,
+    #13c2c2 15%,
+    #52c41a 30%,
+    #a0d911 45%,
+    #fadb14 60%,
+    #fa8c16 75%,
+    #f5222d 90%,
+    #eb2f96 100%
+  );
+  background-size: 200% 100%;
+  animation: rainbowShimmer 3s linear infinite;
+  z-index: 9999;
+} */
+
+/* ============ Header Card - Enhanced ============ */
+.ae-hero {
+  --ae-ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
+  --ae-ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --ae-accent: #0ea5e9;
+  --ae-accent-2: #14b8a6;
+  --ae-accent-3: #6366f1;
+  --ae-accent-soft: rgba(14, 165, 233, 0.10);
+  --ae-accent-ring: rgba(14, 165, 233, 0.28);
+  --ae-surface: #ffffff;
+  --ae-border: #e2e8f0;
+  --ae-text: #0b1220;
+  --ae-text-muted: #5b6677;
+  --ae-shadow-sm: 0 4px 14px rgba(2, 6, 23, 0.06);
+  --ae-shadow-md: 0 14px 34px rgba(2, 6, 23, 0.10);
+
+  position: relative;
+  overflow: hidden;
+  margin: 0 0 24px;
+  padding: 56px 32px 40px;
+  border-radius: 26px;
+  background:
+    linear-gradient(180deg, var(--ae-surface), var(--ae-surface)) padding-box,
+    linear-gradient(135deg, rgba(14,165,233,0.45), rgba(99,102,241,0.35), rgba(20,184,166,0.45)) border-box;
+  border: 1px solid transparent;
+  box-shadow: var(--ae-shadow-md);
+  opacity: 0;
+  transform: translateY(8px);
+  animation: aeFadeUp 0.7s var(--ae-ease-spring) forwards;
+}
+
+@keyframes aeFadeUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes aeFloat {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50%      { transform: translateY(-14px) scale(1.04); }
+}
+
+.ae-hero__bg { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.ae-hero__bg .blob {
+  position: absolute; border-radius: 50%;
+  filter: blur(70px); opacity: 0.5;
+  animation: aeFloat 14s ease-in-out infinite;
+}
+.ae-hero__bg .blob-1 { width: 280px; height: 280px; background: #38bdf8; top: -70px; left: -50px; }
+.ae-hero__bg .blob-2 { width: 320px; height: 320px; background: #6366f1; bottom: -130px; right: -70px; animation-duration: 18s; }
+.ae-hero__bg .blob-3 { width: 200px; height: 200px; background: #14b8a6; top: 40%; left: 55%; animation-duration: 22s; opacity: 0.35; }
+.ae-hero__bg .dot-grid {
+  position: absolute; inset: 0;
+  background-image: radial-gradient(rgba(15,23,42,0.08) 1px, transparent 1px);
+  background-size: 18px 18px;
+  -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+          mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+}
+
+
+.job-post-page-container {
+   padding: 24px;
+  padding-top: 10px;
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+ }
+ 
+.ae-hero__content {
+  position: relative; z-index: 1;
+  max-width: 1080px; margin: 0 auto; text-align: center;
+}
+
+.ae-hero__brand {
+  display: inline-flex; align-items: center; gap: 14px; margin-bottom: 14px;
+}
+.ae-hero__logo {
+  width: 56px; height: 56px; object-fit: contain;
+  border-radius: 14px; background: var(--ae-surface); padding: 6px;
+  box-shadow: var(--ae-shadow-sm);
+  animation: aeFloat 6s ease-in-out infinite;
+}
+.ae-hero__brand-meta {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 4px;
+}
+.ae-chip {
+  background: var(--ae-accent-soft) !important;
+  color: var(--ae-accent) !important;
+  border: 1px solid var(--ae-accent-ring) !important;
+  border-radius: 999px !important;
+  padding: 4px 12px !important;
+  font-weight: 700 !important;
+  font-size: 11.5px !important;
+  letter-spacing: 0.08em;
+  margin: 0 !important;
+}
+.ae-hero__eyebrow {
+  color: var(--ae-text-muted) !important;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.ae-hero__title {
+  font-size: clamp(28px, 4.4vw, 46px) !important;
+  line-height: 1.1 !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.02em;
+  color: var(--ae-text) !important;
+  margin: 6px 0 14px !important;
+}
+.ae-hero .grad-text {
+  background: linear-gradient(135deg, var(--ae-accent) 0%, var(--ae-accent-3) 50%, var(--ae-accent-2) 100%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+}
+.ae-hero__lead {
+  color: var(--ae-text-muted) !important;
+  font-size: 16px !important;
+  line-height: 1.7 !important;
+  max-width: 720px; margin: 0 auto 28px !important;
+}
+
+/* Stat tiles */
+.ae-hero__stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  max-width: 920px;
+  margin: 0 auto;
+}
+.ae-stat {
+  display: flex; align-items: center; gap: 14px;
+  padding: 16px 18px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--ae-border);
+  border-radius: 16px;
+  box-shadow: var(--ae-shadow-sm);
+  text-align: left;
+  transition: transform 0.25s var(--ae-ease-spring), box-shadow 0.25s var(--ae-ease-smooth), border-color 0.25s;
+}
+.ae-stat:hover {
+  transform: translateY(-3px);
+  border-color: var(--ae-accent-ring);
+  box-shadow: var(--ae-shadow-md);
+}
+.ae-stat__icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 42px; height: 42px;
+  border-radius: 12px;
+  background: var(--ae-accent-soft);
+  color: var(--ae-accent);
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.ae-stat__icon--blue  { background: rgba(99,102,241,0.12); color: #6366f1; }
+.ae-stat__icon--green { background: rgba(16,185,129,0.12); color: #10b981; }
+.ae-stat__icon--gray  { background: rgba(100,116,139,0.12); color: #64748b; }
+.ae-stat__body { display: flex; flex-direction: column; line-height: 1.2; min-width: 0; }
+.ae-stat__value { font-size: 22px; font-weight: 800; color: var(--ae-text); letter-spacing: -0.01em; }
+.ae-stat__label { font-size: 12px; color: var(--ae-text-muted); margin-top: 2px; font-weight: 500; }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .ae-hero__stats { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 560px) {
+  .ae-hero { padding: 40px 18px 28px; border-radius: 20px; }
+  .ae-hero__brand { flex-direction: column; gap: 10px; }
+  .ae-hero__brand-meta { align-items: center; }
+  .ae-hero__title { font-size: 26px !important; }
+  .ae-hero__lead { font-size: 14.5px !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ae-hero, .ae-hero__logo, .ae-hero__bg .blob { animation: none !important; }
+  .ae-stat { transition: none; }
+}
+
+/* ============ Stats Row - Enhanced ============ */
+
+.stats-row {
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  border-radius: 16px;
+  border: none;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  position: relative;
+  animation: fadeInUp 0.5s ease-out both;
+}
+
+.stat-card:nth-child(1) { animation-delay: 0.1s; }
+.stat-card:nth-child(2) { animation-delay: 0.2s; }
+.stat-card:nth-child(3) { animation-delay: 0.3s; }
+.stat-card:nth-child(4) { animation-delay: 0.4s; }
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.1) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+}
+
+.stat-card:hover::before {
+  opacity: 1;
+}
+
+.stat-card .ant-card-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 4px;
+  min-height: 0;
+}
+
+.stat-card .ant-statistic {
+  width: 100%;
+}
+
+.stat-card .ant-statistic-title {
+  margin-bottom: 6px;
+}
+
+.stat-card .ant-statistic-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stat-card-total {
+  border-left: 5px solid #1890ff;
+  background: linear-gradient(135deg, #fff 0%, #e6f7ff 100%);
+}
+
+.stat-card-pending {
+  border-left: 5px solid #faad14;
+  background: linear-gradient(135deg, #fff 0%, #fffbe6 100%);
+}
+
+.stat-card-approved {
+  border-left: 5px solid #52c41a;
+  background: linear-gradient(135deg, #fff 0%, #f6ffed 100%);
+}
+
+.stat-card-expired {
+  border-left: 5px solid #ff4d4f;
+  background: linear-gradient(135deg, #fff 0%, #fff2f0 100%);
+}
+
+/* ============ Tabs Card - Enhanced ============ */
+
+.tabs-card {
+  border-radius: 16px;
+  margin-bottom: 24px;
+  border: none;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  animation: fadeInUp 0.6s ease-out 0.3s both;
+  overflow: hidden;
+}
+
+.tabs-card .ant-card-body {
+  padding: 24px;
+}
+
+.job-tabs .ant-tabs-tab {
+  padding: 14px 24px;
+  font-weight: 500;
+  font-size: 14px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 10px;
+  margin-right: 8px;
+}
+
+.job-tabs .ant-tabs-tab:hover {
+  color: #667eea;
+  background: rgba(102, 126, 234, 0.08);
+  transform: translateY(-2px);
+}
+
+.job-tabs .ant-tabs-tab-active {
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+  border-radius: 10px;
+}
+
+.job-tabs .ant-tabs-ink-bar {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  height: 4px;
+  border-radius: 4px;
+}
+
+/* ============ Controls Card - Enhanced ============ */
+
+.controls-card {
+  border-radius: 16px;
+  margin-bottom: 24px;
+  border: none;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  animation: fadeInUp 0.5s ease-out 0.4s both;
+}
+
+.controls-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.controls-left {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.controls-right {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.search-input {
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.search-input:focus {
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
+
+/* ============ Job Card - Enhanced ============ */
+
+.job-post-card {
+  border-radius: 20px;
+  border: 1px solid #f0f0f0;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  height: 100%;
+  overflow: hidden;
+  animation: scaleIn 0.5s ease-out both;
+  position: relative;
+}
+
+.job-grid > .ant-col:nth-child(1) .job-post-card { animation-delay: 0.1s; }
+.job-grid > .ant-col:nth-child(2) .job-post-card { animation-delay: 0.15s; }
+.job-grid > .ant-col:nth-child(3) .job-post-card { animation-delay: 0.2s; }
+.job-grid > .ant-col:nth-child(4) .job-post-card { animation-delay: 0.25s; }
+.job-grid > .ant-col:nth-child(5) .job-post-card { animation-delay: 0.3s; }
+.job-grid > .ant-col:nth-child(6) .job-post-card { animation-delay: 0.35s; }
+.job-grid > .ant-col:nth-child(7) .job-post-card { animation-delay: 0.4s; }
+.job-grid > .ant-col:nth-child(8) .job-post-card { animation-delay: 0.45s; }
+
+.job-post-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #667eea, #764ba2, #667eea);
+  background-size: 200% 100%;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.job-post-card:hover {
+  box-shadow: 0 16px 48px rgba(102, 126, 234, 0.2);
+  transform: translateY(-8px) scale(1.01);
+  border-color: rgba(102, 126, 234, 0.3);
+}
+
+.job-post-card:hover::before {
+  opacity: 1;
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+.job-post-card .ant-card-body {
+  padding: 0;
+}
+
+/* Job Card Cover */
+.job-card-cover {
+  position: relative;
+  height: 180px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+}
+
+.job-card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.job-post-card:hover .job-card-image {
+  transform: scale(1.1);
+}
+
+.job-card-image-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e8ecef 100%);
+  gap: 8px;
+}
+
+.job-card-status-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 2;
+}
+
+.job-card-type-badge {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  z-index: 2;
+}
+
+/* Job Card Content */
+.job-card-content {
+  padding: 20px 24px;
+}
+
+.job-card-title {
+  font-size: 17px;
+  color: #1a1a1a;
+  line-height: 1.4;
+  margin-bottom: 10px !important;
+  transition: color 0.3s ease;
+}
+
+.job-post-card:hover .job-card-title {
+  color: #667eea;
+}
+
+.job-card-company {
+  margin-bottom: 12px;
+  color: #555;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+}
+
+/* Creator Info Container */
+.job-card-creator {
+  margin-bottom: 16px;
+  padding: 14px;
+  background: linear-gradient(135deg, #f9f9fb 0%, #f0f2f5 100%);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.job-card-creator:hover {
+  background: linear-gradient(135deg, #f0f2f5 0%, #e8ecef 100%);
+}
+
+.creator-info-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.creator-info-large {
+  gap: 16px;
+}
+
+.creator-avatar {
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.creator-avatar:hover {
+  transform: scale(1.1) rotate(3deg);
+}
+
+.creator-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.creator-name-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.creator-name {
+  font-size: 14px;
+  color: #262626;
+  transition: color 0.3s ease;
+}
+
+.creator-email {
+  font-size: 12px;
+  display: block;
+  margin-top: 2px;
+  color: #8c8c8c;
+}
+
+/* Applicant Info Container */
+.applicant-info-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.applicant-info-large {
+  gap: 16px;
+}
+
+.applicant-avatar {
+  flex-shrink: 0;
+}
+
+.applicant-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.applicant-name-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.applicant-name {
+  font-size: 14px;
+  color: #262626;
+}
+
+.applicant-email {
+  font-size: 12px;
+  display: block;
+  margin-top: 2px;
+  color: #8c8c8c;
+}
+
+/* Job Card Meta */
+.job-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+
+.job-card-meta .meta-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  transition: transform 0.3s ease;
+}
+
+.job-card-meta .meta-item:hover {
+  transform: translateX(4px);
+}
+
+.job-card-meta .meta-item .anticon {
+  color: #667eea;
+  font-size: 14px;
+}
+
+.job-card-date {
+  font-size: 12px;
+  color: #8c8c8c;
+  display: flex;
+  align-items: center;
+  margin-top: 12px;
+}
+
+/* Job Card Actions */
+.job-card-actions {
+  padding: 16px 24px;
+  border-top: 1px solid #f0f0f0;
+  background: linear-gradient(135deg, #fafafa 0%, #f5f7fa 100%);
+}
+
+.job-card-actions .ant-btn {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.job-card-actions .ant-btn:hover {
+  transform: translateY(-2px);
+}
+
+/* ============ Empty State Card ============ */
+
+.empty-state-card {
+  border-radius: 16px;
+  text-align: center;
+  padding: 64px 24px;
+  animation: fadeInUp 0.5s ease-out;
+}
+
+.empty-state-card .ant-empty-image {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* ============ Create Job Card ============ */
+
+.create-job-card {
+  border-radius: 16px;
+  border: 2px dashed #d9d9d9;
+  text-align: center;
+  transition: all 0.3s ease;
+  animation: fadeInUp 0.5s ease-out;
+}
+
+.create-job-card:hover {
+  border-color: #667eea;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.03) 0%, rgba(118, 75, 162, 0.03) 100%);
+}
+
+.create-job-content {
+  padding: 48px 24px;
+}
+
+.create-job-icon {
+  margin-bottom: 20px;
+  animation: float 3s ease-in-out infinite;
+}
+
+.create-job-content p {
+  color: #666;
+  margin-bottom: 24px;
+  font-size: 15px;
+}
+
+/* ============ Job Details Drawer - Enhanced ============ */
+
+.job-details-drawer .ant-drawer-body {
+  padding: 0;
+}
+
+.job-details-content {
+  padding: 0;
+}
+
+.job-details-banner {
+  margin-bottom: 16px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.job-details-image-container {
+  position: relative;
+  height: 220px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+}
+
+.job-details-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.job-details-header {
+  padding: 24px 24px 0;
+  animation: fadeInUp 0.4s ease-out;
+}
+
+.job-details-badges {
+  margin-top: 12px;
+}
+
+.job-details-creator-card {
+  margin: 16px 24px;
+  border-radius: 12px;
+  animation: fadeInUp 0.4s ease-out 0.1s both;
+}
+
+.job-details-info {
+  padding: 0 24px;
+  animation: fadeInUp 0.4s ease-out 0.2s both;
+}
+
+.job-details-info .info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 8px 0;
+  transition: all 0.3s ease;
+}
+
+.job-details-info .info-item:hover {
+  padding-left: 8px;
+  background: rgba(102, 126, 234, 0.05);
+  border-radius: 8px;
+}
+
+.job-details-info .info-icon {
+  font-size: 18px;
+  color: #667eea;
+  margin-top: 2px;
+}
+
+.job-details-section {
+  padding: 0 24px;
+  margin-bottom: 16px;
+  animation: fadeInUp 0.4s ease-out 0.3s both;
+}
+
+.job-details-actions {
+  padding: 24px;
+  animation: fadeInUp 0.4s ease-out 0.4s both;
+}
+
+/* ============ Applications Drawer ============ */
+
+.applications-drawer .ant-drawer-body {
+  padding: 16px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e8ecef 100%);
+}
+
+.applications-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.application-card {
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  animation: fadeInUp 0.4s ease-out both;
+}
+
+.application-card:nth-child(1) { animation-delay: 0.1s; }
+.application-card:nth-child(2) { animation-delay: 0.15s; }
+.application-card:nth-child(3) { animation-delay: 0.2s; }
+
+/* ============ Table Styles - Enhanced ============ */
+
+.job-table {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.job-table .ant-table-thead > tr > th {
+  background: linear-gradient(135deg, #fafafa 0%, #f5f7fa 100%);
+  font-weight: 600;
+  color: #333;
+  border-bottom: 2px solid #f0f0f0;
+  padding: 16px;
+}
+
+.job-table .ant-table-tbody > tr {
+  transition: all 0.3s ease;
+}
+
+.job-table .ant-table-tbody > tr:hover > td {
+  background: linear-gradient(135deg, #f0f5ff 0%, #e6f4ff 100%);
+}
+
+.job-table .ant-table-tbody > tr > td {
+  border-bottom: 1px solid #f0f0f0;
+  padding: 16px;
+}
+
+.table-job-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* ============ Modal Styles - Enhanced ============ */
+
+.job-form-modal .ant-modal-content,
+.application-modal .ant-modal-content {
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+
+.job-form-modal .ant-modal-header,
+.application-modal .ant-modal-header {
+  border-bottom: 1px solid #f0f0f0;
+  padding: 24px 28px;
+  background: linear-gradient(135deg, #fafafa 0%, #fff 100%);
+}
+
+.job-form-modal .ant-modal-title,
+.application-modal .ant-modal-title {
+  font-weight: 600;
+  font-size: 20px;
+  color: #262626;
+}
+
+.job-form-modal .ant-modal-body,
+.application-modal .ant-modal-body {
+  padding: 28px;
+  animation: fadeInUp 0.4s ease-out;
+}
+
+.job-form-modal .ant-form-item-label > label,
+.application-modal .ant-form-item-label > label {
+  font-weight: 500;
+  color: #333;
+}
+
+.job-form-modal .ant-input,
+.job-form-modal .ant-input-textarea textarea,
+.application-modal .ant-input,
+.application-modal .ant-input-textarea textarea {
+  border-radius: 10px;
+  border: 1px solid #d9d9d9;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.job-form-modal .ant-input:hover,
+.job-form-modal .ant-input:focus,
+.application-modal .ant-input:hover,
+.application-modal .ant-input:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+}
+
+/* ============ Fix: character counter (showCount) overlapping
+   the helper/"extra" text and required text below each field.
+   AntD renders the counter as a floated element; without clearing
+   it, the wrapper's height collapses and the counter overlaps
+   whatever comes next. ============ */
+.job-form-modal .ant-input-textarea-show-count,
+.job-form-modal .ant-input-show-count,
+.application-modal .ant-input-textarea-show-count,
+.application-modal .ant-input-show-count {
+  display: block;
+  overflow: hidden;
+}
+
+.job-form-modal .ant-input-textarea-show-count::after,
+.job-form-modal .ant-input-show-count::after,
+.application-modal .ant-input-textarea-show-count::after,
+.application-modal .ant-input-show-count::after {
+  display: block;
+  float: right;
+  clear: both;
+  margin-top: 6px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.job-form-modal .ant-form-item-extra,
+.application-modal .ant-form-item-extra {
+  clear: both;
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.job-form-modal .ant-form-item-control-input-content > *,
+.application-modal .ant-form-item-control-input-content > * {
+  max-width: 100%;
+}
+
+.job-form-modal .ant-modal-footer,
+.application-modal .ant-modal-footer {
+  border-top: 1px solid #f0f0f0;
+  padding: 20px 28px;
+  background: linear-gradient(135deg, #fafafa 0%, #fff 100%);
+}
+
+/* ============ Badge and Tag Styles - Enhanced ============ */
+
+.ant-badge-count {
+  font-size: 10px;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.ant-tag {
+  border-radius: 16px;
+  font-size: 11px;
+  padding: 4px 12px;
+  font-weight: 500;
+  border: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ant-tag:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* ============ Button Styles - Enhanced ============ */
+
+.ant-btn {
+  border-radius: 10px;
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.ant-btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.6s ease, height 0.6s ease;
+}
+
+.ant-btn:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.ant-btn-primary {
+  /* background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); */
+  border: none;
+  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.35);
+}
+
+.ant-btn-primary:hover {
+  /* background: linear-gradient(135deg, #5a6fd6 0%, #6a4190 100%); */
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.45);
+}
+
+.ant-btn-text {
+  border-radius: 8px;
+}
+
+.ant-btn-text:hover {
+  background: rgba(102, 126, 234, 0.1);
+  transform: scale(1.05);
+}
+
+/* ============ Responsive Design ============ */
+
+@media (max-width: 992px) {
+  .job-post-page-container {
+    padding: 16px;
+  }
+
+  .job-header-card .ant-card-body {
+    padding: 24px;
+  }
+
+  .job-header-title {
+    font-size: 26px;
+  }
+
+  .job-header-subtitle {
+    font-size: 14px;
+  }
+
+  .tabs-card .ant-card-body {
+    padding: 16px;
+  }
+
+  .job-tabs .ant-tabs-tab {
+    padding: 12px 18px;
+    font-size: 13px;
+  }
+
+  .controls-section {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .controls-left,
+  .controls-right {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .job-post-page-container {
+    padding: 12px;
+  }
+
+  .job-header-card .ant-card-body {
+    padding: 20px;
+  }
+
+  .job-header-title {
+    font-size: 22px;
+  }
+
+  .job-header-subtitle {
+    font-size: 13px;
+  }
+
+  .stats-row {
+    margin-bottom: 16px;
+  }
+
+  .stat-card .ant-card-body {
+    padding: 14px;
+    gap: 2px;
+  }
+
+  .stat-card .ant-statistic-title {
+    font-size: 11px;
+    margin-bottom: 4px;
+    white-space: normal;
+  }
+
+  .stat-card .ant-statistic-content {
+    gap: 6px;
+  }
+
+  .stat-card .ant-statistic-content-value {
+    font-size: 20px;
+  }
+
+  .stat-card .ant-statistic-content-prefix {
+    font-size: 14px;
+  }
+
+  .tabs-card .ant-card-body {
+    padding: 12px;
+  }
+
+  .job-tabs .ant-tabs-tab {
+    padding: 10px 14px;
+    font-size: 12px;
+  }
+
+  .job-post-card {
+    border-radius: 14px;
+  }
+
+  .job-card-cover {
+    height: 150px;
+  }
+
+  .job-card-content {
+    padding: 16px;
+  }
+
+  .job-card-actions {
+    padding: 14px 16px;
+  }
+
+  .job-table .ant-table-tbody > tr > td {
+    padding: 12px 8px;
+    font-size: 13px;
+  }
+
+  .job-form-modal,
+  .application-modal {
+    width: 95% !important;
+    margin: 10px auto;
+  }
+
+  .job-form-modal .ant-modal-body,
+  .application-modal .ant-modal-body {
+    padding: 16px;
+  }
+
+  .create-job-content {
+    padding: 32px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .job-post-page-container {
+    padding: 8px;
+  }
+
+  .job-header-card .ant-card-body {
+    padding: 16px;
+  }
+
+  .job-header-title {
+    font-size: 18px;
+  }
+
+  .job-header-subtitle {
+    font-size: 12px;
+  }
+
+  .job-tabs .ant-tabs-tab {
+    padding: 8px 10px;
+    font-size: 11px;
+  }
+
+  .job-card-title {
+    font-size: 14px;
+  }
+
+  .job-card-creator {
+    padding: 10px;
+  }
+
+  .creator-info-container {
+    gap: 10px;
+  }
+
+  .creator-name {
+    font-size: 13px;
+  }
+}
+
+/* ============ Silent Loading Transitions ============ */
+
+/* Smooth content appearance for silent loading */
+.job-post-card,
+.stat-card,
+.tabs-card,
+.controls-card,
+.application-card {
+  opacity: 1;
+  transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+}
+
+/* Content fade in animation */
+.job-posts-grid,
+.applications-list,
+.job-table {
+  animation: contentFadeIn 0.4s ease-out;
+}
+
+@keyframes contentFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Skeleton shimmer for loading states */
+.loading-skeleton {
+  background: linear-gradient(
+    90deg,
+    #f0f0f0 25%,
+    #e8e8e8 50%,
+    #f0f0f0 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: 8px;
+}
+
+[data-theme="black"] .loading-skeleton {
+  background: linear-gradient(
+    90deg,
+    #2d2d2d 25%,
+    #3d3d3d 50%,
+    #2d2d2d 75%
+  );
+  background-size: 200% 100%;
+}
+
+/* Hide default spin but keep smooth transitions */
+.ant-spin-nested-loading > .ant-spin {
+  transition: opacity 0.3s ease;
+}
+
+/* ============================================== */
+/* [data-theme="black"] - DARK THEME STYLES */
+/* ============================================== */
+
+[data-theme="black"] .job-post-page-container {
+  background: linear-gradient(135deg, #0a0a0a 0%, #111111 100%);
+}
+
+/* ============================================
+   Dark Theme — Header Hero
+   ============================================ */
+[data-theme="black"] .ae-hero {
+  --ae-surface: #121620;
+  --ae-border: #242a36;
+  --ae-text: #e7ecf3;
+  --ae-text-muted: #9aa4b2;
+  --ae-accent-soft: rgba(14, 165, 233, 0.16);
+  --ae-shadow-sm: 0 4px 14px rgba(0,0,0,0.45);
+  --ae-shadow-md: 0 14px 34px rgba(0,0,0,0.55);
+
+  background:
+    linear-gradient(180deg, #121620, #121620) padding-box,
+    linear-gradient(135deg, rgba(14,165,233,0.55), rgba(99,102,241,0.45), rgba(20,184,166,0.55)) border-box;
+}
+[data-theme="black"] .ae-hero__bg .dot-grid {
+  background-image: radial-gradient(rgba(255,255,255,0.08) 1px, transparent 1px);
+}
+[data-theme="black"] .ae-stat {
+  background: rgba(26, 31, 43, 0.85);
+  border-color: #242a36;
+}
+[data-theme="black"] .ae-stat__value { color: #e7ecf3; }
+[data-theme="black"] .ae-hero__logo { background: #1a1f2b; }
+
+
+/* Rainbow bar stays the same in dark mode - keeps the vibrant colors */
+[data-theme="black"] .job-post-page-container::before {
+  background: linear-gradient(
+    90deg,
+    #1890ff 0%,
+    #13c2c2 15%,
+    #52c41a 30%,
+    #a0d911 45%,
+    #fadb14 60%,
+    #fa8c16 75%,
+    #f5222d 90%,
+    #eb2f96 100%
+  );
+  background-size: 200% 100%;
+  animation: rainbowShimmer 3s linear infinite;
+}
+
+[data-theme="black"] .job-header-title,
+[data-theme="black"] .job-header-subtitle {
+  color: #fff !important;
+} 
+
+[data-theme="black"] .stat-card,
+[data-theme="black"] .tabs-card,
+[data-theme="black"] .controls-card,
+[data-theme="black"] .job-post-card,
+[data-theme="black"] .create-job-card,
+[data-theme="black"] .empty-state-card,
+[data-theme="black"] .application-card {
+  background: #1a1a1a;
+  border-color: #2d2d2d;
+}
+
+[data-theme="black"] .stat-card-total {
+  background: linear-gradient(135deg, #1a1a1a 0%, #1a2635 100%);
+}
+
+[data-theme="black"] .stat-card-pending {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2a2515 100%);
+}
+
+[data-theme="black"] .stat-card-approved {
+  background: linear-gradient(135deg, #1a1a1a 0%, #1a2a1a 100%);
+}
+
+[data-theme="black"] .stat-card-expired {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2a1a1a 100%);
+}
+
+[data-theme="black"] .stat-card .ant-statistic-title,
+[data-theme="black"] .stat-card .ant-statistic-content-value {
+  color: #fff !important;
+}
+
+[data-theme="black"] .tabs-card .ant-card-body {
+  background: #1a1a1a;
+}
+
+[data-theme="black"] .job-tabs .ant-tabs-tab {
+  color: #a0a0a0;
+}
+
+[data-theme="black"] .job-tabs .ant-tabs-tab:hover {
+  color: #667eea;
+  background: rgba(102, 126, 234, 0.1);
+}
+
+[data-theme="black"] .job-tabs .ant-tabs-tab-active {
+  background: rgba(102, 126, 234, 0.2);
+  color: #fff !important;
+}
+
+[data-theme="black"] .job-tabs .ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: #fff !important;
+}
+
+[data-theme="black"] .job-card-content {
+  background: #1a1a1a;
+}
+
+[data-theme="black"] .job-card-title {
+  color: #fff !important;
+}
+
+[data-theme="black"] .job-post-card:hover .job-card-title {
+  color: #a0b4ff !important;
+}
+
+[data-theme="black"] .job-card-company {
+  color: #b0b0b0;
+}
+
+[data-theme="black"] .job-card-creator {
+  background: linear-gradient(135deg, #252525 0%, #1f1f1f 100%);
+}
+
+[data-theme="black"] .job-card-creator:hover {
+  background: linear-gradient(135deg, #2a2a2a 0%, #252525 100%);
+}
+
+[data-theme="black"] .creator-name,
+[data-theme="black"] .applicant-name {
+  color: #fff !important;
+}
+
+[data-theme="black"] .creator-email,
+[data-theme="black"] .applicant-email {
+  color: #888 !important;
+}
+
+[data-theme="black"] .job-card-meta .meta-item .anticon {
+  color: #8a9eff;
+}
+
+[data-theme="black"] .job-card-date {
+  color: #666;
+}
+
+[data-theme="black"] .job-card-actions {
+  background: linear-gradient(135deg, #151515 0%, #1a1a1a 100%);
+  border-top-color: #2d2d2d;
+}
+
+[data-theme="black"] .job-card-image-placeholder {
+  background: linear-gradient(135deg, #252525 0%, #1a1a1a 100%);
+}
+
+[data-theme="black"] .create-job-card {
+  border-color: #333;
+  background: #1a1a1a;
+}
+
+[data-theme="black"] .create-job-card:hover {
+  border-color: #667eea;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.08) 100%);
+}
+
+[data-theme="black"] .create-job-content p {
+  color: #a0a0a0;
+}
+
+[data-theme="black"] .create-job-content h4 {
+  color: #fff !important;
+}
+
+[data-theme="black"] .empty-state-card .ant-empty-description {
+  color: #888;
+}
+
+/* Table Styles - Dark Theme */
+[data-theme="black"] .job-table {
+  background: #1a1a1a;
+}
+
+[data-theme="black"] .job-table .ant-table {
+  background: #1a1a1a;
+  color: #fff;
+}
+
+[data-theme="black"] .job-table .ant-table-thead > tr > th {
+  background: linear-gradient(135deg, #252525 0%, #202020 100%);
+  color: #fff;
+  border-bottom-color: #333;
+}
+
+[data-theme="black"] .job-table .ant-table-tbody > tr > td {
+  background: #1a1a1a;
+  color: #e0e0e0;
+  border-bottom-color: #2d2d2d;
+}
+
+[data-theme="black"] .job-table .ant-table-tbody > tr:hover > td {
+  background: linear-gradient(135deg, #252525 0%, #222 100%);
+}
+
+[data-theme="black"] .job-table .ant-pagination {
+  background: #1a1a1a;
+}
+
+[data-theme="black"] .job-table .ant-pagination-item {
+  background: #252525;
+  border-color: #333;
+}
+
+[data-theme="black"] .job-table .ant-pagination-item a {
+  color: #fff;
+}
+
+[data-theme="black"] .job-table .ant-pagination-item-active {
+  background: #667eea;
+  border-color: #667eea;
+}
+
+/* Modal Styles - Dark Theme */
+[data-theme="black"] .job-form-modal .ant-modal-content,
+[data-theme="black"] .application-modal .ant-modal-content {
+  background: #1a1a1a;
+}
+
+[data-theme="black"] .job-form-modal .ant-modal-header,
+[data-theme="black"] .application-modal .ant-modal-header {
+  background: linear-gradient(135deg, #1f1f1f 0%, #1a1a1a 100%);
+  border-bottom-color: #333;
+}
+
+[data-theme="black"] .job-form-modal .ant-modal-title,
+[data-theme="black"] .application-modal .ant-modal-title {
+  color: #fff;
+}
+
+[data-theme="black"] .job-form-modal .ant-modal-body,
+[data-theme="black"] .application-modal .ant-modal-body {
+  background: #1a1a1a;
+}
+
+[data-theme="black"] .job-form-modal .ant-form-item-label > label,
+[data-theme="black"] .application-modal .ant-form-item-label > label {
+  color: #e0e0e0;
+}
+
+/* Form.Item "tooltip" question-mark icon was inheriting AntD's default
+   near-black color (rgba(0,0,0,.45)), making it invisible against the
+   dark modal background. Force it white/light in black theme. */
+[data-theme="black"] .job-form-modal .ant-form-item-tooltip,
+[data-theme="black"] .application-modal .ant-form-item-tooltip,
+[data-theme="black"] .job-form-modal .ant-form-item-label .anticon-question-circle,
+[data-theme="black"] .application-modal .ant-form-item-label .anticon-question-circle {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+[data-theme="black"] .job-form-modal .ant-input,
+[data-theme="black"] .job-form-modal .ant-input-textarea textarea,
+[data-theme="black"] .application-modal .ant-input,
+[data-theme="black"] .application-modal .ant-input-textarea textarea {
+  background: #252525;
+  border-color: #333;
+  color: #fff;
+}
+
+[data-theme="black"] .job-form-modal .ant-input::placeholder,
+[data-theme="black"] .application-modal .ant-input::placeholder {
+  color: #666;
+}
+
+[data-theme="black"] .job-form-modal .ant-input:hover,
+[data-theme="black"] .job-form-modal .ant-input:focus,
+[data-theme="black"] .application-modal .ant-input:hover,
+[data-theme="black"] .application-modal .ant-input:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.25);
+}
+
+[data-theme="black"] .job-form-modal .ant-select-selector,
+[data-theme="black"] .application-modal .ant-select-selector {
+  background: #252525 !important;
+  border-color: #333 !important;
+  color: #fff !important;
+}
+
+[data-theme="black"] .job-form-modal .ant-modal-footer,
+[data-theme="black"] .application-modal .ant-modal-footer {
+  background: linear-gradient(135deg, #1f1f1f 0%, #1a1a1a 100%);
+  border-top-color: #333;
+}
+
+[data-theme="black"] .job-form-modal .ant-btn-default,
+[data-theme="black"] .application-modal .ant-btn-default {
+  background: #252525;
+  border-color: #333;
+  color: #fff;
+}
+
+/* Drawer Styles - Dark Theme */
+[data-theme="black"] .job-details-drawer .ant-drawer-content,
+[data-theme="black"] .applications-drawer .ant-drawer-content {
+  background: #1a1a1a;
+}
+
+[data-theme="black"] .job-details-drawer .ant-drawer-header,
+[data-theme="black"] .applications-drawer .ant-drawer-header {
+  background: #1a1a1a;
+  border-bottom-color: #333;
+}
+
+[data-theme="black"] .job-details-drawer .ant-drawer-title,
+[data-theme="black"] .applications-drawer .ant-drawer-title {
+  color: #fff;
+}
+
+[data-theme="black"] .job-details-drawer .ant-drawer-close,
+[data-theme="black"] .applications-drawer .ant-drawer-close {
+  color: #fff;
+}
+
+[data-theme="black"] .job-details-drawer .ant-drawer-body,
+[data-theme="black"] .applications-drawer .ant-drawer-body {
+  background: #1a1a1a;
+}
+
+[data-theme="black"] .applications-drawer .ant-drawer-body {
+  background: linear-gradient(135deg, #0a0a0a 0%, #111 100%);
+}
+
+[data-theme="black"] .job-details-header h3 {
+  color: #fff !important;
+}
+
+[data-theme="black"] .job-details-creator-card {
+  background: #252525;
+  border-color: #333;
+}
+
+[data-theme="black"] .job-details-info .info-item:hover {
+  background: rgba(102, 126, 234, 0.1);
+}
+
+[data-theme="black"] .job-details-info .info-value {
+  color: #fff !important;
+}
+
+[data-theme="black"] .job-details-section h5 {
+  color: #fff !important;
+}
+
+[data-theme="black"] .job-details-section p {
+  color: #b0b0b0;
+}
+
+[data-theme="black"] .ant-divider {
+  border-color: #333;
+}
+
+/* Controls Styles - Dark Theme */
+[data-theme="black"] .controls-card .ant-input {
+  background: #252525;
+  border-color: #333;
+  color: #fff;
+}
+
+[data-theme="black"] .controls-card .ant-input::placeholder {
+  color: #666;
+}
+
+[data-theme="black"] .controls-card .ant-select-selector {
+  background: #252525 !important;
+  border-color: #333 !important;
+  color: #fff !important;
+}
+
+[data-theme="black"] .controls-card .ant-select-arrow {
+  color: #888;
+}
+
+/* Typography - Dark Theme */
+[data-theme="black"] .ant-typography {
+  color: #e0e0e0;
+}
+
+[data-theme="black"] .ant-typography.ant-typography-secondary {
+  color: #888 !important;
+}
+
+[data-theme="black"] .ant-typography strong {
+  color: #fff;
+}
+
+/* Upload - Dark Theme */
+[data-theme="black"] .ant-upload.ant-upload-select-picture-card {
+  background: #252525;
+  border-color: #333;
+}
+
+[data-theme="black"] .ant-upload.ant-upload-select-picture-card:hover {
+  border-color: #667eea;
+}
+
+/* Dropdown - Dark Theme */
+[data-theme="black"] .ant-select-dropdown {
+  background: #252525;
+  border: 1px solid #333;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="black"] .ant-select-item {
+  color: #fff;
+}
+
+[data-theme="black"] .ant-select-item-option-active {
+  background: #333;
+}
+
+[data-theme="black"] .ant-select-item-option-selected {
+  background: #667eea;
+}
+
+[data-theme="black"] .ant-select-item-option-selected:hover {
+  background: #5a6fd6;
+}
+
+/* ============ Tabs Dropdown (3 dots responsive menu) - Dark Theme ============ */
+[data-theme="black"] .ant-tabs-dropdown {
+  background: #1a1a1a !important;
+}
+
+[data-theme="black"] .ant-tabs-dropdown .ant-tabs-dropdown-menu {
+  background: #1a1a1a !important;
+  border: 1px solid #333;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  border-radius: 8px;
+  padding: 4px;
+}
+
+[data-theme="black"] .ant-tabs-dropdown .ant-tabs-dropdown-menu-item {
+  color: #fff !important;
+  background: transparent;
+  border-radius: 6px;
+  padding: 8px 12px;
+  transition: all 0.2s ease;
+}
+
+[data-theme="black"] .ant-tabs-dropdown .ant-tabs-dropdown-menu-item:hover {
+  background: #333 !important;
+  color: #667eea !important;
+}
+
+[data-theme="black"] .ant-tabs-dropdown .ant-tabs-dropdown-menu-item-active {
+  background: rgba(102, 126, 234, 0.2) !important;
+  color: #667eea !important;
+}
+
+[data-theme="black"] .ant-tabs-dropdown .ant-tabs-dropdown-menu-item-selected {
+  background: rgba(102, 126, 234, 0.3) !important;
+  color: #fff !important;
+}
+
+/* Tabs more button (3 dots) - Dark Theme */
+[data-theme="black"] .ant-tabs-nav-more {
+  color: #fff !important;
+  background: transparent;
+}
+
+[data-theme="black"] .ant-tabs-nav-more:hover {
+  color: #667eea !important;
+  background: rgba(102, 126, 234, 0.1);
+}
+
+[data-theme="black"] .job-post-edit-btn,
+[data-theme="black"] .job-post-edit-btn .anticon {
+    color: #ffffff !important;
+}
+/* Fix for dropdown icon in dark theme */
+[data-theme="black"] .ant-tabs .ant-tabs-nav-more .anticon {
+  color: #fff !important;
+}
+
+[data-theme="black"] .ant-tabs .ant-tabs-nav-more:hover .anticon {
+  color: #667eea !important;
+}
+
+/* Dropdown menu container dark theme */
+[data-theme="black"] .ant-dropdown,
+[data-theme="black"] .ant-dropdown-menu {
+  background: #1a1a1a !important;
+  border: 1px solid #333;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+}
+
+[data-theme="black"] .ant-dropdown-menu-item {
+  color: #fff !important;
+}
+
+[data-theme="black"] .ant-dropdown-menu-item:hover {
+  background: #333 !important;
+  color: #667eea !important;
+}
+
+[data-theme="black"] .ant-dropdown-menu-item-selected {
+  background: rgba(102, 126, 234, 0.2) !important;
+  color: #fff !important;
+}
+
+/* Alert - Dark Theme */
+[data-theme="black"] .ant-alert {
+  background: #252525;
+  border-color: #333;
+}
+
+[data-theme="black"] .ant-alert-message,
+[data-theme="black"] .ant-alert-description {
+  color: #e0e0e0;
+}
+
+/* Progress - Dark Theme */
+[data-theme="black"] .ant-progress-text {
+  color: #fff !important;
+}
+
+/* Scrollbar - Dark Theme */
+[data-theme="black"] ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+[data-theme="black"] ::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+
+[data-theme="black"] ::-webkit-scrollbar-thumb {
+  background: #333333;
+  border-radius: 4px;
+}
+
+[data-theme="black"] ::-webkit-scrollbar-thumb:hover {
+  background: #444444;
+}
+
+/* Inactive Job Card */
+.job-post-card-inactive {
+  opacity: 0.85;
+}
+
+.job-post-card-inactive .job-card-cover {
+  filter: grayscale(30%);
+}
+
+[data-theme="black"] .job-post-card-inactive {
+  opacity: 0.75;
+}
+
+/* ============ Print Styles ============ */
+@media print {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+    box-shadow: none !important;
+  }
+
+  .job-post-page-container {
+    background: #fff !important;
+    padding: 0 !important;
+  }
+
+  .ant-btn {
+    display: none !important;
+  }
+
+  .job-post-card,
+  .ant-card {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    border: 1px solid #d9d9d9 !important;
+    box-shadow: none !important;
+  }
+}
+/* ============ Job Card Info Spacing ============ */
+.job-card-info-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.job-card-info-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.job-card-company {
+  margin-bottom: 8px;
+}
+
+.job-card-creator {
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
+
+.job-card-meta {
+  margin-top: 12px;
+}
+
+/* Job details info styling for dark theme */
+[data-theme="black"] .job-details-info .info-item {
+  padding: 12px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+[data-theme="black"] .job-details-info .info-item:hover {
+  background: rgba(102, 126, 234, 0.1);
+}
+
+/* ============================================
+   MOBILE RESPONSIVE FIX FOR MODALS & DRAWERS
+   Ensures modals/drawers fit all phone sizes
+   ============================================ */
+@media (max-width: 768px) {
+  .ant-modal {
+    max-width: 95vw !important;
+    width: 95vw !important;
+    margin: 8px auto !important;
+    top: 8px !important;
+    padding-bottom: 0 !important;
+  }
+  .ant-modal-content {
+    border-radius: 12px !important;
+    overflow: hidden;
+  }
+  .ant-modal-body {
+    padding: 16px !important;
+    max-height: calc(100vh - 160px) !important;
+    overflow-y: auto !important;
+  }
+  .ant-modal-header {
+    padding: 12px 16px !important;
+  }
+  .ant-modal-footer {
+    padding: 12px 16px !important;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .ant-modal-title {
+    font-size: 16px !important;
+    flex-wrap: wrap;
+  }
+  .ant-drawer-content-wrapper {
+    width: 100vw !important;
+    max-width: 100vw !important;
+  }
+  .ant-drawer-body {
+    padding: 16px !important;
+  }
+  .ant-drawer-header {
+    padding: 12px 16px !important;
+  }
+  .ant-drawer-title {
+    font-size: 16px !important;
+  }
+  .job-form-modal .ant-modal-body,
+  .application-modal .ant-modal-body {
+    padding: 16px !important;
+  }
+
+  .job-form-modal .ant-form-item,
+  .application-modal .ant-form-item {
+    margin-bottom: 18px !important;
+  }
+
+  .job-form-modal .ant-input-textarea-show-count::after,
+  .job-form-modal .ant-input-show-count::after,
+  .application-modal .ant-input-textarea-show-count::after,
+  .application-modal .ant-input-show-count::after {
+    font-size: 11px !important;
+  }
+
+  .job-form-modal .ant-form-item-extra,
+  .application-modal .ant-form-item-extra {
+    font-size: 11px !important;
+  }
+
+  .job-form-modal .ant-upload.ant-upload-select-picture-card {
+    width: 96px !important;
+    height: 96px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .ant-modal {
+    max-width: 98vw !important;
+    width: 98vw !important;
+    margin: 4px auto !important;
+    top: 4px !important;
+  }
+  .ant-modal-body {
+    padding: 12px !important;
+    max-height: calc(100vh - 140px) !important;
+  }
+  .ant-modal-header,
+  .ant-modal-footer {
+    padding: 10px 12px !important;
+  }
+  .ant-modal-title {
+    font-size: 15px !important;
+  }
+  .ant-drawer-body {
+    padding: 12px !important;
+  }
+  .ant-modal-footer .ant-btn {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 380px) {
+  .ant-modal-title {
+    font-size: 14px !important;
+  }
+  .ant-modal-body,
+  .ant-drawer-body {
+    font-size: 13px !important;
+  }
+}
+
+/* ===== MOBILE READABILITY & NON-OVERLAP FIX ===== */
+@media (max-width: 768px) {
+  /* Prevent any horizontal overflow inside modals/drawers */
+  .ant-modal-body,
+  .ant-drawer-body {
+    word-wrap: break-word !important;
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
+  }
+  .ant-modal-body *,
+  .ant-drawer-body * {
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  /* Form inputs full width, readable */
+  .ant-modal .ant-form-item,
+  .ant-drawer .ant-form-item {
+    margin-bottom: 14px !important;
+  }
+  .ant-modal .ant-form-item-label,
+  .ant-drawer .ant-form-item-label {
+    padding-bottom: 4px !important;
+    white-space: normal !important;
+  }
+  .ant-modal .ant-form-item-label > label,
+  .ant-drawer .ant-form-item-label > label {
+    font-size: 13px !important;
+    height: auto !important;
+    line-height: 1.4 !important;
+  }
+  .ant-modal .ant-input,
+  .ant-modal .ant-input-affix-wrapper,
+  .ant-modal .ant-select,
+  .ant-modal .ant-select-selector,
+  .ant-modal .ant-picker,
+  .ant-modal textarea.ant-input,
+  .ant-drawer .ant-input,
+  .ant-drawer .ant-input-affix-wrapper,
+  .ant-drawer .ant-select,
+  .ant-drawer .ant-select-selector,
+  .ant-drawer .ant-picker,
+  .ant-drawer textarea.ant-input {
+    width: 100% !important;
+    font-size: 14px !important;
+  }
+  /* Buttons stack and stay tappable, no overlap */
+  .ant-modal-footer {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    justify-content: flex-end !important;
+    gap: 8px !important;
+  }
+  .ant-modal-footer .ant-btn {
+    flex: 1 1 calc(50% - 8px) !important;
+    min-height: 38px !important;
+    margin: 0 !important;
+    white-space: normal !important;
+    font-size: 13px !important;
+    padding: 6px 10px !important;
+  }
+  .ant-drawer-footer {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+  .ant-drawer-footer .ant-btn {
+    flex: 1 1 calc(50% - 8px) !important;
+    min-height: 38px !important;
+    white-space: normal !important;
+    font-size: 13px !important;
+  }
+  /* Modal title row - close button shouldn't overlap title */
+  .ant-modal-header {
+    padding-right: 44px !important;
+  }
+  .ant-modal-close {
+    top: 6px !important;
+    right: 6px !important;
+  }
+  .ant-modal-title {
+    line-height: 1.4 !important;
+    word-break: break-word !important;
+  }
+  /* Drawer title */
+  .ant-drawer-header {
+    padding-right: 44px !important;
+  }
+  .ant-drawer-close {
+    padding: 10px !important;
+  }
+  /* Tables/lists inside modals scroll horizontally instead of overlapping */
+  .ant-modal-body .ant-table-wrapper,
+  .ant-drawer-body .ant-table-wrapper {
+    overflow-x: auto !important;
+  }
+  .ant-modal-body .ant-table,
+  .ant-drawer-body .ant-table {
+    min-width: 0 !important;
+  }
+  /* Descriptions / tags should wrap */
+  .ant-modal-body .ant-descriptions-item-label,
+  .ant-modal-body .ant-descriptions-item-content,
+  .ant-drawer-body .ant-descriptions-item-label,
+  .ant-drawer-body .ant-descriptions-item-content {
+    display: block !important;
+    width: 100% !important;
+    padding: 6px 8px !important;
+    font-size: 13px !important;
+  }
+  /* "Applications" / "Time Remaining" stats in the job details
+     drawer were fixed at 50/50 (Col span=12) with no mobile
+     breakpoint, so the "Expires: ..." text and the progress bar
+     had no room and overlapped each other. Stack them full width
+     on phones instead. */
+  .job-details-drawer .ant-col-12 {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+    margin-bottom: 16px;
+  }
+  .job-details-drawer .ant-col-12:last-child {
+    margin-bottom: 0;
+  }
+  .job-details-drawer .ant-statistic-content {
+    white-space: normal !important;
+    word-break: break-word !important;
+  }
+  .ant-tag {
+    margin-bottom: 4px !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+  }
+  /* Headings inside modals shrink */
+  .ant-modal-body h1,
+  .ant-drawer-body h1 { font-size: 18px !important; }
+  .ant-modal-body h2,
+  .ant-drawer-body h2 { font-size: 16px !important; }
+  .ant-modal-body h3,
+  .ant-drawer-body h3 { font-size: 15px !important; }
+  .ant-modal-body p,
+  .ant-drawer-body p { font-size: 13px !important; line-height: 1.5 !important; }
+}
+
+@media (max-width: 480px) {
+  .ant-modal-footer .ant-btn,
+  .ant-drawer-footer .ant-btn {
+    flex: 1 1 100% !important;
+    font-size: 13px !important;
+  }
+  .ant-modal-title,
+  .ant-drawer-title {
+    font-size: 14px !important;
+    padding-right: 8px !important;
+  }
+  .ant-modal .ant-form-item-label > label,
+  .ant-drawer .ant-form-item-label > label {
+    font-size: 12px !important;
+  }
+}
+[data-theme="black"] .ant-modal-confirm-title,
+[data-theme="black"] .ant-modal-confirm-content,
+[data-theme="black"] .ant-popconfirm-title,
+[data-theme="black"] .ant-popconfirm-description {
+    color: #ffffff !important;
+}
+
+/* ==============================================
+   ENHANCEMENT: Application Draft / Discard Modals
+   Matches the existing reject / warning / success modal
+   design language and inherits the current theme tokens.
+   ============================================== */
+
+.application-discard-modal .ant-modal-content,
+.application-draft-restore-modal .ant-modal-content {
+  border-radius: 14px;
+  overflow: hidden;
+  animation: scaleIn 0.25s ease-out;
+}
+
+.application-discard-modal .ant-modal-header,
+.application-draft-restore-modal .ant-modal-header {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  padding: 16px 24px;
+}
+
+.application-discard-modal .ant-modal-title,
+.application-draft-restore-modal .ant-modal-title {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.application-discard-modal .ant-modal-body,
+.application-draft-restore-modal .ant-modal-body {
+  padding: 20px 24px;
+  line-height: 1.6;
+}
+
+.application-discard-modal .ant-modal-footer,
+.application-draft-restore-modal .ant-modal-footer {
+  padding: 12px 20px;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+/* Dark theme overrides (matches existing theme system already used in this file) */
+.dark-theme .application-discard-modal .ant-modal-content,
+.dark-theme .application-draft-restore-modal .ant-modal-content,
+[data-theme="dark"] .application-discard-modal .ant-modal-content,
+[data-theme="dark"] .application-draft-restore-modal .ant-modal-content {
+  background: #1f1f2e;
+  color: #f0f0f0;
+}
+
+.dark-theme .application-discard-modal .ant-modal-header,
+.dark-theme .application-draft-restore-modal .ant-modal-header,
+[data-theme="dark"] .application-discard-modal .ant-modal-header,
+[data-theme="dark"] .application-draft-restore-modal .ant-modal-header {
+  background: #1f1f2e;
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+.dark-theme .application-discard-modal .ant-modal-title,
+.dark-theme .application-draft-restore-modal .ant-modal-title,
+[data-theme="dark"] .application-discard-modal .ant-modal-title,
+[data-theme="dark"] .application-draft-restore-modal .ant-modal-title {
+  color: #f0f0f0;
+}
+
+.dark-theme .application-discard-modal .ant-modal-footer,
+.dark-theme .application-draft-restore-modal .ant-modal-footer,
+[data-theme="dark"] .application-discard-modal .ant-modal-footer,
+[data-theme="dark"] .application-draft-restore-modal .ant-modal-footer {
+  border-top-color: rgba(255, 255, 255, 0.08);
+}
+
+/* ============================================================ */
+/* === DARK THEME: Resume Viewer + Application Info Cards ===== */
+/* ============================================================ */
+
+/* Resume viewer card wrapper */
+.resume-viewer-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #f0f4ff, #e8eeff);
+  border: 1.5px solid #c7d2fe;
+  margin-top: 6px;
+}
+
+[data-theme="black"] .resume-viewer-card {
+  background: linear-gradient(135deg, #1e2235, #1a1d2e) !important;
+  border-color: #3a3f6e !important;
+}
+
+/* Icon bg inside resume card */
+.resume-viewer-icon-bg {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.resume-viewer-icon-bg--pdf {
+  background: #fff1f0;
+}
+.resume-viewer-icon-bg--doc {
+  background: #e6f4ff;
+}
+.resume-viewer-icon-bg--image {
+  background: #f6ffed;
+}
+.resume-viewer-icon-bg--default {
+  background: #f5f5f5;
+}
+
+[data-theme="black"] .resume-viewer-icon-bg--pdf {
+  background: #2d1a1a !important;
+}
+[data-theme="black"] .resume-viewer-icon-bg--doc {
+  background: #1a2030 !important;
+}
+[data-theme="black"] .resume-viewer-icon-bg--image {
+  background: #1a2a1a !important;
+}
+[data-theme="black"] .resume-viewer-icon-bg--default {
+  background: #252525 !important;
+}
+
+/* Resume viewer text */
+[data-theme="black"] .resume-viewer-card .ant-typography {
+  color: #e0e0e0 !important;
+}
+[data-theme="black"] .resume-viewer-card .ant-typography.ant-typography-secondary {
+  color: #888 !important;
+}
+
+/* Contact info card (green tint) inside application drawer */
+.applicant-contact-card {
+  background: #f6ffed !important;
+  border-color: #b7eb8f !important;
+}
+
+[data-theme="black"] .applicant-contact-card {
+  background: #141f14 !important;
+  border-color: #2a4a2a !important;
+}
+
+[data-theme="black"] .applicant-contact-card .ant-card-head {
+  background: #141f14 !important;
+  border-bottom-color: #2a4a2a !important;
+  color: #9fe89f !important;
+}
+
+[data-theme="black"] .applicant-contact-card .ant-card-head-title,
+[data-theme="black"] .applicant-contact-card .ant-card-head .anticon {
+  color: #9fe89f !important;
+}
+
+[data-theme="black"] .applicant-contact-card .ant-typography {
+  color: #c8e6c8 !important;
+}
+
+[data-theme="black"] .applicant-contact-card .ant-typography.ant-typography-secondary {
+  color: #6a986a !important;
+}
+
+/* Career info card (blue tint) inside application drawer */
+.applicant-career-card {
+  background: #e6f7ff !important;
+  border-color: #91d5ff !important;
+}
+
+[data-theme="black"] .applicant-career-card {
+  background: #111e2d !important;
+  border-color: #1a3d5c !important;
+}
+
+[data-theme="black"] .applicant-career-card .ant-card-head {
+  background: #111e2d !important;
+  border-bottom-color: #1a3d5c !important;
+  color: #69b8ff !important;
+}
+
+[data-theme="black"] .applicant-career-card .ant-card-head-title,
+[data-theme="black"] .applicant-career-card .ant-card-head .anticon {
+  color: #69b8ff !important;
+}
+
+[data-theme="black"] .applicant-career-card .ant-typography {
+  color: #b0d4f0 !important;
+}
+
+[data-theme="black"] .applicant-career-card .ant-typography.ant-typography-secondary {
+  color: #4a7a9e !important;
+}
+
+/* ID document card */
+[data-theme="black"] .ant-card.id-doc-card {
+  background: #1a1a1a !important;
+  border-color: #333 !important;
+}
+
+[data-theme="black"] .ant-card.id-doc-card .ant-card-body {
+  background: #1a1a1a !important;
+}
+
+/* Application card inner cards (general small cards inside applications-drawer) */
+[data-theme="black"] .applications-drawer .ant-card-small {
+  background: #1e1e1e;
+  border-color: #333;
+  color: #e0e0e0;
+}
+
+[data-theme="black"] .applications-drawer .ant-card-small .ant-card-head {
+  background: #252525;
+  border-bottom-color: #333;
+  color: #e0e0e0;
+}
+
+[data-theme="black"] .applications-drawer .ant-card-small .ant-card-body {
+  background: #1e1e1e;
+}
+
+/* Document viewer modal dark */
+[data-theme="black"] .ant-modal-content {
+  background: #1a1a1a;
+  color: #e0e0e0;
+}
+[data-theme="black"] .ant-modal-header {
+  background: #1f1f1f;
+  border-bottom-color: #333;
+}
+[data-theme="black"] .ant-modal-title {
+  color: #fff;
+}
+[data-theme="black"] .ant-modal-body {
+  background: #1a1a1a;
+}
+[data-theme="black"] .ant-modal-footer {
+  background: #1f1f1f;
+  border-top-color: #333;
+}/* ==============================================
+   AdminAlumniJobPostPage.css - Professional Enhanced Styles
+   With Animations Like ProfilePage.css
+   ============================================== */
+
+/* ============ Keyframe Animations ============ */
+
+/* Fade in from bottom */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Fade in from left */
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Fade in from right */
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Scale in animation */
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Subtle float animation */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+/* Pulse glow animation */
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 20px 5px rgba(102, 126, 234, 0.2);
+  }
+}
+
+/* Shimmer loading effect */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Border glow animation */
+@keyframes borderGlow {
+  0%, 100% {
+    border-color: transparent;
+  }
+  50% {
+    border-color: rgba(102, 126, 234, 0.3);
+  }
+}
+
+/* Slide down for content reveal */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    max-height: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    max-height: 1000px;
+    transform: translateY(0);
+  }
+}
+
+/* Gradient animation */
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Rainbow Light Animation - Like ProfilePage */
+@keyframes rainbowShimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+/* ============ Main Container ============ */
+
+
+
+
+/* Rainbow Light Bar at Top */
+/* .job-post-page-container::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(
+    90deg,
+    #1890ff 0%,
+    #13c2c2 15%,
+    #52c41a 30%,
+    #a0d911 45%,
+    #fadb14 60%,
+    #fa8c16 75%,
+    #f5222d 90%,
+    #eb2f96 100%
+  );
+  background-size: 200% 100%;
+  animation: rainbowShimmer 3s linear infinite;
+  z-index: 9999;
+} */
+
+/* ============ Header Card - Enhanced ============ */
+.ae-hero {
+  --ae-ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
+  --ae-ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --ae-accent: #0ea5e9;
+  --ae-accent-2: #14b8a6;
+  --ae-accent-3: #6366f1;
+  --ae-accent-soft: rgba(14, 165, 233, 0.10);
+  --ae-accent-ring: rgba(14, 165, 233, 0.28);
+  --ae-surface: #ffffff;
+  --ae-border: #e2e8f0;
+  --ae-text: #0b1220;
+  --ae-text-muted: #5b6677;
+  --ae-shadow-sm: 0 4px 14px rgba(2, 6, 23, 0.06);
+  --ae-shadow-md: 0 14px 34px rgba(2, 6, 23, 0.10);
+
+  position: relative;
+  overflow: hidden;
+  margin: 0 0 24px;
+  padding: 56px 32px 40px;
+  border-radius: 26px;
+  background:
+    linear-gradient(180deg, var(--ae-surface), var(--ae-surface)) padding-box,
+    linear-gradient(135deg, rgba(14,165,233,0.45), rgba(99,102,241,0.35), rgba(20,184,166,0.45)) border-box;
+  border: 1px solid transparent;
+  box-shadow: var(--ae-shadow-md);
+  opacity: 0;
+  transform: translateY(8px);
+  animation: aeFadeUp 0.7s var(--ae-ease-spring) forwards;
+}
+
+@keyframes aeFadeUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes aeFloat {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50%      { transform: translateY(-14px) scale(1.04); }
+}
+
+.ae-hero__bg { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.ae-hero__bg .blob {
+  position: absolute; border-radius: 50%;
+  filter: blur(70px); opacity: 0.5;
+  animation: aeFloat 14s ease-in-out infinite;
+}
+.ae-hero__bg .blob-1 { width: 280px; height: 280px; background: #38bdf8; top: -70px; left: -50px; }
+.ae-hero__bg .blob-2 { width: 320px; height: 320px; background: #6366f1; bottom: -130px; right: -70px; animation-duration: 18s; }
+.ae-hero__bg .blob-3 { width: 200px; height: 200px; background: #14b8a6; top: 40%; left: 55%; animation-duration: 22s; opacity: 0.35; }
+.ae-hero__bg .dot-grid {
+  position: absolute; inset: 0;
+  background-image: radial-gradient(rgba(15,23,42,0.08) 1px, transparent 1px);
+  background-size: 18px 18px;
+  -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+          mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+}
+
+
+.job-post-page-container {
+   padding: 24px;
+  padding-top: 10px;
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+ }
+ 
+.ae-hero__content {
+  position: relative; z-index: 1;
+  max-width: 1080px; margin: 0 auto; text-align: center;
+}
+
+.ae-hero__brand {
+  display: inline-flex; align-items: center; gap: 14px; margin-bottom: 14px;
+}
+.ae-hero__logo {
+  width: 56px; height: 56px; object-fit: contain;
+  border-radius: 14px; background: var(--ae-surface); padding: 6px;
+  box-shadow: var(--ae-shadow-sm);
+  animation: aeFloat 6s ease-in-out infinite;
+}
+.ae-hero__brand-meta {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 4px;
+}
+.ae-chip {
+  background: var(--ae-accent-soft) !important;
+  color: var(--ae-accent) !important;
+  border: 1px solid var(--ae-accent-ring) !important;
+  border-radius: 999px !important;
+  padding: 4px 12px !important;
+  font-weight: 700 !important;
+  font-size: 11.5px !important;
+  letter-spacing: 0.08em;
+  margin: 0 !important;
+}
+.ae-hero__eyebrow {
+  color: var(--ae-text-muted) !important;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.ae-hero__title {
+  font-size: clamp(28px, 4.4vw, 46px) !important;
+  line-height: 1.1 !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.02em;
+  color: var(--ae-text) !important;
+  margin: 6px 0 14px !important;
+}
+.ae-hero .grad-text {
+  background: linear-gradient(135deg, var(--ae-accent) 0%, var(--ae-accent-3) 50%, var(--ae-accent-2) 100%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+}
+.ae-hero__lead {
+  color: var(--ae-text-muted) !important;
+  font-size: 16px !important;
+  line-height: 1.7 !important;
+  max-width: 720px; margin: 0 auto 28px !important;
+}
+
+/* Stat tiles */
+.ae-hero__stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  max-width: 920px;
+  margin: 0 auto;
+}
+.ae-stat {
+  display: flex; align-items: center; gap: 14px;
+  padding: 16px 18px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--ae-border);
+  border-radius: 16px;
+  box-shadow: var(--ae-shadow-sm);
+  text-align: left;
+  transition: transform 0.25s var(--ae-ease-spring), box-shadow 0.25s var(--ae-ease-smooth), border-color 0.25s;
+}
+.ae-stat:hover {
+  transform: translateY(-3px);
+  border-color: var(--ae-accent-ring);
+  box-shadow: var(--ae-shadow-md);
+}
+.ae-stat__icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 42px; height: 42px;
+  border-radius: 12px;
+  background: var(--ae-accent-soft);
+  color: var(--ae-accent);
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.ae-stat__icon--blue  { background: rgba(99,102,241,0.12); color: #6366f1; }
+.ae-stat__icon--green { background: rgba(16,185,129,0.12); color: #10b981; }
+.ae-stat__icon--gray  { background: rgba(100,116,139,0.12); color: #64748b; }
+.ae-stat__body { display: flex; flex-direction: column; line-height: 1.2; min-width: 0; }
+.ae-stat__value { font-size: 22px; font-weight: 800; color: var(--ae-text); letter-spacing: -0.01em; }
+.ae-stat__label { font-size: 12px; color: var(--ae-text-muted); margin-top: 2px; font-weight: 500; }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .ae-hero__stats { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 560px) {
+  .ae-hero { padding: 40px 18px 28px; border-radius: 20px; }
+  .ae-hero__brand { flex-direction: column; gap: 10px; }
+  .ae-hero__brand-meta { align-items: center; }
+  .ae-hero__title { font-size: 26px !important; }
+  .ae-hero__lead { font-size: 14.5px !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ae-hero, .ae-hero__logo, .ae-hero__bg .blob { animation: none !important; }
+  .ae-stat { transition: none; }
+}
+
+/* ============ Stats Row - Enhanced ============ */
+
+.stats-row {
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  border-radius: 16px;
+  border: none;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  position: relative;
+  animation: fadeInUp 0.5s ease-out both;
+}
+
+.stat-card:nth-child(1) { animation-delay: 0.1s; }
+.stat-card:nth-child(2) { animation-delay: 0.2s; }
+.stat-card:nth-child(3) { animation-delay: 0.3s; }
+.stat-card:nth-child(4) { animation-delay: 0.4s; }
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.1) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+}
+
+.stat-card:hover::before {
+  opacity: 1;
+}
+
+.stat-card .ant-card-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 4px;
+  min-height: 0;
+}
+
+.stat-card .ant-statistic {
+  width: 100%;
+}
+
+.stat-card .ant-statistic-title {
+  margin-bottom: 6px;
+}
+
+.stat-card .ant-statistic-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stat-card-total {
+  border-left: 5px solid #1890ff;
+  background: linear-gradient(135deg, #fff 0%, #e6f7ff 100%);
+}
+
+.stat-card-pending {
+  border-left: 5px solid #faad14;
+  background: linear-gradient(135deg, #fff 0%, #fffbe6 100%);
+}
+
+.stat-card-approved {
+  border-left: 5px solid #52c41a;
+  background: linear-gradient(135deg, #fff 0%, #f6ffed 100%);
+}
+
+.stat-card-expired {
+  border-left: 5px solid #ff4d4f;
+  background: linear-gradient(135deg, #fff 0%, #fff2f0 100%);
+}
+
+/* ============ Tabs Card - Enhanced ============ */
+
+.tabs-card {
+  border-radius: 16px;
+  margin-bottom: 24px;
+  border: none;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  animation: fadeInUp 0.6s ease-out 0.3s both;
+  overflow: hidden;
+}
+
+.tabs-card .ant-card-body {
+  padding: 24px;
+}
+
+.job-tabs .ant-tabs-tab {
+  padding: 14px 24px;
+  font-weight: 500;
+  font-size: 14px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 10px;
+  margin-right: 8px;
+}
+
+.job-tabs .ant-tabs-tab:hover {
+  color: #667eea;
+  background: rgba(102, 126, 234, 0.08);
+  transform: translateY(-2px);
+}
+
+.job-tabs .ant-tabs-tab-active {
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+  border-radius: 10px;
+}
+
+.job-tabs .ant-tabs-ink-bar {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  height: 4px;
+  border-radius: 4px;
+}
+
+/* ============ Controls Card - Enhanced ============ */
+
+.controls-card {
+  border-radius: 16px;
+  margin-bottom: 24px;
+  border: none;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  animation: fadeInUp 0.5s ease-out 0.4s both;
+}
+
+.controls-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.controls-left {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.controls-right {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.search-input {
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.search-input:focus {
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
+
+/* ============ Job Card - Enhanced ============ */
+
+.job-post-card {
+  border-radius: 20px;
+  border: 1px solid #f0f0f0;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  height: 100%;
+  overflow: hidden;
+  animation: scaleIn 0.5s ease-out both;
+  position: relative;
+}
+
+.job-grid > .ant-col:nth-child(1) .job-post-card { animation-delay: 0.1s; }
+.job-grid > .ant-col:nth-child(2) .job-post-card { animation-delay: 0.15s; }
+.job-grid > .ant-col:nth-child(3) .job-post-card { animation-delay: 0.2s; }
+.job-grid > .ant-col:nth-child(4) .job-post-card { animation-delay: 0.25s; }
+.job-grid > .ant-col:nth-child(5) .job-post-card { animation-delay: 0.3s; }
+.job-grid > .ant-col:nth-child(6) .job-post-card { animation-delay: 0.35s; }
+.job-grid > .ant-col:nth-child(7) .job-post-card { animation-delay: 0.4s; }
+.job-grid > .ant-col:nth-child(8) .job-post-card { animation-delay: 0.45s; }
+
+.job-post-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #667eea, #764ba2, #667eea);
+  background-size: 200% 100%;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.job-post-card:hover {
+  box-shadow: 0 16px 48px rgba(102, 126, 234, 0.2);
+  transform: translateY(-8px) scale(1.01);
+  border-color: rgba(102, 126, 234, 0.3);
+}
+
+.job-post-card:hover::before {
+  opacity: 1;
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+.job-post-card .ant-card-body {
+  padding: 0;
+}
+
+/* Job Card Cover */
+.job-card-cover {
+  position: relative;
+  height: 180px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+}
+
+.job-card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.job-post-card:hover .job-card-image {
+  transform: scale(1.1);
+}
+
+.job-card-image-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e8ecef 100%);
+  gap: 8px;
+}
+
+.job-card-status-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 2;
+}
+
+.job-card-type-badge {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  z-index: 2;
+}
+
+/* Job Card Content */
+.job-card-content {
+  padding: 20px 24px;
+}
+
+.job-card-title {
+  font-size: 17px;
+  color: #1a1a1a;
+  line-height: 1.4;
+  margin-bottom: 10px !important;
+  transition: color 0.3s ease;
+}
+
+.job-post-card:hover .job-card-title {
+  color: #667eea;
+}
+
+.job-card-company {
+  margin-bottom: 12px;
+  color: #555;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+}
+
+/* Creator Info Container */
+.job-card-creator {
+  margin-bottom: 16px;
+  padding: 14px;
+  background: linear-gradient(135deg, #f9f9fb 0%, #f0f2f5 100%);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.job-card-creator:hover {
+  background: linear-gradient(135deg, #f0f2f5 0%, #e8ecef 100%);
+}
+
+.creator-info-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.creator-info-large {
+  gap: 16px;
+}
+
+.creator-avatar {
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.creator-avatar:hover {
+  transform: scale(1.1) rotate(3deg);
+}
+
+.creator-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.creator-name-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.creator-name {
+  font-size: 14px;
+  color: #262626;
+  transition: color 0.3s ease;
+}
+
+.creator-email {
+  font-size: 12px;
+  display: block;
+  margin-top: 2px;
+  color: #8c8c8c;
+}
+
+/* Applicant Info Container */
+.applicant-info-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.applicant-info-large {
+  gap: 16px;
+}
+
+.applicant-avatar {
+  flex-shrink: 0;
+}
+
+.applicant-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.applicant-name-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.applicant-name {
+  font-size: 14px;
+  color: #262626;
+}
+
+.applicant-email {
+  font-size: 12px;
+  display: block;
+  margin-top: 2px;
+  color: #8c8c8c;
+}
+
+/* Job Card Meta */
+.job-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+
+.job-card-meta .meta-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  transition: transform 0.3s ease;
+}
+
+.job-card-meta .meta-item:hover {
+  transform: translateX(4px);
+}
+
+.job-card-meta .meta-item .anticon {
+  color: #667eea;
+  font-size: 14px;
+}
+
+.job-card-date {
+  font-size: 12px;
+  color: #8c8c8c;
+  display: flex;
+  align-items: center;
+  margin-top: 12px;
+}
+
+/* Job Card Actions */
+.job-card-actions {
+  padding: 16px 24px;
+  border-top: 1px solid #f0f0f0;
+  background: linear-gradient(135deg, #fafafa 0%, #f5f7fa 100%);
+}
+
+.job-card-actions .ant-btn {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.job-card-actions .ant-btn:hover {
+  transform: translateY(-2px);
+}
+
+/* ============ Empty State Card ============ */
+
+.empty-state-card {
+  border-radius: 16px;
+  text-align: center;
+  padding: 64px 24px;
+  animation: fadeInUp 0.5s ease-out;
+}
+
+.empty-state-card .ant-empty-image {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* ============ Create Job Card ============ */
+
+.create-job-card {
+  border-radius: 16px;
+  border: 2px dashed #d9d9d9;
+  text-align: center;
+  transition: all 0.3s ease;
+  animation: fadeInUp 0.5s ease-out;
+}
+
+.create-job-card:hover {
+  border-color: #667eea;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.03) 0%, rgba(118, 75, 162, 0.03) 100%);
+}
+
+.create-job-content {
+  padding: 48px 24px;
+}
+
+.create-job-icon {
+  margin-bottom: 20px;
+  animation: float 3s ease-in-out infinite;
+}
+
+.create-job-content p {
+  color: #666;
+  margin-bottom: 24px;
+  font-size: 15px;
+}
+
+/* ============ Job Details Drawer - Enhanced ============ */
+
+.job-details-drawer .ant-drawer-body {
+  padding: 0;
+}
+
+.job-details-content {
+  padding: 0;
+}
+
+.job-details-banner {
+  margin-bottom: 16px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.job-details-image-container {
+  position: relative;
+  height: 220px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+}
+
+.job-details-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.job-details-header {
+  padding: 24px 24px 0;
+  animation: fadeInUp 0.4s ease-out;
+}
+
+.job-details-badges {
+  margin-top: 12px;
+}
+
+.job-details-creator-card {
+  margin: 16px 24px;
+  border-radius: 12px;
+  animation: fadeInUp 0.4s ease-out 0.1s both;
+}
+
+.job-details-info {
+  padding: 0 24px;
+  animation: fadeInUp 0.4s ease-out 0.2s both;
+}
+
+.job-details-info .info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 8px 0;
+  transition: all 0.3s ease;
+}
+
+.job-details-info .info-item:hover {
+  padding-left: 8px;
+  background: rgba(102, 126, 234, 0.05);
+  border-radius: 8px;
+}
+
+.job-details-info .info-icon {
+  font-size: 18px;
+  color: #667eea;
+  margin-top: 2px;
+}
+
+.job-details-section {
+  padding: 0 24px;
+  margin-bottom: 16px;
+  animation: fadeInUp 0.4s ease-out 0.3s both;
+}
+
+.job-details-actions {
+  padding: 24px;
+  animation: fadeInUp 0.4s ease-out 0.4s both;
+}
+
+/* ============ Applications Drawer ============ */
+
+.applications-drawer .ant-drawer-body {
+  padding: 16px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e8ecef 100%);
+}
+
+.applications-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.application-card {
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  animation: fadeInUp 0.4s ease-out both;
+}
+
+.application-card:nth-child(1) { animation-delay: 0.1s; }
+.application-card:nth-child(2) { animation-delay: 0.15s; }
+.application-card:nth-child(3) { animation-delay: 0.2s; }
+
+/* ============ Table Styles - Enhanced ============ */
+
+.job-table {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.job-table .ant-table-thead > tr > th {
+  background: linear-gradient(135deg, #fafafa 0%, #f5f7fa 100%);
+  font-weight: 600;
+  color: #333;
+  border-bottom: 2px solid #f0f0f0;
+  padding: 16px;
+}
+
+.job-table .ant-table-tbody > tr {
+  transition: all 0.3s ease;
+}
+
+.job-table .ant-table-tbody > tr:hover > td {
+  background: linear-gradient(135deg, #f0f5ff 0%, #e6f4ff 100%);
+}
+
+.job-table .ant-table-tbody > tr > td {
+  border-bottom: 1px solid #f0f0f0;
+  padding: 16px;
+}
+
+.table-job-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* ============ Modal Styles - Enhanced ============ */
+
+.job-form-modal .ant-modal-content,
+.application-modal .ant-modal-content {
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+
+.job-form-modal .ant-modal-header,
+.application-modal .ant-modal-header {
+  border-bottom: 1px solid #f0f0f0;
+  padding: 24px 28px;
+  background: linear-gradient(135deg, #fafafa 0%, #fff 100%);
+}
+
+.job-form-modal .ant-modal-title,
+.application-modal .ant-modal-title {
+  font-weight: 600;
+  font-size: 20px;
+  color: #262626;
+}
+
+.job-form-modal .ant-modal-body,
+.application-modal .ant-modal-body {
+  padding: 28px;
+  animation: fadeInUp 0.4s ease-out;
+}
+
+.job-form-modal .ant-form-item-label > label,
+.application-modal .ant-form-item-label > label {
+  font-weight: 500;
+  color: #333;
+}
+
+.job-form-modal .ant-input,
+.job-form-modal .ant-input-textarea textarea,
+.application-modal .ant-input,
+.application-modal .ant-input-textarea textarea {
+  border-radius: 10px;
+  border: 1px solid #d9d9d9;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.job-form-modal .ant-input:hover,
+.job-form-modal .ant-input:focus,
+.application-modal .ant-input:hover,
+.application-modal .ant-input:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+}
+
+/* ============ Fix: character counter (showCount) overlapping
+   the helper/"extra" text and required text below each field.
+   AntD renders the counter as a floated element; without clearing
+   it, the wrapper's height collapses and the counter overlaps
+   whatever comes next. ============ */
+.job-form-modal .ant-input-textarea-show-count,
+.job-form-modal .ant-input-show-count,
+.application-modal .ant-input-textarea-show-count,
+.application-modal .ant-input-show-count {
+  display: block;
+  overflow: hidden;
+}
+
+.job-form-modal .ant-input-textarea-show-count::after,
+.job-form-modal .ant-input-show-count::after,
+.application-modal .ant-input-textarea-show-count::after,
+.application-modal .ant-input-show-count::after {
+  display: block;
+  float: right;
+  clear: both;
+  margin-top: 6px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.job-form-modal .ant-form-item-extra,
+.application-modal .ant-form-item-extra {
+  clear: both;
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.job-form-modal .ant-form-item-control-input-content > *,
+.application-modal .ant-form-item-control-input-content > * {
+  max-width: 100%;
+}
+
+.job-form-modal .ant-modal-footer,
+.application-modal .ant-modal-footer {
+  border-top: 1px solid #f0f0f0;
+  padding: 20px 28px;
+  background: linear-gradient(135deg, #fafafa 0%, #fff 100%);
+}
+
+/* ============ Badge and Tag Styles - Enhanced ============ */
+
+.ant-badge-count {
+  font-size: 10px;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.ant-tag {
+  border-radius: 16px;
+  font-size: 11px;
+  padding: 4px 12px;
+  font-weight: 500;
+  border: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ant-tag:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* ============ Button Styles - Enhanced ============ */
+
+.ant-btn {
+  border-radius: 10px;
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.ant-btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.6s ease, height 0.6s ease;
+}
+
+.ant-btn:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.ant-btn-primary {
+  /* background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); */
+  border: none;
+  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.35);
+}
+
+.ant-btn-primary:hover {
+  /* background: linear-gradient(135deg, #5a6fd6 0%, #6a4190 100%); */
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.45);
+}
+
+.ant-btn-text {
+  border-radius: 8px;
+}
+
+.ant-btn-text:hover {
+  background: rgba(102, 126, 234, 0.1);
+  transform: scale(1.05);
+}
+
+/* ============ Responsive Design ============ */
+
+@media (max-width: 992px) {
+  .job-post-page-container {
+    padding: 16px;
+  }
+
+  .job-header-card .ant-card-body {
+    padding: 24px;
+  }
+
+  .job-header-title {
+    font-size: 26px;
+  }
+
+  .job-header-subtitle {
+    font-size: 14px;
+  }
+
+  .tabs-card .ant-card-body {
+    padding: 16px;
+  }
+
+  .job-tabs .ant-tabs-tab {
+    padding: 12px 18px;
+    font-size: 13px;
+  }
+
+  .controls-section {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .controls-left,
+  .controls-right {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .job-post-page-container {
+    padding: 12px;
+  }
+
+  .job-header-card .ant-card-body {
+    padding: 20px;
+  }
+
+  .job-header-title {
+    font-size: 22px;
+  }
+
+  .job-header-subtitle {
+    font-size: 13px;
+  }
+
+  .stats-row {
+    margin-bottom: 16px;
+  }
+
+  .stat-card .ant-card-body {
+    padding: 14px;
+    gap: 2px;
+  }
+
+  .stat-card .ant-statistic-title {
+    font-size: 11px;
+    margin-bottom: 4px;
+    white-space: normal;
+  }
+
+  .stat-card .ant-statistic-content {
+    gap: 6px;
+  }
+
+  .stat-card .ant-statistic-content-value {
+    font-size: 20px;
+  }
+
+  .stat-card .ant-statistic-content-prefix {
+    font-size: 14px;
+  }
+
+  .tabs-card .ant-card-body {
+    padding: 12px;
+  }
+
+  .job-tabs .ant-tabs-tab {
+    padding: 10px 14px;
+    font-size: 12px;
+  }
+
+  .job-post-card {
+    border-radius: 14px;
+  }
+
+  .job-card-cover {
+    height: 150px;
+  }
+
+  .job-card-content {
+    padding: 16px;
+  }
+
+  .job-card-actions {
+    padding: 14px 16px;
+  }
+
+  .job-table .ant-table-tbody > tr > td {
+    padding: 12px 8px;
+    font-size: 13px;
+  }
+
+  .job-form-modal,
+  .application-modal {
+    width: 95% !important;
+    margin: 10px auto;
+  }
+
+  .job-form-modal .ant-modal-body,
+  .application-modal .ant-modal-body {
+    padding: 16px;
+  }
+
+  .create-job-content {
+    padding: 32px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .job-post-page-container {
+    padding: 8px;
+  }
+
+  .job-header-card .ant-card-body {
+    padding: 16px;
+  }
+
+  .job-header-title {
+    font-size: 18px;
+  }
+
+  .job-header-subtitle {
+    font-size: 12px;
+  }
+
+  .job-tabs .ant-tabs-tab {
+    padding: 8px 10px;
+    font-size: 11px;
+  }
+
+  .job-card-title {
+    font-size: 14px;
+  }
+
+  .job-card-creator {
+    padding: 10px;
+  }
+
+  .creator-info-container {
+    gap: 10px;
+  }
+
+  .creator-name {
+    font-size: 13px;
+  }
+}
+
+/* ============ Silent Loading Transitions ============ */
+
+/* Smooth content appearance for silent loading */
+.job-post-card,
+.stat-card,
+.tabs-card,
+.controls-card,
+.application-card {
+  opacity: 1;
+  transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+}
+
+/* Content fade in animation */
+.job-posts-grid,
+.applications-list,
+.job-table {
+  animation: contentFadeIn 0.4s ease-out;
+}
+
+@keyframes contentFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Skeleton shimmer for loading states */
+.loading-skeleton {
+  background: linear-gradient(
+    90deg,
+    #f0f0f0 25%,
+    #e8e8e8 50%,
+    #f0f0f0 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: 8px;
+}
+
+[data-theme="black"] .loading-skeleton {
+  background: linear-gradient(
+    90deg,
+    #2d2d2d 25%,
+    #3d3d3d 50%,
+    #2d2d2d 75%
+  );
+  background-size: 200% 100%;
+}
+
+/* Hide default spin but keep smooth transitions */
+.ant-spin-nested-loading > .ant-spin {
+  transition: opacity 0.3s ease;
+}
+
+/* ============================================== */
+/* [data-theme="black"] - DARK THEME STYLES */
+/* ============================================== */
+
+[data-theme="black"] .job-post-page-container {
+  background: linear-gradient(135deg, #0a0a0a 0%, #111111 100%);
+}
+
+/* ============================================
+   Dark Theme — Header Hero
+   ============================================ */
+[data-theme="black"] .ae-hero {
+  --ae-surface: #121620;
+  --ae-border: #242a36;
+  --ae-text: #e7ecf3;
+  --ae-text-muted: #9aa4b2;
+  --ae-accent-soft: rgba(14, 165, 233, 0.16);
+  --ae-shadow-sm: 0 4px 14px rgba(0,0,0,0.45);
+  --ae-shadow-md: 0 14px 34px rgba(0,0,0,0.55);
+
+  background:
+    linear-gradient(180deg, #121620, #121620) padding-box,
+    linear-gradient(135deg, rgba(14,165,233,0.55), rgba(99,102,241,0.45), rgba(20,184,166,0.55)) border-box;
+}
+[data-theme="black"] .ae-hero__bg .dot-grid {
+  background-image: radial-gradient(rgba(255,255,255,0.08) 1px, transparent 1px);
+}
+[data-theme="black"] .ae-stat {
+  background: rgba(26, 31, 43, 0.85);
+  border-color: #242a36;
+}
+[data-theme="black"] .ae-stat__value { color: #e7ecf3; }
+[data-theme="black"] .ae-hero__logo { background: #1a1f2b; }
+
+
+/* Rainbow bar stays the same in dark mode - keeps the vibrant colors */
+[data-theme="black"] .job-post-page-container::before {
+  background: linear-gradient(
+    90deg,
+    #1890ff 0%,
+    #13c2c2 15%,
+    #52c41a 30%,
+    #a0d911 45%,
+    #fadb14 60%,
+    #fa8c16 75%,
+    #f5222d 90%,
+    #eb2f96 100%
+  );
+  background-size: 200% 100%;
+  animation: rainbowShimmer 3s linear infinite;
+}
+
+[data-theme="black"] .job-header-title,
+[data-theme="black"] .job-header-subtitle {
+  color: #fff !important;
+} 
+
+[data-theme="black"] .stat-card,
+[data-theme="black"] .tabs-card,
+[data-theme="black"] .controls-card,
+[data-theme="black"] .job-post-card,
+[data-theme="black"] .create-job-card,
+[data-theme="black"] .empty-state-card,
+[data-theme="black"] .application-card {
+  background: #1a1a1a;
+  border-color: #2d2d2d;
+}
+
+[data-theme="black"] .stat-card-total {
+  background: linear-gradient(135deg, #1a1a1a 0%, #1a2635 100%);
+}
+
+[data-theme="black"] .stat-card-pending {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2a2515 100%);
+}
+
+[data-theme="black"] .stat-card-approved {
+  background: linear-gradient(135deg, #1a1a1a 0%, #1a2a1a 100%);
+}
+
+[data-theme="black"] .stat-card-expired {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2a1a1a 100%);
+}
+
+[data-theme="black"] .stat-card .ant-statistic-title,
+[data-theme="black"] .stat-card .ant-statistic-content-value {
+  color: #fff !important;
+}
+
+[data-theme="black"] .tabs-card .ant-card-body {
+  background: #1a1a1a;
+}
+
+[data-theme="black"] .job-tabs .ant-tabs-tab {
+  color: #a0a0a0;
+}
+
+[data-theme="black"] .job-tabs .ant-tabs-tab:hover {
+  color: #667eea;
+  background: rgba(102, 126, 234, 0.1);
+}
+
+[data-theme="black"] .job-tabs .ant-tabs-tab-active {
+  background: rgba(102, 126, 234, 0.2);
+  color: #fff !important;
+}
+
+[data-theme="black"] .job-tabs .ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: #fff !important;
+}
+
+[data-theme="black"] .job-card-content {
+  background: #1a1a1a;
+}
+
+[data-theme="black"] .job-card-title {
+  color: #fff !important;
+}
+
+[data-theme="black"] .job-post-card:hover .job-card-title {
+  color: #a0b4ff !important;
+}
+
+[data-theme="black"] .job-card-company {
+  color: #b0b0b0;
+}
+
+[data-theme="black"] .job-card-creator {
+  background: linear-gradient(135deg, #252525 0%, #1f1f1f 100%);
+}
+
+[data-theme="black"] .job-card-creator:hover {
+  background: linear-gradient(135deg, #2a2a2a 0%, #252525 100%);
+}
+
+[data-theme="black"] .creator-name,
+[data-theme="black"] .applicant-name {
+  color: #fff !important;
+}
+
+[data-theme="black"] .creator-email,
+[data-theme="black"] .applicant-email {
+  color: #888 !important;
+}
+
+[data-theme="black"] .job-card-meta .meta-item .anticon {
+  color: #8a9eff;
+}
+
+[data-theme="black"] .job-card-date {
+  color: #666;
+}
+
+[data-theme="black"] .job-card-actions {
+  background: linear-gradient(135deg, #151515 0%, #1a1a1a 100%);
+  border-top-color: #2d2d2d;
+}
+
+[data-theme="black"] .job-card-image-placeholder {
+  background: linear-gradient(135deg, #252525 0%, #1a1a1a 100%);
+}
+
+[data-theme="black"] .create-job-card {
+  border-color: #333;
+  background: #1a1a1a;
+}
+
+[data-theme="black"] .create-job-card:hover {
+  border-color: #667eea;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.08) 100%);
+}
+
+[data-theme="black"] .create-job-content p {
+  color: #a0a0a0;
+}
+
+[data-theme="black"] .create-job-content h4 {
+  color: #fff !important;
+}
+
+[data-theme="black"] .empty-state-card .ant-empty-description {
+  color: #888;
+}
+
+/* Table Styles - Dark Theme */
+[data-theme="black"] .job-table {
+  background: #1a1a1a;
+}
+
+[data-theme="black"] .job-table .ant-table {
+  background: #1a1a1a;
+  color: #fff;
+}
+
+[data-theme="black"] .job-table .ant-table-thead > tr > th {
+  background: linear-gradient(135deg, #252525 0%, #202020 100%);
+  color: #fff;
+  border-bottom-color: #333;
+}
+
+[data-theme="black"] .job-table .ant-table-tbody > tr > td {
+  background: #1a1a1a;
+  color: #e0e0e0;
+  border-bottom-color: #2d2d2d;
+}
+
+[data-theme="black"] .job-table .ant-table-tbody > tr:hover > td {
+  background: linear-gradient(135deg, #252525 0%, #222 100%);
+}
+
+[data-theme="black"] .job-table .ant-pagination {
+  background: #1a1a1a;
+}
+
+[data-theme="black"] .job-table .ant-pagination-item {
+  background: #252525;
+  border-color: #333;
+}
+
+[data-theme="black"] .job-table .ant-pagination-item a {
+  color: #fff;
+}
+
+[data-theme="black"] .job-table .ant-pagination-item-active {
+  background: #667eea;
+  border-color: #667eea;
+}
+
+/* Modal Styles - Dark Theme */
+[data-theme="black"] .job-form-modal .ant-modal-content,
+[data-theme="black"] .application-modal .ant-modal-content {
+  background: #1a1a1a;
+}
+
+[data-theme="black"] .job-form-modal .ant-modal-header,
+[data-theme="black"] .application-modal .ant-modal-header {
+  background: linear-gradient(135deg, #1f1f1f 0%, #1a1a1a 100%);
+  border-bottom-color: #333;
+}
+
+[data-theme="black"] .job-form-modal .ant-modal-title,
+[data-theme="black"] .application-modal .ant-modal-title {
+  color: #fff;
+}
+
+[data-theme="black"] .job-form-modal .ant-modal-body,
+[data-theme="black"] .application-modal .ant-modal-body {
+  background: #1a1a1a;
+}
+
+[data-theme="black"] .job-form-modal .ant-form-item-label > label,
+[data-theme="black"] .application-modal .ant-form-item-label > label {
+  color: #e0e0e0;
+}
+
+/* Form.Item "tooltip" question-mark icon was inheriting AntD's default
+   near-black color (rgba(0,0,0,.45)), making it invisible against the
+   dark modal background. Force it white/light in black theme. */
+[data-theme="black"] .job-form-modal .ant-form-item-tooltip,
+[data-theme="black"] .application-modal .ant-form-item-tooltip,
+[data-theme="black"] .job-form-modal .ant-form-item-label .anticon-question-circle,
+[data-theme="black"] .application-modal .ant-form-item-label .anticon-question-circle {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+[data-theme="black"] .job-form-modal .ant-input,
+[data-theme="black"] .job-form-modal .ant-input-textarea textarea,
+[data-theme="black"] .application-modal .ant-input,
+[data-theme="black"] .application-modal .ant-input-textarea textarea {
+  background: #252525;
+  border-color: #333;
+  color: #fff;
+}
+
+[data-theme="black"] .job-form-modal .ant-input::placeholder,
+[data-theme="black"] .application-modal .ant-input::placeholder {
+  color: #666;
+}
+
+[data-theme="black"] .job-form-modal .ant-input:hover,
+[data-theme="black"] .job-form-modal .ant-input:focus,
+[data-theme="black"] .application-modal .ant-input:hover,
+[data-theme="black"] .application-modal .ant-input:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.25);
+}
+
+[data-theme="black"] .job-form-modal .ant-select-selector,
+[data-theme="black"] .application-modal .ant-select-selector {
+  background: #252525 !important;
+  border-color: #333 !important;
+  color: #fff !important;
+}
+
+[data-theme="black"] .job-form-modal .ant-modal-footer,
+[data-theme="black"] .application-modal .ant-modal-footer {
+  background: linear-gradient(135deg, #1f1f1f 0%, #1a1a1a 100%);
+  border-top-color: #333;
+}
+
+[data-theme="black"] .job-form-modal .ant-btn-default,
+[data-theme="black"] .application-modal .ant-btn-default {
+  background: #252525;
+  border-color: #333;
+  color: #fff;
+}
+
+/* Drawer Styles - Dark Theme */
+[data-theme="black"] .job-details-drawer .ant-drawer-content,
+[data-theme="black"] .applications-drawer .ant-drawer-content {
+  background: #1a1a1a;
+}
+
+[data-theme="black"] .job-details-drawer .ant-drawer-header,
+[data-theme="black"] .applications-drawer .ant-drawer-header {
+  background: #1a1a1a;
+  border-bottom-color: #333;
+}
+
+[data-theme="black"] .job-details-drawer .ant-drawer-title,
+[data-theme="black"] .applications-drawer .ant-drawer-title {
+  color: #fff;
+}
+
+[data-theme="black"] .job-details-drawer .ant-drawer-close,
+[data-theme="black"] .applications-drawer .ant-drawer-close {
+  color: #fff;
+}
+
+[data-theme="black"] .job-details-drawer .ant-drawer-body,
+[data-theme="black"] .applications-drawer .ant-drawer-body {
+  background: #1a1a1a;
+}
+
+[data-theme="black"] .applications-drawer .ant-drawer-body {
+  background: linear-gradient(135deg, #0a0a0a 0%, #111 100%);
+}
+
+[data-theme="black"] .job-details-header h3 {
+  color: #fff !important;
+}
+
+[data-theme="black"] .job-details-creator-card {
+  background: #252525;
+  border-color: #333;
+}
+
+[data-theme="black"] .job-details-info .info-item:hover {
+  background: rgba(102, 126, 234, 0.1);
+}
+
+[data-theme="black"] .job-details-info .info-value {
+  color: #fff !important;
+}
+
+[data-theme="black"] .job-details-section h5 {
+  color: #fff !important;
+}
+
+[data-theme="black"] .job-details-section p {
+  color: #b0b0b0;
+}
+
+[data-theme="black"] .ant-divider {
+  border-color: #333;
+}
+
+/* Controls Styles - Dark Theme */
+[data-theme="black"] .controls-card .ant-input {
+  background: #252525;
+  border-color: #333;
+  color: #fff;
+}
+
+[data-theme="black"] .controls-card .ant-input::placeholder {
+  color: #666;
+}
+
+[data-theme="black"] .controls-card .ant-select-selector {
+  background: #252525 !important;
+  border-color: #333 !important;
+  color: #fff !important;
+}
+
+[data-theme="black"] .controls-card .ant-select-arrow {
+  color: #888;
+}
+
+/* Typography - Dark Theme */
+[data-theme="black"] .ant-typography {
+  color: #e0e0e0;
+}
+
+[data-theme="black"] .ant-typography.ant-typography-secondary {
+  color: #888 !important;
+}
+
+[data-theme="black"] .ant-typography strong {
+  color: #fff;
+}
+
+/* Upload - Dark Theme */
+[data-theme="black"] .ant-upload.ant-upload-select-picture-card {
+  background: #252525;
+  border-color: #333;
+}
+
+[data-theme="black"] .ant-upload.ant-upload-select-picture-card:hover {
+  border-color: #667eea;
+}
+
+/* Dropdown - Dark Theme */
+[data-theme="black"] .ant-select-dropdown {
+  background: #252525;
+  border: 1px solid #333;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="black"] .ant-select-item {
+  color: #fff;
+}
+
+[data-theme="black"] .ant-select-item-option-active {
+  background: #333;
+}
+
+[data-theme="black"] .ant-select-item-option-selected {
+  background: #667eea;
+}
+
+[data-theme="black"] .ant-select-item-option-selected:hover {
+  background: #5a6fd6;
+}
+
+/* ============ Tabs Dropdown (3 dots responsive menu) - Dark Theme ============ */
+[data-theme="black"] .ant-tabs-dropdown {
+  background: #1a1a1a !important;
+}
+
+[data-theme="black"] .ant-tabs-dropdown .ant-tabs-dropdown-menu {
+  background: #1a1a1a !important;
+  border: 1px solid #333;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  border-radius: 8px;
+  padding: 4px;
+}
+
+[data-theme="black"] .ant-tabs-dropdown .ant-tabs-dropdown-menu-item {
+  color: #fff !important;
+  background: transparent;
+  border-radius: 6px;
+  padding: 8px 12px;
+  transition: all 0.2s ease;
+}
+
+[data-theme="black"] .ant-tabs-dropdown .ant-tabs-dropdown-menu-item:hover {
+  background: #333 !important;
+  color: #667eea !important;
+}
+
+[data-theme="black"] .ant-tabs-dropdown .ant-tabs-dropdown-menu-item-active {
+  background: rgba(102, 126, 234, 0.2) !important;
+  color: #667eea !important;
+}
+
+[data-theme="black"] .ant-tabs-dropdown .ant-tabs-dropdown-menu-item-selected {
+  background: rgba(102, 126, 234, 0.3) !important;
+  color: #fff !important;
+}
+
+/* Tabs more button (3 dots) - Dark Theme */
+[data-theme="black"] .ant-tabs-nav-more {
+  color: #fff !important;
+  background: transparent;
+}
+
+[data-theme="black"] .ant-tabs-nav-more:hover {
+  color: #667eea !important;
+  background: rgba(102, 126, 234, 0.1);
+}
+
+[data-theme="black"] .job-post-edit-btn,
+[data-theme="black"] .job-post-edit-btn .anticon {
+    color: #ffffff !important;
+}
+/* Fix for dropdown icon in dark theme */
+[data-theme="black"] .ant-tabs .ant-tabs-nav-more .anticon {
+  color: #fff !important;
+}
+
+[data-theme="black"] .ant-tabs .ant-tabs-nav-more:hover .anticon {
+  color: #667eea !important;
+}
+
+/* Dropdown menu container dark theme */
+[data-theme="black"] .ant-dropdown,
+[data-theme="black"] .ant-dropdown-menu {
+  background: #1a1a1a !important;
+  border: 1px solid #333;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+}
+
+[data-theme="black"] .ant-dropdown-menu-item {
+  color: #fff !important;
+}
+
+[data-theme="black"] .ant-dropdown-menu-item:hover {
+  background: #333 !important;
+  color: #667eea !important;
+}
+
+[data-theme="black"] .ant-dropdown-menu-item-selected {
+  background: rgba(102, 126, 234, 0.2) !important;
+  color: #fff !important;
+}
+
+/* Alert - Dark Theme */
+[data-theme="black"] .ant-alert {
+  background: #252525;
+  border-color: #333;
+}
+
+[data-theme="black"] .ant-alert-message,
+[data-theme="black"] .ant-alert-description {
+  color: #e0e0e0;
+}
+
+/* Progress - Dark Theme */
+[data-theme="black"] .ant-progress-text {
+  color: #fff !important;
+}
+
+/* Scrollbar - Dark Theme */
+[data-theme="black"] ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+[data-theme="black"] ::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+
+[data-theme="black"] ::-webkit-scrollbar-thumb {
+  background: #333333;
+  border-radius: 4px;
+}
+
+[data-theme="black"] ::-webkit-scrollbar-thumb:hover {
+  background: #444444;
+}
+
+/* Inactive Job Card */
+.job-post-card-inactive {
+  opacity: 0.85;
+}
+
+.job-post-card-inactive .job-card-cover {
+  filter: grayscale(30%);
+}
+
+[data-theme="black"] .job-post-card-inactive {
+  opacity: 0.75;
+}
+
+/* ============ Print Styles ============ */
+@media print {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+    box-shadow: none !important;
+  }
+
+  .job-post-page-container {
+    background: #fff !important;
+    padding: 0 !important;
+  }
+
+  .ant-btn {
+    display: none !important;
+  }
+
+  .job-post-card,
+  .ant-card {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    border: 1px solid #d9d9d9 !important;
+    box-shadow: none !important;
+  }
+}
+/* ============ Job Card Info Spacing ============ */
+.job-card-info-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.job-card-info-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.job-card-company {
+  margin-bottom: 8px;
+}
+
+.job-card-creator {
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
+
+.job-card-meta {
+  margin-top: 12px;
+}
+
+/* Job details info styling for dark theme */
+[data-theme="black"] .job-details-info .info-item {
+  padding: 12px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+[data-theme="black"] .job-details-info .info-item:hover {
+  background: rgba(102, 126, 234, 0.1);
+}
+
+/* ============================================
+   MOBILE RESPONSIVE FIX FOR MODALS & DRAWERS
+   Ensures modals/drawers fit all phone sizes
+   ============================================ */
+@media (max-width: 768px) {
+  .ant-modal {
+    max-width: 95vw !important;
+    width: 95vw !important;
+    margin: 8px auto !important;
+    top: 8px !important;
+    padding-bottom: 0 !important;
+  }
+  .ant-modal-content {
+    border-radius: 12px !important;
+    overflow: hidden;
+  }
+  .ant-modal-body {
+    padding: 16px !important;
+    max-height: calc(100vh - 160px) !important;
+    overflow-y: auto !important;
+  }
+  .ant-modal-header {
+    padding: 12px 16px !important;
+  }
+  .ant-modal-footer {
+    padding: 12px 16px !important;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .ant-modal-title {
+    font-size: 16px !important;
+    flex-wrap: wrap;
+  }
+  .ant-drawer-content-wrapper {
+    width: 100vw !important;
+    max-width: 100vw !important;
+  }
+  .ant-drawer-body {
+    padding: 16px !important;
+  }
+  .ant-drawer-header {
+    padding: 12px 16px !important;
+  }
+  .ant-drawer-title {
+    font-size: 16px !important;
+  }
+  .job-form-modal .ant-modal-body,
+  .application-modal .ant-modal-body {
+    padding: 16px !important;
+  }
+
+  .job-form-modal .ant-form-item,
+  .application-modal .ant-form-item {
+    margin-bottom: 18px !important;
+  }
+
+  .job-form-modal .ant-input-textarea-show-count::after,
+  .job-form-modal .ant-input-show-count::after,
+  .application-modal .ant-input-textarea-show-count::after,
+  .application-modal .ant-input-show-count::after {
+    font-size: 11px !important;
+  }
+
+  .job-form-modal .ant-form-item-extra,
+  .application-modal .ant-form-item-extra {
+    font-size: 11px !important;
+  }
+
+  .job-form-modal .ant-upload.ant-upload-select-picture-card {
+    width: 96px !important;
+    height: 96px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .ant-modal {
+    max-width: 98vw !important;
+    width: 98vw !important;
+    margin: 4px auto !important;
+    top: 4px !important;
+  }
+  .ant-modal-body {
+    padding: 12px !important;
+    max-height: calc(100vh - 140px) !important;
+  }
+  .ant-modal-header,
+  .ant-modal-footer {
+    padding: 10px 12px !important;
+  }
+  .ant-modal-title {
+    font-size: 15px !important;
+  }
+  .ant-drawer-body {
+    padding: 12px !important;
+  }
+  .ant-modal-footer .ant-btn {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 380px) {
+  .ant-modal-title {
+    font-size: 14px !important;
+  }
+  .ant-modal-body,
+  .ant-drawer-body {
+    font-size: 13px !important;
+  }
+}
+
+/* ===== MOBILE READABILITY & NON-OVERLAP FIX ===== */
+@media (max-width: 768px) {
+  /* Prevent any horizontal overflow inside modals/drawers */
+  .ant-modal-body,
+  .ant-drawer-body {
+    word-wrap: break-word !important;
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
+  }
+  .ant-modal-body *,
+  .ant-drawer-body * {
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  /* Form inputs full width, readable */
+  .ant-modal .ant-form-item,
+  .ant-drawer .ant-form-item {
+    margin-bottom: 14px !important;
+  }
+  .ant-modal .ant-form-item-label,
+  .ant-drawer .ant-form-item-label {
+    padding-bottom: 4px !important;
+    white-space: normal !important;
+  }
+  .ant-modal .ant-form-item-label > label,
+  .ant-drawer .ant-form-item-label > label {
+    font-size: 13px !important;
+    height: auto !important;
+    line-height: 1.4 !important;
+  }
+  .ant-modal .ant-input,
+  .ant-modal .ant-input-affix-wrapper,
+  .ant-modal .ant-select,
+  .ant-modal .ant-select-selector,
+  .ant-modal .ant-picker,
+  .ant-modal textarea.ant-input,
+  .ant-drawer .ant-input,
+  .ant-drawer .ant-input-affix-wrapper,
+  .ant-drawer .ant-select,
+  .ant-drawer .ant-select-selector,
+  .ant-drawer .ant-picker,
+  .ant-drawer textarea.ant-input {
+    width: 100% !important;
+    font-size: 14px !important;
+  }
+  /* Buttons stack and stay tappable, no overlap */
+  .ant-modal-footer {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    justify-content: flex-end !important;
+    gap: 8px !important;
+  }
+  .ant-modal-footer .ant-btn {
+    flex: 1 1 calc(50% - 8px) !important;
+    min-height: 38px !important;
+    margin: 0 !important;
+    white-space: normal !important;
+    font-size: 13px !important;
+    padding: 6px 10px !important;
+  }
+  .ant-drawer-footer {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+  .ant-drawer-footer .ant-btn {
+    flex: 1 1 calc(50% - 8px) !important;
+    min-height: 38px !important;
+    white-space: normal !important;
+    font-size: 13px !important;
+  }
+  /* Modal title row - close button shouldn't overlap title */
+  .ant-modal-header {
+    padding-right: 44px !important;
+  }
+  .ant-modal-close {
+    top: 6px !important;
+    right: 6px !important;
+  }
+  .ant-modal-title {
+    line-height: 1.4 !important;
+    word-break: break-word !important;
+  }
+  /* Drawer title */
+  .ant-drawer-header {
+    padding-right: 44px !important;
+  }
+  .ant-drawer-close {
+    padding: 10px !important;
+  }
+  /* Tables/lists inside modals scroll horizontally instead of overlapping */
+  .ant-modal-body .ant-table-wrapper,
+  .ant-drawer-body .ant-table-wrapper {
+    overflow-x: auto !important;
+  }
+  .ant-modal-body .ant-table,
+  .ant-drawer-body .ant-table {
+    min-width: 0 !important;
+  }
+  /* Descriptions / tags should wrap */
+  .ant-modal-body .ant-descriptions-item-label,
+  .ant-modal-body .ant-descriptions-item-content,
+  .ant-drawer-body .ant-descriptions-item-label,
+  .ant-drawer-body .ant-descriptions-item-content {
+    display: block !important;
+    width: 100% !important;
+    padding: 6px 8px !important;
+    font-size: 13px !important;
+  }
+  /* "Applications" / "Time Remaining" stats in the job details
+     drawer were fixed at 50/50 (Col span=12) with no mobile
+     breakpoint, so the "Expires: ..." text and the progress bar
+     had no room and overlapped each other. Stack them full width
+     on phones instead. */
+  .job-details-drawer .ant-col-12 {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+    margin-bottom: 16px;
+  }
+  .job-details-drawer .ant-col-12:last-child {
+    margin-bottom: 0;
+  }
+  .job-details-drawer .ant-statistic-content {
+    white-space: normal !important;
+    word-break: break-word !important;
+  }
+  .ant-tag {
+    margin-bottom: 4px !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+  }
+  /* Headings inside modals shrink */
+  .ant-modal-body h1,
+  .ant-drawer-body h1 { font-size: 18px !important; }
+  .ant-modal-body h2,
+  .ant-drawer-body h2 { font-size: 16px !important; }
+  .ant-modal-body h3,
+  .ant-drawer-body h3 { font-size: 15px !important; }
+  .ant-modal-body p,
+  .ant-drawer-body p { font-size: 13px !important; line-height: 1.5 !important; }
+}
+
+@media (max-width: 480px) {
+  .ant-modal-footer .ant-btn,
+  .ant-drawer-footer .ant-btn {
+    flex: 1 1 100% !important;
+    font-size: 13px !important;
+  }
+  .ant-modal-title,
+  .ant-drawer-title {
+    font-size: 14px !important;
+    padding-right: 8px !important;
+  }
+  .ant-modal .ant-form-item-label > label,
+  .ant-drawer .ant-form-item-label > label {
+    font-size: 12px !important;
+  }
+}
+[data-theme="black"] .ant-modal-confirm-title,
+[data-theme="black"] .ant-modal-confirm-content,
+[data-theme="black"] .ant-popconfirm-title,
+[data-theme="black"] .ant-popconfirm-description {
+    color: #ffffff !important;
+}
+
+/* ==============================================
+   ENHANCEMENT: Application Draft / Discard Modals
+   Matches the existing reject / warning / success modal
+   design language and inherits the current theme tokens.
+   ============================================== */
+
+.application-discard-modal .ant-modal-content,
+.application-draft-restore-modal .ant-modal-content {
+  border-radius: 14px;
+  overflow: hidden;
+  animation: scaleIn 0.25s ease-out;
+}
+
+.application-discard-modal .ant-modal-header,
+.application-draft-restore-modal .ant-modal-header {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  padding: 16px 24px;
+}
+
+.application-discard-modal .ant-modal-title,
+.application-draft-restore-modal .ant-modal-title {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.application-discard-modal .ant-modal-body,
+.application-draft-restore-modal .ant-modal-body {
+  padding: 20px 24px;
+  line-height: 1.6;
+}
+
+.application-discard-modal .ant-modal-footer,
+.application-draft-restore-modal .ant-modal-footer {
+  padding: 12px 20px;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+/* Dark theme overrides (matches existing theme system already used in this file) */
+.dark-theme .application-discard-modal .ant-modal-content,
+.dark-theme .application-draft-restore-modal .ant-modal-content,
+[data-theme="dark"] .application-discard-modal .ant-modal-content,
+[data-theme="dark"] .application-draft-restore-modal .ant-modal-content {
+  background: #1f1f2e;
+  color: #f0f0f0;
+}
+
+.dark-theme .application-discard-modal .ant-modal-header,
+.dark-theme .application-draft-restore-modal .ant-modal-header,
+[data-theme="dark"] .application-discard-modal .ant-modal-header,
+[data-theme="dark"] .application-draft-restore-modal .ant-modal-header {
+  background: #1f1f2e;
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+.dark-theme .application-discard-modal .ant-modal-title,
+.dark-theme .application-draft-restore-modal .ant-modal-title,
+[data-theme="dark"] .application-discard-modal .ant-modal-title,
+[data-theme="dark"] .application-draft-restore-modal .ant-modal-title {
+  color: #f0f0f0;
+}
+
+.dark-theme .application-discard-modal .ant-modal-footer,
+.dark-theme .application-draft-restore-modal .ant-modal-footer,
+[data-theme="dark"] .application-discard-modal .ant-modal-footer,
+[data-theme="dark"] .application-draft-restore-modal .ant-modal-footer {
+  border-top-color: rgba(255, 255, 255, 0.08);
+}
+
+/* ============================================================ */
+/* === DARK THEME: Resume Viewer + Application Info Cards ===== */
+/* ============================================================ */
+
+/* Resume viewer card wrapper */
+.resume-viewer-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #f0f4ff, #e8eeff);
+  border: 1.5px solid #c7d2fe;
+  margin-top: 6px;
+}
+
+[data-theme="black"] .resume-viewer-card {
+  background: linear-gradient(135deg, #1e2235, #1a1d2e) !important;
+  border-color: #3a3f6e !important;
+}
+
+/* Icon bg inside resume card */
+.resume-viewer-icon-bg {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.resume-viewer-icon-bg--pdf {
+  background: #fff1f0;
+}
+.resume-viewer-icon-bg--doc {
+  background: #e6f4ff;
+}
+.resume-viewer-icon-bg--image {
+  background: #f6ffed;
+}
+.resume-viewer-icon-bg--default {
+  background: #f5f5f5;
+}
+
+[data-theme="black"] .resume-viewer-icon-bg--pdf {
+  background: #2d1a1a !important;
+}
+[data-theme="black"] .resume-viewer-icon-bg--doc {
+  background: #1a2030 !important;
+}
+[data-theme="black"] .resume-viewer-icon-bg--image {
+  background: #1a2a1a !important;
+}
+[data-theme="black"] .resume-viewer-icon-bg--default {
+  background: #252525 !important;
+}
+
+/* Resume viewer text */
+[data-theme="black"] .resume-viewer-card .ant-typography {
+  color: #e0e0e0 !important;
+}
+[data-theme="black"] .resume-viewer-card .ant-typography.ant-typography-secondary {
+  color: #888 !important;
+}
+
+/* Contact info card (green tint) inside application drawer */
+.applicant-contact-card {
+  background: #f6ffed !important;
+  border-color: #b7eb8f !important;
+}
+
+[data-theme="black"] .applicant-contact-card {
+  background: #141f14 !important;
+  border-color: #2a4a2a !important;
+}
+
+[data-theme="black"] .applicant-contact-card .ant-card-head {
+  background: #141f14 !important;
+  border-bottom-color: #2a4a2a !important;
+  color: #9fe89f !important;
+}
+
+[data-theme="black"] .applicant-contact-card .ant-card-head-title,
+[data-theme="black"] .applicant-contact-card .ant-card-head .anticon {
+  color: #9fe89f !important;
+}
+
+[data-theme="black"] .applicant-contact-card .ant-typography {
+  color: #c8e6c8 !important;
+}
+
+[data-theme="black"] .applicant-contact-card .ant-typography.ant-typography-secondary {
+  color: #6a986a !important;
+}
+
+/* Career info card (blue tint) inside application drawer */
+.applicant-career-card {
+  background: #e6f7ff !important;
+  border-color: #91d5ff !important;
+}
+
+[data-theme="black"] .applicant-career-card {
+  background: #111e2d !important;
+  border-color: #1a3d5c !important;
+}
+
+[data-theme="black"] .applicant-career-card .ant-card-head {
+  background: #111e2d !important;
+  border-bottom-color: #1a3d5c !important;
+  color: #69b8ff !important;
+}
+
+[data-theme="black"] .applicant-career-card .ant-card-head-title,
+[data-theme="black"] .applicant-career-card .ant-card-head .anticon {
+  color: #69b8ff !important;
+}
+
+[data-theme="black"] .applicant-career-card .ant-typography {
+  color: #b0d4f0 !important;
+}
+
+[data-theme="black"] .applicant-career-card .ant-typography.ant-typography-secondary {
+  color: #4a7a9e !important;
+}
+
+/* ID document card */
+[data-theme="black"] .ant-card.id-doc-card {
+  background: #1a1a1a !important;
+  border-color: #333 !important;
+}
+
+[data-theme="black"] .ant-card.id-doc-card .ant-card-body {
+  background: #1a1a1a !important;
+}
+
+/* Application card inner cards (general small cards inside applications-drawer) */
+[data-theme="black"] .applications-drawer .ant-card-small {
+  background: #1e1e1e;
+  border-color: #333;
+  color: #e0e0e0;
+}
+
+[data-theme="black"] .applications-drawer .ant-card-small .ant-card-head {
+  background: #252525;
+  border-bottom-color: #333;
+  color: #e0e0e0;
+}
+
+[data-theme="black"] .applications-drawer .ant-card-small .ant-card-body {
+  background: #1e1e1e;
+}
+
+/* Document viewer modal dark */
+[data-theme="black"] .ant-modal-content {
+  background: #1a1a1a;
+  color: #e0e0e0;
+}
+[data-theme="black"] .ant-modal-header {
+  background: #1f1f1f;
+  border-bottom-color: #333;
+}
+[data-theme="black"] .ant-modal-title {
+  color: #fff;
+}
+[data-theme="black"] .ant-modal-body {
+  background: #1a1a1a;
+}
+[data-theme="black"] .ant-modal-footer {
+  background: #1f1f1f;
+  border-top-color: #333;
+}

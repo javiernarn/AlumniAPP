@@ -1,0 +1,3636 @@
+@media (min-width: 769px) {
+  #header {
+    height: 48px !important;
+    line-height: 48px !important;
+  }
+
+  #content {
+    height: calc(100vh - 48px) !important;
+  }
+
+  #sidebar-wrapper .ant-layout-sider {
+    font-size: 13px !important;
+  }
+
+  .sidebar-logo,
+  .logo img {
+    width: 48px !important;
+  }
+
+  .menu-icon {
+    font-size: 14px !important;
+  }
+}
+
+
+@media (max-width: 768px) {
+  .ant-drawer-left .ant-drawer-content-wrapper {
+    max-width: 65vw !important;
+    /* was 55vw */
+    min-width: 250px !important;
+    /* was 200px */
+  }
+}
+
+@media (max-width: 480px) {
+  .ant-drawer-left .ant-drawer-content-wrapper {
+    max-width: 75vw !important;
+    /* was 65vw */
+  }
+}
+
+/* Make main layout fixed height with no body scroll */
+#main-layout {
+  height: 100vh !important;
+  min-height: 100vh !important;
+  max-height: 100vh !important;
+  overflow: hidden !important;
+  display: flex !important;
+}
+
+/* ===== HARD SCROLL LOCK (mobile, admin shell only) =====
+   Only #content is meant to scroll. If the outer document can also
+   scroll - even by a pixel, e.g. from safe-area padding pushing the
+   layout a hair past 100vh - mobile browsers treat that as page
+   scroll: they collapse/expand the address bar and move the WHOLE
+   page (header included) as one unit, which is exactly what made
+   the header "hide to the edge" and the footer ride up with it.
+   Locking html/body to the viewport removes that possibility, so
+   the browser chrome no longer has a reason to react to touch
+   scrolling and #header/footer simply never move.
+
+   Scoped to html.app-shell-active/body.app-shell-active - a class
+   MainLayout (index.js) adds only while it's mounted - so this never
+   touches the public pages (PublicHomePage, PublicEventsPage, etc.),
+   which don't use this shell and need normal document scrolling. A
+   bare "html, body" selector here previously locked scrolling
+   site-wide and broke scrolling on every public page.
+
+   LANDSCAPE NOTE: a rotated phone's viewport WIDTH can be well over
+   768px (iPhone XR = 896px, 14 Pro Max = 932px), so a plain
+   "max-width: 768px" check never matches it and the lock silently
+   turned off the moment the phone was rotated - the outer document
+   was free to scroll again, which is exactly what let the browser
+   chrome show/hide and drag the fixed sidebar sideways with it
+   (the "sidebar moves left and right" / black-gap bug). Phones in
+   landscape always have a short viewport HEIGHT (≤ ~430px on every
+   current iPhone), while tablets in landscape stay tall (iPad mini
+   landscape height is 768px), so "max-height: 500px" is what
+   reliably singles out phones here regardless of width. */
+@media (max-width: 768px), (orientation: landscape) and (max-height: 500px) {
+  html.app-shell-active,
+  body.app-shell-active {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    overscroll-behavior: none !important;
+    -webkit-overflow-scrolling: auto !important;
+  }
+}
+
+#content {
+  overscroll-behavior: contain !important;
+}
+
+/* Make site-layout fill remaining space */
+.site-layout {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100vh !important;
+  overflow: hidden !important;
+}
+
+/* iOS installed-PWA fix: 100vh can exceed the visible safe area in
+   landscape on notched iPhones, causing content to sit under the
+   notch/home-indicator instead of being padded away from it. dvh
+   accounts for that. Falls back silently to 100vh everywhere else. */
+@supports (height: 100dvh) {
+  #main-layout,
+  .site-layout {
+    height: 100dvh !important;
+    min-height: 100dvh !important;
+    max-height: 100dvh !important;
+  }
+}
+
+/* Fix header height */
+#header {
+  flex-shrink: 0 !important;
+  height: 64px !important;
+  line-height: 64px !important;
+}
+
+/* ===== iOS SAFE AREA (notch + home indicator) =====
+   Reserves space around the physical notch/rounded corners in BOTH
+   orientations. env() returns 0 on Android/non-notched devices, so
+   this is a no-op there. */
+#header {
+  padding-left: env(safe-area-inset-left) !important;
+  padding-right: env(safe-area-inset-right) !important;
+  padding-top: env(safe-area-inset-top) !important;
+  box-sizing: border-box !important;
+}
+
+#content {
+  padding-left: env(safe-area-inset-left) !important;
+  padding-right: env(safe-area-inset-right) !important;
+}
+
+#sidebar-wrapper .ant-layout-sider {
+  padding-left: env(safe-area-inset-left) !important;
+  box-sizing: border-box !important;
+}
+
+/* Make only content area scrollable */
+#content {
+  flex: 1 !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  height: calc(100vh - 64px) !important;
+}
+
+/* Fix sidebar to not scroll */
+#sidebar-wrapper {
+  height: 100vh !important;
+  overflow: hidden !important;
+  position: sticky !important;
+  top: 0 !important;
+}
+
+#sidebar-wrapper .ant-layout-sider {
+  height: 100vh !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  position: fixed !important;
+  left: 0 !important;
+  top: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* ===== PIN THE LOGO, SCROLL ONLY THE MENU =====
+   .logo and the <Menu> are both plain children of the sider above,
+   which is the element that actually scrolls (overflow-y: auto).
+   That meant scrolling the menu dragged the logo along with it.
+   Making .logo sticky to the top of that same scroll container
+   keeps it pinned in place while the menu list scrolls underneath -
+   exactly like #header already behaves for the page as a whole. */
+#sidebar-wrapper .ant-layout-sider .logo {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 5 !important;
+  flex-shrink: 0 !important;
+  width: 100% !important;
+  background: var(--surface, #ffffff) !important;
+  /* Padding (not margin) on purpose: this box's own vertical spacing
+     used to come from the *image's* margin-top/bottom (10px auto,
+     see the "FIX LOGO SIZE" rule below). A child's vertical margin
+     collapses straight through a plain block parent with no padding/
+     border, which meant this sticky box's real top edge sat ~10px
+     lower than where "top: 0" locks it - so on scroll you'd see the
+     logo drift up that ~10px before it actually caught and stuck.
+     Padding never collapses, so moving the spacing here removes that
+     drift entirely; the logo is pinned from the very first pixel of
+     scroll. */
+  padding: 10px 0 !important;
+}
+
+/* The menu is the only part that should scroll. Descendant selector
+   (not a direct-child ">") on purpose - it still works no matter
+   whether antd renders the menu as a direct child of the sider or
+   wraps it in an inner div, since position: sticky above only cares
+   about the nearest scrolling ancestor, not direct parentage. */
+#sidebar-wrapper .ant-layout-sider .ant-menu {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  overflow-x: hidden !important;
+}
+
+/* dvh fallback for the sidebar - kept as a separate block placed
+   right after so it wins the cascade over the plain 100vh above.
+   #main-layout/.site-layout already got this same dvh treatment
+   near the top of the file; the sidebar was missing it, which left
+   it sized against the OLD static viewport while the rest of the
+   shell resized against the live one as Safari's toolbar hid/showed
+   - that mismatch is part of what made the sidebar visibly drift. */
+@supports (height: 100dvh) {
+  #sidebar-wrapper,
+  #sidebar-wrapper .ant-layout-sider {
+    height: 100dvh !important;
+  }
+}
+
+/* ===== FIX LOGO SIZE =====*/
+.sidebar-logo {
+  width: 55px !important;
+  height: auto !important;
+  margin: 10px auto !important;
+  display: block !important;
+}
+
+/* .logo img: vertical spacing now lives on the sticky .logo
+   container's padding (see above) instead of margin here, so the
+   two don't stack and so the image's margin can't collapse through
+   its sticky parent. Horizontal auto margin stays, for centering. */
+.logo img {
+  width: 55px !important;
+  height: auto !important;
+  margin: 0 auto !important;
+  display: block !important;
+}
+
+/* ===== FIX HEADER TITLE OVERLAP ===== */
+/* Fixed header row layout to prevent title overlap */
+.row-header {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  width: 100% !important;
+  align-items: center !important;
+  /* Added padding to prevent dropdown from touching edge */
+  padding: 0 16px !important;
+}
+
+.first {
+  flex: 1 !important;
+  min-width: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  overflow: hidden !important;
+}
+
+/* Title text - RESPONSIVE FIX */
+.first .ant-typography {
+  display: block !important;
+  max-width: 100% !important;
+}
+
+/* Desktop only - truncate text */
+@media (min-width: 769px) {
+  .first .ant-typography {
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+}
+
+/* Mobile - show full text */
+@media (max-width: 1000px) {
+  .first {
+    flex: 0 1 auto !important;
+    min-width: auto !important;
+    max-width: none !important;
+    overflow: visible !important;
+  }
+
+  .first .ant-typography {
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    font-size: clamp(9px, 2.5vw, 14px) !important;
+    line-height: 1.3 !important;
+    word-break: break-word !important;
+    text-align: left !important;
+    display: inline-block !important;
+  }
+
+  .row-header {
+    flex-wrap: wrap !important;
+    gap: 4px !important;
+  }
+}
+
+
+
+/* Fixed second column to stay at right edge properly */
+.second {
+  flex: 0 0 auto !important;
+  width: auto !important;
+  display: flex !important;
+  justify-content: flex-end !important;
+  align-items: center !important;
+  margin-left: auto !important;
+  /* Added min-width to ensure icons don't get squished */
+  min-width: fit-content !important;
+  padding-right: 8px !important;
+}
+
+.second .ant-space {
+  gap: 8px !important;
+}
+
+/* ===== FIX DROPDOWN Z-INDEX ===== */
+/* Lowered z-index so dropdowns appear BELOW modals (modals use z-index ~1000) */
+.ant-dropdown,
+.ant-dropdown-menu,
+.notification-dropdown {
+  z-index: 999 !important;
+}
+
+/* ===============================
+   HEADER RAINBOW LIGHT EFFECT
+   =============================== */
+
+/* Rainbow shimmer animation */
+/* @keyframes headerRainbow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+} */
+
+/* Soft glow pulse */
+ /* @keyframes headerGlow {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(24, 144, 255, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(24, 144, 255, 0.4);
+  }
+}  */
+
+/* Ensure header can hold pseudo elements */
+#header {
+  position: relative !important;
+  background: #ffffff !important;
+  /* keep header clean */
+  z-index: 1000 !important;
+  animation: headerGlow 4s ease-in-out infinite;
+}
+
+/* 🌈 Animated light bar */
+/* #header::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+
+  background: linear-gradient(
+    90deg,
+    #1890ff,
+    #13c2c2,
+    #52c41a,
+    #fadb14,
+    #fa8c16,
+    #f5222d,
+    #eb2f96,
+    #722ed1,
+    #1890ff
+  );
+
+  background-size: 200% 100%;
+  animation: headerRainbow 3s linear infinite;
+
+  z-index: 9999;
+  pointer-events: none;
+} */
+
+/* Ensure dropdowns inside header-right are positioned relative to it */
+.header-right .ant-dropdown {
+  position: absolute !important;
+  top: 100% !important;
+}
+
+/* User profile button styling */
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+}
+
+.user-profile:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.user-info .ant-typography:last-child {
+  font-size: 12px;
+}
+
+.trigger {
+  font-size: 18px;
+  cursor: pointer;
+  padding: 8px;
+  transition: color 0.3s;
+}
+
+.trigger:hover {
+  color: #1890ff;
+}
+
+/* ===== FIX NOTIFICATION DROPDOWN WIDTH ===== */
+.notification-dropdown {
+  width: 380px !important;
+  max-width: 95vw !important;
+}
+
+/* Improved notification dropdown for mobile - smaller width, proper positioning */
+@media (max-width: 768px) {
+  .notification-dropdown {
+    width: calc(100vw - 24px) !important;
+    max-width: 320px !important;
+    left: auto !important;
+    right: 12px !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
+  }
+
+  /* Fix notification dropdown header text cutoff */
+  .notification-dropdown .ant-card-head-title,
+  .notification-dropdown h4,
+  .notification-dropdown .ant-typography {
+    padding-left: 12px !important;
+    text-align: left !important;
+  }
+}
+
+/* Notification button stays above everything */
+/* Lowered btn-notification z-index to match dropdown behavior */
+.btn-notification {
+  z-index: 999;
+}
+
+/* ===== MOBILE RESPONSIVE STYLES ===== */
+
+/* ===== MAIN LAYOUT MOBILE ===== */
+@media (max-width: 768px) {
+  #main-layout {
+    min-height: 100vh;
+  }
+
+  /* Hide sidebar on mobile - use drawer instead */
+  #sidebar-wrapper {
+    display: none !important;
+  }
+
+  .ant-layout-sider {
+    display: none !important;
+  }
+
+  /* Site layout takes full width on mobile */
+  .site-layout {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+}
+
+
+/* ===== HEADER MOBILE ===== */
+@media (max-width: 768px) {
+  #header {
+    padding: 0 8px !important;
+    height: auto !important;
+    min-height: 56px !important;
+    line-height: normal !important;
+  }
+
+  /* Fixed row-header layout - prevent title from overlapping burger menu */
+  .row-header {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    gap: 4px !important;
+    padding: 0 8px !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    width: 100% !important;
+  }
+
+  /* First column - burger + title side by side with proper spacing.
+     IMPORTANT: kept in normal flex flow (position: relative, not
+     absolute). An absolutely-positioned box here has no explicit
+     top/left, so the browser has to recompute its "static position"
+     on every reflow (scroll-driven toolbar resize, text re-wrap,
+     orientation change) - that recomputation is what made the
+     burger/title drift left-right. Flex flow is deterministic. */
+  .first {
+    flex: 1 1 auto !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    position: relative !important;
+    min-width: 0 !important;
+    justify-content: flex-start !important;
+    overflow: visible !important;
+  }
+
+  /* Title text - prevent truncation, show full text */
+  .first .ant-typography {
+    font-size: 13px !important;
+    white-space: nowrap !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    max-width: none !important;
+    flex-shrink: 1 !important;
+    min-width: 0 !important;
+  }
+
+  /* Second column - smaller, positioned to the right.
+     Forced back to normal flex flow (see .first above for why) -
+     margin-left: auto already pushes it flush right inside the
+     flex row, an absolute position isn't needed and was the other
+     half of the side-to-side drift. */
+  .second {
+    position: relative !important;
+    top: auto !important;
+    right: auto !important;
+    flex: 0 0 auto !important;
+    margin-left: auto !important;
+    gap: 2px !important;
+    padding-right: 0 !important;
+    max-width: 80px !important;
+  }
+
+ 
+}
+
+/* ===== HEADER ICONS MOBILE ===== */
+@media (max-width: 768px) {
+
+ 
+  /* Much smaller notification button */
+  .btn-notification {
+    width: 28px !important;
+    height: 28px !important;
+    min-width: 28px !important;
+    padding: 0 !important;
+    font-size: 14px !important;
+  }
+
+  .btn-notification .anticon {
+    font-size: 14px !important;
+  }
+
+  /* Smaller user dropdown button */
+  .second .ant-btn[type="text"] {
+    padding: 0 2px !important;
+    height: 28px !important;
+    border-radius: 14px !important;
+  }
+
+  /* Hide user name on mobile */
+  .second .ant-btn .ant-typography {
+    display: none !important;
+  }
+
+  /* Much smaller avatar on mobile */
+  .second .ant-avatar {
+    margin-right: 0 !important;
+    width: 24px !important;
+    height: 24px !important;
+    min-width: 24px !important;
+  }
+}
+
+/* Remove the 480-768px media query that was showing user name */
+/* Show user name on slightly larger mobile - REMOVED to save space */
+
+/* ===== CONTENT AREA MOBILE ===== */
+@media (max-width: 768px) {
+  #content {
+    padding: 12px !important;
+    margin: 0 !important;
+    min-height: calc(100vh - 56px) !important;
+  }
+}
+
+/* ===== DRAWER MOBILE ===== */
+@media (max-width: 768px) {
+  .ant-drawer-body {
+    padding: 0 !important;
+  }
+
+  .ant-drawer-header {
+    padding: 12px 16px !important;
+  }
+
+  /* Logo in drawer */
+  .ant-drawer .logo img {
+    width: 50px !important;
+    height: auto !important;
+  }
+
+  /* Menu items in drawer */
+  .ant-drawer .ant-menu {
+    border-right: none !important;
+  }
+
+  .ant-drawer .ant-menu-item {
+    height: 48px !important;
+    line-height: 48px !important;
+    margin: 4px 8px !important;
+    border-radius: 8px !important;
+  }
+
+  .ant-drawer .ant-menu-item-icon {
+    font-size: 18px !important;
+  }
+
+  .ant-drawer .ant-menu-title-content {
+    font-size: 14px !important;
+  }
+}
+
+/* ===== ACCOUNT DROPDOWN MOBILE ===== */
+@media (max-width: 768px) {
+  .ant-dropdown {
+    max-width: 95vw !important;
+  }
+
+  .ant-dropdown-menu {
+    max-width: 300px !important;
+    border-radius: 12px !important;
+  }
+
+  .ant-dropdown-menu-item {
+    padding: 10px 16px !important;
+  }
+}
+
+/* ===== BREADCRUMB MOBILE ===== */
+@media (max-width: 768px) {
+  .ant-breadcrumb {
+    font-size: 12px !important;
+    margin-bottom: 12px !important;
+  }
+
+  .ant-breadcrumb-separator {
+    margin: 0 4px !important;
+  }
+}
+
+/* ===== TABLES MOBILE ===== */
+@media (max-width: 768px) {
+  .ant-table-wrapper {
+    overflow-x: auto !important;
+  }
+
+  .ant-table {
+    min-width: 600px !important;
+  }
+
+  .ant-table-thead>tr>th,
+  .ant-table-tbody>tr>td {
+    padding: 8px !important;
+    font-size: 12px !important;
+  }
+}
+
+/* ===== CARDS MOBILE ===== */
+@media (max-width: 768px) {
+  .ant-card {
+    border-radius: 12px !important;
+  }
+
+  .ant-card-head {
+    padding: 0 12px !important;
+    min-height: 40px !important;
+  }
+
+  .ant-card-head-title {
+    font-size: 14px !important;
+    padding: 12px 0 !important;
+  }
+
+  .ant-card-body {
+    padding: 12px !important;
+  }
+}
+
+/* ===== FORMS MOBILE ===== */
+@media (max-width: 768px) {
+  .ant-form-item {
+    margin-bottom: 12px !important;
+  }
+
+  .ant-form-item-label {
+    padding-bottom: 4px !important;
+  }
+
+  .ant-form-item-label>label {
+    font-size: 13px !important;
+  }
+
+  .ant-input,
+  .ant-select-selector,
+  .ant-picker {
+    height: 40px !important;
+    font-size: 14px !important;
+  }
+
+  .ant-btn {
+    height: 40px !important;
+    font-size: 14px !important;
+  }
+}
+
+/* ===== MODALS MOBILE ===== */
+@media (max-width: 768px) {
+  .ant-modal {
+    max-width: calc(100vw - 24px) !important;
+    margin: 12px !important;
+    top: 12px !important;
+  }
+
+  .ant-modal-content {
+    border-radius: 12px !important;
+  }
+
+  .ant-modal-header {
+    padding: 12px 16px !important;
+  }
+
+  .ant-modal-body {
+    padding: 16px !important;
+    max-height: 70vh !important;
+    overflow-y: auto !important;
+  }
+
+  .ant-modal-footer {
+    padding: 12px 16px !important;
+  }
+}
+
+/* ===== ROW/COL GRID MOBILE ===== */
+@media (max-width: 768px) {
+  .ant-row {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  .ant-col {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  /* Stack columns on mobile */
+  .ant-col-xs-24,
+  .ant-col-sm-24,
+  .ant-col-md-12,
+  .ant-col-lg-8,
+  .ant-col-xl-6 {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+  }
+}
+
+/* ===== STATISTICS CARDS MOBILE ===== */
+@media (max-width: 768px) {
+  .ant-statistic-title {
+    font-size: 12px !important;
+  }
+
+  .ant-statistic-content {
+    font-size: 20px !important;
+  }
+}
+
+/* ===== TABS MOBILE ===== */
+@media (max-width: 768px) {
+  .ant-tabs-nav {
+    margin-bottom: 12px !important;
+  }
+
+  .ant-tabs-tab {
+    padding: 8px 12px !important;
+    font-size: 13px !important;
+  }
+
+  .ant-tabs-content {
+    padding: 0 !important;
+  }
+}
+
+/* ===== SPACE COMPONENT MOBILE ===== */
+@media (max-width: 768px) {
+  .ant-space {
+    gap: 8px !important;
+  }
+
+  .ant-space-vertical {
+    width: 100% !important;
+  }
+}
+
+/* ===== EXTRA SMALL SCREENS (< 480px) ===== */
+@media (max-width: 480px) {
+
+  /* Better header layout for very small screens */
+  .row-header {
+    padding: 0 4px !important;
+    gap: 2px !important;
+  }
+
+  /* Smaller title font but still visible */
+  .first .ant-typography {
+    font-size: 11px !important;
+  }
+
+ 
+  /* Even smaller icons */
+  .second {
+    margin-left: auto !important;
+    max-width: 70px !important;
+  }
+
+  .second .ant-space {
+    gap: 8px !important;
+  }
+
+  .btn-notification {
+    width: 24px !important;
+    height: 24px !important;
+    min-width: 24px !important;
+  }
+
+  .btn-notification .anticon {
+    font-size: 12px !important;
+  }
+
+  .second .ant-avatar {
+    width: 22px !important;
+    height: 22px !important;
+    min-width: 22px !important;
+  }
+
+  /* Notification dropdown full width */
+  /* Notification dropdown - smaller and properly positioned */
+  .notification-dropdown {
+    position: fixed !important;
+    top: 56px !important;
+    left: 12px !important;
+    right: 12px !important;
+    width: calc(100vw - 24px) !important;
+    max-width: 300px !important;
+    max-height: calc(100vh - 70px) !important;
+    overflow-y: auto !important;
+    border-radius: 12px !important;
+  }
+}
+
+/* ===== PORTRAIT MOBILE: remove box around Theme Select (Light/Dark) ===== */
+@media (max-width: 768px) and (orientation: portrait) {
+  .account-dropdown-theme-row .ant-select .ant-select-selector {
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+  }
+
+  .account-dropdown-theme-row .ant-select:hover .ant-select-selector,
+  .account-dropdown-theme-row .ant-select-focused .ant-select-selector {
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Optional: tuck the arrow closer since the box is gone */
+  .account-dropdown-theme-row .ant-select-arrow {
+    right: 0 !important;
+  }
+}
+
+@media (max-width: 768px) and (orientation: portrait) {
+  .account-dropdown-theme-row .ant-select,
+  .account-dropdown-theme-row .ant-select .ant-select-selector {
+    height: auto !important;
+    line-height: inherit !important;
+    display: inline-flex !important;
+    align-items: center !important;
+  }
+
+  .account-dropdown-theme-row .ant-select .ant-select-selection-item {
+    line-height: inherit !important;
+    font-size: 14px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+  }
+}
+
+
+
+
+/* ===== LANDSCAPE MOBILE =====
+   max-height (not max-width) detects "phone in landscape" here too -
+   see the CAMERA/NOTCH SAFE AREA block near the end of this file for
+   why max-width never matches a rotated iPhone. */
+@media (orientation: landscape) and (max-height: 500px) {
+  #header {
+    min-height: 48px !important;
+  }
+
+  #content {
+    min-height: calc(100vh - 48px) !important;
+  }
+
+  .ant-modal-body {
+    max-height: 50vh !important;
+  }
+
+  /* Camera/notch safe area: on notched phones held sideways, the
+     cutout sits on the left or right edge of the screen. Reserve
+     space there the same way FormLogin.css does, so the burger
+     menu, title, icons, and footer text never sit under it.
+
+     Only the OUTER container (#header/#content/footer) gets this
+     padding. .row-header/.app-footer-inner are children living
+     INSIDE that already-padded box, so giving them their own copy
+     of the same safe-area padding doesn't override anything - it
+     stacks on top of the parent's padding and shows up as a big
+     empty gap ("dead space") between the sidebar and the header/
+     footer content on notched phones. One layer of padding is
+     enough; see the consolidated block at the end of this file
+     which is the single source of truth for this. */
+  #sidebar-wrapper .ant-layout-sider,
+  .ant-drawer-content {
+    padding-left: env(safe-area-inset-left) !important;
+  }
+}
+
+/* ===== TOUCH FRIENDLY ===== */
+@media (max-width: 768px) {
+
+  /* Larger touch targets */
+  .ant-menu-item,
+  .ant-btn,
+  .ant-input,
+  .ant-select-selector {
+    min-height: 44px !important;
+  }
+
+  /* Remove hover effects that don't work on touch */
+  .ant-btn:active {
+    transform: scale(0.98) !important;
+  }
+
+  /* Smooth scrolling */
+  * {
+    -webkit-overflow-scrolling: touch !important;
+  }
+}
+
+/* ===== DESKTOP HEADER FIX ===== */
+/* Added desktop styles to prevent dropdown cutoff */
+@media (min-width: 769px) {
+  .row-header {
+    padding: 0 24px !important;
+  }
+
+  .second {
+    padding-right: 10px !important;
+    min-width: fit-content !important;
+  }
+
+  /* Ensure dropdown doesn't get cut off */
+  .ant-dropdown {
+    max-width: calc(100vw - 32px) !important;
+  }
+}
+
+
+
+/* Added styles for highlighted registration row */
+.highlighted-row {
+  background-color: #e6f7ff !important;
+}
+
+.highlighted-row:hover {
+  background-color: #bae7ff !important;
+}
+
+/* Added styles for event notification icons */
+.notification-event-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Event details modal image styles */
+.event-details-modal-image {
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* Bell animation keyframes */
+@keyframes bellShake {
+  0% {
+    transform: rotate(0);
+  }
+
+  15% {
+    transform: rotate(15deg);
+  }
+
+  30% {
+    transform: rotate(-15deg);
+  }
+
+  45% {
+    transform: rotate(10deg);
+  }
+
+  60% {
+    transform: rotate(-10deg);
+  }
+
+  75% {
+    transform: rotate(5deg);
+  }
+
+  90% {
+    transform: rotate(-5deg);
+  }
+
+  100% {
+    transform: rotate(0);
+  }
+}
+
+.bell-animate .anticon {
+  animation: bellShake 0.5s ease-in-out;
+}
+
+/* ===== NOTIFICATION CATEGORY STYLES ===== */
+
+/* Added styles for notification category tags */
+.notification-category-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  padding: 0 6px;
+  border-radius: 10px;
+  line-height: 18px;
+}
+
+/* Category filter buttons styling */
+.notification-category-filters {
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  padding: 8px 0;
+  scrollbar-width: thin;
+}
+
+.notification-category-filters::-webkit-scrollbar {
+  height: 4px;
+}
+
+.notification-category-filters::-webkit-scrollbar-thumb {
+  background: #d9d9d9;
+  border-radius: 2px;
+}
+
+/* Category button hover effects */
+.notification-category-btn {
+  transition: all 0.2s ease;
+}
+
+.notification-category-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Category color indicators */
+.category-event-registration {
+  background-color: #f6ffed;
+  border-color: #52c41a;
+}
+
+.category-profile-update {
+  background-color: #f9f0ff;
+  border-color: #722ed1;
+}
+
+.category-account-login {
+  background-color: #e6fffb;
+  border-color: #13c2c2;
+}
+
+.category-account-approved {
+  background-color: #fffbe6;
+  border-color: #faad14;
+}
+
+.category-quiz-submission {
+  background-color: #fff0f6;
+  border-color: #eb2f96;
+}
+
+.category-login-attempt {
+  background-color: #fff2f0;
+  border-color: #ff4d4f;
+}
+
+/* Mobile responsive for category filters */
+@media (max-width: 768px) {
+  .notification-category-filters {
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .notification-category-tag {
+    font-size: 9px;
+    padding: 0 4px;
+  }
+}
+
+/* Notification dropdown wider for categories */
+@media (min-width: 769px) {
+  .notification-dropdown {
+    width: 450px !important;
+  }
+}
+
+/* Category badge in notification list */
+.notification-item-category {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Smooth transitions for category filters */
+.ant-tag {
+  transition: all 0.2s ease;
+}
+
+.ant-tag:hover {
+  opacity: 0.85;
+}
+
+/* Active category highlight */
+.category-filter-active {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  font-weight: 600;
+}
+
+
+/* ===== NOTIFICATION DROPDOWN POSITIONING FIX ===== */
+/* Added proper dropdown positioning to prevent overlap */
+.header-right>.ant-dropdown-trigger {
+  position: relative;
+}
+
+/* Ensure notification dropdown doesn't overlap header */
+.ant-dropdown-placement-bottomRight {
+  margin-top: 8px !important;
+}
+
+/* Mobile: hide user info text */
+@media (max-width: 768px) {
+  .user-info {
+    display: none;
+  }
+
+  .header-right {
+    gap: 8px;
+  }
+
+  .user-profile {
+    padding: 4px;
+  }
+}
+
+/* ===== FIX NOTIFICATION BELL CIRCULAR SHAPE ===== */
+/* Ensure notification bell is perfectly circular */
+.btn-notification {
+  width: 40px !important;
+  height: 40px !important;
+  min-width: 40px !important;
+  min-height: 40px !important;
+  border-radius: 50% !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.btn-notification .anticon {
+  font-size: 18px !important;
+}
+
+/* ===== FIX HEADER TITLE MOBILE RESPONSIVE ===== */
+/* Better header layout for mobile */
+@media (max-width: 768px) {
+  .first .ant-typography {
+    font-size: 14px !important;
+    max-width: calc(100vw - 150px) !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  .second {
+    flex: 0 0 auto !important;
+    width: auto !important;
+  }
+
+  /* Smaller notification button on mobile */
+  .btn-notification {
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+    min-height: 36px !important;
+  }
+
+  .btn-notification .anticon {
+    font-size: 16px !important;
+  }
+}
+
+/* ===== FIX NOTIFICATION DROPDOWN OVERLAP ===== */
+/* Proper notification dropdown positioning and sizing */
+.notification-dropdown,
+.ant-dropdown {
+  z-index: 1050 !important;
+}
+
+@media (max-width: 768px) {
+  .notification-dropdown {
+    width: calc(100vw - 32px) !important;
+    max-width: 340px !important;
+    right: 16px !important;
+    left: auto !important;
+  }
+
+  /* Ensure dropdown doesn't overlap header */
+  .ant-dropdown-placement-bottomRight {
+    margin-top: 4px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .first .ant-typography {
+    font-size: 12px !important;
+    max-width: calc(100vw - 130px) !important;
+  }
+
+  .btn-notification {
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    min-height: 32px !important;
+  }
+
+  .btn-notification .anticon {
+    font-size: 14px !important;
+  }
+}
+
+/* ===== DRAWER MENU ACTIVE STATE ===== */
+.ant-drawer .ant-menu-item-selected {
+  background-color: #f0f0f0 !important;
+  color: #1a1a1a !important;
+}
+
+.ant-drawer .ant-menu-item-selected::after {
+  display: none !important;
+}
+
+.ant-drawer .ant-menu-item:hover {
+  background-color: #f5f5f5 !important;
+}
+
+.ant-drawer .ant-menu-item {
+  color: #333 !important;
+  border-radius: 8px !important;
+  margin: 4px 12px !important;
+}
+
+.ant-drawer .ant-menu-item .anticon {
+  color: #666 !important;
+}
+
+.ant-drawer .ant-menu-item-selected .anticon {
+  color: #1a1a1a !important;
+}
+
+[data-theme="black"] .burger-menu {
+  color: var(--accent) !important;
+}
+
+[data-theme="black"] .burger-menu {
+  color: #d1d5db !important;
+}
+
+/* ============ THEME SYSTEM CSS FOR INDEX.JS ============ */
+
+/* Black theme - html and body */
+html[data-theme="black"],
+html[data-theme="black"] body {
+  background: var(--bg) !important;
+  color: #ffffff !important;
+}
+
+/* Printing must always be on a white page, even when the app is in black
+   theme — otherwise the dark html/body background bleeds through around
+   (and behind) the printable area since print routines only hide the
+   body's *contents* (body *), never the body element itself. This is the
+   actual cause of the "black page" some admins see when printing while
+   in dark mode. */
+@media print {
+  html,
+  body,
+  html[data-theme="black"],
+  html[data-theme="black"] body {
+    background: #ffffff !important;
+    color: #0f172a !important;
+  }
+}
+
+/* Black theme - Main Layout */
+[data-theme="black"] #main-layout {
+  background: var(--bg) !important;
+}
+
+[data-theme="black"] .site-layout {
+  background: var(--bg) !important;
+}
+
+/* Black theme - Header */
+[data-theme="black"] #header {
+  background: var(--surface) !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+
+[data-theme="black"] #header .ant-typography {
+  color: #ffffff !important;
+}
+
+/* Black theme - Sidebar */
+[data-theme="black"] .ant-layout-sider {
+  background: var(--surface) !important;
+}
+
+[data-theme="black"] .ant-menu {
+  background: var(--surface) !important;
+  color: #ffffff !important;
+}
+
+[data-theme="black"] .ant-menu-item {
+  color: #ffffff !important;
+}
+
+[data-theme="black"] .ant-menu-item:hover {
+  background: var(--surface-2) !important;
+}
+
+[data-theme="black"] .ant-menu-item-selected {
+  background: var(--surface-2) !important;
+  color: var(--accent) !important;
+}
+
+/* Black theme - Content */
+[data-theme="black"] #content {
+  background: var(--bg) !important;
+  color: #ffffff !important;
+}
+
+/* Black theme - Cards */
+[data-theme="black"] .ant-card {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+  color: #ffffff !important;
+}
+
+[data-theme="black"] .ant-card-head {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+  color: #ffffff !important;
+}
+
+[data-theme="black"] .ant-card-body {
+  color: #ffffff !important;
+}
+
+/* Black theme - Modal */
+[data-theme="black"] .ant-modal-content {
+  background: var(--surface) !important;
+  color: #ffffff !important;
+}
+
+[data-theme="black"] .ant-modal-header {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+}
+
+[data-theme="black"] .ant-modal-title {
+  color: #ffffff !important;
+}
+
+[data-theme="black"] .ant-modal-body {
+  background: var(--surface) !important;
+  color: #ffffff !important;
+}
+
+[data-theme="black"] .ant-modal-footer {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+}
+
+/* Black theme - List */
+[data-theme="black"] .ant-list-item {
+  border-color: var(--border) !important;
+}
+
+[data-theme="black"] .ant-list-item-meta-title {
+  color: #ffffff !important;
+}
+
+[data-theme="black"] .ant-list-item-meta-description {
+  color: var(--text-muted) !important;
+}
+
+/* Black theme - Dropdown */
+[data-theme="black"] .ant-dropdown-menu {
+  background: var(--surface-2) !important;
+}
+
+[data-theme="black"] .ant-dropdown-menu-item {
+  color: #ffffff !important;
+}
+
+[data-theme="black"] .ant-dropdown-menu-item:hover {
+  background: var(--border) !important;
+}
+
+/* Black theme - Select dropdown */
+[data-theme="black"] .ant-select-dropdown {
+  background: var(--surface-2) !important;
+}
+
+[data-theme="black"] .ant-select-item {
+  color: #ffffff !important;
+}
+
+[data-theme="black"] .ant-select-item:hover {
+  background: var(--border) !important;
+}
+
+[data-theme="black"] .ant-select-item-option-selected {
+  background: var(--border) !important;
+}
+
+/* Black theme - Select selector */
+[data-theme="black"] .ant-select-selector {
+  background: var(--surface-2) !important;
+  border-color: var(--border) !important;
+  color: #ffffff !important;
+}
+
+/* Black theme - Typography */
+[data-theme="black"] .ant-typography {
+  color: #ffffff !important;
+}
+
+[data-theme="black"] h1,
+[data-theme="black"] h2,
+[data-theme="black"] h3,
+[data-theme="black"] h4,
+[data-theme="black"] h5,
+[data-theme="black"] h6,
+[data-theme="black"] p,
+[data-theme="black"] span,
+[data-theme="black"] label {
+  color: inherit;
+}
+
+/* Black theme - Drawer */
+[data-theme="black"] .ant-drawer-content {
+  background: var(--surface) !important;
+}
+
+[data-theme="black"] .ant-drawer-header {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+}
+
+[data-theme="black"] .ant-drawer-title {
+  color: #ffffff !important;
+}
+
+[data-theme="black"] .ant-drawer-body {
+  background: var(--surface) !important;
+  color: #ffffff !important;
+}
+
+/* Black theme - Button */
+[data-theme="black"] .ant-btn-default {
+  background: var(--surface-2) !important;
+  border-color: var(--border) !important;
+  color: #ffffff !important;
+}
+
+[data-theme="black"] .ant-btn-default:hover {
+  background: var(--border) !important;
+  border-color: var(--border-strong) !important;
+}
+
+/* Black theme - Table */
+[data-theme="black"] .ant-table {
+  background: var(--surface) !important;
+  color: #ffffff !important;
+}
+
+[data-theme="black"] .ant-table-thead>tr>th {
+  background: var(--surface-2) !important;
+  color: #ffffff !important;
+  border-color: var(--border) !important;
+}
+
+[data-theme="black"] .ant-table-tbody>tr>td {
+  border-color: var(--border) !important;
+}
+
+[data-theme="black"] .ant-table-tbody>tr:hover>td {
+  background: var(--surface-2) !important;
+}
+
+/* Black theme - Custom Account Dropdown */
+[data-theme="black"] .account-dropdown-container {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+}
+
+[data-theme="black"] .account-dropdown-container .ant-typography,
+[data-theme="black"] .account-dropdown-container h1,
+[data-theme="black"] .account-dropdown-container h2,
+[data-theme="black"] .account-dropdown-container h3,
+[data-theme="black"] .account-dropdown-container h4,
+[data-theme="black"] .account-dropdown-container h5,
+[data-theme="black"] .account-dropdown-container span {
+  color: #ffffff !important;
+}
+
+[data-theme="black"] .account-dropdown-container .ant-menu {
+  background: var(--surface) !important;
+}
+
+[data-theme="black"] .account-dropdown-container .ant-menu-item {
+  color: #ffffff !important;
+}
+
+[data-theme="black"] .account-dropdown-container .ant-menu-item:hover {
+  background: var(--surface-2) !important;
+}
+
+[data-theme="black"] .account-dropdown-container .ant-badge-status-text {
+  color: #ffffff !important;
+}
+
+/* Black theme - Custom Notification Dropdown */
+[data-theme="black"] .notification-dropdown-container {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+}
+
+[data-theme="black"] .notification-dropdown-container .ant-typography,
+[data-theme="black"] .notification-dropdown-container span,
+[data-theme="black"] .notification-dropdown-container .ant-list-item-meta-title,
+[data-theme="black"] .notification-dropdown-container .ant-list-item-meta-description {
+  color: #ffffff !important;
+}
+
+[data-theme="black"] .notification-dropdown-container .notification-header {
+  background: var(--accent-grad) !important;
+}
+
+[data-theme="black"] .notification-dropdown-container .notification-category-bar {
+  background: var(--surface-2) !important;
+  border-color: var(--border) !important;
+}
+
+[data-theme="black"] .notification-dropdown-container .notification-actions-bar {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+}
+
+[data-theme="black"] .notification-dropdown-container .notification-footer {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+}
+
+[data-theme="black"] .notification-dropdown-container .ant-list-item {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+}
+
+[data-theme="black"] .notification-dropdown-container .ant-list-item:hover {
+  background: var(--surface-2) !important;
+}
+
+[data-theme="black"] .notification-dropdown-container .ant-list-item.unread {
+  background: var(--surface-2) !important;
+}
+
+[data-theme="black"] .notification-dropdown-container .ant-empty-description {
+  color: var(--text-muted) !important;
+}
+
+[data-theme="black"] .notification-dropdown-container .ant-spin-text {
+  color: #ffffff !important;
+}
+
+/* Black theme - secondary text colors */
+[data-theme="black"] .account-dropdown-container .text-secondary,
+[data-theme="black"] .notification-dropdown-container .text-secondary {
+  color: var(--text-muted) !important;
+}
+
+/* ============ THEME-AWARE CSS CLASSES ============ */
+
+/* Theme card background - replaces inline background: #f5f5f5 */
+.theme-card-bg {
+  background: #f5f5f5 !important;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+[data-theme="black"] .theme-card-bg {
+  background: var(--surface-2) !important;
+  color: #ffffff !important;
+}
+
+[data-theme="black"] .theme-card-bg * {
+  color: inherit;
+}
+
+/* Theme footer background */
+.theme-footer-bg {
+  background: #fafafa !important;
+  transition: background 0.3s ease;
+}
+
+[data-theme="black"] .theme-footer-bg {
+  background: var(--surface) !important;
+}
+
+/* Theme text classes */
+.theme-text {
+  color: var(--border) !important;
+  transition: color 0.3s ease;
+}
+
+[data-theme="black"] .theme-text {
+  color: #ffffff !important;
+}
+
+.theme-text-secondary {
+  color: #666;
+  transition: color 0.3s ease;
+}
+
+[data-theme="black"] .theme-text-secondary {
+  color: var(--text-muted) !important;
+}
+
+/* Theme avatar border */
+.theme-avatar-border {
+  border: 1px solid #e8e8e8;
+}
+
+[data-theme="black"] .theme-avatar-border {
+  border: 1px solid var(--border) !important;
+}
+
+/* Theme warning box */
+.theme-warning-box {
+  background: #fffbe6;
+}
+
+[data-theme="black"] .theme-warning-box {
+  background: var(--surface-2) !important;
+}
+
+/* Notification list item styling */
+.notification-list-item {
+  background: #fff;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background 0.3s ease;
+}
+
+[data-theme="black"] .notification-list-item {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+}
+
+[data-theme="black"] .notification-list-item:hover {
+  background: var(--surface-2) !important;
+}
+
+[data-theme="black"] .notification-list-item.unread {
+  background: var(--surface-2) !important;
+}
+
+/* Registration list item */
+.registration-list-item {
+  background: #fff;
+  transition: background 0.3s ease;
+}
+
+[data-theme="black"] .registration-list-item {
+  background: var(--surface) !important;
+}
+
+[data-theme="black"] .registration-list-item.highlighted {
+  background: var(--surface-2) !important;
+  border-left: 3px solid var(--accent) !important;
+}
+
+/* ============ END THEME-AWARE CSS CLASSES ============ */
+
+/* Smooth transitions */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* ============ END THEME SYSTEM CSS ============ */
+/* ===== FIX NOTIFICATION BADGE Z-INDEX ===== */
+.btn-notification .ant-badge-count {
+  z-index: 10 !important;
+}
+
+/* ===== FIX ALL NOTIFICATIONS MODAL DARK THEME ===== */
+[data-theme="black"] .ant-modal-content {
+  background: var(--surface) !important;
+}
+
+[data-theme="black"] .ant-modal-body {
+  background: var(--surface) !important;
+  color: #ffffff !important;
+}
+
+/* All Notifications Modal - Filter area */
+[data-theme="black"] .ant-modal-body>div[style*="border-bottom"] {
+  background: var(--surface-2) !important;
+  border-color: var(--border) !important;
+}
+
+[data-theme="black"] .ant-modal-body .ant-typography {
+  color: #ffffff !important;
+}
+
+[data-theme="black"] .ant-modal-body .ant-btn-default {
+  background: var(--surface-2) !important;
+  border-color: var(--border) !important;
+  color: #ffffff !important;
+}
+
+[data-theme="black"] .ant-modal-body .ant-btn-default:hover {
+  background: var(--border) !important;
+  border-color: var(--border-strong) !important;
+}
+
+/* Notification list items in modal */
+[data-theme="black"] .ant-modal-body .ant-list-item {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+}
+
+[data-theme="black"] .ant-modal-body .ant-list-item:hover {
+  background: var(--surface-2) !important;
+}
+
+/* Unread notification in modal */
+[data-theme="black"] .ant-modal-body .ant-list-item[style*="#f0f7ff"] {
+  background: var(--surface-2) !important;
+}
+
+/* Filter by Category text */
+[data-theme="black"] .ant-modal-body [style*="background: #fafafa"],
+[data-theme="black"] .ant-modal-body [style*="background:#fafafa"] {
+  background: var(--surface-2) !important;
+}
+
+/* Pagination area */
+[data-theme="black"] .ant-modal-body [style*="border-top"] {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+}
+
+[data-theme="black"] .ant-pagination-item {
+  background: var(--surface-2) !important;
+  border-color: var(--border) !important;
+}
+
+[data-theme="black"] .ant-pagination-item a {
+  color: #ffffff !important;
+}
+
+[data-theme="black"] .ant-pagination-item-active {
+  background: var(--accent) !important;
+  border-color: var(--accent) !important;
+}
+
+[data-theme="black"] .ant-pagination-prev .ant-pagination-item-link,
+[data-theme="black"] .ant-pagination-next .ant-pagination-item-link {
+  background: var(--surface-2) !important;
+  border-color: var(--border) !important;
+  color: #ffffff !important;
+}
+
+[data-theme="black"] .ant-pagination-total-text {
+  color: var(--text-muted) !important;
+}
+
+/* Empty state in modal */
+[data-theme="black"] .ant-empty-description {
+  color: var(--text-muted) !important;
+}
+
+/* Spin loading text */
+[data-theme="black"] .ant-spin-text {
+  color: #ffffff !important;
+}
+
+/* View All Notifications button - ensure it's visible */
+[data-theme="black"] .notification-footer .ant-btn-primary {
+  background: var(--accent) !important;
+  border-color: var(--accent) !important;
+  color: #ffffff !important;
+}
+
+[data-theme="black"] .ant-btn-text         { color: var(--text) !important; }
+[data-theme="black"] .ant-btn-text:hover   { background: var(--surface-2) !important; color: var(--text) !important; }
+[data-theme="black"] .ant-btn-text .anticon { color: var(--text) !important; }
+
+/* ============ Message Popup Dark Theme ============ */
+[data-theme="black"] .ant-message {
+  color: #ffffff;
+}
+
+[data-theme="black"] .ant-message-notice-content {
+  background-color: #1f1f1f !important;
+  border: 1px solid #333333;
+  box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="black"] .ant-message-success .anticon {
+  color: #52c41a !important;
+}
+
+[data-theme="black"] .ant-message-error .anticon {
+  color: #ff4d4f !important;
+}
+
+[data-theme="black"] .ant-message-warning .anticon {
+  color: #faad14 !important;
+}
+
+[data-theme="black"] .ant-message-info .anticon {
+  color: var(--accent) !important;
+}
+
+[data-theme="black"] .ant-message-notice-content span {
+  color: #ffffff !important;
+}
+
+[data-theme="black"] .ant-message .ant-message-custom-content {
+  color: #ffffff !important;
+}
+
+[data-theme="black"] .ant-message .ant-message-custom-content>span:last-child {
+  color: #ffffff !important;
+}
+
+/* ===== PROFESSIONAL FOOTER STYLES ===== */
+.ant-layout-footer.app-footer {
+  flex: 0 0 auto !important;
+  flex-shrink: 0 !important;
+  padding: 8px 16px !important;
+  padding-bottom: calc(8px + env(safe-area-inset-bottom)) !important;
+  overflow: visible !important;
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+[data-theme="black"] .ant-layout-footer.app-footer {
+  background: linear-gradient(180deg, var(--surface) 0%, var(--surface-2) 100%) !important;
+  border-top: 1px solid var(--border) !important;
+}
+
+.app-footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px 10px;
+  font-size: 11px;
+  line-height: 1.4;
+  width: 100%;
+  padding-left: max(0px, env(safe-area-inset-left));
+  padding-right: max(0px, env(safe-area-inset-right));
+  box-sizing: border-box;
+}
+
+.app-footer-inner .app-footer-credits,
+.app-footer-inner .app-footer-copy,
+.app-footer-links .ant-typography {
+  font-size: 11px !important;
+  line-height: 1.4 !important;
+  white-space: normal !important;
+}
+
+.app-footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 4px 8px;
+}
+@media (max-width: 768px) {
+  .ant-layout-footer.app-footer {
+    padding: 8px 10px !important;
+  }
+
+  .app-footer-inner {
+    flex-direction: row !important;
+    gap: 0 !important;
+  }
+
+  .app-footer-links,
+  .app-footer-copy,
+  .app-footer-sep,
+  .app-footer-dot {
+    display: none !important;
+  }
+
+  .app-footer-inner .app-footer-credits {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    max-width: 100%;
+    font-size: clamp(9px, 3vw, 11px) !important;
+    line-height: 1.3 !important;
+    text-align: center;
+    white-space: nowrap !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .ant-layout-footer.app-footer {
+    padding: 8px 6px !important;
+  }
+
+  .app-footer-inner {
+    flex-direction: row !important;
+    gap: 0 !important;
+  }
+
+  .app-footer-inner .app-footer-credits {
+    font-size: clamp(8.5px, 3vw, 10px) !important;
+    text-align: center;
+  }
+}
+
+@media (max-width: 360px) {
+  .app-footer-inner .app-footer-credits {
+    font-size: clamp(8px, 2.9vw, 9px) !important;
+  }
+}
+
+/* ===== ALUMNI DETAILS MODAL DARK THEME ===== */
+/* Fix hardcoded light backgrounds in modals */
+[data-theme="black"] .ant-modal-body [style*="background: #f5f5f5"],
+[data-theme="black"] .ant-modal-body [style*="background:#f5f5f5"],
+[data-theme="black"] .ant-modal-body [style*="background: rgb(245, 245, 245)"],
+[data-theme="black"] .ant-modal [style*="background: #f5f5f5"],
+[data-theme="black"] [style*="background: #f5f5f5"] {
+  background: var(--surface-2) !important;
+}
+
+/* Fix all inline text colors in modals */
+[data-theme="black"] .ant-modal-body [style*="color: #666"],
+[data-theme="black"] .ant-modal-body [style*="color:#666"],
+[data-theme="black"] .ant-modal-body [style*="color: rgb(102, 102, 102)"] {
+  color: var(--text-muted) !important;
+}
+
+/* Fix List item backgrounds in dark mode */
+[data-theme="black"] .ant-modal-body .ant-list-item[style*="background: #fff"],
+[data-theme="black"] .ant-modal-body .ant-list-item[style*="background:#fff"] {
+  background: var(--surface) !important;
+}
+
+/* Alumni Details specific overrides */
+[data-theme="black"] .alumni-details-modal .ant-descriptions-item-label {
+  color: var(--text-muted) !important;
+  background: var(--surface-2) !important;
+}
+
+[data-theme="black"] .alumni-details-modal .ant-descriptions-item-content {
+  color: #ffffff !important;
+  background: var(--surface) !important;
+}
+
+[data-theme="black"] .alumni-details-modal .ant-descriptions-bordered .ant-descriptions-item-label,
+[data-theme="black"] .alumni-details-modal .ant-descriptions-bordered .ant-descriptions-item-content {
+  border-color: var(--border) !important;
+}
+
+/* Fix event details modal sections */
+[data-theme="black"] .ant-modal-body div[style*="padding: 16px"][style*="background"],
+[data-theme="black"] .ant-modal-body div[style*="padding:16px"][style*="background"] {
+  background: var(--surface-2) !important;
+  border-color: var(--border) !important;
+}
+
+/* ===== INPUT FIELDS DARK THEME ===== */
+[data-theme="black"] .ant-input {
+  background: var(--surface-2) !important;
+  border-color: var(--border) !important;
+  color: #ffffff !important;
+}
+
+[data-theme="black"] .ant-input::placeholder {
+  color: #666 !important;
+}
+
+[data-theme="black"] .ant-input:focus,
+[data-theme="black"] .ant-input:hover {
+  border-color: var(--accent) !important;
+}
+
+[data-theme="black"] .ant-input-affix-wrapper {
+  background: var(--surface-2) !important;
+  border-color: var(--border) !important;
+}
+
+[data-theme="black"] .ant-input-affix-wrapper input {
+  background: transparent !important;
+  color: #ffffff !important;
+}
+
+/* ===== DESCRIPTIONS DARK THEME ===== */
+[data-theme="black"] .ant-descriptions {
+  background: var(--surface) !important;
+}
+
+[data-theme="black"] .ant-descriptions-item-label {
+  background: var(--surface-2) !important;
+  color: var(--text-muted) !important;
+}
+
+[data-theme="black"] .ant-descriptions-item-content {
+  background: var(--surface) !important;
+  color: #ffffff !important;
+}
+
+[data-theme="black"] .ant-descriptions-bordered .ant-descriptions-view {
+  border-color: var(--border) !important;
+}
+
+[data-theme="black"] .ant-descriptions-bordered .ant-descriptions-item-label,
+[data-theme="black"] .ant-descriptions-bordered .ant-descriptions-item-content {
+  border-color: var(--border) !important;
+}
+
+/* Mobile responsive for alumni details modal */
+@media (max-width: 768px) {
+  [data-theme="black"] .alumni-details-modal .ant-modal-content {
+    background: var(--surface) !important;
+  }
+
+  [data-theme="black"] .alumni-details-modal .ant-modal-body {
+    padding: 12px !important;
+  }
+}
+
+@media (max-width: 480px) {
+
+  [data-theme="black"] .alumni-details-modal .ant-descriptions-item-label,
+  [data-theme="black"] .alumni-details-modal .ant-descriptions-item-content {
+    padding: 8px !important;
+    font-size: 12px !important;
+  }
+}
+
+/* ===== FORM LABELS DARK THEME ===== */
+[data-theme="black"] .ant-form-item-label>label {
+  color: #ffffff !important;
+}
+
+[data-theme="black"] .ant-form-item-explain,
+[data-theme="black"] .ant-form-item-extra {
+  color: var(--text-muted) !important;
+}
+
+/* ===== CHECKBOX DARK THEME ===== */
+[data-theme="black"] .ant-checkbox-wrapper {
+  color: #ffffff !important;
+}
+
+[data-theme="black"] .ant-checkbox-inner {
+  background: var(--surface-2) !important;
+  border-color: var(--border) !important;
+}
+
+/* ===== RADIO DARK THEME ===== */
+[data-theme="black"] .ant-radio-wrapper {
+  color: #ffffff !important;
+}
+
+[data-theme="black"] .ant-radio-inner {
+  background: var(--surface-2) !important;
+  border-color: var(--border) !important;
+}
+
+/* ===== DATE PICKER DARK THEME ===== */
+[data-theme="black"] .ant-picker {
+  background: var(--surface-2) !important;
+  border-color: var(--border) !important;
+}
+
+[data-theme="black"] .ant-picker input  {
+  color: #ffffff !important;
+}
+
+[data-theme="black"] .ant-picker-dropdown {
+  background: var(--surface-2) !important;
+}
+
+[data-theme="black"] .ant-picker-panel {
+  background: var(--surface-2) !important;
+  border-color: var(--border) !important;
+}
+
+[data-theme="black"] .ant-picker-header {
+  color: #ffffff !important;
+  border-color: var(--border) !important;
+}
+
+[data-theme="black"] .ant-picker-content th,
+[data-theme="black"] .ant-picker-content td,
+[data-theme="black"] .ant-picker-input input::placeholder,
+[data-theme="black"] .ant-picker-input > input {
+  color: #ffffff !important;
+}
+
+
+[data-theme="black"] .ant-picker-cell-in-view {
+  color: #ffffff !important;
+}
+
+[data-theme="black"] .ant-picker-cell:hover .ant-picker-cell-inner {
+  background: var(--border) !important;
+}
+
+/* ===== TOOLTIP DARK THEME ===== */
+[data-theme="black"] .ant-tooltip-inner {
+  background: var(--surface-2) !important;
+  color: #ffffff !important;
+}
+
+[data-theme="black"] .ant-tooltip-arrow-content {
+  background: var(--surface-2) !important;
+}
+
+/* ===== POPCONFIRM DARK THEME ===== */
+[data-theme="black"] .ant-popconfirm .ant-popover-inner {
+  background: var(--surface-2) !important;
+}
+
+[data-theme="black"] .ant-popconfirm .ant-popover-message-title {
+  color: #ffffff !important;
+}
+
+[data-theme="black"] .ant-popconfirm .ant-popover-arrow-content {
+  background: var(--surface-2) !important;
+}
+
+/* ===== POPOVER DARK THEME ===== */
+[data-theme="black"] .ant-popover-inner {
+  background: var(--surface-2) !important;
+}
+
+[data-theme="black"] .ant-popover-title {
+  color: #ffffff !important;
+  border-color: var(--border) !important;
+}
+
+[data-theme="black"] .ant-popover-inner-content {
+  color: #ffffff !important;
+}
+
+/* ===== TABS DARK THEME ===== */
+[data-theme="black"] .ant-tabs-tab {
+  color: var(--text-muted) !important;
+}
+
+[data-theme="black"] .ant-tabs-tab:hover {
+  color: #ffffff !important;
+}
+
+[data-theme="black"] .ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: var(--accent) !important;
+}
+
+[data-theme="black"] .ant-tabs-ink-bar {
+  background: var(--accent) !important;
+}
+
+/* ===== DIVIDER DARK THEME ===== */
+[data-theme="black"] .ant-divider {
+  border-color: var(--border) !important;
+}
+
+[data-theme="black"] .ant-divider-inner-text {
+  color: var(--text-muted) !important;
+}
+
+/* ===== ALERT DARK THEME ===== */
+[data-theme="black"] .ant-alert {
+  background: var(--surface-2) !important;
+  border-color: var(--border) !important;
+}
+
+[data-theme="black"] .ant-alert-message {
+  color: #ffffff !important;
+}
+
+[data-theme="black"] .ant-alert-description {
+  color: var(--text-muted) !important;
+}
+
+/* ===== BADGE DARK THEME ===== */
+[data-theme="black"] .ant-badge-status-text {
+  color: #ffffff !important;
+}
+
+/* ===== STEPS DARK THEME ===== */
+[data-theme="black"] .ant-steps-item-title {
+  color: #ffffff !important;
+}
+
+[data-theme="black"] .ant-steps-item-description {
+  color: var(--text-muted) !important;
+}
+
+/* ===== TIMELINE DARK THEME ===== */
+[data-theme="black"] .ant-timeline-item-content {
+  color: #ffffff !important;
+}
+
+[data-theme="black"] .ant-timeline-item-tail {
+  border-color: var(--border) !important;
+}
+
+/* ===== COLLAPSE/ACCORDION DARK THEME ===== */
+[data-theme="black"] .ant-collapse {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+}
+
+[data-theme="black"] .ant-collapse-header {
+  color: #ffffff !important;
+  background: var(--surface-2) !important;
+}
+
+[data-theme="black"] .ant-collapse-content {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+}
+
+[data-theme="black"] .ant-collapse-content-box {
+  color: #ffffff !important;
+}
+
+/* ===== SPIN LOADING DARK THEME ===== */
+[data-theme="black"] .ant-spin-dot-item {
+  background: var(--accent) !important;
+}
+
+/* ===== UPLOAD DARK THEME ===== */
+[data-theme="black"] .ant-upload-list-item {
+  background: var(--surface-2) !important;
+  border-color: var(--border) !important;
+}
+
+[data-theme="black"] .ant-upload-list-item-name {
+  color: #ffffff !important;
+}
+
+[data-theme="black"] .ant-upload.ant-upload-drag {
+  background: var(--surface-2) !important;
+  border-color: var(--border) !important;
+}
+
+[data-theme="black"] .ant-upload.ant-upload-drag p.ant-upload-text {
+  color: #ffffff !important;
+}
+
+[data-theme="black"] .ant-upload.ant-upload-drag p.ant-upload-hint {
+  color: var(--text-muted) !important;
+}
+
+/* ===== NOTIFICATION RESPONSIVE FIX (Admin & Alumni) ===== */
+/* Notification bell button - keep compact and never overlap header items */
+.btn-notification {
+  flex-shrink: 0 !important;
+}
+
+/* Tablet and below */
+@media (max-width: 1000px) {
+
+  /* Notification dropdown overlay - fit within viewport */
+  .ant-dropdown {
+    max-width: calc(100vw - 16px) !important;
+  }
+
+  .notification-dropdown-container,
+  .ant-dropdown .notification-dropdown-container {
+    max-width: calc(100vw - 16px) !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+  }
+
+  .notification-dropdown-container * {
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+}
+
+/* Mobile phones */
+@media (max-width: 768px) {
+
+  /* Bell button - smaller so it fits with avatar */
+  .btn-notification {
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+    min-height: 36px !important;
+    padding: 0 !important;
+  }
+
+  .btn-notification .anticon {
+    font-size: 16px !important;
+  }
+
+  /* Notification dropdown */
+  .ant-dropdown {
+    max-width: 100vw !important;
+    left: 8px !important;
+    right: 8px !important;
+    width: calc(100vw - 16px) !important;
+  }
+
+  .notification-dropdown-container {
+    width: calc(100vw - 16px) !important;
+    max-width: calc(100vw - 16px) !important;
+  }
+
+  /* Notification list rows - prevent text overflow */
+  .notification-dropdown-container .ant-list-item,
+  .ant-modal .ant-list-item {
+    flex-wrap: wrap !important;
+    word-break: break-word !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  .notification-dropdown-container .ant-list-item-meta-title,
+  .notification-dropdown-container .ant-list-item-meta-description,
+  .ant-modal .ant-list-item-meta-title,
+  .ant-modal .ant-list-item-meta-description {
+    white-space: normal !important;
+    word-break: break-word !important;
+    overflow-wrap: anywhere !important;
+    max-width: 100% !important;
+  }
+
+  /* "All Notifications" modal - full width, no overflow */
+  .ant-modal {
+    max-width: 95vw !important;
+    width: 95vw !important;
+    margin: 8px auto !important;
+    padding-bottom: 0 !important;
+  }
+
+  .ant-modal-content {
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+  }
+
+  .ant-modal-body {
+    max-height: calc(100vh - 140px) !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    padding: 12px !important;
+  }
+
+  .ant-modal-header,
+  .ant-modal-title {
+    max-width: 100% !important;
+    overflow: hidden !important;
+  }
+
+  .ant-modal-title>div {
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+
+  /* Header action area - avatar + bell must not collide with title */
+  .row-header .second {
+    flex-shrink: 0 !important;
+    gap: 6px !important;
+  }
+}
+
+/* Very small phones */
+@media (max-width: 380px) {
+  .btn-notification {
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    min-height: 32px !important;
+  }
+
+  .ant-modal {
+    width: 98vw !important;
+    max-width: 98vw !important;
+    margin: 4px auto !important;
+  }
+
+  .ant-modal-body {
+    padding: 8px !important;
+  }
+}
+
+
+
+/* ============ Design Tokens — mirrored from FormLogin / AlumniRegistration ============ */
+#main-layout,
+html,
+body {
+  --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+
+  --accent:        #4f46e5;
+  --accent-2:      #0ea5e9;
+  --accent-3:      #7c3aed;
+  --accent-soft:   rgba(79, 70, 229, 0.10);
+  --accent-ring:   rgba(79, 70, 229, 0.26);
+  --accent-grad:   linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #0ea5e9 100%);
+
+  --bg:            #f4f7fb;
+  --surface:       #ffffff;
+  --surface-2:     #f1f5f9;
+  --border:        #e2e8f0;
+  --border-strong: #cbd5e1;
+
+  --text:          #0b1220;
+  --text-muted:    #5b6677;
+  --text-subtle:   #94a3b8;
+
+  --shadow-xs: 0 1px 2px  rgba(2, 6, 23, 0.05);
+  --shadow-sm: 0 4px 14px rgba(2, 6, 23, 0.06);
+  --shadow-md: 0 14px 34px rgba(2, 6, 23, 0.10);
+  --shadow-lg: 0 28px 60px rgba(2, 6, 23, 0.18);
+
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 22px;
+}
+
+[data-theme="black"] #main-layout,
+html[data-theme="black"],
+html[data-theme="black"] body {
+  --bg:            #0a0c12;
+  --surface:       #121620;
+  --surface-2:     #1a1f2b;
+  --border:        #242a36;
+  --border-strong: #303746;
+
+  --text:          #e7ecf3;
+  --text-muted:    #9aa4b2;
+  --text-subtle:   #6b7280;
+
+  --accent-soft:   rgba(99, 102, 241, 0.16);
+  --accent-ring:   rgba(99, 102, 241, 0.30);
+
+  --shadow-xs: 0 1px 2px  rgba(0, 0, 0, 0.5);
+  --shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.45);
+  --shadow-md: 0 14px 34px rgba(0, 0, 0, 0.55);
+  --shadow-lg: 0 28px 60px rgba(0, 0, 0, 0.65);
+}
+
+
+
+
+
+
+
+
+@media (min-width: 769px) {
+  .first .ant-typography {
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+}
+
+@media (max-width: 1000px) {
+  .first {
+    flex: 0 1 auto !important;
+    min-width: auto !important;
+    max-width: none !important;
+    overflow: visible !important;
+  }
+
+  .first .ant-typography {
+    white-space: normal !important;
+    font-size: 16px !important;
+  }
+}
+
+
+
+@keyframes bellShake {
+
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+
+  20% {
+    transform: rotate(-12deg);
+  }
+
+  40% {
+    transform: rotate(10deg);
+  }
+
+  60% {
+    transform: rotate(-6deg);
+  }
+
+  80% {
+    transform: rotate(4deg);
+  }
+}
+
+
+/* ============ Account dropdown trigger ============ */
+.account-trigger,
+.row-header .ant-btn[type="button"] {
+  transition: all 0.22s var(--ease-smooth) !important;
+}
+
+.row-header .ant-btn[type="button"]:hover {
+  border-color: var(--accent) !important;
+  background: var(--accent-soft) !important;
+}
+
+
+
+/* ============ Buttons (global within shell) ============ */
+.ant-btn {
+  border-radius: 10px !important;
+  font-weight: 600 !important;
+}
+
+
+/* ============ Tags & Badges ============ */
+.ant-tag {
+  border-radius: 999px !important;
+  padding: 2px 10px !important;
+  font-weight: 600 !important;
+  font-size: 12px !important;
+}
+
+/* ============ Tables ============ */
+.ant-table {
+  border-radius: var(--radius-md) !important;
+  overflow: hidden;
+}
+
+.ant-table-thead>tr>th {
+  background: var(--surface-2) !important;
+  color: var(--text) !important;
+  font-weight: 700 !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+
+/* ============ Responsive ============ */
+@media (max-width: 768px) {
+  #header {
+    height: 60px !important;
+  }
+
+  #content {
+    height: calc(100vh - 60px) !important;
+  }
+
+  .row-header {
+    padding: 0 12px !important;
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+
+  .logo img,
+  .ant-btn-primary,
+  .btn-notification,
+  .bell-animate {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ===== FEEDBACK MODAL — RESPONSIVE + THEME ===== */
+.feedback-modal .ant-modal-content {
+  padding: 0 !important;
+  border-radius: 12px !important;
+  overflow: hidden;
+}
+.feedback-modal .ant-modal-header {
+  padding: 14px 16px !important;
+  margin-bottom: 0 !important;
+  border-bottom: 1px solid transparent;
+}
+.feedback-modal .ant-modal-body {
+  border-radius: 0 0 12px 12px;
+}
+
+/* LIGHT */
+.feedback-modal-light .ant-modal-content,
+.feedback-modal-dark .ant-modal-btns { background: #ffffff !important; }
+.feedback-modal-light .ant-modal-header { background: #ffffff !important; }
+.feedback-modal-light .ant-modal-header { border-bottom-color: #eaeaea !important; }
+.feedback-modal-light .ant-modal-title,
+.feedback-modal-light .ant-modal-close-x { color: #1a1a1a !important; }
+
+/* DARK */
+.feedback-modal-dark .ant-modal-content,
+.feedback-modal-dark .ant-modal-btns { background: #0a0a0a !important; }
+.feedback-modal-dark .ant-modal-header { background: #0a0a0a !important; }
+.feedback-modal-dark .ant-modal-header { border-bottom-color: #2a2a2a !important; }
+.feedback-modal-dark .ant-modal-title,
+.feedback-modal-dark .ant-modal-close-x { color: #ffffff !important; }
+.feedback-modal-dark .ant-modal-close:hover { background: #1c1c1c !important; }
+
+/* Dark theme inputs */
+.feedback-modal-dark .ant-select-selector,
+.feedback-modal-dark .ant-input,
+.feedback-modal-dark .ant-input-affix-wrapper,
+.feedback-modal-dark textarea.ant-input,
+.feedback-modal-dark .ant-btn-icon {
+  background: #141414 !important;
+  border-color: #2a2a2a !important;
+  color: #ffffff !important;
+}
+.feedback-modal-dark .ant-select-selection-placeholder,
+.feedback-modal-dark .ant-input::placeholder,
+.feedback-modal-dark textarea.ant-input::placeholder {
+  color: #ffffff !important;
+}
+.feedback-modal-dark .ant-select-arrow,
+.feedback-modal-dark .anticon { color: #cfcfcf !important; }
+
+/* Dark theme buttons (default/text) */
+.feedback-modal-dark .ant-btn-default {
+  background: #1c1c1c !important;
+  border-color: #2a2a2a !important;
+  color: #ffffff !important;
+}
+.feedback-modal-dark .ant-btn-default:hover {
+  background: #262626 !important;
+  border-color: #3a3a3a !important;
+  color: #ffffff !important;
+}
+.feedback-modal-dark .ant-btn-text { color: #cfcfcf !important; }
+.feedback-modal-dark .ant-btn-text:hover { background: #1c1c1c !important; }
+
+/* Upload list (dark) */
+.feedback-modal-dark .ant-upload-list-item,
+.feedback-modal-dark .ant-upload-list-item-name { color: #ffffff !important; }
+.feedback-modal-dark .ant-upload-list-item:hover { background: #141414 !important; }
+
+/* Mobile tweaks */
+@media (max-width: 576px) {
+  .feedback-modal .ant-modal { max-width: 94vw !important; margin: 0 auto !important; }
+  .feedback-modal .ant-modal-header { padding: 12px !important; }
+  .feedback-modal .ant-modal-title { font-size: 14px !important; }
+  .feedback-modal .ant-btn { font-size: 13px !important; }
+}
+
+
+/* ============ Modern polish (added to align with FormLogin) ============ */
+#header {
+  background: var(--surface) !important;
+  border-bottom: 1px solid var(--border) !important;
+  box-shadow: var(--shadow-xs) !important;
+  backdrop-filter: saturate(180%) blur(8px);
+}
+
+#header .ant-typography {
+  color: var(--text) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.01em;
+}
+
+#sidebar-wrapper .ant-layout-sider {
+  background: var(--surface) !important;
+  border-right: 1px solid var(--border) !important;
+}
+
+.ant-menu {
+  background: transparent !important;
+  color: var(--text) !important;
+  border-inline-end: none !important;
+}
+
+.ant-menu-item {
+  border-radius: var(--radius-sm) !important;
+  margin: 4px 8px !important;
+  width: auto !important;
+  transition: background 0.22s var(--ease-smooth), color 0.22s var(--ease-smooth) !important;
+}
+
+.ant-menu-item:hover {
+  background: var(--accent-soft) !important;
+  color: var(--accent) !important;
+}
+
+.ant-menu-item-selected {
+  background: var(--accent-soft) !important;
+  color: var(--accent) !important;
+  font-weight: 600 !important;
+  box-shadow: inset 3px 0 0 var(--accent) !important;
+}
+
+#content {
+  background: var(--bg) !important;
+  color: var(--text) !important;
+}
+
+.ant-card {
+  background: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius-md) !important;
+  box-shadow: var(--shadow-xs);
+  transition: box-shadow 0.25s var(--ease-smooth), transform 0.25s var(--ease-smooth);
+}
+.ant-card:hover {
+  box-shadow: var(--shadow-sm);
+}
+
+.ant-btn-primary {
+  background: var(--accent-grad) !important;
+  border: none !important;
+  box-shadow: 0 6px 18px var(--accent-ring) !important;
+}
+.ant-btn-primary:hover {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+}
+
+/* Dark-mode header / sider / cards inherit from tokens automatically */
+[data-theme="black"] #header {
+  background: var(--surface) !important;
+  border-bottom-color: var(--border) !important;
+}
+[data-theme="black"] #sidebar-wrapper .ant-layout-sider {
+  background: var(--surface) !important;
+  border-right-color: var(--border) !important;
+}
+[data-theme="black"] .ant-card,
+[data-theme="black"] .ant-modal-content,
+[data-theme="black"] .ant-modal-header,
+[data-theme="black"] .ant-modal-body,
+[data-theme="black"] .ant-modal-footer,
+[data-theme="black"] .ant-drawer-content,
+[data-theme="black"] .ant-drawer-header,
+[data-theme="black"] .ant-drawer-body {
+  background: var(--surface) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+[data-theme="black"] .theme-card-bg,
+[data-theme="black"] .theme-footer-bg,
+[data-theme="black"] .notification-list-item,
+[data-theme="black"] .registration-list-item {
+  background: var(--surface) !important;
+  color: var(--text) !important;
+}
+[data-theme="black"] .ant-menu-item-selected {
+  background: var(--accent-soft) !important;
+  color: var(--accent) !important;
+}
+
+/* ===== KEEP FOOTER VISIBLE ON ALL MOBILE PHONES ===== */
+.site-layout {
+  display: flex !important;
+  flex-direction: column !important;
+  min-height: 100vh !important;
+  height: 100vh !important;
+  overflow: hidden !important;
+}
+
+#content {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  height: auto !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+}
+
+.ant-layout-footer.app-footer {
+  display: block !important;
+  visibility: visible !important;
+}
+
+@supports (height: 100dvh) {
+  .site-layout {
+    min-height: 100dvh !important;
+    height: 100dvh !important;
+  }
+}
+
+@media (max-width: 768px) {
+  #content {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    height: auto !important;
+  }
+}
+
+
+/* =========================================================
+   DARK MODE — ANT DESIGN PORTAL COMPONENTS
+   ========================================================= */
+
+/* ----- Dropdown ----- */
+html[data-theme="black"] .ant-dropdown,
+html[data-theme="black"] .ant-dropdown-menu,
+html[data-theme="black"] .ant-dropdown-menu-submenu-popup .ant-dropdown-menu {
+  background: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
+  border-radius: 8px !important;
+}
+html[data-theme="black"] .ant-dropdown-menu-item,
+html[data-theme="black"] .ant-dropdown-menu-submenu-title {
+  color: var(--text) !important;
+  background: transparent !important;
+}
+html[data-theme="black"] .ant-dropdown-menu-item:hover,
+html[data-theme="black"] .ant-dropdown-menu-submenu-title:hover,
+html[data-theme="black"] .ant-dropdown-menu-item-active,
+html[data-theme="black"] .ant-dropdown-menu-submenu-active > .ant-dropdown-menu-submenu-title {
+  background: var(--surface-2) !important;
+  color: var(--text) !important;
+}
+html[data-theme="black"] .ant-dropdown-menu-item-selected {
+  background: rgba(59, 130, 246, 0.15) !important;
+  color: var(--accent) !important;
+}
+html[data-theme="black"] .ant-dropdown-menu-item-divider,
+html[data-theme="black"] .ant-dropdown-menu-item-group-title {
+  background: var(--border) !important;
+  color: var(--text-muted) !important;
+}
+html[data-theme="black"] .ant-dropdown-arrow::before,
+html[data-theme="black"] .ant-dropdown-arrow::after {
+  background: var(--surface) !important;
+}
+
+/* ----- Select ----- */
+html[data-theme="black"] .ant-select-dropdown {
+  background: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
+}
+html[data-theme="black"] .ant-select-item,
+html[data-theme="black"] .ant-select-item-option {
+  color: var(--text) !important;
+  background: transparent !important;
+}
+html[data-theme="black"] .ant-select-item-option-active:not(.ant-select-item-option-disabled) {
+  background: var(--surface-2) !important;
+  color: var(--text) !important;
+}
+html[data-theme="black"] .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+  background: rgba(59, 130, 246, 0.15) !important;
+  color: var(--accent) !important;
+  font-weight: 600;
+}
+html[data-theme="black"] .ant-select-item-empty,
+html[data-theme="black"] .ant-empty-description {
+  color: var(--text-muted) !important;
+}
+html[data-theme="black"] .ant-select:not(.ant-select-customize-input) .ant-select-selector {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+  color: var(--text) !important;
+}
+html[data-theme="black"] .ant-select-selection-placeholder,
+html[data-theme="black"] .ant-select-arrow {
+  color: var(--text-muted) !important;
+}
+
+/* ----- Popover ----- */
+html[data-theme="black"] .ant-popover-inner,
+html[data-theme="black"] .ant-popover-content > .ant-popover-inner {
+  background: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
+}
+html[data-theme="black"] .ant-popover-title,
+html[data-theme="black"] .ant-popover-inner-content {
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+html[data-theme="black"] .ant-popover-arrow::before,
+html[data-theme="black"] .ant-popover-arrow::after {
+  background: var(--surface) !important;
+}
+
+/* ----- Tooltip ----- */
+html[data-theme="black"] .ant-tooltip-inner {
+  background: var(--surface-2) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--border) !important;
+}
+html[data-theme="black"] .ant-tooltip-arrow::before,
+html[data-theme="black"] .ant-tooltip-arrow::after {
+  background: var(--surface-2) !important;
+}
+
+/* ----- DatePicker / Picker ----- */
+html[data-theme="black"] .ant-picker-dropdown,
+html[data-theme="black"] .ant-picker-panel-container,
+html[data-theme="black"] .ant-picker-panel {
+  background: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text) !important;
+}
+html[data-theme="black"] .ant-picker-cell,
+html[data-theme="black"] .ant-picker-header,
+html[data-theme="black"] .ant-picker-header button,
+html[data-theme="black"] .ant-picker-content th {
+  color: var(--text) !important;
+}
+html[data-theme="black"] .ant-picker-cell-in-view {
+  color: var(--text) !important;
+}
+html[data-theme="black"] .ant-picker-cell:hover .ant-picker-cell-inner {
+  background: var(--surface-2) !important;
+}
+html[data-theme="black"] .ant-picker-cell-selected .ant-picker-cell-inner {
+  background: var(--accent) !important;
+  color: #fff !important;
+}
+
+/* ----- Cascader / TreeSelect ----- */
+html[data-theme="black"] .ant-cascader-menus,
+html[data-theme="black"] .ant-cascader-menu,
+html[data-theme="black"] .ant-tree-select-dropdown {
+  background: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text) !important;
+}
+html[data-theme="black"] .ant-cascader-menu-item:hover,
+html[data-theme="black"] .ant-select-tree-node-content-wrapper:hover {
+  background: var(--surface-2) !important;
+}
+
+/* ----- Menu submenu popup ----- */
+html[data-theme="black"] .ant-menu-submenu-popup > .ant-menu,
+html[data-theme="black"] .ant-menu-submenu-popup .ant-menu-sub {
+  background: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+}
+html[data-theme="black"] .ant-menu-submenu-popup .ant-menu-item {
+  color: var(--text) !important;
+}
+html[data-theme="black"] .ant-menu-submenu-popup .ant-menu-item:hover {
+  background: var(--surface-2) !important;
+}
+html[data-theme="black"] .ant-menu-submenu-popup .ant-menu-item-selected {
+  background: rgba(59, 130, 246, 0.15) !important;
+  color: var(--accent) !important;
+}
+
+/* ----- Modal ----- */
+html[data-theme="black"] .ant-modal-content,
+html[data-theme="black"] .ant-modal-header,
+html[data-theme="black"] .ant-modal-footer {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+  color: var(--text) !important;
+}
+html[data-theme="black"] .ant-modal-title,
+html[data-theme="black"] .ant-modal-body,
+html[data-theme="black"] .ant-modal-close-x {
+  color: var(--text) !important;
+}
+html[data-theme="black"] .ant-modal-mask {
+  background: rgba(0, 0, 0, 0.75) !important;
+}
+
+/* ----- Drawer ----- */
+html[data-theme="black"] .ant-drawer-content,
+html[data-theme="black"] .ant-drawer-header,
+html[data-theme="black"] .ant-drawer-body,
+html[data-theme="black"] .ant-drawer-footer {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+  color: var(--text) !important;
+}
+html[data-theme="black"] .ant-drawer-title,
+html[data-theme="black"] .ant-drawer-close {
+  color: var(--text) !important;
+}
+
+/* ----- Notification / Message / Popconfirm ----- */
+html[data-theme="black"] .ant-notification-notice,
+html[data-theme="black"] .ant-message-notice-content,
+html[data-theme="black"] .ant-popconfirm .ant-popover-inner {
+  background: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text) !important;
+}
+html[data-theme="black"] .ant-notification-notice-message,
+html[data-theme="black"] .ant-notification-notice-description {
+  color: var(--text) !important;
+}
+
+/* ---------- Textarea Character Count (0 / 500) ---------- */
+html[data-theme="black"] .ant-input-textarea-show-count::after,
+html[data-theme="black"] .ant-input-data-count {
+  color: #fff !important;
+}
+
+/* ---------- Input Placeholder ---------- */
+html[data-theme="black"] .ant-input::placeholder,
+html[data-theme="black"] .ant-input-affix-wrapper input::placeholder,
+html[data-theme="black"] textarea::placeholder {
+  color: var(--text-muted) !important;
+}
+
+/* ---------- Password Eye ---------- */
+html[data-theme="black"] .ant-input-password-icon {
+  color: var(--text-muted) !important;
+}
+
+html[data-theme="black"] .ant-input-password-icon:hover {
+  color: #fff !important;
+}
+
+/* ---------- Input Number ---------- */
+html[data-theme="black"] .ant-input-number-handler-wrap {
+  background: var(--surface-2) !important;
+}
+
+html[data-theme="black"] .ant-input-number-handler {
+  border-color: var(--border) !important;
+}
+
+html[data-theme="black"] .ant-input-number-handler-up-inner,
+html[data-theme="black"] .ant-input-number-handler-down-inner {
+  color: #fff !important;
+}
+
+/* ---------- Radio ---------- */
+html[data-theme="black"] .ant-radio-wrapper {
+  color: var(--text) !important;
+}
+
+html[data-theme="black"] .ant-radio-inner {
+  background: var(--surface-2) !important;
+  border-color: var(--border) !important;
+}
+
+html[data-theme="black"] .ant-radio-checked .ant-radio-inner {
+  border-color: var(--accent) !important;
+}
+
+/* ---------- Checkbox ---------- */
+html[data-theme="black"] .ant-checkbox-wrapper {
+  color: var(--text) !important;
+}
+
+html[data-theme="black"] .ant-checkbox-inner {
+  background: var(--surface-2) !important;
+  border-color: var(--border) !important;
+}
+
+/* ---------- Switch ---------- */
+html[data-theme="black"] .ant-switch {
+  background: #374151 !important;
+}
+
+html[data-theme="black"] .ant-switch-checked {
+  background: linear-gradient(
+    135deg,
+    var(--accent),
+    var(--accent-2)
+  ) !important;
+}
+
+/* ---------- Divider ---------- */
+html[data-theme="black"] .ant-divider {
+  border-color: var(--border) !important;
+}
+
+html[data-theme="black"] .ant-divider-inner-text {
+  color: var(--text) !important;
+}
+
+/* ---------- Tag ---------- */
+html[data-theme="black"] .ant-tag {
+  background: var(--surface-2) !important;
+  border-color: var(--border) !important;
+  color: var(--text) !important;
+}
+
+/* ---------- Upload ---------- */
+html[data-theme="black"] .ant-upload-text,
+html[data-theme="black"] .ant-upload-hint {
+  color: var(--text) !important;
+}
+
+/* html[data-theme="black"] .ant-upload {
+  background: var(--surface-2) !important;
+  border-color: var(--border) !important;
+} */
+
+/* ---------- Progress ---------- */
+html[data-theme="black"] .ant-progress-text,
+html[data-theme="black"] .ant-progress-outer {
+  color: var(--text) !important;
+}
+
+/* ---------- Steps ---------- */
+html[data-theme="black"] .ant-steps-item-title {
+  color: var(--text) !important;
+}
+
+html[data-theme="black"] .ant-steps-item-description {
+  color: var(--text-muted) !important;
+}
+
+html[data-theme="black"] .ant-steps-item-icon .ant-steps-icon {
+  color: #fff !important;
+}
+
+/* ---------- Alert ---------- */
+html[data-theme="black"] .ant-alert {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+}
+
+html[data-theme="black"] .ant-alert-message,
+html[data-theme="black"] .ant-alert-description {
+  color: var(--text) !important;
+}
+
+/* ---------- Card ---------- */
+html[data-theme="black"] .ant-card {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+}
+
+html[data-theme="black"] .ant-card-head {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+}
+
+html[data-theme="black"] .ant-card-head-title {
+  color: var(--text) !important;
+}
+
+/* ---------- Collapse ---------- */
+html[data-theme="black"] .ant-collapse {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+}
+
+html[data-theme="black"] .ant-collapse-item {
+  border-color: var(--border) !important;
+}
+
+html[data-theme="black"] .ant-collapse-header,
+html[data-theme="black"] .ant-collapse-content-box {
+  color: var(--text) !important;
+  background: var(--surface) !important;
+}
+
+html[data-theme="black"] .ant-collapse-content {
+  background: var(--surface) !important;
+  border-top-color: var(--border) !important;
+}
+
+/* ---------- Tabs ---------- */
+html[data-theme="black"] .ant-tabs-tab {
+  color: var(--text-muted) !important;
+}
+
+html[data-theme="black"] .ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: var(--accent) !important;
+}
+
+html[data-theme="black"] .ant-tabs-content {
+  color: var(--text) !important;
+}
+
+/* ---------- List ---------- */
+html[data-theme="black"] .ant-list-item {
+  border-color: var(--border) !important;
+}
+
+html[data-theme="black"] .ant-list-item,
+html[data-theme="black"] .ant-list-item-meta-title,
+html[data-theme="black"] .ant-list-item-meta-description {
+  color: var(--text) !important;
+}
+
+/* ---------- Empty ---------- */
+html[data-theme="black"] .ant-empty-description {
+  color: var(--text-muted) !important;
+}
+
+/* ---------- Spin ---------- */
+html[data-theme="black"] .ant-spin-text {
+  color: var(--text) !important;
+}
+
+/* ---------- Pagination ---------- */
+html[data-theme="black"] .ant-pagination-item {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+}
+
+html[data-theme="black"] .ant-pagination-item a {
+  color: var(--text) !important;
+}
+
+html[data-theme="black"] .ant-pagination-item-active {
+  border-color: var(--accent) !important;
+}
+
+html[data-theme="black"] .ant-pagination-item-active a {
+  color: var(--accent) !important;
+}
+
+html[data-theme="black"] .ant-pagination-prev button,
+html[data-theme="black"] .ant-pagination-next button {
+  color: var(--text) !important;
+}
+
+/* ---------- Timeline ---------- */
+html[data-theme="black"] .ant-timeline-item-content {
+  color: var(--text) !important;
+}
+
+/* ---------- Statistic ---------- */
+html[data-theme="black"] .ant-statistic-content,
+html[data-theme="black"] .ant-statistic-title {
+  color: var(--text) !important;
+}
+
+/* ---------- Table ---------- */
+html[data-theme="black"] .ant-table {
+  background: var(--surface) !important;
+  color: var(--text) !important;
+}
+
+html[data-theme="black"] .ant-table-thead > tr > th {
+  background: var(--surface-2) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+
+html[data-theme="black"] .ant-table-tbody > tr > td {
+  background: var(--surface) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+
+html[data-theme="black"] .ant-table-tbody > tr:hover > td {
+  background: var(--surface-2) !important;
+}
+
+/* ---------- Message ---------- */
+html[data-theme="black"] .ant-message-notice-content {
+  background: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text) !important;
+}
+
+/* ---------- Notification ---------- */
+html[data-theme="black"] .ant-notification-notice {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+}
+
+html[data-theme="black"] .ant-notification-notice-message,
+html[data-theme="black"] .ant-notification-notice-description {
+  color: var(--text) !important;
+}
+
+/* ---------- Image Preview ---------- */
+html[data-theme="black"] .ant-image-preview-wrap {
+  background: rgba(0,0,0,.85) !important;
+}
+
+/* ---------- Modal Confirm ---------- */
+html[data-theme="black"] .ant-modal-confirm-content,
+html[data-theme="black"] .ant-modal-confirm-title {
+  color: var(--text) !important;
+}
+
+/* ---------- Form Validation ---------- */
+html[data-theme="black"] .ant-form-item-explain-error {
+  color: #ff7875 !important;
+}
+
+/* ---------- Tooltip ---------- */
+html[data-theme="black"] .ant-tooltip-inner {
+  background: var(--surface-2) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--border) !important;
+}
+
+/* ---------- Links ---------- */
+html[data-theme="black"] a {
+  color: #60a5fa;
+}
+
+html[data-theme="black"] a:hover {
+  color: #93c5fd;
+}
+
+/* InputNumber */
+html[data-theme="black"] .ant-input-number {
+  background: var(--surface-2) !important;
+  border-color: var(--border) !important;
+}
+
+html[data-theme="black"] .ant-input-number-input {
+  background: transparent !important;
+  color: var(--text) !important;
+}
+
+html[data-theme="black"] .ant-input-number-input::placeholder {
+  color: var(--text-secondary) !important;
+}
+
+/* InputNumber controls */
+html[data-theme="black"] .ant-input-number-handler-wrap {
+  background: var(--surface-2) !important;
+  border-left: 1px solid var(--border) !important;
+}
+
+html[data-theme="black"] .ant-input-number-handler {
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+
+html, body {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE & Edge */
+    scroll-behavior: smooth;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+
+/* Quiz Modal Dark Theme */
+[data-theme="black"] .quiz-modal .ant-modal-content {
+  background: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+}
+
+[data-theme="black"] .quiz-modal .ant-modal-header {
+  background: var(--surface) !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+
+[data-theme="black"] .quiz-modal .ant-modal-title {
+  color: #fff !important;
+}
+
+[data-theme="black"] .quiz-modal .ant-modal-body {
+  background: var(--surface) !important;
+  color: #fff !important;
+}
+
+/* Warning Box */
+[data-theme="black"] .quiz-modal .theme-warning-box {
+  background: var(--surface-2) !important;
+  border-color: #fa8c16 !important;
+}
+
+/* Quiz Buttons */
+[data-theme="black"] .quiz-modal .ant-btn-dashed {
+  background: var(--surface-2) !important;
+  border-color: var(--border) !important;
+  color: #fff !important;
+}
+
+[data-theme="black"] .quiz-modal .ant-btn-dashed:hover {
+  border-color: var(--accent) !important;
+  color: var(--accent) !important;
+}
+
+/* Logout Button */
+[data-theme="black"] .quiz-modal .ant-btn {
+  transition: all 0.3s ease;
+}
+
+
+
+@media (hover: none), (pointer: coarse) {
+  .notification-category-bar .ant-tooltip {
+    display: none !important;
+  }
+}
+
+/* ===== Account dropdown ("Theme: Light" panel) centering/overflow ===== */
+.account-dropdown-container {
+  width: 280px;
+  max-width: calc(100vw - 24px);
+  box-sizing: border-box;
+}
+
+@media (hover: none), (pointer: coarse) {
+
+  .ant-dropdown {
+    max-width: calc(100vw - 16px) !important;
+  }
+
+  .ant-dropdown .account-dropdown-container {
+    width: min(280px, calc(100vw - 24px));
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 360px) {
+  .account-dropdown-container {
+    width: calc(100vw - 24px);
+  }
+}
+
+.all-notifications-modal .ant-modal-body > div > div:last-child {
+  flex-wrap: wrap !important;
+  row-gap: 8px;
+}
+
+@media (max-width: 480px), (hover: none), (pointer: coarse) {
+  .all-notifications-modal .ant-modal-body > div > div:last-child {
+    justify-content: flex-start !important;
+  }
+
+  .all-notifications-modal .ant-modal-body > div > div:last-child > button {
+    flex: 0 0 auto;
+  }
+}
+
+
+.account-dropdown-scroll,
+.notification-list-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(102, 126, 234, 0.45) transparent;
+}
+
+.account-dropdown-scroll::-webkit-scrollbar,
+.notification-list-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.account-dropdown-scroll::-webkit-scrollbar-thumb,
+.notification-list-scroll::-webkit-scrollbar-thumb {
+  background-color: rgba(102, 126, 234, 0.45);
+  border-radius: 999px;
+}
+
+.account-dropdown-scroll::-webkit-scrollbar-track,
+.notification-list-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+[data-theme="black"] .account-dropdown-scroll,
+[data-theme="black"] .notification-list-scroll {
+  scrollbar-color: rgba(96, 165, 250, 0.5) transparent;
+}
+
+[data-theme="black"] .account-dropdown-scroll::-webkit-scrollbar-thumb,
+[data-theme="black"] .notification-list-scroll::-webkit-scrollbar-thumb {
+  background-color: rgba(96, 165, 250, 0.5);
+}
+
+
+.account-dropdown-container,
+.notification-dropdown-container {
+  max-height: calc(100vh - 80px);
+}
+
+@supports (height: 100dvh) {
+  .account-dropdown-container,
+  .notification-dropdown-container {
+    max-height: calc(100dvh - 80px);
+  }
+}
+
+.legal-footer-link {
+  transition: color 0.15s ease, text-decoration-color 0.15s ease;
+  text-decoration: none;
+}
+
+.legal-footer-link:hover {
+  text-decoration: underline;
+  color: #1890ff !important;
+}
+
+@keyframes helpSupportSlideDown {
+  from {
+    opacity: 0;
+    max-height: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    max-height: 220px;
+    transform: translateY(0);
+  }
+}
+
+.help-support-submenu {
+  overflow: hidden;
+  animation: helpSupportSlideDown 0.22s ease;
+}
+
+/* =========================================================
+   CAMERA / NOTCH SAFE AREA — LANDSCAPE MOBILE
+   Deliberately placed at the very end of the file: several older
+   rules above reset .row-header/#header/#content/footer padding to
+   plain pixel values inside plain "(max-width: 768px)" queries
+   (no orientation check), and being later in the file they would
+   otherwise win the cascade and cancel the safe-area padding out.
+   Living last guarantees this always applies in landscape, keeping
+   the burger, title, header icons, and footer text clear of the
+   camera cutout - same approach as FormLogin.css.
+
+   Uses max-height instead of max-width to detect "phone in
+   landscape": rotated iPhones report a viewport WIDTH of
+   812-932px (well past 768), so a max-width check here never
+   matched on any current iPhone. Landscape height stays under
+   ~430px on every current phone while tablets stay much taller
+   (iPad mini landscape height is 768px), so max-height:500px is
+   what actually singles out phones regardless of model. */
+@media (orientation: landscape) and (max-height: 500px) {
+  /* Safe-area padding lives on the OUTER box only (#header /
+     #content / .ant-layout-footer.app-footer). .row-header and
+     .app-footer-inner are children rendered INSIDE that box, so
+     they inherit the clearance for free - giving them their own
+     copy of the same padding stacked a second gap on top of the
+     first and is what showed up as "dead space" beside the header
+     and footer content on notched phones in landscape. */
+  #header,
+  #content,
+  .ant-layout-footer.app-footer {
+    padding-left: max(10px, env(safe-area-inset-left)) !important;
+    padding-right: max(10px, env(safe-area-inset-right)) !important;
+  }
+
+  /* These two no longer need their own safe-area padding - reset
+     any pixel padding from earlier rules so they sit flush inside
+     their already-padded parent instead of adding a second inset. */
+  .row-header {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .app-footer-inner {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  #sidebar-wrapper .ant-layout-sider,
+  .ant-drawer-content-wrapper .ant-drawer-content {
+    padding-left: env(safe-area-inset-left) !important;
+  }
+
+  .burger-menu {
+    left: max(0px, env(safe-area-inset-left)) !important;
+  }
+}

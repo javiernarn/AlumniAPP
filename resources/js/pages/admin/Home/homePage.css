@@ -1,0 +1,1938 @@
+/* ── Entry reveal ─────────────────────────────────────────── */
+.hp-root {
+    padding: 20px 24px 32px;
+    min-height: 100%;
+    opacity: 0;
+    transform: translateY(12px);
+    transition:
+        opacity 0.5s ease,
+        transform 0.5s ease;
+}
+.hp-root.hp-revealed {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ── HERO ─────────────────────────────────────────────────── */
+.hp-hero {
+    position: relative;
+    padding: 32px 36px 28px;
+    border-radius: 20px;
+    background:
+        linear-gradient(135deg, #ffffff 0%, #f5f9ff 60%, #eef3ff 100%);
+    border: 1px solid #e8efff;
+    overflow: hidden;
+    margin-bottom: 4px;
+    box-shadow:
+        0 1px 2px rgba(16, 24, 40, 0.04),
+        0 10px 30px -18px rgba(24, 144, 255, 0.25);
+}
+.hp-hero--admin {
+    background:
+        linear-gradient(135deg, #fffbf2 0%, #fff5e6 55%, #f6f0ff 100%);
+    border-color: #ffe7c2;
+    box-shadow:
+        0 1px 2px rgba(16, 24, 40, 0.04),
+        0 10px 30px -18px rgba(250, 140, 22, 0.3);
+}
+
+.hp-hero-bg-shape {
+    position: absolute;
+    top: -60px;
+    right: -60px;
+    width: 280px;
+    height: 280px;
+    border-radius: 50%;
+    background: linear-gradient(
+        135deg,
+        rgba(24, 144, 255, 0.16),
+        rgba(114, 46, 209, 0.16)
+    );
+    filter: blur(10px);
+    pointer-events: none;
+}
+.hp-hero-bg-shape-2 {
+    top: auto;
+    right: auto;
+    bottom: -80px;
+    left: -60px;
+    width: 220px;
+    height: 220px;
+    background: linear-gradient(
+        135deg,
+        rgba(82, 196, 26, 0.14),
+        rgba(19, 194, 194, 0.14)
+    );
+}
+.hp-hero--admin .hp-hero-bg-shape {
+    background: linear-gradient(
+        135deg,
+        rgba(250, 140, 22, 0.18),
+        rgba(245, 34, 45, 0.14)
+    );
+}
+.hp-hero--admin .hp-hero-bg-shape-2 {
+    background: linear-gradient(
+        135deg,
+        rgba(114, 46, 209, 0.16),
+        rgba(250, 173, 20, 0.14)
+    );
+}
+.hp-hero-grid-overlay {
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(24, 144, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(24, 144, 255, 0.05) 1px, transparent 1px);
+    background-size: 32px 32px;
+    mask-image: radial-gradient(circle at top right, #000 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.hp-hero-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    position: relative;
+    z-index: 1;
+}
+.hp-hero-left {
+    flex: 1;
+    min-width: 0;
+}
+
+.hp-hero-chip {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 6px;
+    background: rgba(24, 144, 255, 0.1) !important;
+    border: 1px solid rgba(24, 144, 255, 0.25) !important;
+    color: #1890ff !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    padding: 4px 12px !important;
+    border-radius: 99px !important;
+    margin-bottom: 12px !important;
+}
+.hp-hero--admin .hp-hero-chip {
+    background: rgba(250, 140, 22, 0.12) !important;
+    border-color: rgba(250, 140, 22, 0.3) !important;
+    color: #d46b08 !important;
+}
+
+.hp-greeting-row {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 4px;
+}
+.hp-greeting-text {
+    font-size: 22px;
+    font-weight: 700;
+    color: #262626;
+    line-height: 1.3;
+}
+.hp-greeting-name {
+    font-size: 30px !important;
+    font-weight: 800 !important;
+    background: linear-gradient(90deg, #1890ff, #722ed1);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 0 !important;
+    line-height: 1.2 !important;
+    letter-spacing: -0.5px;
+}
+.hp-hero--admin .hp-greeting-name {
+    background: linear-gradient(90deg, #fa8c16, #f5222d);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.hp-greeting-wave {
+    font-size: 24px;
+    display: inline-block;
+    animation: hp-wave 2.4s ease-in-out infinite;
+    transform-origin: 70% 70%;
+}
+@keyframes hp-wave {
+    0%, 60%, 100% { transform: rotate(0deg); }
+    10% { transform: rotate(14deg); }
+    20% { transform: rotate(-8deg); }
+    30% { transform: rotate(14deg); }
+    40% { transform: rotate(-4deg); }
+    50% { transform: rotate(10deg); }
+}
+
+.hp-date-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 10px;
+}
+.hp-date-icon {
+    color: #8c8c8c;
+    font-size: 13px;
+}
+.hp-date-text {
+    font-size: 13px;
+    color: #8c8c8c;
+}
+.hp-hero-tagline {
+    font-size: 14px;
+    color: #4a5568;
+    max-width: 520px;
+    margin: 0;
+    line-height: 1.65;
+}
+.hp-hero-tagline strong {
+    color: #1890ff;
+}
+.hp-hero--admin .hp-hero-tagline strong {
+    color: #d46b08;
+}
+
+.hp-hero-right {
+    flex-shrink: 0;
+}
+.hp-hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    border-radius: 99px;
+    background: linear-gradient(135deg, #1890ff 0%, #722ed1 100%);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    white-space: nowrap;
+    box-shadow: 0 8px 22px rgba(24, 144, 255, 0.35);
+    letter-spacing: 0.3px;
+}
+/* The badge is now a <button> so it can toggle the logo showcase —
+   reset native button chrome and layer on interactive states. */
+button.hp-hero-badge--toggle {
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    transition:
+        transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+        box-shadow 0.25s ease,
+        filter 0.25s ease;
+}
+button.hp-hero-badge--toggle:hover {
+    transform: translateY(-2px) scale(1.03);
+    filter: brightness(1.06);
+    box-shadow: 0 12px 28px rgba(24, 144, 255, 0.45);
+}
+.hp-hero--admin button.hp-hero-badge--toggle:hover {
+    box-shadow: 0 12px 28px rgba(250, 140, 22, 0.5);
+}
+button.hp-hero-badge--toggle:active {
+    transform: translateY(0) scale(0.97);
+}
+button.hp-hero-badge--toggle:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+}
+button.hp-hero-badge--active {
+    box-shadow:
+        0 8px 22px rgba(24, 144, 255, 0.35),
+        0 0 0 3px rgba(255, 255, 255, 0.4);
+}
+.hp-hero--admin button.hp-hero-badge--active {
+    box-shadow:
+        0 8px 22px rgba(250, 140, 22, 0.4),
+        0 0 0 3px rgba(255, 255, 255, 0.4);
+}
+.hp-hero-badge-chevron {
+    font-size: 11px;
+    margin-left: 2px;
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.hp-hero-badge-chevron--open {
+    transform: rotate(180deg);
+}
+.hp-hero--admin .hp-hero-badge {
+    background: linear-gradient(135deg, #fa8c16 0%, #f5222d 100%);
+    box-shadow: 0 8px 22px rgba(250, 140, 22, 0.4);
+}
+.hp-hero-badge-icon {
+    font-size: 16px;
+}
+.hp-hero-divider {
+    margin: 18px 0 !important;
+    border-color: transparent !important;
+}
+
+/* ── BRAND SHOWCASE TOGGLE — collapse / expand with a pop ───────────── */
+.hp-brand-toggle-wrap {
+    max-height: 0;
+    opacity: 0;
+    margin-bottom: 0;
+    transform-origin: top center;
+    transform: scaleY(0.9) translateY(-18px);
+    overflow: hidden;
+    pointer-events: none;
+    transition:
+        max-height 0.55s cubic-bezier(0.4, 0, 0.2, 1),
+        opacity 0.4s ease,
+        transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+        margin-bottom 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.hp-brand-toggle-wrap--open {
+    max-height: 1000px;
+    opacity: 1;
+    margin-bottom: 20px;
+    transform: scaleY(1) translateY(0);
+    pointer-events: auto;
+}
+.hp-brand-toggle-wrap .hp-brand-showcase {
+    margin-bottom: 0;
+}
+
+/* ── SECTIONS ─────────────────────────────────────────────── */
+.hp-section {
+    margin-bottom: 24px;
+}
+.hp-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+.hp-section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    color: #262626 !important;
+    margin: 0 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+}
+
+/* ── STATS GRID ───────────────────────────────────────────── */
+.hp-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+}
+
+.hp-stat-card {
+    border-radius: 14px !important;
+    background: #fff !important;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04),
+        0 4px 14px -8px rgba(16, 24, 40, 0.1) !important;
+    transition:
+        box-shadow 0.25s ease,
+        transform 0.25s ease;
+    height: 100%;
+    border: 1px solid #f0f4fa !important;
+}
+.hp-stat-card:hover {
+    box-shadow: 0 6px 24px -8px rgba(24, 144, 255, 0.22) !important;
+    transform: translateY(-3px);
+}
+.hp-stat-inner {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-height: 52px;
+}
+.hp-stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+.hp-stat-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+.hp-stat-value {
+    font-size: 24px;
+    font-weight: 800;
+    color: #1a202c;
+    line-height: 1.1;
+    letter-spacing: -0.3px;
+    font-variant-numeric: tabular-nums;
+}
+.hp-stat-label {
+    font-size: 12px;
+    color: #718096;
+    margin-top: 4px;
+    font-weight: 500;
+}
+
+/* ── WEATHER CARD ─────────────────────────────────────────── */
+.hp-weather-inner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 52px;
+}
+.hp-weather-left {
+    flex: 1;
+    min-width: 0;
+}
+.hp-weather-right {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    flex-shrink: 0;
+    min-width: 64px;
+}
+.hp-weather-divider {
+    width: 1px;
+    height: 44px;
+    background: #f0f0f0;
+    flex-shrink: 0;
+}
+.hp-weather-location {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 2px;
+}
+.hp-weather-location-label {
+    font-size: 11px;
+    color: #8c8c8c;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+.hp-weather-time {
+    font-size: 20px;
+    font-weight: 800;
+    color: #1890ff;
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+}
+.hp-weather-date {
+    font-size: 11px;
+    color: #8c8c8c;
+    margin-top: 1px;
+}
+.hp-weather-icon {
+    font-size: 20px;
+    line-height: 1;
+}
+.hp-weather-temp {
+    font-size: 16px;
+    font-weight: 700;
+    color: #262626;
+    line-height: 1;
+}
+.hp-weather-condition {
+    font-size: 10px;
+    color: #8c8c8c;
+    text-align: center;
+    max-width: 80px;
+    line-height: 1.3;
+}
+
+/* ── QUICK ACCESS GRID ────────────────────────────────────── */
+.hp-quick-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 16px;
+}
+.hp-quick-link {
+    display: block;
+    height: 100%;
+    text-decoration: none;
+}
+
+.hp-quick-card {
+    border-radius: 16px !important;
+    text-align: center;
+    padding: 20px 14px !important;
+    cursor: pointer;
+    height: 100%;
+    transition:
+        box-shadow 0.25s ease,
+        transform 0.25s ease,
+        border-color 0.25s ease;
+    border: 1px solid #f0f4fa !important;
+    background: #fff !important;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04),
+        0 4px 14px -8px rgba(16, 24, 40, 0.1) !important;
+    position: relative;
+    overflow: hidden;
+}
+.hp-quick-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(24,144,255,0.05), transparent 60%);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    pointer-events: none;
+}
+.hp-quick-card:hover {
+    box-shadow: 0 12px 28px -10px rgba(24, 144, 255, 0.25) !important;
+    transform: translateY(-4px);
+    border-color: #d6e4ff !important;
+}
+.hp-quick-card:hover::before {
+    opacity: 1;
+}
+.hp-quick-card .ant-card-body {
+    padding: 0 !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    height: 100%;
+    position: relative;
+    z-index: 1;
+}
+.hp-quick-icon-wrap {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 4px;
+    transition: transform 0.3s ease;
+}
+.hp-quick-card:hover .hp-quick-icon-wrap {
+    transform: scale(1.08) rotate(-4deg);
+}
+.hp-quick-label {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #1a202c;
+    display: block;
+}
+.hp-quick-desc {
+    font-size: 11.5px;
+    color: #718096;
+    display: block;
+    line-height: 1.45;
+    text-align: center;
+}
+
+/* ── PANELS GRID (Events + Jobs + Achievements) ───────────── */
+.hp-panels-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 20px;
+}
+.hp-panel-card {
+    border-radius: 16px !important;
+    border: 1px solid #f0f4fa !important;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04),
+        0 4px 14px -8px rgba(16, 24, 40, 0.1) !important;
+    height: 100%;
+    background: #fff !important;
+}
+.hp-panel-card .ant-card-head {
+    border-bottom: 1px solid #f5f5f5;
+    padding: 0 20px;
+    min-height: 52px;
+}
+.hp-panel-card .ant-card-body {
+    padding: 14px 20px 18px;
+}
+.hp-panel-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 700;
+}
+.hp-panel-loading {
+    display: flex;
+    justify-content: center;
+    padding: 28px 0;
+}
+.hp-panel-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 28px 0;
+    gap: 8px;
+}
+.hp-panel-empty-icon {
+    font-size: 32px;
+    color: #d9d9d9;
+}
+
+/* ── EVENT ROWS ───────────────────────────────────────────── */
+.hp-event-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.hp-event-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: #fafbfd;
+    transition: background 0.15s, transform 0.15s;
+}
+.hp-event-row:hover {
+    background: #f0f7ff;
+    transform: translateX(2px);
+}
+.hp-event-date-box {
+    flex-shrink: 0;
+    width: 44px;
+    text-align: center;
+    border-left: 3px solid #1890ff;
+    padding-left: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+.hp-event-month {
+    font-size: 10px;
+    text-transform: uppercase;
+    color: #8c8c8c;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+.hp-event-day {
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 1.1;
+}
+.hp-event-info {
+    flex: 1;
+    min-width: 0;
+}
+.hp-event-title {
+    font-size: 13px;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.hp-event-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 4px;
+    flex-wrap: wrap;
+}
+.hp-event-meta-item {
+    font-size: 11px;
+    color: #8c8c8c;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+/* ── JOB ROWS ─────────────────────────────────────────────── */
+.hp-job-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.hp-job-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: #fafbfd;
+    transition: background 0.15s, transform 0.15s;
+}
+.hp-job-row:hover {
+    background: #fff8f0;
+    transform: translateX(2px);
+}
+.hp-job-company-avatar {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: #f0f7ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: 1px solid #e6f4ff;
+}
+.hp-job-company-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+.hp-job-info {
+    flex: 1;
+    min-width: 0;
+}
+.hp-job-title {
+    font-size: 13px;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.hp-job-meta {
+    font-size: 11px;
+    color: #8c8c8c;
+    margin-top: 3px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 2px;
+}
+.hp-dot {
+    color: #bfbfbf;
+    margin: 0 2px;
+}
+.hp-job-new-tag {
+    flex-shrink: 0;
+    font-size: 11px;
+}
+
+/* ── ACHIEVEMENTS ─────────────────────────────────────────── */
+.hp-achievement-card .ant-card-head-title {
+    font-weight: 700;
+}
+.hp-achv-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.hp-achv-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #faf5ff 0%, #f5f9ff 100%);
+    border: 1px solid #efe6ff;
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+.hp-achv-row:hover {
+    transform: translateX(2px);
+    box-shadow: 0 4px 12px -6px rgba(114, 46, 209, 0.25);
+}
+.hp-achv-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+}
+.hp-achv-info {
+    flex: 1;
+    min-width: 0;
+}
+.hp-achv-title {
+    font-size: 13px;
+    display: block;
+    color: #1a202c;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.hp-achv-meta {
+    font-size: 11px;
+    color: #718096;
+    margin-top: 3px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+
+/* ════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ════════════════════════════════════════════════════════════ */
+
+/* Tablet ≤ 1024px */
+@media (max-width: 1024px) {
+    .hp-root {
+        padding: 16px 18px 28px;
+    }
+    .hp-stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+        gap: 12px;
+    }
+    .hp-quick-grid {
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 14px;
+    }
+    .hp-greeting-name {
+        font-size: 26px !important;
+    }
+}
+
+/* Phones landscape & small tablets ≤ 900px */
+@media (max-width: 900px) {
+    .hp-hero {
+        padding: 24px 22px 22px;
+        border-radius: 18px;
+    }
+    .hp-hero-content {
+        flex-wrap: wrap;
+    }
+    .hp-hero-bg-shape {
+        width: 180px;
+        height: 180px;
+        top: -50px;
+        right: -50px;
+    }
+    .hp-greeting-text {
+        font-size: 19px;
+    }
+    .hp-greeting-name {
+        font-size: 24px !important;
+    }
+    .hp-hero-tagline {
+        font-size: 13px;
+    }
+
+    .hp-stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+    .hp-quick-grid {
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    }
+    .hp-panels-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Phones portrait ≤ 575px */
+@media (max-width: 575px) {
+    .hp-root {
+        padding: 14px 12px 24px;
+    }
+
+    .hp-hero {
+        padding: 20px 16px 18px;
+        border-radius: 16px;
+    }
+    .hp-hero-bg-shape {
+        width: 140px;
+        height: 140px;
+        top: -60px;
+        right: -60px;
+    }
+    .hp-hero-bg-shape-2 {
+        display: none;
+    }
+    .hp-hero-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    .hp-hero-right {
+        width: 100%;
+    }
+    .hp-hero-badge {
+        width: 100%;
+        justify-content: center;
+        padding: 10px 14px;
+        font-size: 12.5px;
+    }
+    .hp-greeting-row {
+        gap: 8px;
+    }
+    .hp-greeting-text {
+        font-size: 17px;
+    }
+    .hp-greeting-name {
+        font-size: 22px !important;
+    }
+    .hp-greeting-wave {
+        font-size: 20px;
+    }
+    .hp-date-text {
+        font-size: 12px;
+    }
+    .hp-hero-tagline {
+        font-size: 12.5px;
+        line-height: 1.55;
+    }
+
+    .hp-hero-divider {
+        margin: 12px 0 !important;
+    }
+    .hp-section {
+        margin-bottom: 18px;
+    }
+
+    /* Stats: 2-up on phones */
+    .hp-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    .hp-weather-card {
+        grid-column: 1 / -1;
+    }
+
+    .hp-stat-card .ant-card-body {
+        padding: 14px !important;
+    }
+    .hp-stat-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 17px;
+        border-radius: 10px;
+    }
+    .hp-stat-value {
+        font-size: 19px;
+    }
+    .hp-stat-label {
+        font-size: 11px;
+    }
+    .hp-stat-inner {
+        gap: 10px;
+        min-height: 44px;
+    }
+
+    .hp-weather-time {
+        font-size: 18px;
+    }
+
+    /* Quick access: 2-up grid */
+    .hp-quick-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    .hp-quick-card {
+        padding: 14px 8px !important;
+    }
+    .hp-quick-card .ant-card-body {
+        gap: 6px;
+    }
+    .hp-quick-icon-wrap {
+        width: 46px;
+        height: 46px;
+        border-radius: 13px;
+    }
+    .hp-quick-icon-wrap span {
+        font-size: 19px !important;
+    }
+    .hp-quick-label {
+        font-size: 12.5px;
+    }
+    .hp-quick-desc {
+        font-size: 10.5px;
+        line-height: 1.4;
+    }
+
+    /* Panels */
+    .hp-panel-card .ant-card-head {
+        padding: 0 14px;
+        min-height: 46px;
+    }
+    .hp-panel-card .ant-card-body {
+        padding: 10px 14px 14px;
+    }
+    .hp-panel-title {
+        font-size: 13px;
+    }
+    .hp-event-row,
+    .hp-job-row,
+    .hp-achv-row {
+        padding: 8px 10px;
+    }
+    .hp-event-title,
+    .hp-job-title,
+    .hp-achv-title {
+        font-size: 12.5px;
+    }
+    .hp-event-meta-item,
+    .hp-job-meta,
+    .hp-achv-meta {
+        font-size: 10.5px;
+    }
+}
+
+/* Very small phones ≤ 360px */
+@media (max-width: 360px) {
+    .hp-stats-grid,
+    .hp-quick-grid {
+        grid-template-columns: 1fr;
+    }
+    .hp-weather-card {
+        grid-column: auto;
+    }
+}
+
+/* Phones LANDSCAPE */
+@media (orientation: landscape) and (max-height: 500px) {
+    .hp-root {
+        padding: 10px 14px 18px;
+    }
+    .hp-hero {
+        padding: 14px 18px 12px;
+    }
+    .hp-hero-content {
+        flex-direction: row;
+        align-items: center;
+        gap: 12px;
+    }
+    .hp-hero-left {
+        flex: 1;
+    }
+    .hp-hero-right {
+        flex-shrink: 0;
+        width: auto;
+    }
+    .hp-hero-badge {
+        width: auto;
+        padding: 8px 14px;
+        font-size: 12px;
+    }
+    .hp-hero-tagline {
+        display: none;
+    }
+    .hp-hero-chip {
+        margin-bottom: 6px !important;
+    }
+    .hp-date-row {
+        margin-bottom: 0;
+    }
+    .hp-hero-divider {
+        margin: 10px 0 !important;
+    }
+
+    .hp-section {
+        margin-bottom: 14px;
+    }
+
+    /* Brand/logo showcase: short landscape viewports (e.g. iPhone XR
+       landscape) are wide enough to fit everything on one row, but not
+       with the larger 1024px-breakpoint sizing — shrink badges/gaps so
+       the row never wraps and leaves a lone, dead-space-padded logo on
+       its own line. */
+    .hp-brand-showcase {
+        padding: 22px 20px 20px;
+    }
+    .hp-brand-track {
+        gap: 18px;
+        padding-top: 40px;
+    }
+    .hp-brand-badge {
+        width: 68px;
+        height: 68px;
+        padding: 9px;
+    }
+    .hp-brand-badge-tag {
+        font-size: 10.5px;
+        bottom: -18px;
+    }
+    .hp-brand-center {
+        width: 96px;
+        height: 96px;
+    }
+    .hp-brand-center-img {
+        width: 96px;
+        height: 96px;
+    }
+    .hp-brand-caption {
+        margin-top: 24px;
+        font-size: 10.5px;
+    }
+    .hp-dev-avatar {
+        width: 38px;
+        height: 38px;
+    }
+    .hp-dev-label {
+        font-size: 11px;
+    }
+
+    .hp-stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 10px;
+    }
+    .hp-weather-card {
+        grid-column: auto;
+    }
+    .hp-stat-card .ant-card-body {
+        padding: 10px 12px !important;
+    }
+    .hp-stat-icon {
+        width: 34px;
+        height: 34px;
+        font-size: 15px;
+    }
+    .hp-stat-value {
+        font-size: 16px;
+    }
+    .hp-stat-label {
+        font-size: 10.5px;
+    }
+    .hp-weather-time {
+        font-size: 16px;
+    }
+
+    .hp-quick-grid {
+        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+        gap: 10px;
+    }
+    .hp-quick-card {
+        padding: 10px 8px !important;
+    }
+    .hp-quick-icon-wrap {
+        width: 40px;
+        height: 40px;
+    }
+    .hp-quick-desc {
+        display: none;
+    }
+
+    .hp-panels-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+}
+
+/* ============================================================
+   DARK THEME OVERRIDES  (data-theme="black")
+   ============================================================ */
+html[data-theme="black"] .hp-hero {
+    background:
+        linear-gradient(135deg, #1a1f2b 0%, #1e2535 60%, #20283a 100%) !important;
+    border-color: var(--border, #2d3748) !important;
+}
+html[data-theme="black"] .hp-hero--admin {
+    background:
+        linear-gradient(135deg, #2a1f15 0%, #2b2418 60%, #251e2e 100%) !important;
+    border-color: #4a3b20 !important;
+}
+html[data-theme="black"] .hp-hero-bg-shape {
+    background: linear-gradient(
+        135deg,
+        rgba(24, 144, 255, 0.1),
+        rgba(114, 46, 209, 0.1)
+    );
+}
+html[data-theme="black"] .hp-hero-grid-overlay {
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+}
+html[data-theme="black"] .hp-hero-chip {
+    background: rgba(96, 165, 250, 0.14) !important;
+    border-color: rgba(96, 165, 250, 0.35) !important;
+    color: #60a5fa !important;
+}
+html[data-theme="black"] .hp-greeting-text,
+html[data-theme="black"] .hp-section-title,
+html[data-theme="black"] .hp-stat-value,
+html[data-theme="black"] .hp-weather-temp,
+html[data-theme="black"] .hp-quick-label,
+html[data-theme="black"] .hp-panel-title,
+html[data-theme="black"] .hp-event-title,
+html[data-theme="black"] .hp-job-title,
+html[data-theme="black"] .hp-achv-title {
+    color: var(--text, #e2e8f0) !important;
+}
+
+html[data-theme="black"] .hp-greeting-name {
+    background: linear-gradient(90deg, #60a5fa, #a78bfa);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+html[data-theme="black"] .hp-hero-tagline strong,
+html[data-theme="black"] .hp-weather-time {
+    color: #60a5fa !important;
+}
+
+html[data-theme="black"] .hp-date-text,
+html[data-theme="black"] .hp-date-icon,
+html[data-theme="black"] .hp-hero-tagline,
+html[data-theme="black"] .hp-stat-label,
+html[data-theme="black"] .hp-weather-location-label,
+html[data-theme="black"] .hp-weather-date,
+html[data-theme="black"] .hp-weather-condition,
+html[data-theme="black"] .hp-quick-desc,
+html[data-theme="black"] .hp-event-month,
+html[data-theme="black"] .hp-event-meta-item,
+html[data-theme="black"] .hp-job-meta,
+html[data-theme="black"] .hp-achv-meta {
+    color: var(--text-muted, #a0aec0) !important;
+}
+
+html[data-theme="black"] .hp-stat-card,
+html[data-theme="black"] .hp-weather-card,
+html[data-theme="black"] .hp-quick-card,
+html[data-theme="black"] .hp-panel-card {
+    background: var(--surface, #1a1f2b) !important;
+    border-color: var(--border, #2d3748) !important;
+}
+
+html[data-theme="black"] .hp-weather-divider {
+    background: var(--border, #2d3748) !important;
+}
+
+html[data-theme="black"] .hp-panel-card .ant-card-head {
+    background: var(--surface, #1a1f2b) !important;
+    border-bottom-color: var(--border, #2d3748) !important;
+    color: var(--text, #e2e8f0) !important;
+}
+
+html[data-theme="black"] .hp-event-row,
+html[data-theme="black"] .hp-job-row {
+    background: var(--surface-2, #242b3b) !important;
+}
+html[data-theme="black"] .hp-achv-row {
+    background: linear-gradient(135deg, #251a36 0%, #1f2638 100%) !important;
+    border-color: #3a2d52 !important;
+}
+html[data-theme="black"] .hp-event-row:hover {
+    background: rgba(24, 144, 255, 0.1) !important;
+}
+html[data-theme="black"] .hp-job-row:hover {
+    background: rgba(250, 140, 22, 0.08) !important;
+}
+
+html[data-theme="black"] .hp-job-company-avatar {
+    background: var(--surface-2, #242b3b) !important;
+    border-color: var(--border, #2d3748) !important;
+}
+
+html[data-theme="black"] .hp-hero-divider {
+    border-color: transparent !important;
+}
+/* ════════════════════════════════════════════════════════════
+   HERO-EMBEDDED WEATHER / TIME WIDGET
+   ════════════════════════════════════════════════════════════ */
+.hp-hero-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 14px;
+    flex-shrink: 0;
+    min-width: 0;
+}
+
+.hp-hero-weather {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 16px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.55);
+    border: 1px solid rgba(24, 144, 255, 0.18);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow:
+        0 1px 2px rgba(16, 24, 40, 0.04),
+        0 10px 24px -14px rgba(24, 144, 255, 0.35);
+    min-width: 240px;
+    max-width: 100%;
+    box-sizing: border-box;
+    flex-wrap: nowrap;
+}
+.hp-hero--admin .hp-hero-weather {
+    background: rgba(255, 251, 242, 0.65);
+    border-color: rgba(250, 140, 22, 0.22);
+    box-shadow:
+        0 1px 2px rgba(16, 24, 40, 0.04),
+        0 10px 24px -14px rgba(250, 140, 22, 0.35);
+}
+
+.hp-hero-weather-block {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    flex: 1 1 auto;
+}
+.hp-hero-weather-block--right {
+    align-items: center;
+    text-align: center;
+    min-width: 64px;
+    flex: 0 0 auto;
+}
+
+.hp-hero-weather-location {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    color: #8c8c8c;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    min-width: 0;
+}
+.hp-hero-weather-location span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+}
+.hp-hero-weather-location .anticon {
+    color: #1890ff;
+    font-size: 12px;
+    flex-shrink: 0;
+}
+.hp-hero--admin .hp-hero-weather-location .anticon {
+    color: #fa8c16;
+}
+
+.hp-hero-weather-time {
+    font-size: 22px;
+    font-weight: 800;
+    line-height: 1.1;
+    color: #1890ff;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.5px;
+    white-space: nowrap;
+}
+.hp-hero--admin .hp-hero-weather-time {
+    color: #d46b08;
+}
+
+.hp-hero-weather-date {
+    font-size: 11px;
+    color: #8c8c8c;
+}
+
+.hp-hero-weather-sep {
+    width: 1px;
+    align-self: stretch;
+    background: linear-gradient(
+        to bottom,
+        transparent,
+        rgba(24, 144, 255, 0.25),
+        transparent
+    );
+    flex-shrink: 0;
+}
+.hp-hero--admin .hp-hero-weather-sep {
+    background: linear-gradient(
+        to bottom,
+        transparent,
+        rgba(250, 140, 22, 0.3),
+        transparent
+    );
+}
+
+.hp-hero-weather-icon {
+    font-size: 22px;
+    line-height: 1;
+}
+.hp-hero-weather-temp {
+    font-size: 16px;
+    font-weight: 800;
+    color: #262626;
+    line-height: 1.1;
+    white-space: nowrap;
+}
+.hp-hero-weather-condition {
+    font-size: 10.5px;
+    color: #8c8c8c;
+    max-width: 90px;
+    line-height: 1.3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ════════════════════════════════════════════════════════════
+   RESPONSIVE — hero-right (badge + weather) across all phones
+   ════════════════════════════════════════════════════════════ */
+
+/* Phones landscape & small tablets ≤ 900px
+   (covers iPhone XR landscape 896×414, etc.) */
+@media (max-width: 900px) {
+    .hp-hero-right {
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 10px;
+        width: 100%;
+    }
+    .hp-hero-badge {
+        flex: 0 0 auto;
+    }
+    .hp-hero-weather {
+        min-width: 0;
+        flex: 1 1 260px;
+        padding: 10px 14px;
+        gap: 12px;
+    }
+    .hp-hero-weather-time {
+        font-size: 18px;
+    }
+    .hp-hero-weather-temp {
+        font-size: 15px;
+    }
+    .hp-hero-weather-icon {
+        font-size: 20px;
+    }
+}
+
+/* Narrow landscape & large portrait ≤ 720px:
+   give the weather pill the full row so location/time/temp never clip */
+@media (max-width: 720px) {
+    .hp-hero-right {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+    .hp-hero-badge {
+        align-self: flex-start;
+    }
+    .hp-hero-weather {
+        width: 100%;
+        justify-content: space-between;
+        flex: 1 1 100%;
+    }
+    .hp-hero-weather-condition {
+        max-width: 110px;
+    }
+}
+
+/* Phones portrait ≤ 575px */
+@media (max-width: 575px) {
+    .hp-hero-weather {
+        padding: 12px 14px;
+        gap: 10px;
+    }
+    .hp-hero-weather-time {
+        font-size: 17px;
+    }
+    .hp-hero-weather-temp {
+        font-size: 15px;
+    }
+    .hp-hero-weather-condition {
+        font-size: 10px;
+        max-width: 90px;
+    }
+}
+
+/* Extra-small phones ≤ 380px:
+   shrink the inner widget so location, clock, cloud & temp
+   all stay visible without horizontal scroll */
+@media (max-width: 380px) {
+    .hp-hero-weather {
+        padding: 10px 12px;
+        gap: 8px;
+    }
+    .hp-hero-weather-location {
+        font-size: 10px;
+        letter-spacing: 0.3px;
+    }
+    .hp-hero-weather-time {
+        font-size: 16px;
+    }
+    .hp-hero-weather-icon {
+        font-size: 18px;
+    }
+    .hp-hero-weather-temp {
+        font-size: 14px;
+    }
+    .hp-hero-weather-condition {
+        font-size: 9.5px;
+        max-width: 72px;
+    }
+}
+
+/* Dark theme */
+html[data-theme="black"] .hp-hero-weather {
+    background: rgba(26, 31, 43, 0.55) !important;
+    border-color: rgba(96, 165, 250, 0.25) !important;
+}
+html[data-theme="black"] .hp-hero--admin .hp-hero-weather {
+    background: rgba(42, 31, 21, 0.6) !important;
+    border-color: rgba(250, 140, 22, 0.3) !important;
+}
+html[data-theme="black"] .hp-hero-weather-time {
+    color: #60a5fa !important;
+}
+html[data-theme="black"] .hp-hero--admin .hp-hero-weather-time {
+    color: #fbbf24 !important;
+}
+html[data-theme="black"] .hp-hero-weather-temp {
+    color: #e2e8f0 !important;
+}
+html[data-theme="black"] .hp-hero-weather-location,
+html[data-theme="black"] .hp-hero-weather-date,
+html[data-theme="black"] .hp-hero-weather-condition {
+    color: #a0aec0 !important;
+}
+
+/* ════════════════════════════════════════════════════════════
+   BRAND / LOGO SHOWCASE — animated header logo strip
+   ════════════════════════════════════════════════════════════ */
+.hp-brand-showcase {
+    position: relative;
+    padding: 40px 32px 36px;
+    margin-bottom: 20px;
+    border-radius: 24px;
+    background: linear-gradient(135deg, #ffffff 0%, #f5f7fb 55%, #eef1f8 100%);
+    border: 1px solid #e8ecf5;
+    overflow: hidden;
+    box-shadow:
+        0 1px 2px rgba(16, 24, 40, 0.04),
+        0 20px 44px -18px rgba(20, 16, 70, 0.18);
+    transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.hp-brand-showcase::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(16, 24, 40, 0.08) 1px, transparent 1px);
+    background-size: 24px 24px;
+    opacity: 0.5;
+    pointer-events: none;
+    transition: background-image 0.3s ease;
+}
+
+/* Dark theme: showcase flips to a true black surface */
+html[data-theme="black"] .hp-brand-showcase {
+    background: linear-gradient(135deg, #05070f 0%, #0c1024 45%, #150a2e 100%);
+    box-shadow:
+        0 1px 2px rgba(0, 0, 0, 0.4),
+        0 20px 44px -18px rgba(0, 0, 0, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+html[data-theme="black"] .hp-brand-showcase::before {
+    background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+}
+
+/* ── Developer credit cluster (top-right corner) ─────────────────────── */
+.hp-brand-devteam {
+    position: absolute;
+    top: 20px;
+    right: 24px;
+    display: flex;
+    align-items: center;
+    z-index: 2;
+}
+.hp-dev-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid rgba(16, 24, 40, 0.15);
+    box-shadow: 0 2px 10px rgba(16, 24, 40, 0.18);
+    background: #fff;
+    cursor: pointer;
+    transition:
+        transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+        box-shadow 0.25s ease,
+        border-color 0.3s ease;
+}
+html[data-theme="black"] .hp-dev-avatar {
+    border-color: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+}
+.hp-dev-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* antd <Image> fills the circular avatar and stays clickable/zoomable */
+.hp-dev-avatar .ant-image,
+.hp-dev-avatar .hp-dev-avatar-image {
+    width: 100% !important;
+    height: 100% !important;
+    display: block !important;
+}
+.hp-dev-avatar .ant-image-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    cursor: pointer;
+}
+.hp-dev-avatar .ant-image-mask {
+    border-radius: 50%;
+    font-size: 14px;
+}
+
+/* Lightbox: show the opened John/Jonee photo generously large and crisp,
+   never shrunk down to thumbnail size regardless of the source file's
+   native dimensions. */
+.hp-dev-preview-root .ant-image-preview-img {
+    max-width: min(90vw, 680px);
+    max-height: 78vh;
+    width: auto;
+    height: auto;
+    min-width: 260px;
+    border-radius: 18px;
+    object-fit: contain;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+@media (max-width: 480px) {
+    .hp-dev-preview-root .ant-image-preview-img {
+        max-width: 94vw;
+        max-height: 70vh;
+        min-width: 200px;
+    }
+}
+
+/* Name / role caption shown under the enlarged image in the lightbox */
+.hp-dev-preview-stage {
+    position: relative;
+    display: inline-block;
+}
+.hp-dev-preview-caption {
+    position: absolute;
+    left: 50%;
+    bottom: -54px;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    background: rgba(20, 16, 40, 0.85);
+    padding: 8px 18px;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    white-space: nowrap;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+.hp-dev-preview-name {
+    color: #fff !important;
+    font-size: 13px;
+    font-weight: 700;
+}
+.hp-dev-preview-role {
+    color: rgba(255, 255, 255, 0.7) !important;
+    font-size: 11px;
+}
+.hp-dev-avatar--2 {
+    margin-left: -16px;
+}
+.hp-dev-avatar:hover,
+.hp-dev-avatar:focus-visible {
+    transform: translateY(-4px) scale(1.18);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+    z-index: 3;
+}
+.hp-dev-avatar:active {
+    transform: translateY(-1px) scale(0.95);
+}
+.hp-dev-label {
+    margin-left: 12px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: rgba(16, 24, 40, 0.65);
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+    transition: color 0.3s ease;
+}
+html[data-theme="black"] .hp-dev-label {
+    color: rgba(255, 255, 255, 0.72);
+}
+
+/* ── Logo track: department badges orbiting the central site logo ───── */
+.hp-brand-track {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 44px;
+    flex-wrap: wrap;
+    z-index: 1;
+    /* Top clearance so the floating animation (translateY -10px, plus
+       -14px more on hover) never collides with the "Built by OCC Dev"
+       avatar badge pinned top-right of the showcase. This alone is enough:
+       it pushes the whole row down uniformly, so even a wrapped second
+       row stays clear — no need to also eat into the row's width, which
+       just causes premature wrapping and dead space on narrower screens. */
+    padding-top: 46px;
+}
+
+.hp-brand-center {
+    position: relative;
+    width: 168px;
+    height: 168px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.hp-brand-center-ring {
+    position: absolute;
+    inset: -14px;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg, #ffd76a, #ff5c8a, #7c5cff, #35c7ff, #ffd76a);
+    animation: hp-spin 6s linear infinite;
+    -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 4px), #000 calc(100% - 4px));
+    mask: radial-gradient(farthest-side, transparent calc(100% - 4px), #000 calc(100% - 4px));
+}
+.hp-brand-center-glow {
+    position: absolute;
+    inset: -36px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(124, 92, 255, 0.5), transparent 70%);
+    animation: hp-pulse-glow 2.6s ease-in-out infinite;
+    pointer-events: none;
+}
+.hp-brand-center-img {
+    position: relative;
+    width: 168px;
+    height: 168px;
+    object-fit: contain;
+    background: transparent;
+    border-radius: 0;
+    padding: 0;
+    filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.45));
+    animation: hp-float 4.5s ease-in-out infinite;
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 1;
+    cursor: pointer;
+}
+.hp-brand-center:hover .hp-brand-center-img {
+    transform: scale(1.1) rotate(-3deg);
+    animation-play-state: paused;
+}
+.hp-brand-center:active .hp-brand-center-img {
+    transform: scale(0.97);
+}
+
+.hp-brand-badge {
+    --accent: #1890ff;
+    position: relative;
+    width: 128px;
+    height: 128px;
+    border-radius: 50%;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    box-shadow:
+        0 8px 22px rgba(16, 24, 40, 0.14),
+        0 0 0 4px rgba(16, 24, 40, 0.04);
+    cursor: pointer;
+    animation: hp-float 4.5s ease-in-out infinite;
+    animation-delay: calc(var(--i, 0) * 0.35s);
+    transition:
+        transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+        box-shadow 0.35s ease,
+        background 0.3s ease;
+    flex-shrink: 0;
+    outline: none;
+}
+/* Dark theme: circles flip to black to match the showcase surface */
+html[data-theme="black"] .hp-brand-badge {
+    background: #0f1320;
+    box-shadow:
+        0 8px 22px rgba(0, 0, 0, 0.32),
+        0 0 0 4px rgba(255, 255, 255, 0.07);
+}
+.hp-brand-badge img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 50%;
+}
+.hp-brand-badge-tag {
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.6px;
+    color: rgba(16, 24, 40, 0.75);
+    white-space: nowrap;
+    transition: color 0.3s ease;
+}
+html[data-theme="black"] .hp-brand-badge-tag {
+    color: rgba(255, 255, 255, 0.8);
+}
+.hp-brand-badge:hover,
+.hp-brand-badge:focus-visible {
+    transform: translateY(-14px) scale(1.12) rotate(-3deg);
+    box-shadow:
+        0 20px 40px -8px var(--accent),
+        0 0 0 4px rgba(255, 255, 255, 0.2);
+    animation-play-state: paused;
+}
+.hp-brand-badge:active {
+    transform: translateY(-6px) scale(0.95);
+}
+
+@keyframes hp-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+@keyframes hp-spin {
+    to { transform: rotate(360deg); }
+}
+@keyframes hp-pulse-glow {
+    0%, 100% { opacity: 0.55; transform: scale(1); }
+    50% { opacity: 0.95; transform: scale(1.12); }
+}
+
+.hp-brand-caption {
+    display: block;
+    text-align: center;
+    margin-top: 44px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.9px;
+    color: rgba(16, 24, 40, 0.55) !important;
+    text-transform: uppercase;
+    transition: color 0.3s ease;
+}
+html[data-theme="black"] .hp-brand-caption {
+    color: rgba(255, 255, 255, 0.6) !important;
+}
+
+/* ── Responsive ───────────────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+    .hp-brand-track {
+        gap: 32px;
+    }
+    .hp-brand-badge {
+        width: 104px;
+        height: 104px;
+    }
+    .hp-brand-center {
+        width: 136px;
+        height: 136px;
+    }
+    .hp-brand-center-img {
+        width: 112px;
+        height: 112px;
+    }
+}
+@media (max-width: 700px) {
+    .hp-brand-showcase {
+        padding: 34px 20px 32px;
+    }
+    /* Below this width, a plain flex-wrap splits the 5 items 3/2 (center
+       logo lands in the top row next to only one badge). Switch to an
+       explicit grid instead: the site logo gets its own centered row,
+       and all four department badges sit together in a single row
+       beneath it — reliable and balanced on every portrait phone. */
+    .hp-brand-track {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-areas:
+            "center center center center"
+            "b1 b2 b3 b4";
+        row-gap: 32px;
+        column-gap: 14px;
+        justify-items: center;
+        align-items: start;
+        /* Smaller top clearance to match the shrunk dev-team badge at
+           this breakpoint. */
+        padding-top: 34px;
+    }
+    .hp-brand-track > *:nth-child(1) {
+        grid-area: b1;
+    }
+    .hp-brand-track > *:nth-child(2) {
+        grid-area: b2;
+    }
+    .hp-brand-track > *:nth-child(3) {
+        grid-area: center;
+        margin-bottom: 6px;
+    }
+    .hp-brand-track > *:nth-child(4) {
+        grid-area: b3;
+    }
+    .hp-brand-track > *:nth-child(5) {
+        grid-area: b4;
+    }
+
+    .hp-brand-badge {
+        width: 76px;
+        height: 76px;
+        padding: 11px;
+    }
+    .hp-brand-center {
+        width: 108px;
+        height: 108px;
+    }
+    .hp-brand-center-img {
+        width: 108px;
+        height: 108px;
+    }
+    .hp-brand-badge-tag {
+        font-size: 11px;
+        bottom: -20px;
+    }
+    .hp-brand-caption {
+        margin-top: 30px;
+        font-size: 11.5px;
+    }
+    .hp-brand-devteam {
+        top: 16px;
+        right: 18px;
+    }
+}
+@media (max-width: 420px) {
+    .hp-brand-showcase {
+        padding: 30px 12px 28px;
+    }
+    .hp-brand-track {
+        column-gap: 8px;
+        row-gap: 26px;
+    }
+    .hp-brand-badge {
+        width: 62px;
+        height: 62px;
+        padding: 8px;
+    }
+    .hp-brand-center {
+        width: 90px;
+        height: 90px;
+    }
+    .hp-brand-center-img {
+        width: 90px;
+        height: 90px;
+    }
+    .hp-brand-badge-tag {
+        font-size: 9.5px;
+        bottom: -17px;
+        letter-spacing: 0.3px;
+    }
+    .hp-brand-caption {
+        margin-top: 26px;
+        font-size: 10.5px;
+    }
+    .hp-brand-devteam {
+        top: 10px;
+        right: 12px;
+    }
+    .hp-dev-avatar {
+        width: 34px;
+        height: 34px;
+    }
+    .hp-dev-label {
+        display: none;
+    }
+}
+
+/* Respect reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+    .hp-brand-badge,
+    .hp-brand-center-img,
+    .hp-brand-center-ring,
+    .hp-brand-center-glow {
+        animation: none !important;
+    }
+}
