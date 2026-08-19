@@ -40,7 +40,21 @@ class JobApplication extends Model
         'updated_at' => 'datetime',
 
         // ===== NEW: verification casts =====
-        'ocr_extracted_data' => 'array',
+        // Phase 9 — encrypt highly sensitive data at rest. These four
+        // columns hold PII lifted directly from a government ID scan
+        // (a name, an ID number, the full raw OCR text dump, and a
+        // structured extraction of the same). Phase 5 already stopped
+        // these from ever reaching an API response; this is the
+        // complementary defense-in-depth layer — even a raw database
+        // dump, backup, or read-only DB-user compromise now sees only
+        // ciphertext for these specific columns, transparently
+        // encrypted/decrypted through Eloquent using APP_KEY.
+        // `encrypted:array` replaces the previous plain `array` cast for
+        // ocr_extracted_data — same JSON behavior, now also encrypted.
+        'ocr_name' => 'encrypted',
+        'ocr_id_number' => 'encrypted',
+        'ocr_raw_text' => 'encrypted',
+        'ocr_extracted_data' => 'encrypted:array',
         'ocr_success'        => 'boolean',
         'id_type_match'      => 'boolean',
         'verified_at'        => 'datetime',

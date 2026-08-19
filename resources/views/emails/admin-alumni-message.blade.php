@@ -23,9 +23,9 @@
                     "{{ $chatMessage->message }}"
                 </p>
 
-                @if($chatMessage->image_path)
+                @if($chatMessage->image_path && file_exists(storage_path('app/private/' . $chatMessage->image_path)))
                 <div style="margin-top: 15px; text-align: center;">
-                    <img src="{{ $message->embed(storage_path('app/public/' . $chatMessage->image_path)) }}" alt="Attached Image" style="max-width: 100%; border-radius: 4px; border: 1px solid #dee2e6;">
+                    <img src="{{ $message->embed(storage_path('app/private/' . $chatMessage->image_path)) }}" alt="Attached Image" style="max-width: 100%; border-radius: 4px; border: 1px solid #dee2e6;">
                 </div>
                 @endif
             </div>

@@ -131,17 +131,25 @@ class NotificationController extends Controller
 
     public function registerDevice(Request $request)
     {
+        $user = $request->user();
+        if (!$user) {
+            return response()->json(['error' => 'Unauthenticated'], 401);
+        }
+
         $validated = $request->validate([
-            'user_id' => 'required|exists:users,id',
             'device_token' => 'required|string',
             'device_uuid' => 'required|string',
             'platform' => 'required|in:ios,android',
         ]);
 
+        // Previously trusted a client-supplied `user_id`, letting any
+        // authenticated caller register a device token under someone
+        // else's account and receive that user's push notifications.
+        // Always use the authenticated user's own id.
         DeviceToken::updateOrCreate(
             ['token' => $validated['device_token']],
             [
-                'user_id' => $validated['user_id'],
+                'user_id' => $user->id,
                 'device_id' => $validated['device_uuid'],
                 'platform' => $validated['platform'],
             ]

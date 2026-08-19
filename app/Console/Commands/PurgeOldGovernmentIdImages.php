@@ -11,6 +11,13 @@ use Carbon\Carbon;
  * Auto-deletes stored Government ID images 90 days after the application
  * is closed (status = accepted or rejected).
  *
+ * Phase 2 fix: this command previously read from Storage::disk('local')
+ * (storage/app/...) while every upload path in JobApplicationController
+ * wrote to the `public` disk — a disk mismatch that meant this scheduled
+ * purge silently matched zero files and never actually deleted anything.
+ * Now points at the `private` disk, matching where uploads are written
+ * as of Phase 2.
+ *
  * Schedule in App\Console\Kernel:
  *   $schedule->command('ids:purge-old')->daily();
  */
@@ -34,11 +41,11 @@ class PurgeOldGovernmentIdImages extends Command
         $count = 0;
         $query->chunkById(100, function ($apps) use (&$count) {
             foreach ($apps as $app) {
-                if ($app->government_id_front && Storage::disk('local')->exists($app->government_id_front)) {
-                    Storage::disk('local')->delete($app->government_id_front);
+                if ($app->government_id_front && Storage::disk('private')->exists($app->government_id_front)) {
+                    Storage::disk('private')->delete($app->government_id_front);
                 }
-                if ($app->government_id_back && Storage::disk('local')->exists($app->government_id_back)) {
-                    Storage::disk('local')->delete($app->government_id_back);
+                if ($app->government_id_back && Storage::disk('private')->exists($app->government_id_back)) {
+                    Storage::disk('private')->delete($app->government_id_back);
                 }
                 $app->update([
                     'government_id_front' => null,

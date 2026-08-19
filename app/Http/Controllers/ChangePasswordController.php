@@ -88,12 +88,32 @@ class ChangePasswordController extends Controller
          return response()->json([
     'success' => false,
     'message' => 'Current password is incorrect.',
-], 200);
+], 422);
         }
 
         try {
             $user->password = Hash::make($request->new_password);
             $user->save();
+
+            // Phase 10 — password change invalidation. Previously,
+            // changing a password did not touch any existing Passport
+            // tokens at all: if an attacker had a stolen bearer token or
+            // auth_token cookie (Phase 6), it stayed fully valid
+            // indefinitely after the legitimate user "secured" their
+            // account by changing the password — exactly the scenario
+            // a password change is supposed to protect against. Revoke
+            // every OTHER active token for this user (every other
+            // device/browser session), but deliberately leave the
+            // current request's own token alone so the user isn't
+            // logged out of the device they just used to make this
+            // change — standard, user-friendly behavior for this flow.
+            if ($authUser->token()) {
+                $currentTokenId = $authUser->token()->id;
+                \Laravel\Passport\Token::where('user_id', $user->id)
+                    ->where('id', '!=', $currentTokenId)
+                    ->where('revoked', false)
+                    ->update(['revoked' => true]);
+            }
 
             PasswordChangeLog::create([
                 'user_id'    => $user->id,

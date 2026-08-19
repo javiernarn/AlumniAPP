@@ -845,7 +845,9 @@ const AdminAlumniMessages = () => {
     const fetchAlumniMessages = useCallback(async (silent = false) => {
         try {
             setError(null);
-            const response = await axios.get("/alumni/messages", { silent });
+            const response = await axios.get("/alumni/messages", {
+                suppressGenericModal: true, // the catch block below shows a specific message instead
+            });
 
             if (response.data.success) {
                 const messagesData = response.data.messages || [];
@@ -879,7 +881,7 @@ const AdminAlumniMessages = () => {
     const fetchAlumniUnreadCount = useCallback(async (silent = false) => {
         try {
             const response = await axios.get("/alumni/messages/unread-count", {
-                silent, // suppress the global error modal for background polls
+                suppressGenericModal: true,
             });
             if (response.data.success) {
                 setAlumniUnreadCount(response.data.unread_count || 0);
@@ -979,7 +981,7 @@ const AdminAlumniMessages = () => {
         try {
             const response = await axios.get("/admin/alumni/all", {
                 params: { search: searchQuery },
-                silent, // suppress the global error modal for background polls
+                suppressGenericModal: true, // the catch block below shows a specific toast instead
             });
             if (response.data.success) {
                 // Rejected alumni accounts should not appear in the All Alumni list.
@@ -998,7 +1000,7 @@ const AdminAlumniMessages = () => {
         try {
             const response = await axios.get("/admin/conversations", {
                 params: { search: searchQuery },
-                silent, // suppress the global error modal for background polls
+                suppressGenericModal: true, // the catch block below shows a specific toast instead
             });
 
             if (response.data.success) {
@@ -1015,7 +1017,7 @@ const AdminAlumniMessages = () => {
             if (!silent) setLoading(true);
 
             const response = await axios.get(`/admin/messages/${alumniId}`, {
-                silent, // suppress the global error modal for background polls
+                suppressGenericModal: true, // the catch block below shows a specific toast instead
             });
 
             if (response.data.success) {
@@ -1105,6 +1107,21 @@ const AdminAlumniMessages = () => {
                 formData,
                 {
                     headers: { "Content-Type": "multipart/form-data" },
+                    // Image uploads carry real file bytes over the wire on
+                    // top of server-side processing (re-encoding, storage,
+                    // optional email dispatch) — the default 15s API
+                    // timeout is tuned for small JSON calls and was firing
+                    // false-positive "timed out" errors on slower
+                    // connections even when the message went through fine
+                    // moments later. Give attachments more breathing room.
+                    timeout: selectedImage ? 60000 : 15000,
+                    // The catch block below already shows a specific,
+                    // situation-aware message (and recovers gracefully on
+                    // timeout) — suppress the generic global modal so the
+                    // admin doesn't see two different error popups for the
+                    // same failed send. Unlike `silent`, this still lets a
+                    // 401 (session expired) redirect to login normally.
+                    suppressGenericModal: true,
                 },
             );
 
@@ -1127,7 +1144,27 @@ const AdminAlumniMessages = () => {
             }
         } catch (error) {
             console.error("Failed to send message:", error);
-            message.error("Failed to send message");
+
+            if (error.code === "ECONNABORTED") {
+                // The client gave up waiting, but the server may well
+                // still be processing (or may have already finished) —
+                // don't tell the admin it "failed" and invite a
+                // duplicate resend. Re-sync the thread shortly after so
+                // the message appears on its own once it lands.
+                message.warning(
+                    "That's taking longer than expected — it may still go through. Checking for it now...",
+                );
+                clearImagePreview();
+                setNewMessage("");
+                if (selectedConversation) {
+                    setTimeout(() => {
+                        fetchAdminMessages(selectedConversation.alumni_id);
+                        fetchConversations();
+                    }, 5000);
+                }
+            } else {
+                message.error("Failed to send message");
+            }
         } finally {
             setSending(false);
         }
@@ -1344,7 +1381,7 @@ const AdminAlumniMessages = () => {
                 contactPermission: values.contactPermission,
                 agreement: values.agreement,
                 profileImage: values?.profile_image_url,
-                idDocuments: values?.document_urls || [],
+                idDocuments: values?.documents || [],
             };
 
             setAlumniPreviewData(previewData);
@@ -1785,7 +1822,7 @@ const AdminAlumniMessages = () => {
                 fetchAlumniMessages(true);
                 fetchAlumniUnreadCount(true);
             }
-        }, 5000);
+        }, 10000);
 
         return () => clearInterval(interval);
     }, [
@@ -1869,15 +1906,21 @@ const AdminAlumniMessages = () => {
     // RENDER MESSAGE IMAGE COMPONENT
     // ============================
 
-    const renderMessageImage = (imagePath, isOptimistic = false) => {
-        if (!imagePath) return null;
+    const renderMessageImage = (imagePath, isOptimistic = false, imageUrlField = null) => {
+        if (!imagePath && !imageUrlField) return null;
 
-        const imageUrl = isOptimistic ? imagePath : getImageUrl(imagePath);
+        // Message images live on the private disk — the backend now
+        // sends a ready-to-use, authorized `image_url` alongside the
+        // raw `image_path`. Prefer that; getImageUrl()'s storage/-path
+        // reconstruction is only a fallback for optimistic/legacy values.
+        const imageUrl = isOptimistic
+            ? imagePath
+            : imageUrlField || getImageUrl(imagePath);
 
         return (
             <div
                 className="message-image-container"
-                onClick={() => !isOptimistic && openLightbox(imagePath)}
+                onClick={() => !isOptimistic && openLightbox(imageUrlField || imagePath)}
             >
                 <img
                     src={imageUrl || "/placeholder.svg"}
@@ -2497,6 +2540,7 @@ const AdminAlumniMessages = () => {
                                             {renderMessageImage(
                                                 groupedItem.image_path,
                                                 groupedItem.isOptimistic,
+                                                groupedItem.image_url,
                                             )}
 
                                             {isEditing
@@ -3385,6 +3429,7 @@ const AdminAlumniMessages = () => {
                                                                 {renderMessageImage(
                                                                     groupedItem.image_path,
                                                                     groupedItem.isOptimistic,
+                                                                    groupedItem.image_url,
                                                                 )}
 
                                                                 {isEditing

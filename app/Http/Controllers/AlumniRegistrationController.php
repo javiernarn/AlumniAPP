@@ -16,6 +16,12 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\AlumniRegistrationConfirmation;
+use App\Http\Requests\Alumni\StoreAlumniRequest;
+use App\Http\Requests\Alumni\UpdateAlumniRequest;
+use App\Http\Requests\Alumni\UploadAlumniDocumentRequest;
+use App\Http\Requests\Alumni\UpdateProfileImageRequest;
+use App\Support\ImageSanitizer;
+use App\Support\UploadedFileNamer;
 use App\Mail\AlumniAccountApproved;
 
 class AlumniRegistrationController extends Controller
@@ -40,82 +46,23 @@ class AlumniRegistrationController extends Controller
         return $data;
     }
 
-    public function store(Request $request)
+    public function store(StoreAlumniRequest $request)
     {
         DB::beginTransaction();
 
+        // Phase 3 — orphan cleanup: track every file this request writes
+        // to the private disk so we can delete them if anything after
+        // the write fails and we roll back the transaction. Previously
+        // a DB failure after a successful store() call left orphaned
+        // files on disk forever with no DB row pointing at them.
+        $writtenPaths = [];
+
         try {
-            $validator = Validator::make($request->all(), [
-                // Personal Information
-                'first_name' => 'required|string|max:255',
-                'password' => 'required|string|max:255',
-                'last_name' => 'required|string|max:255',
-                'middle_name' => 'nullable|string|max:255',
-                'suffix' => 'nullable|string|max:10',
-                'email' => 'required|email|unique:alumni,email|unique:users,email',
-                'phone' => 'required|string|max:20|unique:alumni,phone',
-                'address' => 'required|string',
-                // 'birth_date' => 'required|date', 
-                'gender' => 'required|in:male,female,other,prefer_not_to_say',
-                'bio' => 'nullable|string',
-                'profile_image' => 'nullable|image|max:5120', // 5MB
-
-                // Academic Information
-                // 'course' => 'required|string|max:255',
-                'student_id' => 'nullable|string|max:50|unique:alumni,student_id',
-                'graduation_year' => 'required|integer|min:1900|max:' . (date('Y') + 5),
-                'enrollment_year' => 'nullable|integer|min:1900|max:' . date('Y'),
-                'honors' => 'nullable|array',
-                'thesis_title' => 'nullable|string|max:500',
-                'academic_achievements' => 'nullable|string',
-                'extracurricular' => 'nullable|string',
-                'continue_education' => 'boolean',
-
-                // Career Information
-                // 'employment_status' => 'required|in:employed,unemployed,self-employed,freelancer,graduate_student,entrepreneur,seeking_opportunities',
-                'current_company' => 'nullable|string|max:255',
-                'job_title' => 'nullable|string|max:255',
-                'industry' => 'nullable|string|max:255',
-                'years_experience' => 'nullable|integer|min:0|max:50',
-                'salary_range' => 'nullable|string|max:50',
-                'work_location' => 'nullable|string|max:255',
-                'career_goals' => 'nullable|string',
-                'previous_companies' => 'nullable|string',
-
-                // Social Media
-                'linkedin' => 'nullable|url|max:255',
-                'github' => 'nullable|url|max:255',
-                'portfolio' => 'nullable|url|max:255',
-                'twitter' => 'nullable|url|max:255',
-
-                // Skills
-                'technical_skills' => 'nullable|array',
-                'soft_skills' => 'nullable|array',
-                'certifications' => 'nullable|array',
-                'languages' => 'nullable|array',
-                'professional_interests' => 'nullable|string',
-                'hobbies' => 'nullable|string',
-                'volunteer_interests' => 'nullable|array',
-                'willing_to_mentor' => 'boolean',
-
-                // Agreements
-                'agreement' => 'required|accepted',
-                'newsletter' => 'boolean',
-                'contact_permission' => 'boolean',
-            ]);
-
-            if ($validator->fails()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Registration failed. Please check the errors below.',
-                    'errors' => $validator->errors(),
-                    'field_errors' => $validator->errors()->all(),
-                    'specific_errors' => $validator->errors()->toArray()
-                ], 422);
-            }
-
-            // Process and format the birth_date after successful validation
-            $validated = $validator->validated();
+            // Form Request (StoreAlumniRequest) has already validated
+            // and authorized this request, including course_id /
+            // employment_status_id foreign keys and the documents array
+            // — none of that was previously checked at all.
+            $validated = $request->validated();
 
             // Normalize name fields to uppercase before they get stored,
             // so "Jessa Mae" becomes "JESSA MAE" consistently in the DB.
@@ -129,7 +76,11 @@ class AlumniRegistrationController extends Controller
             // Handle profile image upload
             $profileImagePath = null;
             if ($request->hasFile('profile_image')) {
-                $profileImagePath = $request->file('profile_image')->store('alumni/profile-images', 'public');
+                $profileImagePath = $this->storeSanitizedImage(
+                    $request->file('profile_image'),
+                    'alumni/profile-images'
+                );
+                $writtenPaths[] = $profileImagePath;
             }
 
             // Handle array fields - convert to JSON if they are arrays
@@ -148,8 +99,6 @@ class AlumniRegistrationController extends Controller
                 }
             }
 
-            $plainPassword = $validated['password'];
-            
             $user = User::create([
                 'name' => $validated['first_name'] . ' ' . $validated['last_name'],
                 'email' => $validated['email'],
@@ -173,10 +122,29 @@ class AlumniRegistrationController extends Controller
                 'gender' => $validated['gender'],
                 'bio' => $validated['bio'] ?? null,
                 'profile_image' => $profileImagePath,
-                'temp_password' => $plainPassword,
+                // Phase 5: previously stored the plaintext password here
+                // ('temp_password' => $plainPassword) so it could be
+                // included in the account-approval email as a
+                // convenience reminder. That created a plaintext
+                // credential at rest for however long the account sat
+                // pending approval. Deleted — see
+                // resources/views/emails/alumni-account-approved.blade.php
+                // for the replacement wording, which just asks the
+                // alumnus to use the password they already chose.
 
                 // Academic Information
-                'course_id' => $request->course_id,
+                // The legacy `course` string column is NOT NULL with no
+                // default. Nothing has populated it since the app
+                // migrated to the course_id foreign key — in production
+                // this was silently masked by MySQL's non-strict mode
+                // (config/database.php 'strict' => false), which just
+                // inserts an empty string, but it's a real data-integrity
+                // gap (every alumni row's `course` ends up ''). Populate
+                // it from the related course when we have one, exactly
+                // as the pre-existing $query->where('course', ...)
+                // search filter elsewhere in this controller expects.
+                'course' => optional(\App\Models\Course::find($validated['course_id'] ?? null))->course_code ?? '',
+                'course_id' => $validated['course_id'] ?? null,
                 'student_id' => $validated['student_id'] ?? null,
                 'graduation_year' => $validated['graduation_year'],
                 'enrollment_year' => $validated['enrollment_year'] ?? null,
@@ -187,7 +155,7 @@ class AlumniRegistrationController extends Controller
                 'continue_education' => $validated['continue_education'] ?? false,
 
                 // Career Information
-                'employment_status_id' => $request->employment_status_id,
+                'employment_status_id' => $validated['employment_status_id'] ?? null,
                 'current_company' => $validated['current_company'] ?? null,
                 'job_title' => $validated['job_title'] ?? null,
                 'industry' => $validated['industry'] ?? null,
@@ -219,11 +187,18 @@ class AlumniRegistrationController extends Controller
                 'contact_permission' => $validated['contact_permission'] ?? false,
             ]);
 
-            // Handle document uploads
+            // Handle document uploads. Form Request validation already
+            // enforced document_type against the enum and file
+            // type/size, so both are now trustworthy here.
             if ($request->has('documents')) {
                 foreach ($request->documents as $document) {
                     if (isset($document['file'])) {
-                        $filePath = $document['file']->store('alumni/documents', 'public');
+                        $filePath = $this->storeSanitizedImage(
+                            $document['file'],
+                            'alumni/documents',
+                            allowNonImagePassthrough: true // PDFs pass through unsanitized; images are re-encoded
+                        );
+                        $writtenPaths[] = $filePath;
 
                         AlumniDocument::create([
                             'alumni_id' => $alumni->id,
@@ -264,14 +239,19 @@ class AlumniRegistrationController extends Controller
                 'success' => true,
                 'message' => 'Alumni registration submitted successfully!',
                 'application_id' => $applicationId,
-                'data' => $alumni->load('documents')
+                'data' => new \App\Http\Resources\Alumni\AlumniSelfResource($alumni->load('documents'))
             ], 201);
         } catch (\Exception $e) {
             DB::rollBack();
 
-            // Clean up uploaded files if any
-            if (isset($profileImagePath)) {
-                Storage::disk('public')->delete($profileImagePath);
+            // Phase 3 — orphan cleanup: delete every file this request
+            // wrote to disk, not just the profile image (the document
+            // loop above previously left orphaned files behind on any
+            // failure after it ran).
+            foreach ($writtenPaths as $path) {
+                if ($path) {
+                    Storage::disk('private')->delete($path);
+                }
             }
 
             // Log the error for debugging
@@ -286,13 +266,127 @@ class AlumniRegistrationController extends Controller
         }
     }
 
+    /**
+     * Phase 3 — store an uploaded file on the private disk, re-encoding
+     * it first if it's a raster image (jpg/png/webp/gif). PDFs (used for
+     * some alumni documents) pass through unchanged when
+     * $allowNonImagePassthrough is true, since GD can't re-encode them;
+     * they're still protected by the mimes/extension whitelist and the
+     * server-generated random filename.
+     *
+     * Returns the stored path, or throws if an "image" mime claimed by
+     * the upload can't actually be decoded by GD — a strong signal the
+     * file's real content doesn't match what it claims to be.
+     */
+    private function storeSanitizedImage($file, string $directory, bool $allowNonImagePassthrough = false): string
+    {
+        $mime = $file->getMimeType();
+        $imageMimes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+
+        if (in_array($mime, $imageMimes, true)) {
+            $reencoded = ImageSanitizer::reencode(file_get_contents($file->getRealPath()), $mime);
+
+            if ($reencoded === null) {
+                throw ValidationException::withMessages([
+                    'file' => ['The uploaded file is not a valid image.'],
+                ]);
+            }
+
+            $filename = \Illuminate\Support\Str::random(40) . '.jpg';
+            Storage::disk('private')->put($directory . '/' . $filename, $reencoded);
+            return $directory . '/' . $filename;
+        }
+
+        if ($allowNonImagePassthrough) {
+            return $file->storeAs($directory, UploadedFileNamer::randomName($file), 'private');
+        }
+
+        throw ValidationException::withMessages([
+            'file' => ['Unsupported file type.'],
+        ]);
+    }
+
     public function show($id)
     {
         $alumni = Alumni::with('documents')->findOrFail($id);
 
+        // Previously unguarded: any authenticated user (including any
+        // other alumnus) could fetch any alumni's full record, including
+        // government-document metadata via the document_urls accessor.
+        // Now: admin, the record owner, or a department head scoped to
+        // the same course.
+        $this->authorize('view', $alumni);
+
+        // Phase 5 — audience-specific serialization instead of dumping
+        // the raw Eloquent model. A department head only ever gets the
+        // course-scoped, contact-info-free view even though the policy
+        // above already limited *which* records they can reach; an
+        // admin or the record's own owner gets the full picture.
+        $user = auth()->user();
+        $resource = $user->role === 'admin'
+            ? new \App\Http\Resources\Alumni\AlumniAdminResource($alumni)
+            : ($user->role === 'department_head'
+                ? new \App\Http\Resources\Alumni\AlumniDepartmentHeadResource($alumni)
+                : new \App\Http\Resources\Alumni\AlumniSelfResource($alumni));
+
         return response()->json([
             'success' => true,
-            'data' => $alumni
+            'data' => $resource
+        ]);
+    }
+
+    /**
+     * Phase 2 — authorized download for an alumnus's profile image.
+     * Replaces the raw public asset('storage/...') URL previously
+     * returned by Alumni::getProfileImageUrlAttribute; the file now
+     * lives on the private disk.
+     */
+    public function downloadProfileImage($id)
+    {
+        $alumni = Alumni::findOrFail($id);
+
+        $this->authorize('view', $alumni);
+
+        if (!$alumni->profile_image || !Storage::disk('private')->exists($alumni->profile_image)) {
+            return response()->json(['message' => 'Not found'], 404);
+        }
+
+        // Unlike the confidential documents below, this is a public-facing
+        // profile photo rendered in bulk everywhere (alumni lists,
+        // conversation lists, notification bell — see the 'profile-image'
+        // rate limiter comment in RouteServiceProvider). 'no-store' forced
+        // the browser to re-fetch every avatar on every re-render/poll,
+        // which was a major contributor to the app's 429 rate-limit
+        // storms. Cache it privately in the browser instead; still
+        // authorized per-request, just not re-downloaded needlessly.
+        return Storage::disk('private')->response($alumni->profile_image, null, [
+            'X-Content-Type-Options' => 'nosniff',
+            'Cache-Control' => 'private, max-age=300',
+        ]);
+    }
+
+    /**
+     * Phase 2 — authorized download for a single alumni document (ID
+     * card, diploma, transcript, etc.). Replaces the raw public
+     * asset('storage/...') URL previously returned by
+     * AlumniDocument::fileUrl; department heads are intentionally
+     * excluded here even though they can view the alumni record itself
+     * (AlumniDocumentPolicy — course scope does not imply a right to see
+     * someone's ID documents).
+     */
+    public function downloadDocument($documentId)
+    {
+        $document = AlumniDocument::with('alumni')->findOrFail($documentId);
+
+        $this->authorize('view', $document);
+
+        if (!$document->file_path || !Storage::disk('private')->exists($document->file_path)) {
+            return response()->json(['message' => 'Not found'], 404);
+        }
+
+        return Storage::disk('private')->response($document->file_path, null, [
+            'X-Content-Type-Options' => 'nosniff',
+            'Cache-Control' => 'private, no-store',
         ]);
     }
 
@@ -364,13 +458,21 @@ class AlumniRegistrationController extends Controller
         }
     }
 
-       public function update(Request $request, $id)
+       public function update(UpdateAlumniRequest $request, $id)
     {
+        $alumni = Alumni::findOrFail($id);
+
+        // Previously unguarded: any authenticated user could edit any
+        // alumni's record (horizontal privilege escalation). Now: admin
+        // or the record's own owner only. Checked before opening the DB
+        // transaction below so a rejected request never leaves a
+        // transaction open (the existing catch block only handles
+        // ValidationException, not AuthorizationException).
+        $this->authorize('update', $alumni);
+
         DB::beginTransaction();
 
         try {
-            $alumni = Alumni::findOrFail($id);
-
             // ============ CAREER INFO EDIT LOCK (60-day server-side) ============
             $careerFields = [
                 'current_company',
@@ -400,54 +502,7 @@ class AlumniRegistrationController extends Controller
             }
             // ============ END CAREER LOCK CHECK ============
 
-            $validated = $request->validate([
-                'first_name' => 'sometimes|required|string|max:255',
-                'last_name' => 'sometimes|required|string|max:255',
-                'email' => [
-                    'sometimes',
-                    'email',
-                    function ($attribute, $value, $fail) use ($alumni) {
-                        if ($value) {
-                            $existsInAlumni = \App\Models\Alumni::where('email', $value)
-                                ->where('id', '!=', $alumni->id)
-                                ->exists();
-
-                            $existsInUsers = \App\Models\User::where('email', $value)
-                                ->where('id', '!=', $alumni->user_id)
-                                ->exists();
-
-                            if ($existsInAlumni || $existsInUsers) {
-                                $fail('This email is already in use.');
-                            }
-                        }
-                    },
-                ],
-                'phone' => [
-                    'sometimes',
-                    'string',
-                    'max:20',
-                    function ($attribute, $value, $fail) use ($alumni) {
-                        if ($value) {
-                            $existsInAlumni = \App\Models\Alumni::where('phone', $value)
-                                ->where('id', '!=', $alumni->id)
-                                ->exists();
-
-                            if ($existsInAlumni) {
-                                $fail('This phone number is already in use.');
-                            }
-                        }
-                    },
-                ],
-                'address' => 'nullable|string|max:255',
-                'current_company' => 'nullable|string|max:255',
-                'job_title' => 'nullable|string|max:255',
-                'industry' => 'nullable|string|max:255',
-                'years_experience' => 'nullable|integer|min:0|max:50',
-                'salary_range' => 'nullable|string|max:100',
-                'work_location' => 'nullable|string|max:255',
-                'previous_companies' => 'nullable|string',
-                'profile_image' => 'sometimes|image|max:5120',
-            ]);
+            $validated = $request->validated();
 
             // Normalize name fields to uppercase before they get stored.
             $validated = $this->uppercaseNameFields($validated);
@@ -455,10 +510,13 @@ class AlumniRegistrationController extends Controller
             // Handle profile image update
             if ($request->hasFile('profile_image')) {
                 if ($alumni->profile_image) {
-                    Storage::disk('public')->delete($alumni->profile_image);
+                    Storage::disk('private')->delete($alumni->profile_image);
                 }
 
-                $profileImagePath = $request->file('profile_image')->store('alumni/profile-images', 'public');
+                $profileImagePath = $this->storeSanitizedImage(
+                    $request->file('profile_image'),
+                    'alumni/profile-images'
+                );
                 $validated['profile_image'] = $profileImagePath;
             }
 
@@ -495,8 +553,15 @@ class AlumniRegistrationController extends Controller
             ]);
 
         } catch (ValidationException $e) {
-            // (keep your existing catch blocks below unchanged)
             DB::rollBack();
+
+            // Phase 3 — orphan cleanup: if a new profile image was
+            // already written to the private disk before the failure,
+            // remove it rather than leaving an unreferenced file behind.
+            if (isset($profileImagePath)) {
+                Storage::disk('private')->delete($profileImagePath);
+            }
+
             return response()->json([
                 'success' => false,
                 'message' => 'Validation failed',
@@ -588,7 +653,7 @@ class AlumniRegistrationController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Alumni status updated successfully!',
-            'data' => $alumni
+            'data' => new \App\Http\Resources\Alumni\AlumniAdminResource($alumni)
         ]);
     }
 
@@ -626,16 +691,14 @@ class AlumniRegistrationController extends Controller
                 'suffix' => $alumni->suffix ?? '',
                 'email' => $alumni->email,
                 'application_id' => $alumni->application_id ?? null,
-                'password' => $alumni->temp_password ?? null, // Include stored temp password
-                'admin_notes' => $alumni->admin_notes ?? null, // NEW: include admin notes in email
+                // Phase 5: no longer includes the plaintext password —
+                // see the temp_password removal above.
+                'admin_notes' => $alumni->admin_notes ?? null,
             ];
 
             Mail::to($alumni->email)->send(new AlumniAccountApproved($alumniData));
             Log::info('Alumni account approval email sent to: ' . $alumni->email);
 
-            if ($alumni->temp_password) {
-                $alumni->update(['temp_password' => null]);
-            }
         } catch (\Exception $emailException) {
             Log::error('Failed to send alumni account approval email: ' . $emailException->getMessage());
         }
@@ -670,13 +733,22 @@ class AlumniRegistrationController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $alumni
+            // Phase 5: not just $alumni — this endpoint is unrouted
+            // (dead code) as of this audit, but kept correct/consistent
+            // with the rest of the controller rather than left as a raw
+            // model dump in case it's wired up later.
+            'data' => \App\Http\Resources\Alumni\AlumniAdminResource::collection($alumni)
         ]);
     }
 
     public function index(Request $request)
     {
-        $query = Alumni::with(['documents', 'employmentStatus']);
+        // Eager-load the linked user's presence columns so
+        // AlumniAdminResource can expose real is_online/last_active_at
+        // values instead of silently falling back to the alumni row's
+        // own updated_at (registration/edit time, unrelated to login
+        // activity) on the frontend.
+        $query = Alumni::with(['documents', 'employmentStatus', 'user:id,last_active_at,is_online']);
 
         // Search
         if ($request->has('search')) {
@@ -693,39 +765,67 @@ class AlumniRegistrationController extends Controller
             $query->where('course', $request->course);
         }
 
-        // Get all results WITHOUT toArray() to preserve accessors
-        $alumni = $query->latest()->get();
+        // Phase 5: previously ->get() (unbounded — every alumni row,
+        // every time, no page limit) serialized via a bare
+        // response()->json($alumni) (every raw Eloquent attribute,
+        // including admin_notes/is_messaging_restricted). Paginated with
+        // a capped page size and wrapped in AlumniAdminResource — this
+        // route is already role:admin-gated (Phase 1), but "same data
+        // for every admin, minimized and paginated" is still the right
+        // default rather than a full unbounded dump.
+        $perPage = min((int) $request->get('per_page', 25), 100);
+        $alumni = $query->latest()->paginate($perPage);
 
-        return response()->json($alumni);
+        return \App\Http\Resources\Alumni\AlumniAdminResource::collection($alumni)->response();
+    }
+
+    /**
+     * Alumni-facing "browse the directory" endpoint (GET /alumni/directory).
+     *
+     * GET /alumni (index() above) stays admin-only — regular alumni have
+     * no business reason to enumerate every other alumni's full record
+     * (email, phone, admin notes, documents, etc). But the app's own UI
+     * (AlumniList.js's non-admin copy: "Browse the OCC Alumni Directory,
+     * connect with fellow graduates...") is meant to let any
+     * authenticated alumni browse a minimized, public-safe subset of
+     * *approved* alumni — see AlumniDirectoryResource for exactly which
+     * fields that includes.
+     */
+    public function directory(Request $request)
+    {
+        // Same reasoning as index() above — the alumni-facing card in
+        // AlumniList.js renders a LastActiveIndicator too, so this needs
+        // the same user:id,last_active_at,is_online eager load or every
+        // card here falls back to "Never active" regardless of real status.
+        $query = Alumni::approved()->with(['course', 'user:id,last_active_at,is_online']);
+
+        if ($request->has('search')) {
+            $query->search($request->search);
+        }
+
+        if ($request->has('course_id')) {
+            $query->where('course_id', $request->course_id);
+        }
+
+        $perPage = min((int) $request->get('per_page', 25), 100);
+        $alumni = $query->latest()->paginate($perPage);
+
+        return \App\Http\Resources\Alumni\AlumniDirectoryResource::collection($alumni)->response();
     }
 
 
-public function updateProfileImage(Request $request, $id)
+public function updateProfileImage(UpdateProfileImageRequest $request, $id)
     {
         try {
-            $validator = Validator::make($request->all(), [
-                'profile_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:5120'
-            ]);
-
-            if ($validator->fails()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => $validator->errors()->first(),
-                    'errors' => $validator->errors()
-                ], 422);
-            }
-
             $alumni = Alumni::findOrFail($id);
 
             // Delete old profile image if exists
-            if ($alumni->profile_image && Storage::disk('public')->exists($alumni->profile_image)) {
-                Storage::disk('public')->delete($alumni->profile_image);
+            if ($alumni->profile_image && Storage::disk('private')->exists($alumni->profile_image)) {
+                Storage::disk('private')->delete($alumni->profile_image);
             }
 
-            // Upload new image
-            $file = $request->file('profile_image');
-            $filename = time() . '_profile_' . Str::random(8) . '.' . $file->getClientOriginalExtension();
-            $path = $file->storeAs('alumni/profile-images', $filename, 'public');
+            // Upload new image (re-encoded + server-generated filename)
+            $path = $this->storeSanitizedImage($request->file('profile_image'), 'alumni/profile-images');
 
             // Update alumni record
             $alumni->profile_image = $path;
@@ -734,7 +834,7 @@ public function updateProfileImage(Request $request, $id)
             return response()->json([
                 'success' => true,
                 'message' => 'Profile image updated successfully',
-                'profileImage' => url('storage/' . $path)
+                'profileImage' => route('alumni.profile-image', $alumni->id)
             ]);
 
         } catch (\Exception $e) {
@@ -747,22 +847,9 @@ public function updateProfileImage(Request $request, $id)
         }
     }
 
-    public function uploadDocument(Request $request, $id)
+    public function uploadDocument(UploadAlumniDocumentRequest $request, $id)
     {
         try {
-            $validator = Validator::make($request->all(), [
-                'file' => 'required|image|mimes:jpeg,png,jpg,gif|max:5120',
-                'document_type' => 'required|string|in:student_id,alumni_id,government_id,diploma,transcript'
-            ]);
-
-            if ($validator->fails()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => $validator->errors()->first(),
-                    'errors' => $validator->errors()
-                ], 422);
-            }
-
             $alumni = Alumni::findOrFail($id);
             $documentType = $request->document_type;
 
@@ -773,13 +860,13 @@ public function updateProfileImage(Request $request, $id)
 
             // Delete old file if exists
             if ($existingDocument && $existingDocument->file_path) {
-                Storage::disk('public')->delete($existingDocument->file_path);
+                Storage::disk('private')->delete($existingDocument->file_path);
             }
 
-            // Upload new file
+            // Upload new file (re-encoded if it's an image, PDF passes
+            // through unchanged; server-generated filename either way)
             $file = $request->file('file');
-            $filename = time() . '_' . $documentType . '_' . Str::random(8) . '.' . $file->getClientOriginalExtension();
-            $path = $file->storeAs('alumni/documents', $filename, 'public');
+            $path = $this->storeSanitizedImage($file, 'alumni/documents', allowNonImagePassthrough: true);
 
             if ($existingDocument) {
                 // Update existing record
@@ -805,7 +892,7 @@ public function updateProfileImage(Request $request, $id)
                 'document' => [
                     'id' => $document->id,
                     'type' => $document->document_type,
-                    'file_url' => url('storage/' . $path),
+                    'file_url' => route('alumni-documents.download', $document->id),
                     'file_name' => $document->file_name
                 ]
             ]);
@@ -825,8 +912,8 @@ public function updateProfileImage(Request $request, $id)
         try {
             $alumni = Alumni::findOrFail($id);
 
-            if ($alumni->profile_image && Storage::disk('public')->exists($alumni->profile_image)) {
-                Storage::disk('public')->delete($alumni->profile_image);
+            if ($alumni->profile_image && Storage::disk('private')->exists($alumni->profile_image)) {
+                Storage::disk('private')->delete($alumni->profile_image);
             }
 
             $alumni->profile_image = null;
@@ -854,8 +941,8 @@ public function updateProfileImage(Request $request, $id)
                 ->where('alumni_id', $id)
                 ->firstOrFail();
 
-            if ($document->file_path && Storage::disk('public')->exists($document->file_path)) {
-                Storage::disk('public')->delete($document->file_path);
+            if ($document->file_path && Storage::disk('private')->exists($document->file_path)) {
+                Storage::disk('private')->delete($document->file_path);
             }
 
             $document->delete();
@@ -886,10 +973,14 @@ public function getOnlineStatuses()
             ->select('id', 'user_id')
             ->get()
             ->map(function ($alumnus) {
+                // is_online / last_active_at live on the related `users`
+                // row, not on Alumni itself — reading $alumnus->is_online
+                // directly (as this used to) always resolved to null/false
+                // regardless of the alumnus's real status.
                 return [
                     'id' => $alumnus->id,
-                    'is_online' => $alumnus->is_online,
-                    'last_active' => $alumnus->last_active,
+                    'is_online' => (bool) ($alumnus->user->is_online ?? false),
+                    'last_active' => $alumnus->user->last_active_at ?? null,
                 ];
             });
 

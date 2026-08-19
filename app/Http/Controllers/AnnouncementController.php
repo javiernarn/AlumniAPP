@@ -95,7 +95,7 @@ class AnnouncementController extends Controller
             'pinned' => 'nullable|boolean',
             'publish_date' => 'nullable|date',
             'expiry_date' => 'nullable|date|after_or_equal:publish_date',
-            'images.*' => 'nullable|image|max:5120',
+            'images.*' => 'nullable|file|mimes:jpeg,png,jpg,webp|max:5120', // Phase 3: excluded SVG (bare 'image' rule allowed it)
         ]);
 
         if ($validator->fails()) {
@@ -183,7 +183,7 @@ class AnnouncementController extends Controller
             'pinned' => 'nullable|boolean',
             'publish_date' => 'nullable|date',
             'expiry_date' => 'nullable|date|after_or_equal:publish_date',
-            'images.*' => 'nullable|image|max:5120',
+            'images.*' => 'nullable|file|mimes:jpeg,png,jpg,webp|max:5120', // Phase 3: excluded SVG (bare 'image' rule allowed it)
         ]);
 
         if ($validator->fails()) {

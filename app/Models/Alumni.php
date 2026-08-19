@@ -26,7 +26,8 @@ class Alumni extends Model
         'gender',
         'bio',
         'profile_image',
-        'temp_password',
+        // 'temp_password', // Phase 5: removed — plaintext-password-at-rest design deleted; column dropped by migration.
+        'course', // legacy string column — see AlumniRegistrationController::store()
         'course_id',
         'student_id',
         'graduation_year',
@@ -85,7 +86,14 @@ class Alumni extends Model
         
     ];
 
-    protected $appends = ['profile_image_url', 'full_name', 'document_urls', 'is_online', 'last_active'];
+    // Phase 5 — data minimization: profile_image_url and document_urls
+    // used to be auto-appended here, meaning EVERY raw serialization of
+    // an Alumni model (including accidental ones from a future
+    // response()->json($alumni) call) carried a document-download URL
+    // and a role/ownership-blind reference to confidential files. The
+    // accessor methods below still exist and Resources call them
+    // explicitly, but they're no longer appended automatically.
+    protected $appends = ['full_name', 'is_online', 'last_active'];
 
     // Relationships
     public function documents()
@@ -116,7 +124,12 @@ class Alumni extends Model
     }
 
     /**
-     * Get the profile image URL attribute
+     * Get the profile image URL attribute.
+     *
+     * Phase 2: profile images now live on the private disk, so a raw
+     * asset('storage/...') URL would 404 (or worse, silently point at
+     * nothing if a new file happened to exist at that path). This now
+     * points at the authorized, policy-checked download endpoint.
      */
     public function getProfileImageUrlAttribute()
     {
@@ -128,11 +141,14 @@ class Alumni extends Model
             return $this->profile_image;
         }
 
-        return asset('storage/' . $this->profile_image);
+        return route('alumni.profile-image', $this->id);
     }
 
     /**
-     * Get document URLs with full file paths
+     * Get document URLs with full file paths.
+     *
+     * Phase 2: file_url now points at the authorized download endpoint
+     * instead of a public asset('storage/...') URL.
      */
     public function getDocumentUrlsAttribute()
     {
@@ -146,7 +162,7 @@ class Alumni extends Model
                 'document_type' => $document->document_type,
                 'file_name' => $document->file_name,
                 'file_path' => $document->file_path,
-                'file_url' => asset('storage/' . $document->file_path),
+                'file_url' => route('alumni-documents.download', $document->id),
                 'status' => $document->status,
                 'rejection_reason' => $document->rejection_reason,
                 'created_at' => $document->created_at,

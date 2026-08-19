@@ -112,8 +112,11 @@ const checkLogin = async ({ params, set, get }) => {
   await delay(1000)
   Api.login(params)
     .then((result) => {
-      secureLocalStorage.setItem("access_token", result.data.access_token)
-
+      // Phase 6: the backend now sets the Passport access token as an
+      // HttpOnly cookie on this same login response — it's never present
+      // in JS-readable form at all, so there is nothing to store here.
+      // The other values below are just cached, non-secret profile
+      // display data (not credentials), kept for UI convenience.
       secureLocalStorage.setItem("faculty_id", result?.data?.faculty_id)
       secureLocalStorage.setItem("userID", result?.data?.user?.id)
       secureLocalStorage.setItem("userRole", result?.data?.user?.role)
@@ -165,8 +168,9 @@ const logout = async () => {
   } catch (error) {
     console.error("Logout error:", error)
   } finally {
-    // Clear all local storage items
-    secureLocalStorage.removeItem("access_token")
+    // Clear all local storage items (Phase 6: access_token is no longer
+    // stored here at all — it's an HttpOnly cookie the browser controls;
+    // logout revokes it and clears the cookie server-side instead).
     secureLocalStorage.removeItem("faculty_id")
     secureLocalStorage.removeItem("userID")
     secureLocalStorage.removeItem("userRole")

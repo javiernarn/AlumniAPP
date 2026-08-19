@@ -13,10 +13,41 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\JobApplicationAccepted;
 use App\Mail\JobApplicationRejected;
 use Illuminate\Support\Facades\Log;
+use App\Http\Requests\JobApplication\ApplyJobRequest;
+use App\Support\ImageSanitizer;
+use App\Support\UploadedFileNamer;
+use Illuminate\Validation\ValidationException;
 
 
 class JobApplicationController extends Controller
 {
+    /**
+     * Phase 3 — store an uploaded file on the private disk, re-encoding
+     * it first if it's a raster image; PDFs/DOC/DOCX pass through
+     * unchanged (mirrors AlumniRegistrationController::storeSanitizedImage).
+     */
+    private function storeSanitizedFile($file, string $directory): string
+    {
+        $mime = $file->getMimeType();
+        $imageMimes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+
+        if (in_array($mime, $imageMimes, true)) {
+            $reencoded = ImageSanitizer::reencode(file_get_contents($file->getRealPath()), $mime);
+
+            if ($reencoded === null) {
+                throw ValidationException::withMessages([
+                    'file' => ['One of the uploaded files is not a valid image.'],
+                ]);
+            }
+
+            $filename = \Illuminate\Support\Str::random(40) . '.jpg';
+            Storage::disk('private')->put($directory . '/' . $filename, $reencoded);
+            return $directory . '/' . $filename;
+        }
+
+        return $file->storeAs($directory, UploadedFileNamer::randomName($file), 'private');
+    }
+
     // ============================================================
     // ============ EXISTING HELPERS (UNCHANGED) ==================
     // ============================================================
@@ -149,7 +180,7 @@ class JobApplicationController extends Controller
     // ============================================================
     // ============ apply() — EXTENDED for ID Verification ========
     // ============================================================
-    public function apply(Request $request, $jobPostId)
+    public function apply(ApplyJobRequest $request, $jobPostId)
     {
         $user = Auth::user();
 
@@ -179,62 +210,59 @@ class JobApplicationController extends Controller
             return response()->json(['message' => 'You have already applied for this job'], 422);
         }
 
-        // ===== EXISTING + NEW validation rules =====
-        $validated = $request->validate([
-            // existing
-            'resume'                 => 'required|file|mimes:pdf,doc,docx|max:5120',
-            'cover_letter'           => 'required|string',
-            'id_documents'           => 'required|array|min:2',
-            'id_documents.*.type'    => 'required|string',
-            'id_documents.*.file'    => 'required|file|mimes:jpg,jpeg,pdf|max:5120',
-            'other_documents'        => 'nullable|array',
-            'other_documents.*'      => 'nullable|file|mimes:jpg,jpeg,pdf,doc,docx|max:5120',
+        // ApplyJobRequest has already validated resume/cover_letter/
+        // id_documents/other_documents (mime, size, and count limits).
+        $validated = $request->validated();
 
-        ], [
-            'id_documents.required' => 'At least 2 valid ID documents are required',
-            'id_documents.min'      => 'At least 2 valid ID documents are required',
-            'cover_letter.required' => 'Cover letter is required',
-        ]);
+        // Phase 3 — orphan cleanup: if anything after these writes
+        // fails, delete every file already written to the private disk
+        // rather than leaving them unreferenced by any DB row.
+        $writtenPaths = [];
 
+        try {
+            $resumePath = $this->storeSanitizedFile($request->file('resume'), 'resumes');
+            $writtenPaths[] = $resumePath;
 
-        // ===== Existing file storage (UNCHANGED) =====
-        $resumePath = $request->file('resume')->store('resumes', 'public');
-
-        $idDocumentsData = [];
-        if ($request->has('id_documents')) {
-            foreach ($request->id_documents as $index => $idDoc) {
-                if (isset($idDoc['file']) && isset($idDoc['type'])) {
-                    $idFilePath = $idDoc['file']->store('id_documents', 'public');
-                    $idDocumentsData[] = [
-                        'type'      => $idDoc['type'],
-                        'file_path' => $idFilePath,
-                    ];
+            $idDocumentsData = [];
+            if ($request->has('id_documents')) {
+                foreach ($request->id_documents as $index => $idDoc) {
+                    if (isset($idDoc['file']) && isset($idDoc['type'])) {
+                        $idFilePath = $this->storeSanitizedFile($idDoc['file'], 'id_documents');
+                        $writtenPaths[] = $idFilePath;
+                        $idDocumentsData[] = [
+                            'type'      => $idDoc['type'],
+                            'file_path' => $idFilePath,
+                        ];
+                    }
                 }
             }
-        }
 
-        $otherDocumentsData = [];
-        if ($request->has('other_documents')) {
-            foreach ($request->other_documents as $index => $file) {
-                if ($file) {
-                    $otherFilePath = $file->store('other_documents', 'public');
-                    $otherDocumentsData[] = ['file_path' => $otherFilePath];
+            $otherDocumentsData = [];
+            if ($request->has('other_documents')) {
+                foreach ($request->other_documents as $index => $file) {
+                    if ($file) {
+                        $otherFilePath = $this->storeSanitizedFile($file, 'other_documents');
+                        $writtenPaths[] = $otherFilePath;
+                        $otherDocumentsData[] = ['file_path' => $otherFilePath];
+                    }
                 }
             }
+
+            $application = JobApplication::create([
+                'job_post_id'  => $jobPostId,
+                'alumni_id'    => $user->id,
+                'resume_path'  => $resumePath,
+                'cover_letter' => $validated['cover_letter'],
+                'id_documents' => json_encode($idDocumentsData),
+                'other_documents' => json_encode($otherDocumentsData),
+                'status'       => 'applied',
+            ]);
+        } catch (\Exception $e) {
+            foreach ($writtenPaths as $path) {
+                Storage::disk('private')->delete($path);
+            }
+            throw $e;
         }
-
-
-        $application = JobApplication::create([
-            // existing
-            'job_post_id'  => $jobPostId,
-            'alumni_id'    => $user->id,
-            'resume_path'  => $resumePath,
-            'cover_letter' => $validated['cover_letter'],
-            'id_documents' => json_encode($idDocumentsData),
-            'other_documents' => json_encode($otherDocumentsData),
-            'status'       => 'applied',
-
-        ]);
 
         return response()->json($application, 201);
     }
@@ -253,34 +281,22 @@ class JobApplicationController extends Controller
 
         $application = JobApplication::with(['jobPost'])->findOrFail($id);
 
-        $isAdmin = $user->role === 'admin';
-        $isOwner = $application->alumni_id === $user->id;
+        $this->authorize('view', $application);
 
-        $isJobCreator = false;
-        if ($application->jobPost) {
-            $isJobCreator = $user->id === $application->jobPost->created_by_user_id;
-        }
-
-        if (!$isAdmin && !$isOwner && !$isJobCreator) {
-            return response()->json(['message' => 'Forbidden'], 403);
-        }
-
-        $applicationData = $application->toArray();
-
+        // Phase 5: JobApplicationResource replaces the previous manual
+        // $application->toArray() + hand-built download-URL merging
+        // here (same download-URL behavior, now centralized in one
+        // place — see JobApplicationController::apply() for the other
+        // caller). It also drops ocr_raw_text/ocr_extracted_data, which
+        // toArray() was including in full: the raw OCR text dump and
+        // structured PII parsed from the applicant's government ID scan
+        // were leaking into this response on every view.
         $alumniData = $this->getAlumniFromUserId($application->alumni_id);
-        if ($alumniData) {
-            $applicationData['alumni'] = $alumniData;
-        }
+        $application->setRelation('alumni', $alumniData ? (object) $alumniData : null);
 
-        if ($application->id_documents) {
-            $applicationData['id_documents'] = json_decode($application->id_documents, true) ?? [];
-        }
-
-        if ($application->other_documents) {
-            $applicationData['other_documents'] = json_decode($application->other_documents, true) ?? [];
-        }
-
-        return response()->json($applicationData);
+        return response()->json(
+            (new \App\Http\Resources\JobApplication\JobApplicationResource($application))->resolve()
+        );
     }
 
     public function updateStatus(Request $request, $id)
@@ -293,16 +309,7 @@ class JobApplicationController extends Controller
 
         $application = JobApplication::with('jobPost.creator')->findOrFail($id);
 
-        $isAdmin = $user->role === 'admin';
-        $isJobCreator = false;
-
-        if ($application->jobPost) {
-            $isJobCreator = $user->id === $application->jobPost->created_by_user_id;
-        }
-
-        if (!$isAdmin && !$isJobCreator) {
-            return response()->json(['message' => 'Only admins or post creators can update application status'], 403);
-        }
+        $this->authorize('updateStatus', $application);
 
         $validated = $request->validate([
             'status' => 'required|in:applied,reviewing,accepted,rejected',
@@ -440,29 +447,19 @@ class JobApplicationController extends Controller
             return response()->json(['message' => 'Unauthorized'], 401);
         }
 
-        $application = JobApplication::findOrFail($id);
+        $application = JobApplication::with('jobPost')->findOrFail($id);
 
-        $isAdmin = $user->role === 'admin';
-        $isOwner = $application->alumni_id === $user->id;
+        $this->authorize('delete', $application);
 
-        $isJobCreator = false;
-        if ($application->jobPost) {
-            $isJobCreator = $user->id === $application->jobPost->created_by_user_id;
-        }
-
-        if (!$isAdmin && !$isOwner && !$isJobCreator) {
-            return response()->json(['message' => 'Forbidden'], 403);
-        }
-
-        if ($application->resume_path && Storage::disk('public')->exists($application->resume_path)) {
-            Storage::disk('public')->delete($application->resume_path);
+        if ($application->resume_path && Storage::disk('private')->exists($application->resume_path)) {
+            Storage::disk('private')->delete($application->resume_path);
         }
 
         if ($application->id_documents) {
             $idDocs = json_decode($application->id_documents, true) ?? [];
             foreach ($idDocs as $doc) {
-                if (isset($doc['file_path']) && Storage::disk('public')->exists($doc['file_path'])) {
-                    Storage::disk('public')->delete($doc['file_path']);
+                if (isset($doc['file_path']) && Storage::disk('private')->exists($doc['file_path'])) {
+                    Storage::disk('private')->delete($doc['file_path']);
                 }
             }
         }
@@ -470,13 +467,125 @@ class JobApplicationController extends Controller
         if ($application->other_documents) {
             $otherDocs = json_decode($application->other_documents, true) ?? [];
             foreach ($otherDocs as $doc) {
-                if (isset($doc['file_path']) && Storage::disk('public')->exists($doc['file_path'])) {
-                    Storage::disk('public')->delete($doc['file_path']);
+                if (isset($doc['file_path']) && Storage::disk('private')->exists($doc['file_path'])) {
+                    Storage::disk('private')->delete($doc['file_path']);
                 }
             }
         }
 
         $application->delete();
         return response()->json(['message' => 'Application deleted']);
+    }
+
+    /**
+     * Serve a government ID image (front/back) attached to a job
+     * application. This route previously had no implementing method at
+     * all (the `job-applications.id-image` route pointed at a
+     * non-existent controller action). Restricted to admins, the
+     * applicant, and the job post creator via JobApplicationPolicy.
+     *
+     * NOTE: as of Phase 2, `government_id_front`/`government_id_back`
+     * are read from the `private` disk. Separately (not a security
+     * issue, flagged for product/engineering follow-up): nothing in this
+     * controller currently *writes* to these two columns — the actual ID
+     * scans captured today go through `id_documents` in apply() below.
+     * This endpoint is correctly authorized and will serve a file the
+     * moment those columns are populated by whatever upload flow ends up
+     * using them; until then it correctly 404s.
+     */
+    public function downloadIdImage($id, $side)
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+
+        $application = JobApplication::with('jobPost')->findOrFail($id);
+
+        $this->authorize('viewIdImage', $application);
+
+        $column = $side === 'front' ? 'government_id_front' : 'government_id_back';
+        $path = $application->{$column};
+
+        if (!$path || !Storage::disk('private')->exists($path)) {
+            return response()->json(['message' => 'Image not found'], 404);
+        }
+
+        return Storage::disk('private')->response($path, null, [
+            'X-Content-Type-Options' => 'nosniff',
+            'Cache-Control' => 'private, no-store',
+        ]);
+    }
+
+    /**
+     * Authorized download for the applicant's resume. Previously the raw
+     * resume_path was returned in show() and the frontend built a public
+     * /storage/... URL itself; now that resumes live on the private
+     * disk, that URL would 404 by design and this endpoint is the only
+     * way to fetch the bytes.
+     */
+    public function downloadResume($id)
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+
+        $application = JobApplication::with('jobPost')->findOrFail($id);
+
+        $this->authorize('view', $application);
+
+        if (!$application->resume_path || !Storage::disk('private')->exists($application->resume_path)) {
+            return response()->json(['message' => 'Resume not found'], 404);
+        }
+
+        return Storage::disk('private')->response($application->resume_path, null, [
+            'X-Content-Type-Options' => 'nosniff',
+            'Cache-Control' => 'private, no-store',
+        ]);
+    }
+
+    /**
+     * Authorized download for one of the applicant's submitted ID or
+     * "other" supporting documents. $type distinguishes which JSON array
+     * to read from; $index must match an entry that actually belongs to
+     * this application — this is what prevents path traversal / fetching
+     * an arbitrary private-disk file via a crafted path.
+     */
+    public function downloadSupportingDocument($id, string $type, int $index)
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+
+        if (!in_array($type, ['id-documents', 'other-documents'], true)) {
+            return response()->json(['message' => 'Not found'], 404);
+        }
+
+        $application = JobApplication::with('jobPost')->findOrFail($id);
+
+        $this->authorize('view', $application);
+
+        $column = $type === 'id-documents' ? 'id_documents' : 'other_documents';
+        $docs = json_decode($application->{$column} ?? '[]', true) ?? [];
+
+        if (!isset($docs[$index]['file_path'])) {
+            return response()->json(['message' => 'Not found'], 404);
+        }
+
+        $path = $docs[$index]['file_path'];
+
+        if (!Storage::disk('private')->exists($path)) {
+            return response()->json(['message' => 'Not found'], 404);
+        }
+
+        return Storage::disk('private')->response($path, null, [
+            'X-Content-Type-Options' => 'nosniff',
+            'Cache-Control' => 'private, no-store',
+        ]);
     }
 }

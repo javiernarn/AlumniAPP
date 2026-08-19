@@ -5,7 +5,7 @@ const createGroupAction = async ({ params }) => {
     await delay(1000);
     return axiosConfig
         .post(`/groups`, params)
-        .then((result) => {  console.log(result?.data)
+        .then((result) => {
             return result;
         })
         .catch((error) => {

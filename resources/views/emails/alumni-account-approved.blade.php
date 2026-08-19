@@ -49,12 +49,6 @@
                         <td style="font-weight: 600; color: #555; padding: 5px 0;">Email:</td>
                         <td style="color: #333; padding: 5px 0;">{{ $alumniData['email'] }}</td>
                     </tr>
-                    @if(!empty($alumniData['password']))
-                    <tr>
-                        <td style="font-weight: 600; color: #555; padding: 5px 0;">Password:</td>
-                        <td style="color: #333; padding: 5px 0;">{{ $alumniData['password'] }}</td>
-                    </tr>
-                    @endif
                     @if(!empty($alumniData['application_id']))
                     <tr>
                         <td style="font-weight: 600; color: #555; padding: 5px 0;">Application ID:</td>
@@ -63,6 +57,8 @@
                     @endif
                 </table>
             </div>
+
+            <p style="font-size: 14px; color: #666;">Log in using the email address above and the password you chose when you registered. If you've forgotten it, use the "Forgot Password" link on the login page.</p>
 
             @if(!empty($alumniData['admin_notes']))
             <div style="background-color: #fffbe6; border-left: 4px solid #faad14; padding: 15px 20px; margin: 20px 0; border-radius: 0 8px 8px 0;">

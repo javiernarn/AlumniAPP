@@ -7,6 +7,27 @@
 // of the logic instead of six duplicated blocks.
 //
 // -----------------------------------------------------------------
+// THIS IS NOT A SECURITY CONTROL — READ BEFORE RELYING ON IT
+// -----------------------------------------------------------------
+// Everything in this file (blocking right-click, F12/Ctrl+Shift+I,
+// Ctrl+U, Ctrl+S, and browser zoom) is a client-side UX deterrent
+// only. It is trivially bypassed: disabling JavaScript, opening
+// DevTools via the browser's menu instead of a shortcut, using a
+// browser extension, or simply calling the API directly with curl/
+// Postman/any HTTP client all skip this entirely — none of it runs
+// on the server, so none of it is enforced.
+//
+// Do not add any logic anywhere in this app — client or server —
+// that assumes a page's content, images, or API responses are
+// protected from inspection/copying because this hook is active.
+// The actual security boundary for who can see what is Laravel's
+// authentication + Policies (see app/Policies, app/Http/Middleware)
+// and the API Resources that shape each response (app/Http/Resources)
+// — this hook has no relationship to either. Treat it purely as a
+// "make casual right-click-saving slightly less convenient" UX
+// touch on public marketing/content pages, nothing more.
+//
+// -----------------------------------------------------------------
 // HOW TO TURN IT OFF WHILE YOU DEBUG
 // -----------------------------------------------------------------
 // Flip the single flag below (or set the env var) instead of

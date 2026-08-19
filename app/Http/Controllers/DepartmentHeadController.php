@@ -260,6 +260,15 @@ class DepartmentHeadController extends Controller
 
             // <CHANGE> Removed problematic relationships - just get alumni data
             $alumni = $query->get();
+
+            // profile_image_url is an accessor on the Alumni model but is
+            // not in its default $appends, so it's silently dropped when
+            // serializing raw models to JSON (unlike the /department-head/
+            // alumni endpoint, which goes through AlumniDepartmentHeadResource
+            // and explicitly includes it). Append it here too so the
+            // dashboard actually gets each alumnus's photo.
+            $alumni->each->append('profile_image_url');
+
             $course = Course::find($courseId);
 
             return response()->json([
@@ -317,7 +326,12 @@ class DepartmentHeadController extends Controller
 
             return response()->json([
                 'success' => true,
-                'data' => $alumni
+                // Phase 5: was a raw model dump (full contact info,
+                // admin_notes, documents, everything) even though the
+                // query itself was already correctly course-scoped.
+                // AlumniDepartmentHeadResource keeps the scoping and
+                // drops everything a department head doesn't need.
+                'data' => \App\Http\Resources\Alumni\AlumniDepartmentHeadResource::collection($alumni)
             ]);
         } catch (\Exception $e) {
             Log::error('Failed to fetch department head alumni: ' . $e->getMessage());

@@ -226,29 +226,19 @@ const LEGITIMATE_JOB_SOURCES = [
 
 // Configure axios base URL
 
-// Helper function to get auth token
-const getAuthToken = () => {
-    try {
-        return secureLocalStorage.getItem("access_token");
-    } catch (error) {
-        console.error("Error getting auth token:", error);
-        return null;
-    }
-};
+// Phase 6: this file already imports the shared, pre-configured axios
+// instance (`~/utils/axiosConfig`) as `axios` above, which now sends
+// `withCredentials: true` — the browser attaches the HttpOnly
+// auth_token cookie to every request automatically. These helpers
+// previously read a bearer token out of secureLocalStorage and built an
+// Authorization header manually; both are now no-ops kept so the ~17
+// call sites below that spread `{...getAuthHeaders()}` into a request's
+// headers keep working unchanged (spreading an empty object is a no-op).
+const getAuthToken = () => null;
 
 // Helper function to get auth headers
 const getAuthHeaders = () => {
-    try {
-        const token = getAuthToken();
-        if (!token) {
-            console.warn("No authentication token found");
-            return {};
-        }
-        return { Authorization: `Bearer ${token}` };
-    } catch (error) {
-        console.error("Error getting auth headers:", error);
-        return {};
-    }
+    return {};
 };
 
 const getCurrentUser = () => {

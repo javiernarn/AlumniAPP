@@ -101,7 +101,6 @@ const FormPrimaryDetails = React.memo(({ submitForm }) => {
 
     const onChange = ({ fileList: newFileList }) => {
         setFileList(newFileList);
-        console.log('file',fileList);
     };
     const onPreview = async (file) => {
         let src = file.url;

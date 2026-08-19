@@ -193,9 +193,11 @@ import { BASE_URL } from "./constant";
 // =========================================
 const instance = axios.create({
     baseURL: BASE_URL + "api/",
-
-// fail fast instead of hanging behind slow/queued requests (e.g. concurrent image downloads)
-    // timeout: 15000,
+    // Phase 6: browser now authenticates via an HttpOnly auth_token
+    // cookie (set by the backend on login) instead of a bearer token
+    // this JS ever reads or attaches itself — withCredentials makes
+    // axios include that cookie automatically on every request.
+    withCredentials: true,
 });
 
 // =========================================
@@ -353,11 +355,24 @@ instance.interceptors.response.use(
         // =========================================
         // OTHER ERRORS
         // =========================================
+        // `suppressGenericModal` lets a call site that already shows its
+        // own specific, contextual error (a toast naming exactly what
+        // failed, a graceful timeout recovery, etc.) opt out of this
+        // generic modal so the admin isn't shown two different error
+        // messages for the same failure. Unlike `silent`, this still
+        // goes through the 401/422 handling above — it only skips the
+        // generic catch-all below.
+        if (error.config?.suppressGenericModal) {
+            return Promise.reject(error);
+        }
+
         let errorMessage;
 
         if (error.code === "ECONNABORTED") {
-            // Our own timeout fired (see `timeout: 15000` above) — the
-            // request took too long, not necessarily that the backend is down.
+            // A timeout fired — either a per-request `timeout` option set at
+            // the call site (there's no default on this instance anymore),
+            // or the browser's own network timeout. Not necessarily a sign
+            // the backend is down.
             errorMessage = "The request timed out. Please try again.";
         } else if (!error.response) {
             // Request never got a response at all (network drop, CORS block,
@@ -384,15 +399,14 @@ instance.interceptors.response.use(
 // =========================================
 // AUTH TOKEN HANDLER
 // =========================================
-const updateAuthToken = () => {
-    const access_token = secureLocalStorage.getItem("access_token");
-
-    if (access_token) {
-        instance.defaults.headers.common[
-            "Authorization"
-        ] = `Bearer ${access_token}`;
-    }
-};
+// Phase 6: the browser no longer stores or attaches the bearer token at
+// all — it's an HttpOnly cookie the browser sends automatically (see
+// `withCredentials: true` above) and JavaScript can never read. This
+// used to read secureLocalStorage["access_token"] and manually build an
+// `Authorization: Bearer <token>` header; both functions are now no-ops
+// kept only so any remaining call sites (if a rebuild/deploy step
+// missed one) fail safely instead of throwing on an undefined import.
+const updateAuthToken = () => {};
 
 // initialize token
 updateAuthToken();
@@ -400,10 +414,10 @@ updateAuthToken();
 // =========================================
 // REFRESH TOKEN EXPORT
 // =========================================
-export const refreshAuthToken = (newToken) => {
-    secureLocalStorage.setItem("access_token", newToken);
-    updateAuthToken();
-};
+// Deprecated no-op — the concept of a client-visible token to "refresh"
+// no longer applies. Kept as a stub for backward compatibility with any
+// call site not yet updated; does nothing.
+export const refreshAuthToken = () => {};
 
 // =========================================
 // EXPORT INSTANCE

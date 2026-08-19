@@ -29,10 +29,16 @@ class AlumniDocument extends Model
     }
 
     // Accessors
+
+    /**
+     * Phase 2: points at the authorized download endpoint instead of a
+     * public asset('storage/...') URL — the underlying file now lives on
+     * the private disk.
+     */
     protected function fileUrl(): Attribute
     {
         return Attribute::make(
-            get: fn () => asset('storage/' . $this->file_path),
+            get: fn () => route('alumni-documents.download', $this->id),
         );
     }
 

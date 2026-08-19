@@ -1,0 +1,482 @@
+/* ============ Header Card — same design system as AuditLogPage /
+   AlumniList / AnnouncementsPage for cross-page consistency ============ */
+.fb-hero {
+  --fb-ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
+  --fb-ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --fb-accent: #ef4444;
+  --fb-accent-2: #f59e0b;
+  --fb-accent-3: #6366f1;
+  --fb-accent-soft: rgba(239, 68, 68, 0.10);
+  --fb-accent-ring: rgba(239, 68, 68, 0.28);
+  --fb-surface: #ffffff;
+  --fb-border: #e2e8f0;
+  --fb-text: #0b1220;
+  --fb-text-muted: #5b6677;
+  --fb-shadow-sm: 0 4px 14px rgba(2, 6, 23, 0.06);
+  --fb-shadow-md: 0 14px 34px rgba(2, 6, 23, 0.10);
+
+  position: relative;
+  overflow: hidden;
+  margin: 0 0 24px;
+  padding: 56px 32px 40px;
+  border-radius: 26px;
+  background:
+    linear-gradient(180deg, var(--fb-surface), var(--fb-surface)) padding-box,
+    linear-gradient(135deg, rgba(239,68,68,0.40), rgba(99,102,241,0.30), rgba(245,158,11,0.40)) border-box;
+  border: 1px solid transparent;
+  box-shadow: var(--fb-shadow-md);
+  opacity: 0;
+  transform: translateY(8px);
+  animation: fbFadeUp 0.7s var(--fb-ease-spring) forwards;
+}
+
+@keyframes fbFadeUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fbFloat {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50%      { transform: translateY(-14px) scale(1.04); }
+}
+
+.fb-hero__bg { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.fb-hero__bg .blob {
+  position: absolute; border-radius: 50%;
+  filter: blur(70px); opacity: 0.5;
+  animation: fbFloat 14s ease-in-out infinite;
+}
+.fb-hero__bg .blob-1 { width: 280px; height: 280px; background: #f87171; top: -70px; left: -50px; }
+.fb-hero__bg .blob-2 { width: 320px; height: 320px; background: #6366f1; bottom: -130px; right: -70px; animation-duration: 18s; }
+.fb-hero__bg .blob-3 { width: 200px; height: 200px; background: #fbbf24; top: 40%; left: 55%; animation-duration: 22s; opacity: 0.35; }
+.fb-hero__bg .dot-grid {
+  position: absolute; inset: 0;
+  background-image: radial-gradient(rgba(15,23,42,0.08) 1px, transparent 1px);
+  background-size: 18px 18px;
+  -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+          mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+}
+
+/* ===== Dark theme — same treatment as AnnouncementsPage / AlumniEvents
+   so this hero doesn't stay stuck in light colors (white card, dark
+   text) when the rest of the app switches to the black theme. Most of
+   the hero already reads its colors from the --fb-* variables above,
+   so re-pointing those variables here does most of the work; the few
+   spots with hardcoded light-mode colors (stat tiles, dot grid) get an
+   explicit override too. ===== */
+[data-theme="black"] .fb-hero {
+  --fb-surface: #121620;
+  --fb-border: #242a36;
+  --fb-text: #e7ecf3;
+  --fb-text-muted: #9aa4b2;
+  --fb-accent-soft: rgba(239, 68, 68, 0.16);
+  --fb-accent-ring: rgba(239, 68, 68, 0.35);
+  --fb-shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.45);
+  --fb-shadow-md: 0 14px 34px rgba(0, 0, 0, 0.55);
+
+  background:
+    linear-gradient(180deg, #121620, #121620) padding-box,
+    linear-gradient(135deg, rgba(239,68,68,0.55), rgba(99,102,241,0.45), rgba(245,158,11,0.55)) border-box;
+}
+[data-theme="black"] .fb-hero__bg .dot-grid {
+  background-image: radial-gradient(rgba(255,255,255,0.08) 1px, transparent 1px);
+}
+[data-theme="black"] .fb-hero__bg .blob { opacity: 0.35; }
+[data-theme="black"] .fb-stat {
+  background: rgba(26, 31, 43, 0.85);
+  border-color: var(--fb-border);
+}
+[data-theme="black"] .fb-stat:hover {
+  border-color: var(--fb-accent-ring);
+}
+
+.fb-hero__content {
+  position: relative; z-index: 1;
+  max-width: 1080px; margin: 0 auto; text-align: center;
+}
+
+.fb-hero__brand {
+  display: inline-flex; align-items: center; gap: 14px; margin-bottom: 14px;
+}
+.fb-hero__logo {
+  width: 56px; height: 56px; object-fit: contain;
+  border-radius: 14px; background: var(--fb-surface); padding: 6px;
+  box-shadow: var(--fb-shadow-sm);
+  animation: fbFloat 6s ease-in-out infinite;
+}
+.fb-hero__brand-meta {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 4px;
+}
+.fb-chip {
+  background: var(--fb-accent-soft) !important;
+  color: var(--fb-accent) !important;
+  border: 1px solid var(--fb-accent-ring) !important;
+  border-radius: 999px !important;
+  padding: 4px 12px !important;
+  font-weight: 700 !important;
+  font-size: 11.5px !important;
+  letter-spacing: 0.08em;
+  margin: 0 !important;
+}
+.fb-hero__eyebrow {
+  color: var(--fb-text-muted) !important;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.fb-hero__title {
+  font-size: clamp(28px, 4.4vw, 46px) !important;
+  line-height: 1.1 !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.02em;
+  color: var(--fb-text) !important;
+  margin: 6px 0 14px !important;
+}
+.fb-hero .grad-text {
+  background: linear-gradient(135deg, var(--fb-accent) 0%, var(--fb-accent-3) 50%, var(--fb-accent-2) 100%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+}
+.fb-hero__lead {
+  color: var(--fb-text-muted) !important;
+  font-size: 16px !important;
+  line-height: 1.7 !important;
+  max-width: 720px; margin: 0 auto 28px !important;
+}
+
+/* Stat tiles */
+.fb-hero__stats {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 14px;
+  max-width: 1080px;
+  margin: 0 auto;
+}
+.fb-stat {
+  display: flex; align-items: center; gap: 14px;
+  padding: 16px 18px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--fb-border);
+  border-radius: 16px;
+  box-shadow: var(--fb-shadow-sm);
+  text-align: left;
+  transition: transform 0.25s var(--fb-ease-spring), box-shadow 0.25s var(--fb-ease-smooth), border-color 0.25s;
+}
+.fb-stat:hover {
+  transform: translateY(-3px);
+  border-color: var(--fb-accent-ring);
+  box-shadow: var(--fb-shadow-md);
+}
+.fb-stat__icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 42px; height: 42px;
+  border-radius: 12px;
+  background: var(--fb-accent-soft);
+  color: var(--fb-accent);
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.fb-stat__icon--amber  { background: rgba(245,158,11,0.14); color: #d97706; }
+.fb-stat__icon--indigo { background: rgba(99,102,241,0.12); color: #6366f1; }
+.fb-stat__icon--green  { background: rgba(16,185,129,0.12); color: #10b981; }
+.fb-stat__icon--gray   { background: rgba(100,116,139,0.12); color: #64748b; }
+.fb-stat__body { display: flex; flex-direction: column; line-height: 1.2; min-width: 0; }
+.fb-stat__value { font-size: 22px; font-weight: 800; color: var(--fb-text); letter-spacing: -0.01em; }
+.fb-stat__label { font-size: 12px; color: var(--fb-text-muted); margin-top: 2px; font-weight: 500; }
+
+@media (max-width: 1000px) {
+  .fb-hero__stats { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 640px) {
+  .fb-hero__stats { grid-template-columns: repeat(2, 1fr); }
+  .fb-hero { padding: 40px 18px 28px; border-radius: 20px; }
+  .fb-hero__brand { flex-direction: column; gap: 10px; }
+  .fb-hero__brand-meta { align-items: center; }
+  .fb-hero__title { font-size: 26px !important; }
+}
+
+/* ============ Page-specific styles ============ */
+.fb-container {
+  padding: 24px;
+  padding-top: 10px;
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.fb-filters-card,
+.fb-table-card {
+  border-radius: 14px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  margin-bottom: 16px;
+}
+
+/* "Submitted By" column — fixed-width flex row so the avatar never
+   shrinks and the name/email always ellipsis instead of wrapping word
+   by word (the bug that made names look "broken" across several
+   lines). */
+.fb-submitter-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  max-width: 100%;
+}
+.fb-user-cell {
+  line-height: 1.4;
+  min-width: 0;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+.fb-user-name,
+.fb-user-email {
+  display: block;
+  max-width: 170px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.fb-user-email { font-size: 12px; }
+.fb-avatar { flex-shrink: 0; }
+
+.fb-type-tag,
+.fb-status-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 600;
+  border-radius: 999px !important;
+}
+
+.fb-area-chip {
+  font-size: 12px;
+  border-radius: 999px !important;
+}
+
+.fb-details-preview {
+  max-width: 320px;
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fb-screenshot-thumb-wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  color: var(--fb-text-muted, #5b6677);
+  font-size: 13px;
+  transition: color 0.2s;
+}
+.fb-screenshot-thumb-wrapper:hover { color: var(--fb-accent, #ef4444); }
+
+/* Detail drawer */
+.fb-drawer .ant-drawer-body { padding: 20px 24px; }
+
+.fb-detail-section { margin-bottom: 22px; }
+.fb-detail-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #94a3b8;
+  margin-bottom: 8px;
+  display: block;
+}
+.fb-detail-body-text {
+  white-space: pre-wrap;
+  line-height: 1.6;
+  background: #f8fafc;
+  border: 1px solid #eef2f7;
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+
+.fb-diagnostics-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 16px;
+  background: #f8fafc;
+  border: 1px solid #eef2f7;
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+.fb-diagnostics-grid .fb-diag-k {
+  font-size: 11px;
+  color: #94a3b8;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.fb-diagnostics-grid .fb-diag-v {
+  font-size: 13px;
+  color: #1a1a2e;
+  word-break: break-all;
+}
+
+[data-theme="black"] .fb-detail-body-text,
+[data-theme="black"] .fb-diagnostics-grid {
+  background: #171a23;
+  border-color: #2a2e3a;
+  color: #e7e9ee;
+}
+[data-theme="black"] .fb-diagnostics-grid .fb-diag-v {
+  color: #e7e9ee;
+}
+[data-theme="black"] .fb-detail-label,
+[data-theme="black"] .fb-diagnostics-grid .fb-diag-k {
+  color: #7d8695;
+}
+
+.fb-screenshot-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 10px;
+}
+.fb-screenshot-gallery .ant-image {
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #eef2f7;
+}
+.fb-screenshot-gallery .ant-image img {
+  height: 110px;
+  width: 100%;
+  object-fit: cover;
+}
+
+.fb-status-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.fb-empty-avatar {
+  background: linear-gradient(135deg, #ef4444, #6366f1);
+}
+
+/* ============ Mobile card list (replaces the Table below 860px) ============ */
+.fb-card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.fb-report-card {
+  border: 1px solid var(--fb-border, #e2e8f0);
+  border-radius: 14px;
+  padding: 14px;
+  background: #fff;
+}
+
+[data-theme="black"] .fb-report-card {
+  background: #171a23;
+  border-color: #2a2e3a;
+}
+[data-theme="black"] .fb-report-card__details {
+  background: #1c2028;
+  border-color: #2a2e3a;
+  color: #9aa3b2;
+}
+[data-theme="black"] .fb-report-card__footer {
+  color: #9aa3b2;
+}
+
+.fb-report-card__header {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.fb-report-card__who {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.35;
+}
+
+.fb-report-card__name,
+.fb-report-card__email {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.fb-report-card__email { font-size: 12px; }
+
+.fb-report-card__status {
+  flex-shrink: 0;
+  margin: 0 !important;
+}
+
+.fb-report-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.fb-report-card__details {
+  font-size: 13px;
+  color: var(--fb-text-muted, #5b6677);
+  margin-bottom: 10px !important;
+  background: #f8fafc;
+  border: 1px solid #eef2f7;
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.fb-report-card__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--fb-text-muted, #5b6677);
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.fb-report-card__meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.fb-report-card__actions {
+  display: flex;
+  gap: 8px;
+}
+.fb-report-card__actions .ant-btn:first-child { flex: 1 1 auto; }
+
+.fb-card-list__pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+@media (max-width: 768px) {
+  .fb-container { padding: 12px; }
+  .fb-diagnostics-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+  .fb-container { padding: 8px; }
+  .fb-filters-card .ant-card-body,
+  .fb-table-card .ant-card-body { padding: 12px; }
+  .fb-report-card { padding: 12px; }
+  .fb-hero { padding: 32px 14px 22px; }
+  .fb-hero__stats { gap: 10px; }
+  .fb-stat { padding: 12px 14px; gap: 10px; }
+  .fb-stat__icon { width: 36px; height: 36px; font-size: 16px; }
+  .fb-stat__value { font-size: 18px; }
+}

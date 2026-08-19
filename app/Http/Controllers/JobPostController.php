@@ -207,7 +207,7 @@ class JobPostController extends Controller
             'job_type' => 'required|in:Full-time,Part-time,Contract',
             'salary_min' => 'nullable|numeric|min:0',
             'salary_max' => 'nullable|numeric|min:0',
-            'banner_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'banner_image' => 'nullable|file|mimes:jpeg,png,jpg,webp|max:5120', // Phase 3: dropped gif, excluded svg (image rule allowed it)
             'capacity' => 'nullable|integer|min:1',
             'expiration_days' => 'nullable|integer|min:1',
             // ============ Job Post Verification System ============
@@ -272,9 +272,7 @@ class JobPostController extends Controller
         $jobPost = JobPost::findOrFail($id);
 
         // Check if user can edit this post
-        if ($user->role !== 'admin' && $jobPost->created_by_user_id !== $user->id) {
-            return response()->json(['message' => 'Unauthorized to edit this post'], 403);
-        }
+        $this->authorize('update', $jobPost);
 
         $validated = $request->validate([
             'title' => 'required|string|max:255',
@@ -285,7 +283,7 @@ class JobPostController extends Controller
             'job_type' => 'required|in:Full-time,Part-time,Contract',
             'salary_min' => 'nullable|numeric|min:0',
             'salary_max' => 'nullable|numeric|min:0',
-            'banner_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'banner_image' => 'nullable|file|mimes:jpeg,png,jpg,webp|max:5120', // Phase 3: dropped gif, excluded svg (image rule allowed it)
             'capacity' => 'nullable|integer|min:1',
             'expiration_days' => 'nullable|integer|min:1',
             // ============ Job Post Verification System ============
@@ -343,9 +341,7 @@ class JobPostController extends Controller
         $jobPost = JobPost::findOrFail($id);
 
         // Check if user can delete this post
-        if ($user->role !== 'admin' && $jobPost->created_by_user_id !== $user->id) {
-            return response()->json(['message' => 'Unauthorized to delete this post'], 403);
-        }
+        $this->authorize('delete', $jobPost);
 
         // Delete banner image if exists
         if ($jobPost->banner_image) {

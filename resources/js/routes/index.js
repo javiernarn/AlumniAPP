@@ -11,6 +11,7 @@ import ProfilePage from "../pages/admin/ProfilePage"
 
 import { DepartmentHeadsPage, DepartmentDashboardPage } from "../pages/admin/department-heads"
 import AdminAlumniMessages from "../pages/admin/messages/AdminAlumniMessages"
+import { AuditLogPage } from "../pages/admin/audit-log"
 
 import AdminAlumniJobPostPage from "../pages/admin/JobPost/AdminAlumniJobPostPage"
 import GalleryPage from "../pages/admin/Gallery/galleryPage"
@@ -21,6 +22,7 @@ import FaqPublicPage from "../pages/admin/Faq/FaqPublicPage"
 import AnnouncementsPage from "../pages/admin/Announcement/AnnouncementsPage"
 import AboutPublicPage from "../pages/admin/About/AboutPublicPage"
 import HomePage from "../pages/admin/Home/homePage"
+import { AtmsFeedbackReportsPage } from "../pages/admin/Feedback"
 // import AssistantPage from "../pages/admin/AiAssistant/AssistantPage"
 // import PublicHomePage from "../pages/admin/Home/PublicHomePage"
 
@@ -50,6 +52,8 @@ const adminRoutes = [
   { path: "/department-dashboard", component: DepartmentDashboardPage },
   { path: "/messages", component: AdminAlumniMessages },
   { path: "/job-posts", component: AdminAlumniJobPostPage },
+  { path: "/audit-logs", component: AuditLogPage },
+  { path: "/feedback-reports", component: AtmsFeedbackReportsPage },
   { path: "/gallery", component: GalleryPage },
   { path: "/about", component: AboutPage },
    { path: "/faq", component: FaqPage },

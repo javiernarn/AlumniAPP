@@ -322,12 +322,8 @@ const headerThemeStyle = {
         }
 
         try {
-            console.log(
-                "[v0] Starting document upload for alumni:",
-                alumniId,
-                "Type:",
-                documentType,
-            );
+            // Phase 6: removed a console.log here that included the
+            // alumni ID and document type on every upload attempt.
             setUploadLoading(true);
             const formData = new FormData();
             formData.append("file", file);

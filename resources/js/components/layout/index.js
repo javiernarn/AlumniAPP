@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
     GroupOutlined,
     UserOutlined,
@@ -49,6 +49,11 @@ import {
     DownOutlined,
     NotificationOutlined,
     ReadOutlined,
+    FileSearchOutlined,
+    ClockCircleOutlined,
+    CheckCircleOutlined,
+    StopOutlined,
+    BulbOutlined,
 } from "@ant-design/icons";
 import {
     Layout,
@@ -87,6 +92,7 @@ import useProfile from "~/hooks/useProfile";
 import { useHistory } from "react-router-dom";
 import axiosConfig from "~/utils/axiosConfig";
 import { BASE_URL } from "~/utils/constant";
+import { useSubmitAtmsFeedback } from "~/hooks/useAtmsFeedback";
 import "./index.css";
 import { AlumniDetails } from "~/components";
 import avatarGuidance from "~/assets/images/avatar_guidance.png";
@@ -160,6 +166,18 @@ const MENU_ADMIN = [
         label: "Job Posts",
         icon: <SolutionOutlined className="menu-icon" />,
     },
+    {
+        key: 128,
+        url: "/audit-logs",
+        label: "Audit Log",
+        icon: <FileSearchOutlined className="menu-icon" />,
+    },
+    {
+        key: 129,
+        url: "/feedback-reports",
+        label: "Feedback Reports",
+        icon: <CommentOutlined className="menu-icon" />,
+    },
 ];
 
 const MENU_ALUMNI = [
@@ -227,7 +245,10 @@ const NOTIFICATION_CATEGORIES = {
         label: "Event Registered",
         icon: <CalendarOutlined />,
         color: "#52c41a",
-        types: ["event_registration", "new_event"],
+        // "event_registration_success" is the copy sent back to the
+        // alumni who just registered (EventController@register) — same
+        // category as the admin-facing "event_registration" notice.
+        types: ["event_registration", "new_event", "event_registration_success"],
     },
     profile_update: {
         label: "Profile Updates",
@@ -251,13 +272,19 @@ const NOTIFICATION_CATEGORIES = {
         label: "Quiz Submissions",
         icon: <FormOutlined />,
         color: "#eb2f96",
-        types: ["quiz_submission", "rating_quiz", "abcd_quiz", "quiz"],
+        // "quiz_completed" is the copy sent back to the alumni who just
+        // finished a quiz (QuizController@submit) — same category as the
+        // admin-facing "quiz_submission" notice.
+        types: ["quiz_submission", "rating_quiz", "abcd_quiz", "quiz", "quiz_completed"],
     },
     login_attempt: {
         label: "Login Attempts",
         icon: <WarningOutlined />,
         color: "#ff4d4f",
-        types: ["login_attempt", "failed_login", "suspicious_login"],
+        // "pending_alumni_login" (AuthController::notifyAdminsAboutPendingAlumniLogin)
+        // is the real type; it doesn't reach this list via notifiable_type
+        // though — see the TYPE_TO_CATEGORY lookup below for why.
+        types: ["login_attempt", "failed_login", "suspicious_login", "pending_alumni_login"],
     },
     department_head_login: {
         label: "Dept. Head Login",
@@ -271,25 +298,87 @@ const NOTIFICATION_CATEGORIES = {
         color: "#fa8c16",
         types: ["announcement", "new_announcement"],
     },
+    feedback: {
+        label: "Feedback",
+        icon: <CommentOutlined />,
+        color: "#ef4444",
+        types: ["new_feedback_report", "feedback_report_update"],
+    },
+    messages: {
+        label: "Messages",
+        icon: <MessageOutlined />,
+        color: "#2563eb",
+        // Alumni-facing only: unread count of one admin's messages to
+        // THIS specific alumni. Kept as its own category (not merged
+        // with alumni_messages below) so the icon/label stay accurate —
+        // this is a single 1-to-1 conversation, not a many-people inbox.
+        types: ["admin_message"],
+    },
+    alumni_messages: {
+        label: "Alumni Messages",
+        icon: <TeamOutlined />,
+        color: "#2563eb",
+        // Admin-facing only: combined unread count across EVERY alumni
+        // conversation (see MessagingController::notifyAdminsOfAlumniMessages).
+        // TeamOutlined (many-people icon) instead of MessageOutlined on
+        // purpose — it's an aggregate of many alumni, not one thread.
+        types: ["alumni_message"],
+    },
 };
+
+// Reverse lookup built from NOTIFICATION_CATEGORIES above: exact type
+// token -> category key. Keeps every known type listed in exactly one
+// place (each category's `types` array) instead of duplicating it again
+// in getNotificationCategory's switch logic.
+const TYPE_TO_CATEGORY = Object.entries(NOTIFICATION_CATEGORIES).reduce(
+    (acc, [key, meta]) => {
+        (meta.types || []).forEach((t) => {
+            acc[t] = key;
+        });
+        return acc;
+    },
+    {},
+);
 
 // ============ ROLE-BASED NOTIFICATION VISIBILITY ============
 // Not every role cares about every notification category. Alumni, for
 // example, only need their own event registrations, login activity, and
 // quiz submissions — security/admin-facing categories like login attempts
-// or department-head logins are just noise for them. Roles not listed
-// here (e.g. admin) fall back to seeing every category.
+// or department-head logins are just noise for them.
+//
+// Alumni & department-head login/logout activity now lives in the
+// dedicated Audit Log page (see AuditLogController + AuthController's
+// logAudit()) instead of being pushed here as Notification rows, since
+// with hundreds of alumni logging in the "account_login" /
+// "department_head_login" categories drowned out every other
+// notification in the bell — including for admins, who previously fell
+// back to seeing every category since they weren't listed here. Admin
+// is now listed explicitly, excluding those two noisy categories; any
+// older rows of that type still in the database simply won't render
+// (see getVisibleNotificationCategoryKeys) rather than falling back to
+// "all".
 const ROLE_NOTIFICATION_CATEGORIES = {
     alumni: [
         "event_registration",
         "account_login",
         "quiz_submission",
         "announcement",
+        "feedback",
+        "messages",
     ],
     department_head: [
-        "department_head_login",
         "account_login",
         "event_registration",
+    ],
+    admin: [
+        "event_registration",
+        "profile_update",
+        "account_approved",
+        "quiz_submission",
+        "login_attempt",
+        "announcement",
+        "feedback",
+        "alumni_messages",
     ],
 };
 
@@ -304,7 +393,7 @@ const getVisibleNotificationCategoryKeys = (userRole) => {
     return restricted;
 };
 
-const withImageCacheBuster = (imageUrl, version = Date.now()) => {
+const withImageCacheBuster = (imageUrl, version) => {
     if (
         !imageUrl ||
         imageUrl.startsWith("blob:") ||
@@ -317,6 +406,19 @@ const withImageCacheBuster = (imageUrl, version = Date.now()) => {
         /([?&])v=\d+(&?)/,
         (match, prefix, suffix) => (suffix ? prefix : ""),
     );
+
+    // No explicit version means the caller doesn't actually know the
+    // image changed — this is just a normal render of an existing
+    // avatar. Return the plain URL so the browser can serve it from
+    // cache instead of treating it as a brand-new resource every time
+    // this runs (previously defaulted to Date.now(), which minted a
+    // new "unique" URL on every single re-render and forced a fresh
+    // network request for the same image, easily blowing through the
+    // profile-image rate limit when many notifications render at once).
+    if (!version) {
+        return cleanUrl;
+    }
+
     return `${cleanUrl}${cleanUrl.includes("?") ? "&" : "?"}v=${version}`;
 };
 
@@ -380,6 +482,13 @@ const MainLayout = ({ children, breadcrumb }) => {
     const [eventDetailsLoading, setEventDetailsLoading] = useState(false);
     const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
     const [discardModalOpen, setDiscardModalOpen] = useState(false);
+    // "View admin note" modal, opened from a resolved/dismissed feedback
+    // notification in the bell.
+    const [feedbackDetailModalVisible, setFeedbackDetailModalVisible] =
+        useState(false);
+    const [selectedFeedbackReport, setSelectedFeedbackReport] =
+        useState(null);
+    const [feedbackDetailLoading, setFeedbackDetailLoading] = useState(false);
     // Feedback flow state
     const [feedbackStep2Open, setFeedbackStep2Open] = useState(false);
     const [feedbackStep3Open, setFeedbackStep3Open] = useState(false);
@@ -387,6 +496,7 @@ const MainLayout = ({ children, breadcrumb }) => {
     const [feedbackArea, setFeedbackArea] = useState(undefined);
     const [feedbackDetails, setFeedbackDetails] = useState("");
     const [feedbackScreenshots, setFeedbackScreenshots] = useState([]);
+    const submitAtmsFeedback = useSubmitAtmsFeedback();
 
     useEffect(() => {
     const pageTitles = {
@@ -403,6 +513,7 @@ const MainLayout = ({ children, breadcrumb }) => {
         "/about": "About Us",
         "/questions": "Questions",
         "/department-heads": "Department Accounts",
+        "/feedback-reports": "Feedback Reports",
         "/402": "Maintenance",
         
 
@@ -503,8 +614,10 @@ const MainLayout = ({ children, breadcrumb }) => {
         } catch (error) {
             console.error("Logout error:", error);
         } finally {
-            // Clear all local storage items
-            secureLocalStorage.removeItem("access_token");
+            // Clear all local storage items (Phase 6: access_token is no
+            // longer stored here — it's an HttpOnly cookie; the /logout
+            // call above already revoked it and cleared the cookie
+            // server-side).
             secureLocalStorage.removeItem("faculty_id");
             secureLocalStorage.removeItem("userID");
             secureLocalStorage.removeItem("userRole");
@@ -577,37 +690,268 @@ const MainLayout = ({ children, breadcrumb }) => {
         }
     }, []);
 
-    const [settings, setSettings] = useState({
-        emailNotifications: true,
-        soundEnabled: false,
-        darkMode: false,
-    });
-
-    const handleSettingsChange = async (key, value) => {
-        setSettings((prev) => ({
-            ...prev,
-            [key]: value,
-        }));
-        const updatedSettings = { ...settings, [key]: value };
-        secureLocalStorage.setItem(
-            "notificationSettings",
-            JSON.stringify(updatedSettings),
-        );
-        message.success(`Setting updated successfully`);
+    // Maps the frontend's camelCase settings state to the backend's
+    // snake_case preference keys (see NotificationPreferencesController).
+    // "darkMode" is intentionally left out — theme is a separate, purely
+    // client-side concern (currentTheme elsewhere in this file), not a
+    // notification channel, so it isn't sent to the server.
+    const SETTINGS_KEY_MAP = {
+        emailNotifications: "email_notifications",
+        soundEnabled: "sound_enabled",
+        pushNotifications: "push_notifications",
     };
 
+    // Mirrors User::DEFAULT_NOTIFICATION_PREFERENCES on the backend —
+    // used purely for display, to show a "Default" tag next to whichever
+    // toggles the user hasn't actively changed yet, so it's obvious at a
+    // glance which settings are still on their out-of-the-box value vs.
+    // which ones they've deliberately switched.
+    const DEFAULT_SETTINGS = {
+        emailNotifications: true,
+        soundEnabled: false,
+        pushNotifications: true,
+    };
+
+    const [settings, setSettings] = useState({
+        ...DEFAULT_SETTINGS,
+        darkMode: false,
+    });
+    const [settingsLoaded, setSettingsLoaded] = useState(false);
+
+    // Tracks unread notification ids across polls so sound/push only
+    // fire for notifications that are genuinely new since the last
+    // check — without this every 30s poll would re-fire them for every
+    // still-unread notification, not just newly arrived ones.
+    const seenUnreadIdsRef = useRef(null);
+
+    // Cache of <audio> elements per role so we don't re-create/re-fetch
+    // the file on every single notification — created lazily the first
+    // time each role's sound is needed.
+    const notificationAudioCacheRef = useRef({});
+
+    // Actual sound file per role, served as static assets from
+    // public/sounds/notifications/. Drop replacement .mp3/.wav files in
+    // that folder (same filenames) to change the sound — no code change
+    // needed.
+    const NOTIFICATION_SOUND_FILES = {
+        admin: "/sounds/notifications/admin.wav",
+        alumni: "/sounds/notifications/alumni.wav",
+        department_head: "/sounds/notifications/department_head.wav",
+        default: "/sounds/notifications/default.wav",
+    };
+
+    // Fallback tone "profiles" (synthesized via WebAudio) used only if
+    // the audio file for a role fails to load/play — e.g. missing file,
+    // blocked network request, or an unsupported browser. Keeps sound
+    // notifications working even if the static assets aren't in place.
+    const NOTIFICATION_SOUND_PROFILES = {
+        admin: [
+            { frequency: 660, start: 0, duration: 0.15 },
+            { frequency: 990, start: 0.17, duration: 0.2 },
+        ],
+        alumni: [{ frequency: 880, start: 0, duration: 0.35 }],
+        department_head: [
+            { frequency: 523, start: 0, duration: 0.12 },
+            { frequency: 659, start: 0.14, duration: 0.12 },
+            { frequency: 784, start: 0.28, duration: 0.16 },
+        ],
+        default: [{ frequency: 880, start: 0, duration: 0.35 }],
+    };
+
+    const playGeneratedNotificationTone = (activeRole) => {
+        try {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            if (!AudioCtx) return;
+
+            const profile =
+                NOTIFICATION_SOUND_PROFILES[activeRole] ||
+                NOTIFICATION_SOUND_PROFILES.default;
+
+            const ctx = new AudioCtx();
+            let notesRemaining = profile.length;
+
+            profile.forEach(({ frequency, start, duration }) => {
+                const oscillator = ctx.createOscillator();
+                const gain = ctx.createGain();
+                const noteStart = ctx.currentTime + start;
+                const noteEnd = noteStart + duration;
+
+                oscillator.type = "sine";
+                oscillator.frequency.value = frequency;
+                gain.gain.setValueAtTime(0.0001, noteStart);
+                gain.gain.exponentialRampToValueAtTime(
+                    0.15,
+                    noteStart + 0.01,
+                );
+                gain.gain.exponentialRampToValueAtTime(0.0001, noteEnd);
+
+                oscillator.connect(gain);
+                gain.connect(ctx.destination);
+                oscillator.start(noteStart);
+                oscillator.stop(noteEnd);
+                oscillator.onended = () => {
+                    notesRemaining -= 1;
+                    if (notesRemaining <= 0) {
+                        ctx.close();
+                    }
+                };
+            });
+        } catch (e) {
+            console.error("Failed to play fallback notification tone:", e);
+        }
+    };
+
+    const playNotificationSound = (forRole) => {
+        const activeRole = forRole || secureLocalStorage.getItem("userRole");
+        const src =
+            NOTIFICATION_SOUND_FILES[activeRole] ||
+            NOTIFICATION_SOUND_FILES.default;
+
+        try {
+            let audio = notificationAudioCacheRef.current[activeRole];
+            if (!audio) {
+                audio = new Audio(src);
+                audio.preload = "auto";
+                audio.volume = 0.6;
+                notificationAudioCacheRef.current[activeRole] = audio;
+            } else {
+                // Restart from the beginning if a previous play is still
+                // finishing up (e.g. two notifications arrive close
+                // together).
+                audio.currentTime = 0;
+            }
+
+            const playPromise = audio.play();
+            if (playPromise && typeof playPromise.catch === "function") {
+                playPromise.catch((e) => {
+                    // Autoplay restrictions, missing file, decode error,
+                    // etc. — fall back to the synthesized tone so the
+                    // user still gets a sound.
+                    console.error(
+                        "Failed to play notification sound file, falling back to tone:",
+                        e,
+                    );
+                    playGeneratedNotificationTone(activeRole);
+                });
+            }
+        } catch (e) {
+            console.error("Failed to play notification sound:", e);
+            playGeneratedNotificationTone(activeRole);
+        }
+    };
+
+    const showBrowserPushNotification = (notif) => {
+        if (typeof window === "undefined" || !("Notification" in window)) {
+            return;
+        }
+        if (window.Notification.permission !== "granted") return;
+
+        try {
+            const title = notif.title || "New notification";
+            const body = notif.message || "";
+            const pushNotif = new window.Notification(title, {
+                body,
+                tag: `notification-${notif.id}`,
+            });
+            pushNotif.onclick = () => {
+                window.focus();
+                pushNotif.close();
+            };
+        } catch (e) {
+            console.error("Failed to show browser push notification:", e);
+        }
+    };
+
+    // Fetches the user's saved preferences from the backend so they're
+    // consistent across devices/browsers, using the localStorage copy
+    // only as an instant-paint fallback while that request is in flight.
     useEffect(() => {
-        const savedSettings = secureLocalStorage.getItem(
-            "notificationSettings",
-        );
-        if (savedSettings) {
+        const cached = secureLocalStorage.getItem("notificationSettings");
+        if (cached) {
             try {
-                setSettings(JSON.parse(savedSettings));
+                setSettings((prev) => ({ ...prev, ...JSON.parse(cached) }));
             } catch (e) {
-                console.error("Failed to parse notification settings");
+                console.error("Failed to parse cached notification settings");
             }
         }
+
+        (async () => {
+            try {
+                const { data } = await axiosConfig.get(
+                    "/notification-settings",
+                    { suppressGenericModal: true },
+                );
+                if (data?.success && data.data) {
+                    const fromServer = {
+                        emailNotifications: data.data.email_notifications,
+                        soundEnabled: data.data.sound_enabled,
+                        pushNotifications: data.data.push_notifications,
+                    };
+                    setSettings((prev) => ({ ...prev, ...fromServer }));
+                    secureLocalStorage.setItem(
+                        "notificationSettings",
+                        JSON.stringify(fromServer),
+                    );
+                }
+            } catch (e) {
+                // Not fatal — the localStorage cache (or the in-state
+                // defaults) is still a usable fallback.
+                console.error("Failed to load notification settings:", e);
+            } finally {
+                setSettingsLoaded(true);
+            }
+        })();
     }, []);
+
+    const handleSettingsChange = async (key, value) => {
+        setSettings((prev) => {
+            const updated = { ...prev, [key]: value };
+            secureLocalStorage.setItem(
+                "notificationSettings",
+                JSON.stringify(updated),
+            );
+            return updated;
+        });
+
+        // Turning push notifications on requires the browser's own
+        // permission prompt — ask right when the user opts in, not
+        // silently, so they understand why the prompt appeared.
+        if (
+            key === "pushNotifications" &&
+            value &&
+            typeof window !== "undefined" &&
+            "Notification" in window &&
+            window.Notification.permission === "default"
+        ) {
+            try {
+                const permission = await window.Notification.requestPermission();
+                if (permission !== "granted") {
+                    message.warning(
+                        "Browser permission was not granted, so push notifications won't show.",
+                    );
+                }
+            } catch (e) {
+                console.error("Failed to request notification permission:", e);
+            }
+        }
+
+        const backendKey = SETTINGS_KEY_MAP[key];
+        if (backendKey) {
+            try {
+                await axiosConfig.put("/notification-settings", {
+                    [backendKey]: value,
+                });
+                message.success("Setting updated successfully");
+            } catch (e) {
+                console.error("Failed to save notification setting:", e);
+                message.error(
+                    "Setting saved on this device, but failed to sync — try again later.",
+                );
+            }
+        } else {
+            message.success("Setting updated successfully");
+        }
+    };
 
     let menus = [];
     const role = secureLocalStorage.getItem("userRole");
@@ -742,8 +1086,18 @@ const MainLayout = ({ children, breadcrumb }) => {
 
     const getNotificationCategory = (notification) => {
         const notificationData = getNotificationData(notification);
-        const type =
-            notification.notifiable_type || notificationData?.type || "";
+        // Kept separate rather than collapsed with `||`: some backend
+        // notifications set notifiable_type to a specific token
+        // ("new_feedback_report"), but others set it to a generic
+        // Eloquent class name ("App\Models\Alumni") and put the real,
+        // specific type in data.type instead (e.g. "profile_update",
+        // "pending_alumni_login" — see AuthController /
+        // AlumniRegistrationController). Collapsing the two with `||`
+        // would let the generic notifiable_type permanently shadow the
+        // specific data.type whenever it happened to be truthy, silently
+        // losing the more useful value.
+        const rawType = notification.notifiable_type || "";
+        const dataType = notificationData?.type || "";
         const notificationMessage = (
             notification.message ||
             notificationData?.message ||
@@ -755,9 +1109,26 @@ const MainLayout = ({ children, breadcrumb }) => {
             ""
         ).toLowerCase();
 
+        // Pass 1: trust an explicit, recognized type token from the
+        // backend — it's authoritative and MUST run before any of the
+        // keyword-based fallbacks below. Otherwise a message that simply
+        // *mentions* another category's keyword gets miscategorized —
+        // e.g. an ATMS feedback report submitted about the "Events" area
+        // reads "...submitted feedback: events", and a naive
+        // event-keyword check (`message.includes("event")`) would match
+        // that before a feedback check ever ran, showing an
+        // "Event Registered" badge instead of "Feedback". Check both
+        // fields — whichever one is a known token wins; notifiable_type
+        // first since it's the more common home for it.
+        if (TYPE_TO_CATEGORY[rawType]) return TYPE_TO_CATEGORY[rawType];
+        if (TYPE_TO_CATEGORY[dataType]) return TYPE_TO_CATEGORY[dataType];
+
+        // Pass 2: keyword-based fallback, only for legacy/unrecognized
+        // notifications that don't carry a known type in either field.
+        // Feedback is checked before event/profile/etc. here too, since a
+        // feedback message can legitimately contain any of those words as
+        // the name of the area it was submitted about.
         if (
-            type === "department_head_login" ||
-            notificationData?.type === "department_head_login" ||
             notificationMessage.includes("department head") ||
             title.includes("department head")
         ) {
@@ -765,8 +1136,13 @@ const MainLayout = ({ children, breadcrumb }) => {
         }
 
         if (
-            type === "event_registration" ||
-            type === "new_event" ||
+            notificationMessage.includes("feedback") ||
+            title.includes("feedback")
+        ) {
+            return "feedback";
+        }
+
+        if (
             notificationMessage.includes("event") ||
             notificationMessage.includes("registered for") ||
             title.includes("event")
@@ -775,7 +1151,6 @@ const MainLayout = ({ children, breadcrumb }) => {
         }
 
         if (
-            type === "profile_update" ||
             notificationMessage.includes("profile") ||
             notificationMessage.includes("updated") ||
             title.includes("profile")
@@ -784,8 +1159,6 @@ const MainLayout = ({ children, breadcrumb }) => {
         }
 
         if (
-            type === "login_attempt" ||
-            type === "failed_login" ||
             notificationMessage.includes("attempt") ||
             notificationMessage.includes("failed login") ||
             notificationMessage.includes("suspicious") ||
@@ -795,9 +1168,6 @@ const MainLayout = ({ children, breadcrumb }) => {
         }
 
         if (
-            type === "login" ||
-            type === "login_success" ||
-            type === "account_login" ||
             notificationMessage.includes("logged in") ||
             notificationMessage.includes("login") ||
             title.includes("login")
@@ -806,9 +1176,6 @@ const MainLayout = ({ children, breadcrumb }) => {
         }
 
         if (
-            type === "account_approved" ||
-            type === "approved" ||
-            type === "approval" ||
             notificationMessage.includes("approved") ||
             notificationMessage.includes("verified") ||
             title.includes("approved")
@@ -817,9 +1184,6 @@ const MainLayout = ({ children, breadcrumb }) => {
         }
 
         if (
-            type === "quiz_submission" ||
-            type === "rating_quiz" ||
-            type === "abcd_quiz" ||
             notificationMessage.includes("quiz") ||
             notificationMessage.includes("rating") ||
             notificationMessage.includes("assessment") ||
@@ -829,12 +1193,27 @@ const MainLayout = ({ children, breadcrumb }) => {
         }
 
         if (
-            type === "announcement" ||
-            type === "new_announcement" ||
             notificationMessage.includes("announcement") ||
             title.includes("announcement")
         ) {
             return "announcement";
+        }
+
+        // Belt-and-suspenders: the two message notifications above should
+        // always carry rawType "admin_message"/"alumni_message" and get
+        // caught by Pass 1, but if an older row is ever missing that
+        // token, don't let it silently fall back to the generic "All"
+        // bucket — match on the title text instead. Admin's aggregate
+        // title ("Alumni Messages") is checked first since it also
+        // contains the word "message".
+        if (title.includes("alumni messages")) {
+            return "alumni_messages";
+        }
+        if (
+            notificationMessage.includes("message") ||
+            title.includes("message")
+        ) {
+            return "messages";
         }
 
         return "all";
@@ -889,6 +1268,14 @@ const MainLayout = ({ children, breadcrumb }) => {
             setIsLoading(true);
             const response = await axiosConfig.get(
                 `/notifications?page=1&per_page=${perPage}`,
+                {
+                    // This polls every 30s in the background (see the
+                    // interval below) regardless of what page the admin
+                    // is on — it must never pop the generic error modal
+                    // for a routine timeout/slow-network hiccup that has
+                    // nothing to do with whatever they're actually doing.
+                    suppressGenericModal: true,
+                },
             );
 
             if (response.data) {
@@ -899,6 +1286,36 @@ const MainLayout = ({ children, breadcrumb }) => {
                 setNotifications(notificationsData);
                 if (response.data.pagination) {
                     setTotalNotifications(response.data.pagination.total);
+                }
+
+                // Sound/push alerts for whatever is unread on THIS poll
+                // that wasn't already unread on the previous one — i.e.
+                // genuinely new arrivals, not every still-unread item
+                // re-firing each 30s cycle. The first poll after mount
+                // only seeds the "seen" set (nothing should alert just
+                // because the page loaded with existing unread items).
+                const currentUnreadIds = new Set(
+                    notificationsData
+                        .filter((n) => !n.read)
+                        .map((n) => n.id),
+                );
+                if (seenUnreadIdsRef.current === null) {
+                    seenUnreadIdsRef.current = currentUnreadIds;
+                } else {
+                    const newlyArrived = notificationsData.filter(
+                        (n) =>
+                            !n.read &&
+                            !seenUnreadIdsRef.current.has(n.id),
+                    );
+                    if (newlyArrived.length > 0) {
+                        if (settings.soundEnabled) {
+                            playNotificationSound(role);
+                        }
+                        if (settings.pushNotifications) {
+                            newlyArrived.forEach(showBrowserPushNotification);
+                        }
+                    }
+                    seenUnreadIdsRef.current = currentUnreadIds;
                 }
             }
         } catch (error) {
@@ -1175,8 +1592,15 @@ const MainLayout = ({ children, breadcrumb }) => {
     //                                        even while the page is unloading)
     //  • Explicit logout                  → is_online = false via /api/logout
     useEffect(() => {
-        const token = secureLocalStorage.getItem("access_token");
-        if (!token) return; // Guest / unauthenticated — nothing to track
+        // Phase 6: the bearer token is no longer readable by JS at all
+        // (HttpOnly cookie) — userID is just cached, non-secret profile
+        // display data, so it's a safe stand-in for "is someone logged
+        // in" here. It carries no authentication weight of its own; the
+        // actual heartbeat/set-offline requests below authenticate via
+        // the auth_token cookie, which the browser attaches
+        // automatically.
+        const userID = secureLocalStorage.getItem("userID");
+        if (!userID) return; // Guest / unauthenticated — nothing to track
 
         const sendHeartbeat = async () => {
             try {
@@ -1189,14 +1613,15 @@ const MainLayout = ({ children, breadcrumb }) => {
 
         // Uses fetch keepalive so the request completes even after the JS
         // context is torn down (tab close, browser close, navigation away).
+        // `credentials: "include"` sends the HttpOnly auth_token cookie
+        // automatically — this used to manually attach a bearer token
+        // read from secureLocalStorage, which no longer exists there.
         const markOfflineOnUnload = () => {
-            const tkn = secureLocalStorage.getItem("access_token");
-            if (!tkn) return;
             fetch(BASE_URL + "api/set-offline", {
                 method: "POST",
                 keepalive: true, // ← survives page unload
+                credentials: "include",
                 headers: {
-                    Authorization: `Bearer ${tkn}`,
                     "Content-Type": "application/json",
                     Accept: "application/json",
                 },
@@ -1298,6 +1723,45 @@ const MainLayout = ({ children, breadcrumb }) => {
         );
     };
 
+    // Opens the "view admin note" modal for a resolved/dismissed feedback
+    // report. Fetches the live report so status/notes are current even
+    // if they've changed since the notification was created; falls back
+    // to whatever was snapshotted on the notification itself if the
+    // report was since deleted.
+    const handleViewFeedbackReport = async (feedbackReportId, fallback) => {
+        if (!feedbackReportId) return;
+        try {
+            setFeedbackDetailLoading(true);
+            setFeedbackDetailModalVisible(true);
+            const response = await axiosConfig.get(
+                `/atms-feedback/${feedbackReportId}`,
+                // The report may have since been deleted by an admin (404) —
+                // that's an expected, gracefully-handled case here (we fall
+                // back to the snapshot baked into the notification below),
+                // not a surprise failure, so skip the generic axios error
+                // modal that would otherwise pop up the raw Laravel
+                // "No query results for model [...]" message.
+                { suppressGenericModal: true },
+            );
+            setSelectedFeedbackReport(response.data?.data || fallback || null);
+        } catch (error) {
+            console.error("Failed to fetch feedback report:", error);
+            if (fallback) {
+                setSelectedFeedbackReport(fallback);
+                if (error?.response?.status === 404) {
+                    message.info(
+                        "This feedback report has since been deleted. Showing the details from your notification.",
+                    );
+                }
+            } else {
+                message.error("Failed to load this feedback report");
+                setFeedbackDetailModalVisible(false);
+            }
+        } finally {
+            setFeedbackDetailLoading(false);
+        }
+    };
+
     const handleViewAlumniProfile = async (alumniId) => {
         try {
             setAlumniDetailsLoading(true);
@@ -1347,7 +1811,7 @@ const MainLayout = ({ children, breadcrumb }) => {
                 contactPermission: values.contactPermission,
                 agreement: values.agreement,
                 profileImage: values?.profile_image_url,
-                idDocuments: values?.document_urls || [],
+                idDocuments: values?.documents || [],
             };
             setAlumniPreviewData(previewData);
             setAlumniDetailsVisible(true);
@@ -1432,6 +1896,52 @@ const MainLayout = ({ children, breadcrumb }) => {
             ) {
                 setDropdownVisible(false);
                 handleViewAnnouncement(notificationData?.announcement_id);
+            }
+
+            if (
+                notification.notifiable_type === "feedback_report_update" &&
+                notificationData?.feedback_report_id
+            ) {
+                setDropdownVisible(false);
+                handleViewFeedbackReport(notificationData.feedback_report_id, {
+                    id: notificationData.feedback_report_id,
+                    status: notificationData.status,
+                    admin_notes: notificationData.admin_notes,
+                    type: notificationData.feedback_type,
+                    area: notificationData.feedback_area,
+                });
+            }
+
+            // Admin-facing: an alumni just submitted a new feedback report.
+            // Deep-link straight into the admin Feedback Reports page with
+            // ?id= so it can open that exact report (see
+            // AtmsFeedbackReportsPage.js), same pattern as
+            // handleViewAnnouncement above.
+            if (
+                notification.notifiable_type === "new_feedback_report" &&
+                notificationData?.feedback_report_id
+            ) {
+                setDropdownVisible(false);
+                history.push(
+                    `/feedback-reports?id=${notificationData.feedback_report_id}`,
+                );
+            }
+
+            // "admin_message" (alumni got a message from the admin) and
+            // "alumni_message" (admin's combined unread-across-all-alumni
+            // count) both just deep-link to the Messages feature itself
+            // — same /messages route renders the right view for each
+            // role (see routes/index.js). The admin variant intentionally
+            // does NOT jump into one specific alumni's thread, so it
+            // can't be mistaken for a per-alumni notification.
+            if (
+                notification.notifiable_type === "admin_message" ||
+                notification.notifiable_type === "alumni_message" ||
+                notificationData?.type === "admin_message" ||
+                notificationData?.type === "alumni_message"
+            ) {
+                setDropdownVisible(false);
+                history.push("/messages");
             }
         };
 
@@ -1573,26 +2083,51 @@ const MainLayout = ({ children, breadcrumb }) => {
                         <Avatar
                             size={40}
                             src={
-                                role === "alumni"
-                                    ? avatarGuidance
-                                    : alumniAvatar
+                                // "alumni_message" is the admin's combined
+                                // inbox notification — it isn't about any
+                                // one alumni, so there's no real profile
+                                // photo to show. Previously this fell
+                                // through to the generic default-person
+                                // silhouette (alumniAvatar resolves to
+                                // null here), which read as a placeholder
+                                // photo rather than an icon. Force the
+                                // TeamOutlined icon below instead.
+                                notification.notifiable_type ===
+                                "alumni_message"
+                                    ? undefined
+                                    : role === "alumni"
+                                      ? avatarGuidance
+                                      : alumniAvatar
                             }
                             icon={
-                                !alumniAvatar &&
-                                role !== "alumni" && <UserOutlined />
+                                notification.notifiable_type ===
+                                "alumni_message" ? (
+                                    <TeamOutlined />
+                                ) : (
+                                    !alumniAvatar &&
+                                    role !== "alumni" && <UserOutlined />
+                                )
                             }
                             style={{
                                 marginRight: 12,
-                                background: alumniAvatar
-                                    ? "transparent"
-                                    : notification.read
-                                      ? "#d9d9d9"
-                                      : "#1890ff",
-                                border: alumniAvatar
-                                    ? isDark
-                                        ? "1px solid #333"
-                                        : "1px solid #e8e8e8"
-                                    : "none",
+                                background:
+                                    notification.notifiable_type ===
+                                    "alumni_message"
+                                        ? "#2563eb"
+                                        : alumniAvatar
+                                          ? "transparent"
+                                          : notification.read
+                                            ? "#d9d9d9"
+                                            : "#1890ff",
+                                border:
+                                    notification.notifiable_type ===
+                                    "alumni_message"
+                                        ? "none"
+                                        : alumniAvatar
+                                          ? isDark
+                                              ? "1px solid #333"
+                                              : "1px solid #e8e8e8"
+                                          : "none",
                             }}
                         />
                     )}
@@ -1731,6 +2266,92 @@ const MainLayout = ({ children, breadcrumb }) => {
                                 View Announcement
                             </Button>
                         )}
+                        {notification.notifiable_type ===
+                            "feedback_report_update" &&
+                            notificationData?.feedback_report_id && (
+                                <Button
+                                    type="link"
+                                    size="small"
+                                    icon={<CommentOutlined />}
+                                    style={{
+                                        padding: 0,
+                                        fontSize: "11px",
+                                        height: "auto",
+                                    }}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        if (!notification.read) {
+                                            handleMarkAsRead(notification.id);
+                                        }
+                                        setDropdownVisible(false);
+                                        handleViewFeedbackReport(
+                                            notificationData.feedback_report_id,
+                                            {
+                                                id: notificationData.feedback_report_id,
+                                                status: notificationData.status,
+                                                admin_notes:
+                                                    notificationData.admin_notes,
+                                                type: notificationData.feedback_type,
+                                                area: notificationData.feedback_area,
+                                            },
+                                        );
+                                    }}
+                                >
+                                    View Feedback
+                                </Button>
+                            )}
+                        {notification.notifiable_type ===
+                            "new_feedback_report" &&
+                            notificationData?.feedback_report_id && (
+                                <Button
+                                    type="link"
+                                    size="small"
+                                    icon={<CommentOutlined />}
+                                    style={{
+                                        padding: 0,
+                                        fontSize: "11px",
+                                        height: "auto",
+                                    }}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        if (!notification.read) {
+                                            handleMarkAsRead(notification.id);
+                                        }
+                                        setDropdownVisible(false);
+                                        history.push(
+                                            `/feedback-reports?id=${notificationData.feedback_report_id}`,
+                                        );
+                                    }}
+                                >
+                                    View Report
+                                </Button>
+                            )}
+                        {(notification.notifiable_type === "admin_message" ||
+                            notification.notifiable_type ===
+                                "alumni_message" ||
+                            notificationData?.type === "admin_message" ||
+                            notificationData?.type === "alumni_message") && (
+                            <Button
+                                type="link"
+                                size="small"
+                                icon={<MessageOutlined />}
+                                style={{
+                                    padding: 0,
+                                    fontSize: "11px",
+                                    height: "auto",
+                                }}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    if (!notification.read) {
+                                        handleMarkAsRead(notification.id);
+                                    }
+                                    setDropdownVisible(false);
+                                    history.push("/messages");
+                                }}
+                            >
+                                Open Messages
+                            </Button>
+                        )}
                         <div
                             style={{
                                 display: "flex",
@@ -1792,12 +2413,27 @@ const MainLayout = ({ children, breadcrumb }) => {
             width={450}
         >
             <div style={{ padding: "16px 0" }}>
+                <Text
+                    type="secondary"
+                    style={{
+                        display: "block",
+                        fontSize: 12,
+                        marginBottom: 12,
+                    }}
+                >
+                    A "Default" tag means you haven't changed this setting
+                    yet — it's using the standard on/off starting value.
+                    Toggling it saves your own choice for your account.
+                </Text>
                 <List>
+                    {/* Email Notifications toggle removed per request.
+                        Original block kept here for reference:
                     <List.Item
                         actions={[
                             <Switch
                                 key="email"
                                 checked={settings.emailNotifications}
+                                loading={!settingsLoaded}
                                 onChange={(checked) =>
                                     handleSettingsChange(
                                         "emailNotifications",
@@ -1813,15 +2449,38 @@ const MainLayout = ({ children, breadcrumb }) => {
                                     style={{ fontSize: 20, color: "#1890ff" }}
                                 />
                             }
-                            title="Email Notifications"
+                            title={
+                                <Space size={6}>
+                                    <span>Email Notifications</span>
+                                    {settingsLoaded &&
+                                        settings.emailNotifications ===
+                                            DEFAULT_SETTINGS.emailNotifications && (
+                                            <Tag
+                                                style={{
+                                                    fontSize: 10,
+                                                    lineHeight: "16px",
+                                                    padding: "0 6px",
+                                                    margin: 0,
+                                                }}
+                                            >
+                                                Default:{" "}
+                                                {DEFAULT_SETTINGS.emailNotifications
+                                                    ? "On"
+                                                    : "Off"}
+                                            </Tag>
+                                        )}
+                                </Space>
+                            }
                             description="Receive notifications via email"
                         />
                     </List.Item>
+                    */}
                     <List.Item
                         actions={[
                             <Switch
                                 key="sound"
                                 checked={settings.soundEnabled}
+                                loading={!settingsLoaded}
                                 onChange={(checked) =>
                                     handleSettingsChange(
                                         "soundEnabled",
@@ -1837,7 +2496,28 @@ const MainLayout = ({ children, breadcrumb }) => {
                                     style={{ fontSize: 20, color: "#52c41a" }}
                                 />
                             }
-                            title="Sound Notifications"
+                            title={
+                                <Space size={6}>
+                                    <span>Sound Notifications</span>
+                                    {settingsLoaded &&
+                                        settings.soundEnabled ===
+                                            DEFAULT_SETTINGS.soundEnabled && (
+                                            <Tag
+                                                style={{
+                                                    fontSize: 10,
+                                                    lineHeight: "16px",
+                                                    padding: "0 6px",
+                                                    margin: 0,
+                                                }}
+                                            >
+                                                Default:{" "}
+                                                {DEFAULT_SETTINGS.soundEnabled
+                                                    ? "On"
+                                                    : "Off"}
+                                            </Tag>
+                                        )}
+                                </Space>
+                            }
                             description="Play sound when new notification arrives"
                         />
                     </List.Item>
@@ -1846,6 +2526,7 @@ const MainLayout = ({ children, breadcrumb }) => {
                             <Switch
                                 key="push"
                                 checked={settings.pushNotifications !== false}
+                                loading={!settingsLoaded}
                                 onChange={(checked) =>
                                     handleSettingsChange(
                                         "pushNotifications",
@@ -1861,7 +2542,29 @@ const MainLayout = ({ children, breadcrumb }) => {
                                     style={{ fontSize: 20, color: "#faad14" }}
                                 />
                             }
-                            title="Push Notifications"
+                            title={
+                                <Space size={6}>
+                                    <span>Push Notifications</span>
+                                    {settingsLoaded &&
+                                        (settings.pushNotifications !==
+                                            false) ===
+                                            DEFAULT_SETTINGS.pushNotifications && (
+                                            <Tag
+                                                style={{
+                                                    fontSize: 10,
+                                                    lineHeight: "16px",
+                                                    padding: "0 6px",
+                                                    margin: 0,
+                                                }}
+                                            >
+                                                Default:{" "}
+                                                {DEFAULT_SETTINGS.pushNotifications
+                                                    ? "On"
+                                                    : "Off"}
+                                            </Tag>
+                                        )}
+                                </Space>
+                            }
                             description="Receive push notifications in browser"
                         />
                     </List.Item>
@@ -2278,6 +2981,38 @@ const MainLayout = ({ children, breadcrumb }) => {
                                                     notificationData?.announcement_id,
                                                 );
                                             }
+                                            if (
+                                                notification.notifiable_type ===
+                                                    "feedback_report_update" &&
+                                                notificationData?.feedback_report_id
+                                            ) {
+                                                setAllNotificationsModalVisible(
+                                                    false,
+                                                );
+                                                handleViewFeedbackReport(
+                                                    notificationData.feedback_report_id,
+                                                    {
+                                                        id: notificationData.feedback_report_id,
+                                                        status: notificationData.status,
+                                                        admin_notes:
+                                                            notificationData.admin_notes,
+                                                        type: notificationData.feedback_type,
+                                                        area: notificationData.feedback_area,
+                                                    },
+                                                );
+                                            }
+                                            if (
+                                                notification.notifiable_type ===
+                                                    "new_feedback_report" &&
+                                                notificationData?.feedback_report_id
+                                            ) {
+                                                setAllNotificationsModalVisible(
+                                                    false,
+                                                );
+                                                history.push(
+                                                    `/feedback-reports?id=${notificationData.feedback_report_id}`,
+                                                );
+                                            }
                                         }}
                                     >
                                         <div
@@ -2314,20 +3049,34 @@ const MainLayout = ({ children, breadcrumb }) => {
                                             ) : (
                                                 <Avatar
                                                     size={40}
-                                                    src={alumniAvatar}
+                                                    src={
+                                                        notification.notifiable_type ===
+                                                        "alumni_message"
+                                                            ? undefined
+                                                            : alumniAvatar
+                                                    }
                                                     icon={
-                                                        !alumniAvatar && (
-                                                            <UserOutlined />
+                                                        notification.notifiable_type ===
+                                                        "alumni_message" ? (
+                                                            <TeamOutlined />
+                                                        ) : (
+                                                            !alumniAvatar && (
+                                                                <UserOutlined />
+                                                            )
                                                         )
                                                     }
                                                     className="theme-avatar-border"
                                                     style={{
                                                         marginRight: 12,
-                                                        background: alumniAvatar
-                                                            ? "transparent"
-                                                            : notification.read
-                                                              ? "#d9d9d9"
-                                                              : "#1890ff",
+                                                        background:
+                                                            notification.notifiable_type ===
+                                                            "alumni_message"
+                                                                ? "#2563eb"
+                                                                : alumniAvatar
+                                                                  ? "transparent"
+                                                                  : notification.read
+                                                                    ? "#d9d9d9"
+                                                                    : "#1890ff",
                                                     }}
                                                 />
                                             )}
@@ -2867,6 +3616,196 @@ const MainLayout = ({ children, breadcrumb }) => {
                                 </Text>
                             </div>
                         </div>
+                    )}
+                </Spin>
+            </Modal>
+        );
+    };
+
+    // "Your feedback was reviewed" notification -> shows the admin's note
+    // and the report's current status. Opened from handleViewFeedbackReport.
+    const FEEDBACK_TYPE_META = {
+        improve: { label: "Help us improve", color: "blue", icon: <BulbOutlined /> },
+        wrong: { label: "Something went wrong", color: "orange", icon: <ExclamationOutlined /> },
+    };
+    const FEEDBACK_STATUS_META = {
+        pending: { label: "Pending", color: "gold", icon: <ClockCircleOutlined /> },
+        in_review: { label: "In Review", color: "processing", icon: <EyeOutlined /> },
+        resolved: { label: "Resolved", color: "success", icon: <CheckCircleOutlined /> },
+        dismissed: { label: "Dismissed", color: "default", icon: <StopOutlined /> },
+    };
+    const FEEDBACK_AREA_LABELS = {
+        gallery: "Photo Library",
+        dashboard: "Dashboard",
+        alumni: "Alumni List",
+        events: "Events",
+        questions: "Questions",
+        "create-dha": "Create D.H.A",
+        messages: "Messages",
+        "job-posts": "Job Posts",
+        faq: "FAQs",
+        about: "About",
+        profile: "Profile",
+        notifications: "Notifications",
+        login: "Login / Authentication",
+        "image-quiz": "Image Quiz",
+        "rating-quiz": "Rating Quiz",
+        registration: "Registration",
+        other: "Other",
+    };
+
+    const renderFeedbackDetailModal = () => {
+        const isDark = currentTheme === "black";
+        const report = selectedFeedbackReport;
+        const typeMeta = report?.type
+            ? FEEDBACK_TYPE_META[report.type]
+            : null;
+        const statusMeta = report?.status
+            ? FEEDBACK_STATUS_META[report.status] || {
+                  label: report.status,
+                  color: "default",
+              }
+            : null;
+        const areaLabel = report
+            ? report.area_label ||
+              FEEDBACK_AREA_LABELS[report.area] ||
+              report.area
+            : null;
+
+        return (
+            <Modal
+                title={
+                    <Space>
+                        <CommentOutlined style={{ color: "#ef4444" }} />
+                        <span>Your Feedback</span>
+                    </Space>
+                }
+                open={feedbackDetailModalVisible}
+                onCancel={() => {
+                    setFeedbackDetailModalVisible(false);
+                    setSelectedFeedbackReport(null);
+                }}
+                footer={[
+                    <Button
+                        key="close"
+                        onClick={() => {
+                            setFeedbackDetailModalVisible(false);
+                            setSelectedFeedbackReport(null);
+                        }}
+                    >
+                        Close
+                    </Button>,
+                ]}
+                width={480}
+                centered
+            >
+                <Spin spinning={feedbackDetailLoading}>
+                    {report ? (
+                        <div>
+                            <Space wrap style={{ marginBottom: 16 }}>
+                                {typeMeta && (
+                                    <Tag color={typeMeta.color} icon={typeMeta.icon}>
+                                        {typeMeta.label}
+                                    </Tag>
+                                )}
+                                {areaLabel && <Tag>{areaLabel}</Tag>}
+                                {statusMeta && (
+                                    <Tag color={statusMeta.color} icon={statusMeta.icon}>
+                                        {statusMeta.label}
+                                    </Tag>
+                                )}
+                            </Space>
+
+                            {report.details && (
+                                <div style={{ marginBottom: 16 }}>
+                                    <Text
+                                        className="theme-text-secondary"
+                                        style={{
+                                            display: "block",
+                                            fontSize: 12,
+                                            fontWeight: 700,
+                                            letterSpacing: "0.05em",
+                                            textTransform: "uppercase",
+                                            marginBottom: 6,
+                                        }}
+                                    >
+                                        What you reported
+                                    </Text>
+                                    <div
+                                        className="theme-card-bg"
+                                        style={{
+                                            padding: "12px 14px",
+                                            borderRadius: 10,
+                                            whiteSpace: "pre-wrap",
+                                            lineHeight: 1.6,
+                                        }}
+                                    >
+                                        {report.details}
+                                    </div>
+                                </div>
+                            )}
+
+                            <div>
+                                <Text
+                                    className="theme-text-secondary"
+                                    style={{
+                                        display: "block",
+                                        fontSize: 12,
+                                        fontWeight: 700,
+                                        letterSpacing: "0.05em",
+                                        textTransform: "uppercase",
+                                        marginBottom: 6,
+                                    }}
+                                >
+                                    Note from admin
+                                </Text>
+                                {report.admin_notes ? (
+                                    <div
+                                        style={{
+                                            padding: "12px 14px",
+                                            borderRadius: 10,
+                                            whiteSpace: "pre-wrap",
+                                            lineHeight: 1.6,
+                                            background: isDark
+                                                ? "#1a1a2e"
+                                                : "#f0f7ff",
+                                            border: isDark
+                                                ? "1px solid #333"
+                                                : "1px solid #d6e8ff",
+                                        }}
+                                    >
+                                        {report.admin_notes}
+                                    </div>
+                                ) : (
+                                    <Text className="theme-text-secondary">
+                                        The admin didn't leave a note with
+                                        this update.
+                                    </Text>
+                                )}
+                            </div>
+
+                            {report.resolved_by?.name && (
+                                <div style={{ marginTop: 16 }}>
+                                    <Text
+                                        className="theme-text-secondary"
+                                        style={{ fontSize: 12 }}
+                                    >
+                                        Reviewed by{" "}
+                                        <Text strong>
+                                            {report.resolved_by.name}
+                                        </Text>
+                                        {report.resolved_at &&
+                                            ` on ${new Date(
+                                                report.resolved_at,
+                                            ).toLocaleString()}`}
+                                    </Text>
+                                </div>
+                            )}
+                        </div>
+                    ) : (
+                        !feedbackDetailLoading && (
+                            <Empty description="This feedback report is no longer available" />
+                        )
                     )}
                 </Spin>
             </Modal>
@@ -4170,6 +5109,7 @@ const MainLayout = ({ children, breadcrumb }) => {
             {renderAllNotificationsModal()}
             {renderEventRegistrationsModal()}
             {renderEventDetailsModal()}
+            {renderFeedbackDetailModal()}
 
             <AlumniDetails
                 visible={alumniDetailsVisible}
@@ -4211,7 +5151,7 @@ const MainLayout = ({ children, breadcrumb }) => {
                                     values?.profile_image_url ||
                                     prev?.profileImage,
                                 idDocuments:
-                                    values?.document_urls ||
+                                    values?.documents ||
                                     prev?.idDocuments ||
                                     [],
                                 first_name:
@@ -4701,14 +5641,38 @@ const MainLayout = ({ children, breadcrumb }) => {
                             </div>
 
                             <div style={{ marginBottom: 14 }}>
+                                <Text
+                                    style={{
+                                        display: "block",
+                                        marginBottom: 6,
+                                        color: fbText,
+                                        fontSize: 13,
+                                    }}
+                                >
+                                    Screenshot{" "}
+                                    <span style={{ color: "#ef4444" }}>
+                                        (required)
+                                    </span>
+                                </Text>
                                 <Upload
                                     listType="picture"
+                                    accept=".jpg,.jpeg,.png,.webp"
                                     beforeUpload={() => false}
                                     fileList={feedbackScreenshots}
                                     onChange={({ fileList }) =>
-                                        setFeedbackScreenshots(fileList)
+                                        setFeedbackScreenshots(
+                                            fileList.slice(0, 5),
+                                        )
+                                    }
+                                    onRemove={(file) =>
+                                        setFeedbackScreenshots((prev) =>
+                                            prev.filter(
+                                                (f) => f.uid !== file.uid,
+                                            ),
+                                        )
                                     }
                                     multiple
+                                    maxCount={5}
                                 >
                                     <Button
                                         icon={
@@ -4718,9 +5682,22 @@ const MainLayout = ({ children, breadcrumb }) => {
                                         }
                                         block={isMobile}
                                     >
-                                        Add screenshot (recommended)
+                                        Add screenshot (required)
                                     </Button>
                                 </Upload>
+                                <p
+                                    className="ant-typography"
+                                    style={{
+                                        fontSize: 11,
+                                        color: fbSubtle,
+                                        marginTop: 6,
+                                        marginBottom: 0,
+                                    }}
+                                >
+                                    At least one screenshot of the issue is
+                                    required (JPG, PNG or WEBP, max 5MB
+                                    each, up to 5 files).
+                                </p>
                             </div>
 
                             <p
@@ -4756,14 +5733,66 @@ const MainLayout = ({ children, breadcrumb }) => {
                                 <Button
                                     block={isMobile}
                                     type="primary"
+                                    loading={submitAtmsFeedback.isLoading}
                                     disabled={
-                                        !feedbackArea || !feedbackDetails.trim()
+                                        !feedbackArea ||
+                                        !feedbackDetails.trim() ||
+                                        feedbackScreenshots.length === 0
                                     }
-                                    onClick={() => {
-                                        message.success(
-                                            "Thanks! Your feedback has been submitted.",
-                                        );
-                                        closeAllFeedback();
+                                    onClick={async () => {
+                                        try {
+                                            const formData = new FormData();
+                                            formData.append(
+                                                "type",
+                                                feedbackOption === "wrong"
+                                                    ? "wrong"
+                                                    : "improve",
+                                            );
+                                            formData.append(
+                                                "area",
+                                                feedbackArea,
+                                            );
+                                            formData.append(
+                                                "details",
+                                                feedbackDetails,
+                                            );
+                                            formData.append(
+                                                "page_url",
+                                                window.location.href,
+                                            );
+                                            formData.append(
+                                                "theme",
+                                                currentTheme,
+                                            );
+                                            feedbackScreenshots.forEach(
+                                                (file) => {
+                                                    const raw =
+                                                        file.originFileObj ||
+                                                        file;
+                                                    if (raw) {
+                                                        formData.append(
+                                                            "screenshots[]",
+                                                            raw,
+                                                        );
+                                                    }
+                                                },
+                                            );
+
+                                            await submitAtmsFeedback.mutateAsync(
+                                                formData,
+                                            );
+
+                                            message.success(
+                                                "Thanks! Your feedback has been submitted.",
+                                            );
+                                            closeAllFeedback();
+                                        } catch (err) {
+                                            message.error(
+                                                err?.response?.data
+                                                    ?.message ||
+                                                    "Failed to submit feedback. Please try again.",
+                                            );
+                                        }
                                     }}
                                 >
                                     Submit

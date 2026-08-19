@@ -403,7 +403,7 @@ const ProfilePage = () => {
             contactPermission: values.contactPermission,
             agreement: values.agreement,
             profileImage: values?.profile_image_url,
-            idDocuments: values?.document_urls || [],
+            idDocuments: values?.documents || [],
         };
 
         setPreviewData(previewData);
@@ -457,7 +457,7 @@ const ProfilePage = () => {
             contactPermission: values.contactPermission,
             agreement: values.agreement,
             profileImage: values?.profile_image_url,
-            idDocuments: values?.document_urls || [],
+            idDocuments: values?.documents || [],
         };
 
         setPreviewData(previewData);

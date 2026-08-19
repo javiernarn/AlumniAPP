@@ -48,6 +48,7 @@ import moment from "moment"
 import "./AlumniList.css"
 import { Layout, AlumniDetails } from "~/components"
 import useAlumni from "~/hooks/useAlumni"
+import useAlumniDirectory from "~/hooks/useAlumniDirectory"
 import useEmployeeStatus from "~/hooks/useEmployeeStatus"
 import useQuizResult from "~/hooks/useQuizResult"
 import axiosConfig from "~/utils/axiosConfig"
@@ -649,7 +650,7 @@ const AlumniCard = ({ alumnus, handleView, handleStatusUpdate, isSelectable, isS
 <div className="detail-item-alumini">
   <CalendarOutlined />
   <LastActiveIndicator 
-    lastActive={alumnus.last_active || alumnus.lastActive || alumnus.updated_at} 
+    lastActive={alumnus.last_active || alumnus.lastActive || null} 
     isOnline={alumnus.is_online || false} 
   />
 </div>
@@ -825,7 +826,7 @@ const NewRegisteredCard = ({ alumnus, handleView, handleStatusUpdate, quizResult
           <div className="detail-item-alumini">
             <CalendarOutlined />
             <LastActiveIndicator
-              lastActive={alumnus.last_active || alumnus.lastActive || alumnus.updated_at}
+              lastActive={alumnus.last_active || alumnus.lastActive || null}
               isOnline={alumnus.is_online || false}
             />
           </div>
@@ -1414,7 +1415,20 @@ const CourseFolderModal = ({ visible, onCancel, course, alumni, handleView }) =>
 }
 
 const AlumniList = () => {
-  const { isLoading, data: alumni = [], isFetching, refetch } = useAlumni()
+  const role = secureLocalStorage.getItem("userRole")
+  // GET /alumni (useAlumni) is role:admin-gated on the backend by
+  // design (see routes/api.php — regular alumni are not authorized to
+  // enumerate every other alumni's full record). This page is reused
+  // for both the admin route and the alumni-facing "/alumni" nav link
+  // ("Browse the OCC Alumni Directory..." below), so it needs the right
+  // data source per role: admins get the full admin record set, everyone
+  // else gets the minimized public-safe directory.
+  const isAdminRole = role === "admin"
+  const adminAlumniQuery = useAlumni({ enabled: isAdminRole })
+  const directoryQuery = useAlumniDirectory({ enabled: !isAdminRole })
+  const { isLoading, data: alumni = [], isFetching, refetch } = isAdminRole
+    ? adminAlumniQuery
+    : directoryQuery
   const { data: statuses } = useEmployeeStatus()
   const { data: quizResults = [] } = useQuizResult()
   const [viewMode, setViewMode] = useState("grid")
@@ -1425,7 +1439,6 @@ const AlumniList = () => {
   const [selectedStatus, setSelectedStatus] = useState(null)
   const [previewData, setPreviewData] = useState(null)
   const [statusUpdateLoading, setStatusUpdateLoading] = useState(false)
-  const role = secureLocalStorage.getItem("userRole")
 
   const [courseFolderVisible, setCourseFolderVisible] = useState(false)
   const [selectedCourse, setSelectedCourse] = useState(null)
@@ -1549,8 +1562,12 @@ useEffect(() => {
       agreement: values.agreement,
 
       // Files
+      // NOTE: the API field is `documents` (see AlumniSelfResource:
+      // 'documents' => $this->document_urls) — not `document_urls`.
+      // Reading the wrong key here meant idDocuments was always [],
+      // so AlumniDetails never showed any uploaded documents.
       profileImage: values?.profile_image_url,
-      idDocuments: values?.document_urls || [],
+      idDocuments: values?.documents || [],
     }
 
     setPreviewData(previewData)

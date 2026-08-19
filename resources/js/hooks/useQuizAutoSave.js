@@ -35,12 +35,15 @@ export default function useQuizAutoSave({
       });
       secureLocalStorage.setItem(storageKey, payload);
     } catch (e) {
-      try {
-        localStorage.setItem(
-          storageKey + "_fallback",
-          JSON.stringify({ ...stateRef.current, savedAt: Date.now() })
-        );
-      } catch (_) {}
+      // Phase 6: previously fell back to plain, unencrypted
+      // localStorage on any secureLocalStorage failure (e.g. quota
+      // exceeded), storing the full quiz state — potentially including
+      // a respondent's answers — in cleartext, readable by any script
+      // on the page or anyone with local access to the browser. If the
+      // secure store fails, this save tick is simply skipped; the next
+      // 1-second autosave tick (or the server-side sync below, when
+      // configured) will retry rather than silently downgrading to an
+      // insecure store.
     }
   }, [enabled, storageKey]);
 
@@ -83,7 +86,9 @@ export default function useQuizAutoSave({
 
   const clear = useCallback(() => {
     try { secureLocalStorage.removeItem(storageKey); } catch (_) {}
-    try { localStorage.removeItem(storageKey); } catch (_) {}
+    // Also clean up any legacy plaintext fallback key from before this
+    // fix, in case a browser still has one cached from an earlier
+    // session.
     try { localStorage.removeItem(storageKey + "_fallback"); } catch (_) {}
   }, [storageKey]);
 
@@ -91,10 +96,6 @@ export default function useQuizAutoSave({
     try {
       const v = secureLocalStorage.getItem(storageKey);
       if (v) return v;
-    } catch (_) {}
-    try {
-      const raw = localStorage.getItem(storageKey + "_fallback");
-      if (raw) return JSON.parse(raw);
     } catch (_) {}
     return null;
   }, [storageKey]);

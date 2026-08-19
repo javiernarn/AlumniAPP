@@ -418,12 +418,10 @@ public function register(Request $request, Event $event)
         'alumni_id' => $alumniId,
     ]);
 
-    $alumniProfileImage = null;
-    if ($alumni->profile_image) {
-        $alumniProfileImage = asset('storage/' . $alumni->profile_image);
-    } elseif ($alumni->profile_image_url) {
-        $alumniProfileImage = $alumni->profile_image_url;
-    }
+    // Phase 2: profile_image_url now resolves to the authorized download
+    // endpoint (not a public asset URL) — no need to special-case
+    // $alumni->profile_image here anymore.
+    $alumniProfileImage = $alumni->profile_image_url;
 
     // Notify admins (existing behavior)
     $adminUsers = User::where('role', 'admin')->get();

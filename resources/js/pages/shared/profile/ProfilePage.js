@@ -206,17 +206,17 @@ const ProfilePage = () => {
         if (activeForm === 'personal') {
             personalForm.validateFields()
                 .then(values => {
-                    console.log('Personal info:', values);
+                    // Phase 6: removed — was logging the full profile form values (name, address, phone, etc.) to the browser console.
                     message.success('Personal information updated successfully');
                     setIsEditModalVisible(false);
                 })
                 .catch(info => {
-                    console.log('Validate Failed:', info);
+                    // console.log('Validate Failed:', info); // Phase 6: kept disabled — this one only logs form-validation error shape, but left off for consistency with the rest of this form.
                 });
         } else if (activeForm === 'skill') {
             skillsForm.validateFields()
                 .then(values => {
-                    console.log('Skill info:', values);
+                    // Phase 6: removed — was logging submitted form values to the browser console.
                     const newSkill = {
                         id: expertiseData.length + 1,
                         skill: values.skill,
@@ -228,12 +228,12 @@ const ProfilePage = () => {
                     skillsForm.resetFields();
                 })
                 .catch(info => {
-                    console.log('Validate Failed:', info);
+                    // console.log('Validate Failed:', info); // Phase 6: kept disabled — this one only logs form-validation error shape, but left off for consistency with the rest of this form.
                 });
         } else if (activeForm === 'education') {
             educationForm.validateFields()
                 .then(values => {
-                    console.log('Education info:', values);
+                    // Phase 6: removed — was logging submitted form values to the browser console.
                     const newEducation = {
                         id: educationData.length + 1,
                         degree: values.degree,
@@ -247,12 +247,12 @@ const ProfilePage = () => {
                     educationForm.resetFields();
                 })
                 .catch(info => {
-                    console.log('Validate Failed:', info);
+                    // console.log('Validate Failed:', info); // Phase 6: kept disabled — this one only logs form-validation error shape, but left off for consistency with the rest of this form.
                 });
         } else if (activeForm === 'experience') {
             experienceForm.validateFields()
                 .then(values => {
-                    console.log('Experience info:', values);
+                    // Phase 6: removed — was logging submitted form values to the browser console.
                     const newExperience = {
                         id: experienceData.length + 1,
                         position: values.position,
@@ -266,12 +266,12 @@ const ProfilePage = () => {
                     experienceForm.resetFields();
                 })
                 .catch(info => {
-                    console.log('Validate Failed:', info);
+                    // console.log('Validate Failed:', info); // Phase 6: kept disabled — this one only logs form-validation error shape, but left off for consistency with the rest of this form.
                 });
         } else if (activeForm === 'certification') {
             certificationForm.validateFields()
                 .then(values => {
-                    console.log('Certification info:', values);
+                    // Phase 6: removed — was logging submitted form values to the browser console.
                     const newCertification = {
                         id: certificationsData.length + 1,
                         name: values.name,
@@ -283,12 +283,12 @@ const ProfilePage = () => {
                     certificationForm.resetFields();
                 })
                 .catch(info => {
-                    console.log('Validate Failed:', info);
+                    // console.log('Validate Failed:', info); // Phase 6: kept disabled — this one only logs form-validation error shape, but left off for consistency with the rest of this form.
                 });
         } else if (activeForm === 'project') {
             projectForm.validateFields()
                 .then(values => {
-                    console.log('Project info:', values);
+                    // Phase 6: removed — was logging submitted form values to the browser console.
                     const newProject = {
                         id: projectsData.length + 1,
                         name: values.name,
@@ -301,7 +301,7 @@ const ProfilePage = () => {
                     projectForm.resetFields();
                 })
                 .catch(info => {
-                    console.log('Validate Failed:', info);
+                    // console.log('Validate Failed:', info); // Phase 6: kept disabled — this one only logs form-validation error shape, but left off for consistency with the rest of this form.
                 });
         } else if (activeForm === 'language') {
             // Language form would be handled similarly

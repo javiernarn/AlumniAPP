@@ -638,7 +638,13 @@ const HomePage = () => {
         secureLocalStorage.getItem("name") ||
         "";
 
-    const { data: alumni = [], isLoading: alumniLoading } = useAlumni();
+    // GET /alumni is admin-only on the backend — this page is shared by
+    // both admin and alumni (see MainPage.js redirect logic), so this
+    // must stay disabled for non-admins or every alumni landing here
+    // fires an admin-only request and gets a 403.
+    const { data: alumni = [], isLoading: alumniLoading } = useAlumni({
+        enabled: isAdmin,
+    });
     const {
         data: quizResults = [],
         isLoading: quizLoading,

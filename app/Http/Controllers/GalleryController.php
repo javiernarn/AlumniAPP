@@ -143,7 +143,7 @@ class GalleryController extends Controller
             'title' => 'required|string|max:255',
             'organization_name' => 'nullable|string|max:255',
             'images' => 'required|array|min:1|max:20',
-            'images.*' => 'required|image|mimes:png,jpg,jpeg,gif,webp|max:10240',
+            'images.*' => 'required|file|mimes:png,jpg,jpeg,webp|max:10240', // Phase 3: dropped gif, excluded svg
             'event_date' => 'required|date',
         ], [
             'title.required' => 'The title field is required.',
@@ -151,7 +151,7 @@ class GalleryController extends Controller
             'images.min' => 'Please select at least one image to upload.',
             'images.*.required' => 'Each image file is required.',
             'images.*.image' => 'Each file must be a valid image.',
-            'images.*.mimes' => 'Only PNG, JPG, JPEG, GIF and WEBP files are allowed.',
+            'images.*.mimes' => 'Only PNG, JPG, JPEG, and WEBP files are allowed.',
             'images.*.max' => 'Each image must be less than 10MB.',
             'event_date.required' => 'The event date field is required.',
         ]);
@@ -232,13 +232,13 @@ class GalleryController extends Controller
             'title' => 'sometimes|required|string|max:255',
             'organization_name' => 'nullable|string|max:255',
             'images' => 'sometimes|array|max:20',
-            'images.*' => 'image|mimes:png,jpg,jpeg,gif,webp|max:10240',
+            'images.*' => 'file|mimes:png,jpg,jpeg,webp|max:10240', // Phase 3: dropped gif, excluded svg
             'event_date' => 'sometimes|required|date',
             'replace_images' => 'sometimes|boolean', // If true, replace all images; if false, append
         ], [
             'title.required' => 'The title field is required.',
             'images.*.image' => 'Each file must be a valid image.',
-            'images.*.mimes' => 'Only PNG, JPG, JPEG, GIF and WEBP files are allowed.',
+            'images.*.mimes' => 'Only PNG, JPG, JPEG, and WEBP files are allowed.',
             'images.*.max' => 'Each image must be less than 10MB.',
             'event_date.required' => 'The event date field is required.',
         ]);

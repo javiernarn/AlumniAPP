@@ -249,7 +249,8 @@ useEffect(() => {
         if (!timeExpired) return;
         if (expiryCountdown <= 0) {
             try {
-                secureLocalStorage.removeItem("access_token");
+                // Phase 6: access_token is no longer stored client-side
+                // (HttpOnly cookie) — nothing to remove here anymore.
                 secureLocalStorage.removeItem("faculty_id");
                 secureLocalStorage.removeItem("userID");
                 secureLocalStorage.removeItem("userRole");
