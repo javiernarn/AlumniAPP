@@ -98936,7 +98936,9 @@ var MainLayout = function MainLayout(_ref3) {
       "/questions": "Questions",
       "/department-heads": "Department Accounts",
       "/feedback-reports": "Feedback Reports",
-      "/402": "Maintenance"
+      "/announcements": "Announcements",
+      "/402": "Maintenance",
+      "/audit-logs": "Audit Logs"
     };
     var pageTitle = pageTitles[pathname] || "ATMS";
     document.title = "".concat(pageTitle, " | ATMS - Opol Community College");
@@ -99195,95 +99197,155 @@ var MainLayout = function MainLayout(_ref3) {
   // still-unread notification, not just newly arrived ones.
   var seenUnreadIdsRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
 
+  // While the tab/window is hidden (e.g. the user Alt-Tabs to another
+  // app or switches to a different browser tab), the 30s polling
+  // interval keeps running in the background but browsers throttle
+  // background timers — so by the time the user switches back, the
+  // next fetch can land right away and "catch up" on everything that
+  // arrived while they were away. Without this flag, that catch-up
+  // poll treated every one of those as newly arrived and fired the
+  // notification sound the instant the window regained focus, even
+  // though nothing changed while the user was actually looking at
+  // this window. Set true when the tab goes hidden; the next
+  // fetchNotifications() call after becoming visible again silently
+  // resyncs (updates what's "seen" without playing sound/push), then
+  // clears the flag so normal live notifications behave as before.
+  var suppressSoundOnNextFetchRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(false);
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+    var handleVisibility = function handleVisibility() {
+      if (document.visibilityState === "hidden") {
+        suppressSoundOnNextFetchRef.current = true;
+      } else if (document.visibilityState === "visible") {
+        // Resync right away rather than waiting for the next
+        // throttled interval tick, so the unread badge is
+        // accurate immediately — this resync itself is silent
+        // because the flag above is still true at this point.
+        fetchNotifications();
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibility);
+    return function () {
+      return document.removeEventListener("visibilitychange", handleVisibility);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Mirrors `settings` for the polling interval below. The interval is
+  // registered once (empty-deps useEffect, further down) and reuses
+  // the SAME fetchNotifications closure for every 30s tick. Reading
+  // `settings.soundEnabled` directly inside that closure meant it was
+  // permanently frozen at whatever "settings" was on the very first
+  // render (soundEnabled: false, before the saved preference even
+  // finished loading from the server) — so toggling sound on in the
+  // Settings modal never had any effect on the polling loop; the sound
+  // toggle looked "on" but no sound ever played. Reading from this ref
+  // instead always sees the live value without needing to tear down
+  // and recreate the interval on every settings change.
+  var settingsRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(settings);
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+    settingsRef.current = settings;
+  }, [settings]);
+
   // Cache of <audio> elements per role so we don't re-create/re-fetch
   // the file on every single notification — created lazily the first
   // time each role's sound is needed.
   var notificationAudioCacheRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)({});
 
+  // Chrome/Firefox/Safari all block audio playback that isn't tied to
+  // a user gesture (click/tap/keypress) until the page has been
+  // "unlocked" once. playNotificationSound() is only ever called from
+  // the 30s polling setInterval — never from a click — so without
+  // this, audio.play() silently rejects (NotAllowedError, swallowed
+  // by the existing .catch()), producing no audible sound even
+  // though nothing visibly errors. This is why sound can appear
+  // completely silent for every user regardless of the
+  // sound_enabled toggle: the toggle was never the only gate.
+  //
+  // Fix: the first time the user clicks/taps/presses a key anywhere
+  // on the page, prime every cached notification sound and resume
+  // the shared AudioContext, once per browser session.
+  var audioUnlockedRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(false);
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+    if (audioUnlockedRef.current) return;
+    var _unlock = function unlock() {
+      if (audioUnlockedRef.current) return;
+      audioUnlockedRef.current = true;
+
+      // Prime each role's <audio> element with a muted play/pause
+      // cycle. This is what actually satisfies Safari's stricter
+      // per-element gesture requirement (unlocking one <audio>
+      // doesn't unlock another created later, so all four are
+      // primed up front here rather than lazily in
+      // playNotificationSound).
+      Object.entries(NOTIFICATION_SOUND_FILES).forEach(function (_ref5) {
+        var _ref6 = _slicedToArray(_ref5, 2),
+          roleKey = _ref6[0],
+          src = _ref6[1];
+        try {
+          var audio = notificationAudioCacheRef.current[roleKey];
+          if (!audio) {
+            audio = new Audio(src);
+            audio.preload = "auto";
+            audio.volume = 0.6;
+            notificationAudioCacheRef.current[roleKey] = audio;
+          }
+          var wasMuted = audio.muted;
+          audio.muted = true;
+          var p = audio.play();
+          if (p && typeof p.then === "function") {
+            p.then(function () {
+              audio.pause();
+              audio.currentTime = 0;
+              audio.muted = wasMuted;
+            })["catch"](function () {
+              audio.muted = wasMuted;
+            });
+          } else {
+            audio.pause();
+            audio.currentTime = 0;
+            audio.muted = wasMuted;
+          }
+        } catch (e) {
+          console.error("Failed to prime notification audio for ".concat(roleKey, ":"), e);
+        }
+      });
+      document.removeEventListener("click", _unlock);
+      document.removeEventListener("keydown", _unlock);
+      document.removeEventListener("touchstart", _unlock);
+    };
+    document.addEventListener("click", _unlock);
+    document.addEventListener("keydown", _unlock);
+    document.addEventListener("touchstart", _unlock);
+    return function () {
+      document.removeEventListener("click", _unlock);
+      document.removeEventListener("keydown", _unlock);
+      document.removeEventListener("touchstart", _unlock);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Actual sound file per role, served as static assets from
-  // public/sounds/notifications/. Drop replacement .mp3/.wav files in
-  // that folder (same filenames) to change the sound — no code change
-  // needed.
+  // public/sounds/notifications/. admin/alumni/default use the
+  // ElevenLabs-generated chimes the user supplied (see below); drop
+  // replacement files in that folder (same filenames) to change the
+  // sound again — no code change needed after that.
+  //   admin    -> "Airy social media chime, modern app alert"
+  //   alumni   -> "Soft chime new message notification, single bright tone"
+  //   default  -> "Subtle bell calendar reminder alert, gentle two-note"
   var NOTIFICATION_SOUND_FILES = {
-    admin: "/sounds/notifications/admin.wav",
-    alumni: "/sounds/notifications/alumni.wav",
+    admin: "/sounds/notifications/admin.mp3",
+    alumni: "/sounds/notifications/alumni.mp3",
     department_head: "/sounds/notifications/department_head.wav",
-    "default": "/sounds/notifications/default.wav"
+    "default": "/sounds/notifications/default.mp3"
   };
 
-  // Fallback tone "profiles" (synthesized via WebAudio) used only if
-  // the audio file for a role fails to load/play — e.g. missing file,
-  // blocked network request, or an unsupported browser. Keeps sound
-  // notifications working even if the static assets aren't in place.
-  var NOTIFICATION_SOUND_PROFILES = {
-    admin: [{
-      frequency: 660,
-      start: 0,
-      duration: 0.15
-    }, {
-      frequency: 990,
-      start: 0.17,
-      duration: 0.2
-    }],
-    alumni: [{
-      frequency: 880,
-      start: 0,
-      duration: 0.35
-    }],
-    department_head: [{
-      frequency: 523,
-      start: 0,
-      duration: 0.12
-    }, {
-      frequency: 659,
-      start: 0.14,
-      duration: 0.12
-    }, {
-      frequency: 784,
-      start: 0.28,
-      duration: 0.16
-    }],
-    "default": [{
-      frequency: 880,
-      start: 0,
-      duration: 0.35
-    }]
-  };
-  var playGeneratedNotificationTone = function playGeneratedNotificationTone(activeRole) {
-    try {
-      var AudioCtx = window.AudioContext || window.webkitAudioContext;
-      if (!AudioCtx) return;
-      var _profile = NOTIFICATION_SOUND_PROFILES[activeRole] || NOTIFICATION_SOUND_PROFILES["default"];
-      var ctx = new AudioCtx();
-      var notesRemaining = _profile.length;
-      _profile.forEach(function (_ref5) {
-        var frequency = _ref5.frequency,
-          start = _ref5.start,
-          duration = _ref5.duration;
-        var oscillator = ctx.createOscillator();
-        var gain = ctx.createGain();
-        var noteStart = ctx.currentTime + start;
-        var noteEnd = noteStart + duration;
-        oscillator.type = "sine";
-        oscillator.frequency.value = frequency;
-        gain.gain.setValueAtTime(0.0001, noteStart);
-        gain.gain.exponentialRampToValueAtTime(0.15, noteStart + 0.01);
-        gain.gain.exponentialRampToValueAtTime(0.0001, noteEnd);
-        oscillator.connect(gain);
-        gain.connect(ctx.destination);
-        oscillator.start(noteStart);
-        oscillator.stop(noteEnd);
-        oscillator.onended = function () {
-          notesRemaining -= 1;
-          if (notesRemaining <= 0) {
-            ctx.close();
-          }
-        };
-      });
-    } catch (e) {
-      console.error("Failed to play fallback notification tone:", e);
-    }
-  };
+  // Plays ONLY the org's own sound file for the role — no synthesized
+  // fallback tone. Previously a WebAudio "bell" tone would play
+  // whenever the mp3 failed or errored, and that generated tone could
+  // start milliseconds apart from (or on top of) the real mp3,
+  // producing the "overlap"/phased sound that wasn't the org's actual
+  // chime. If the mp3 can't play for some reason, we simply log it —
+  // no substitute sound is generated.
   var playNotificationSound = function playNotificationSound(forRole) {
     var activeRole = forRole || react_secure_storage__WEBPACK_IMPORTED_MODULE_3__["default"].getItem("userRole");
     var src = NOTIFICATION_SOUND_FILES[activeRole] || NOTIFICATION_SOUND_FILES["default"];
@@ -99303,16 +99365,11 @@ var MainLayout = function MainLayout(_ref3) {
       var playPromise = audio.play();
       if (playPromise && typeof playPromise["catch"] === "function") {
         playPromise["catch"](function (e) {
-          // Autoplay restrictions, missing file, decode error,
-          // etc. — fall back to the synthesized tone so the
-          // user still gets a sound.
-          console.error("Failed to play notification sound file, falling back to tone:", e);
-          playGeneratedNotificationTone(activeRole);
+          console.error("Failed to play notification sound file:", e);
         });
       }
     } catch (e) {
       console.error("Failed to play notification sound:", e);
-      playGeneratedNotificationTone(activeRole);
     }
   };
   var showBrowserPushNotification = function showBrowserPushNotification(notif) {
@@ -99325,7 +99382,16 @@ var MainLayout = function MainLayout(_ref3) {
       var body = notif.message || "";
       var pushNotif = new window.Notification(title, {
         body: body,
-        tag: "notification-".concat(notif.id)
+        tag: "notification-".concat(notif.id),
+        // playNotificationSound() above already plays the
+        // org's own role-specific chime (admin.mp3/alumni.mp3/
+        // etc.) for this same event. Without `silent: true`
+        // here, the OS/browser also plays its own generic
+        // default notification sound on top of it — that's the
+        // "overlap" sound that isn't the org's sound. Muting
+        // the native sound leaves only the one intentional
+        // chime.
+        silent: true
       });
       pushNotif.onclick = function () {
         window.focus();
@@ -99393,7 +99459,7 @@ var MainLayout = function MainLayout(_ref3) {
     }))();
   }, []);
   var handleSettingsChange = /*#__PURE__*/function () {
-    var _ref7 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3(key, value) {
+    var _ref8 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3(key, value) {
       var permission, backendKey, _t3, _t4;
       return _regenerator().w(function (_context3) {
         while (1) switch (_context3.p = _context3.n) {
@@ -99454,7 +99520,7 @@ var MainLayout = function MainLayout(_ref3) {
       }, _callee3, null, [[5, 7], [1, 3]]);
     }));
     return function handleSettingsChange(_x, _x2) {
-      return _ref7.apply(this, arguments);
+      return _ref8.apply(this, arguments);
     };
   }();
   var menus = [];
@@ -99476,9 +99542,9 @@ var MainLayout = function MainLayout(_ref3) {
   // getNotificationCategory(), so they stay visible to every role
   // instead of silently disappearing for restricted ones.
   var allowedNotificationCategoryKeys = getVisibleNotificationCategoryKeys(role);
-  var visibleNotificationCategories = Object.fromEntries(Object.entries(NOTIFICATION_CATEGORIES).filter(function (_ref8) {
-    var _ref9 = _slicedToArray(_ref8, 1),
-      key = _ref9[0];
+  var visibleNotificationCategories = Object.fromEntries(Object.entries(NOTIFICATION_CATEGORIES).filter(function (_ref9) {
+    var _ref0 = _slicedToArray(_ref9, 1),
+      key = _ref0[0];
     return key === "all" || allowedNotificationCategoryKeys.includes(key);
   }));
   var _useState87 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(true),
@@ -99534,7 +99600,7 @@ var MainLayout = function MainLayout(_ref3) {
     });
   };
   var syncNotificationsWithFreshAlumniImages = /*#__PURE__*/function () {
-    var _ref0 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee5(notificationsList) {
+    var _ref1 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee5(notificationsList) {
       var alumniIds, alumniById, version;
       return _regenerator().w(function (_context5) {
         while (1) switch (_context5.n) {
@@ -99552,7 +99618,7 @@ var MainLayout = function MainLayout(_ref3) {
             alumniById = new Map();
             _context5.n = 2;
             return Promise.all(alumniIds.map(/*#__PURE__*/function () {
-              var _ref1 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4(alumniId) {
+              var _ref10 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4(alumniId) {
                 var _response$data, response, alumni, _t5;
                 return _regenerator().w(function (_context4) {
                   while (1) switch (_context4.p = _context4.n) {
@@ -99577,7 +99643,7 @@ var MainLayout = function MainLayout(_ref3) {
                 }, _callee4, null, [[0, 2]]);
               }));
               return function (_x4) {
-                return _ref1.apply(this, arguments);
+                return _ref10.apply(this, arguments);
               };
             }()));
           case 2:
@@ -99592,7 +99658,7 @@ var MainLayout = function MainLayout(_ref3) {
       }, _callee5);
     }));
     return function syncNotificationsWithFreshAlumniImages(_x3) {
-      return _ref0.apply(this, arguments);
+      return _ref1.apply(this, arguments);
     };
   }();
   var getNotificationCategory = function getNotificationCategory(notification) {
@@ -99713,8 +99779,8 @@ var MainLayout = function MainLayout(_ref3) {
     return counts;
   };
   var fetchNotifications = /*#__PURE__*/function () {
-    var _ref10 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee6() {
-      var response, notificationsData, currentUnreadIds, newlyArrived, _t6;
+    var _ref11 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee6() {
+      var response, notificationsData, isVisibleToRole, visibleNotificationsData, currentUnreadIds, newlyArrived, shouldSuppress, _t6;
       return _regenerator().w(function (_context6) {
         while (1) switch (_context6.p = _context6.n) {
           case 0:
@@ -99750,7 +99816,26 @@ var MainLayout = function MainLayout(_ref3) {
             // re-firing each 30s cycle. The first poll after mount
             // only seeds the "seen" set (nothing should alert just
             // because the page loaded with existing unread items).
-            currentUnreadIds = new Set(notificationsData.filter(function (n) {
+            //
+            // IMPORTANT: this must only consider notifications whose
+            // category is actually visible to this role in the bell
+            // (allowedNotificationCategoryKeys — same filter used by
+            // getFilteredNotifications below). Without this, a
+            // notification hidden from the bell for this role (e.g.
+            // "account_approved" isn't in ROLE_NOTIFICATION_CATEGORIES.alumni,
+            // even though notifyAlumniAboutApproval() sends it
+            // straight to that alumni's own user_id) still counted
+            // toward "newlyArrived" and fired the sound/push with
+            // nothing ever appearing in the bell to explain it —
+            // exactly the "I hear a sound but there's no
+            // notification" symptom. Filtering here makes what you
+            // hear match what you can actually see.
+            isVisibleToRole = function isVisibleToRole(n) {
+              var cat = getNotificationCategory(n);
+              return cat === "all" || allowedNotificationCategoryKeys.includes(cat);
+            };
+            visibleNotificationsData = notificationsData.filter(isVisibleToRole);
+            currentUnreadIds = new Set(visibleNotificationsData.filter(function (n) {
               return !n.read;
             }).map(function (n) {
               return n.id;
@@ -99758,14 +99843,27 @@ var MainLayout = function MainLayout(_ref3) {
             if (seenUnreadIdsRef.current === null) {
               seenUnreadIdsRef.current = currentUnreadIds;
             } else {
-              newlyArrived = notificationsData.filter(function (n) {
+              newlyArrived = visibleNotificationsData.filter(function (n) {
                 return !n.read && !seenUnreadIdsRef.current.has(n.id);
-              });
-              if (newlyArrived.length > 0) {
-                if (settings.soundEnabled) {
+              }); // If the tab was hidden since the last poll (see
+              // suppressSoundOnNextFetchRef above), this fetch is a
+              // silent resync: anything that arrived while the user
+              // was away gets marked as "seen" below without
+              // announcing it, so switching back to this window
+              // never plays a sound for notifications that weren't
+              // actually new to this check-in.
+              shouldSuppress = suppressSoundOnNextFetchRef.current;
+              suppressSoundOnNextFetchRef.current = false;
+              if (newlyArrived.length > 0 && !shouldSuppress) {
+                // Read via the ref (see settingsRef above), not the
+                // closed-over `settings` state — this function is
+                // called from a setInterval closure created once on
+                // mount, so `settings` here would otherwise always
+                // reflect the very first render's defaults.
+                if (settingsRef.current.soundEnabled) {
                   playNotificationSound(role);
                 }
-                if (settings.pushNotifications) {
+                if (settingsRef.current.pushNotifications) {
                   newlyArrived.forEach(showBrowserPushNotification);
                 }
               }
@@ -99788,11 +99886,11 @@ var MainLayout = function MainLayout(_ref3) {
       }, _callee6, null, [[0, 4, 5, 6]]);
     }));
     return function fetchNotifications() {
-      return _ref10.apply(this, arguments);
+      return _ref11.apply(this, arguments);
     };
   }();
   var fetchAllNotifications = /*#__PURE__*/function () {
-    var _ref11 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee7() {
+    var _ref12 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee7() {
       var page,
         response,
         notificationsData,
@@ -99840,11 +99938,11 @@ var MainLayout = function MainLayout(_ref3) {
       }, _callee7, null, [[1, 5, 6, 7]]);
     }));
     return function fetchAllNotifications() {
-      return _ref11.apply(this, arguments);
+      return _ref12.apply(this, arguments);
     };
   }();
   var handleDeleteNotification = /*#__PURE__*/function () {
-    var _ref12 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee8(notificationId) {
+    var _ref13 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee8(notificationId) {
       var _t8;
       return _regenerator().w(function (_context8) {
         while (1) switch (_context8.p = _context8.n) {
@@ -99883,11 +99981,11 @@ var MainLayout = function MainLayout(_ref3) {
       }, _callee8, null, [[0, 2]]);
     }));
     return function handleDeleteNotification(_x5) {
-      return _ref12.apply(this, arguments);
+      return _ref13.apply(this, arguments);
     };
   }();
   var handleMarkAsRead = /*#__PURE__*/function () {
-    var _ref13 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee9(notificationId) {
+    var _ref14 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee9(notificationId) {
       var updateRead, _t9;
       return _regenerator().w(function (_context9) {
         while (1) switch (_context9.p = _context9.n) {
@@ -99918,11 +100016,11 @@ var MainLayout = function MainLayout(_ref3) {
       }, _callee9, null, [[0, 2]]);
     }));
     return function handleMarkAsRead(_x6) {
-      return _ref13.apply(this, arguments);
+      return _ref14.apply(this, arguments);
     };
   }();
   var handleMarkAllAsRead = /*#__PURE__*/function () {
-    var _ref14 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee0() {
+    var _ref15 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee0() {
       var _response$data2, response, markAllRead, _t0;
       return _regenerator().w(function (_context0) {
         while (1) switch (_context0.p = _context0.n) {
@@ -99958,7 +100056,7 @@ var MainLayout = function MainLayout(_ref3) {
       }, _callee0, null, [[0, 2]]);
     }));
     return function handleMarkAllAsRead() {
-      return _ref14.apply(this, arguments);
+      return _ref15.apply(this, arguments);
     };
   }();
 
@@ -99990,10 +100088,10 @@ var MainLayout = function MainLayout(_ref3) {
   }, []);
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
     var handleAlumniImageUpdated = function handleAlumniImageUpdated(event) {
-      var _ref15 = event.detail || {},
-        alumniId = _ref15.alumniId,
-        userId = _ref15.userId,
-        newImageUrl = _ref15.newImageUrl;
+      var _ref16 = event.detail || {},
+        alumniId = _ref16.alumniId,
+        userId = _ref16.userId,
+        newImageUrl = _ref16.newImageUrl;
       if (!newImageUrl) return;
       var version = Date.now();
       var patchList = function patchList(list) {
@@ -100118,7 +100216,7 @@ var MainLayout = function MainLayout(_ref3) {
     if (!userID) return; // Guest / unauthenticated — nothing to track
 
     var sendHeartbeat = /*#__PURE__*/function () {
-      var _ref16 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee1() {
+      var _ref17 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee1() {
         var _t1;
         return _regenerator().w(function (_context1) {
           while (1) switch (_context1.p = _context1.n) {
@@ -100138,7 +100236,7 @@ var MainLayout = function MainLayout(_ref3) {
         }, _callee1, null, [[0, 2]]);
       }));
       return function sendHeartbeat() {
-        return _ref16.apply(this, arguments);
+        return _ref17.apply(this, arguments);
       };
     }();
 
@@ -100197,7 +100295,7 @@ var MainLayout = function MainLayout(_ref3) {
     return !n.read;
   }).length;
   var handleViewEventRegistrations = /*#__PURE__*/function () {
-    var _ref17 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee10(eventId, alumniId) {
+    var _ref18 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee10(eventId, alumniId) {
       var response, _t10;
       return _regenerator().w(function (_context10) {
         while (1) switch (_context10.p = _context10.n) {
@@ -100244,11 +100342,11 @@ var MainLayout = function MainLayout(_ref3) {
       }, _callee10, null, [[1, 3, 4, 5]]);
     }));
     return function handleViewEventRegistrations(_x7, _x8) {
-      return _ref17.apply(this, arguments);
+      return _ref18.apply(this, arguments);
     };
   }();
   var handleViewEventDetails = /*#__PURE__*/function () {
-    var _ref18 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee11(eventId) {
+    var _ref19 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee11(eventId) {
       var response, _t11;
       return _regenerator().w(function (_context11) {
         while (1) switch (_context11.p = _context11.n) {
@@ -100287,7 +100385,7 @@ var MainLayout = function MainLayout(_ref3) {
       }, _callee11, null, [[1, 3, 4, 5]]);
     }));
     return function handleViewEventDetails(_x9) {
-      return _ref18.apply(this, arguments);
+      return _ref19.apply(this, arguments);
     };
   }();
   var handleViewAnnouncement = function handleViewAnnouncement(announcementId) {
@@ -100300,7 +100398,7 @@ var MainLayout = function MainLayout(_ref3) {
   // to whatever was snapshotted on the notification itself if the
   // report was since deleted.
   var handleViewFeedbackReport = /*#__PURE__*/function () {
-    var _ref19 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee12(feedbackReportId, fallback) {
+    var _ref20 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee12(feedbackReportId, fallback) {
       var _response$data3, response, _error$response, _t12;
       return _regenerator().w(function (_context12) {
         while (1) switch (_context12.p = _context12.n) {
@@ -100353,11 +100451,11 @@ var MainLayout = function MainLayout(_ref3) {
       }, _callee12, null, [[1, 3, 4, 5]]);
     }));
     return function handleViewFeedbackReport(_x0, _x1) {
-      return _ref19.apply(this, arguments);
+      return _ref20.apply(this, arguments);
     };
   }();
   var handleViewAlumniProfile = /*#__PURE__*/function () {
-    var _ref20 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee13(alumniId) {
+    var _ref21 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee13(alumniId) {
       var _response$data4, response, values, previewData, _t13;
       return _regenerator().w(function (_context13) {
         while (1) switch (_context13.p = _context13.n) {
@@ -100428,12 +100526,12 @@ var MainLayout = function MainLayout(_ref3) {
       }, _callee13, null, [[0, 2, 3, 4]]);
     }));
     return function handleViewAlumniProfile(_x10) {
-      return _ref20.apply(this, arguments);
+      return _ref21.apply(this, arguments);
     };
   }();
-  var NotificationItem = function NotificationItem(_ref21) {
+  var NotificationItem = function NotificationItem(_ref22) {
     var _notification$sender2;
-    var notification = _ref21.notification;
+    var notification = _ref22.notification;
     var notificationData = getNotificationData(notification);
     var categoryInfo = getCategoryInfo(notification);
     var isDark = currentTheme === "black";
@@ -101025,10 +101123,10 @@ var MainLayout = function MainLayout(_ref3) {
           }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(antd__WEBPACK_IMPORTED_MODULE_50__["default"], {
             wrap: true,
             size: [8, 8],
-            children: Object.entries(visibleNotificationCategories).map(function (_ref22) {
-              var _ref23 = _slicedToArray(_ref22, 2),
-                key = _ref23[0],
-                category = _ref23[1];
+            children: Object.entries(visibleNotificationCategories).map(function (_ref23) {
+              var _ref24 = _slicedToArray(_ref23, 2),
+                key = _ref24[0],
+                category = _ref24[1];
               return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_48__["default"], {
                 size: "small",
                 type: activeCategory === key ? "primary" : "default",
@@ -101924,10 +102022,10 @@ var MainLayout = function MainLayout(_ref3) {
         },
         children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(antd__WEBPACK_IMPORTED_MODULE_50__["default"], {
           size: 4,
-          children: Object.entries(visibleNotificationCategories).map(function (_ref24) {
-            var _ref25 = _slicedToArray(_ref24, 2),
-              key = _ref25[0],
-              category = _ref25[1];
+          children: Object.entries(visibleNotificationCategories).map(function (_ref25) {
+            var _ref26 = _slicedToArray(_ref25, 2),
+              key = _ref26[0],
+              category = _ref26[1];
             return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(antd__WEBPACK_IMPORTED_MODULE_60__["default"], {
               title: category.label
               // On touch devices, hover never reliably
@@ -102882,7 +102980,7 @@ var MainLayout = function MainLayout(_ref3) {
       viewOnly: true,
       loading: alumniDetailsLoading,
       refetchAlumni: /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee14() {
-        var _ref27, _alumniPreviewData$id, _alumniPreviewData$al;
+        var _ref28, _alumniPreviewData$id, _alumniPreviewData$al;
         var currentAlumniId, _response$data5, response, values, _t14;
         return _regenerator().w(function (_context14) {
           while (1) switch (_context14.p = _context14.n) {
@@ -102897,7 +102995,7 @@ var MainLayout = function MainLayout(_ref3) {
               //    push the fresh data (including the new profile image)
               //    back into alumniPreviewData so the drawer updates
               //    immediately — no logout/login required.
-              currentAlumniId = (_ref27 = (_alumniPreviewData$id = alumniPreviewData === null || alumniPreviewData === void 0 ? void 0 : alumniPreviewData.id) !== null && _alumniPreviewData$id !== void 0 ? _alumniPreviewData$id : alumniPreviewData === null || alumniPreviewData === void 0 ? void 0 : alumniPreviewData.alumni_id) !== null && _ref27 !== void 0 ? _ref27 : alumniPreviewData === null || alumniPreviewData === void 0 || (_alumniPreviewData$al = alumniPreviewData.alumni) === null || _alumniPreviewData$al === void 0 ? void 0 : _alumniPreviewData$al.id;
+              currentAlumniId = (_ref28 = (_alumniPreviewData$id = alumniPreviewData === null || alumniPreviewData === void 0 ? void 0 : alumniPreviewData.id) !== null && _alumniPreviewData$id !== void 0 ? _alumniPreviewData$id : alumniPreviewData === null || alumniPreviewData === void 0 ? void 0 : alumniPreviewData.alumni_id) !== null && _ref28 !== void 0 ? _ref28 : alumniPreviewData === null || alumniPreviewData === void 0 || (_alumniPreviewData$al = alumniPreviewData.alumni) === null || _alumniPreviewData$al === void 0 ? void 0 : _alumniPreviewData$al.id;
               if (!currentAlumniId) {
                 _context14.n = 5;
                 break;
@@ -103352,8 +103450,8 @@ var MainLayout = function MainLayout(_ref3) {
                 return false;
               },
               fileList: feedbackScreenshots,
-              onChange: function onChange(_ref28) {
-                var fileList = _ref28.fileList;
+              onChange: function onChange(_ref29) {
+                var fileList = _ref29.fileList;
                 return setFeedbackScreenshots(fileList.slice(0, 5));
               },
               onRemove: function onRemove(file) {
@@ -126466,6 +126564,21 @@ var getEmploymentStatusTag = function getEmploymentStatusTag(status) {
       icon: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_22__["default"], {})
     }
   };
+
+  // No employment_status on the alumni record yet — either they didn't
+  // set one at registration, or an admin hasn't set one via the "Edit
+  // Status" modal. Previously this fell through to
+  // `{ color: "default", text: status }` with status === undefined,
+  // which rendered as a blank, unlabeled tag with no way to tell it
+  // apart from a loading glitch. Show an explicit "Not Set" tag instead
+  // so it's clear the value is genuinely unset, not a display bug.
+  if (!status) {
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_23__["default"], {
+      color: "default",
+      icon: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_22__["default"], {}),
+      children: "Not Set"
+    });
+  }
   var statusConfig = config[status] || {
     color: "default",
     text: status

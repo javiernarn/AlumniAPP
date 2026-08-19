@@ -514,7 +514,9 @@ const MainLayout = ({ children, breadcrumb }) => {
         "/questions": "Questions",
         "/department-heads": "Department Accounts",
         "/feedback-reports": "Feedback Reports",
+        "/announcements": "Announcements",
         "/402": "Maintenance",
+        "/audit-logs": "Audit Logs",
         
 
     };
@@ -724,83 +726,163 @@ const MainLayout = ({ children, breadcrumb }) => {
     // still-unread notification, not just newly arrived ones.
     const seenUnreadIdsRef = useRef(null);
 
+    // While the tab/window is hidden (e.g. the user Alt-Tabs to another
+    // app or switches to a different browser tab), the 30s polling
+    // interval keeps running in the background but browsers throttle
+    // background timers — so by the time the user switches back, the
+    // next fetch can land right away and "catch up" on everything that
+    // arrived while they were away. Without this flag, that catch-up
+    // poll treated every one of those as newly arrived and fired the
+    // notification sound the instant the window regained focus, even
+    // though nothing changed while the user was actually looking at
+    // this window. Set true when the tab goes hidden; the next
+    // fetchNotifications() call after becoming visible again silently
+    // resyncs (updates what's "seen" without playing sound/push), then
+    // clears the flag so normal live notifications behave as before.
+    const suppressSoundOnNextFetchRef = useRef(false);
+    useEffect(() => {
+        const handleVisibility = () => {
+            if (document.visibilityState === "hidden") {
+                suppressSoundOnNextFetchRef.current = true;
+            } else if (document.visibilityState === "visible") {
+                // Resync right away rather than waiting for the next
+                // throttled interval tick, so the unread badge is
+                // accurate immediately — this resync itself is silent
+                // because the flag above is still true at this point.
+                fetchNotifications();
+            }
+        };
+        document.addEventListener("visibilitychange", handleVisibility);
+        return () =>
+            document.removeEventListener(
+                "visibilitychange",
+                handleVisibility,
+            );
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    // Mirrors `settings` for the polling interval below. The interval is
+    // registered once (empty-deps useEffect, further down) and reuses
+    // the SAME fetchNotifications closure for every 30s tick. Reading
+    // `settings.soundEnabled` directly inside that closure meant it was
+    // permanently frozen at whatever "settings" was on the very first
+    // render (soundEnabled: false, before the saved preference even
+    // finished loading from the server) — so toggling sound on in the
+    // Settings modal never had any effect on the polling loop; the sound
+    // toggle looked "on" but no sound ever played. Reading from this ref
+    // instead always sees the live value without needing to tear down
+    // and recreate the interval on every settings change.
+    const settingsRef = useRef(settings);
+    useEffect(() => {
+        settingsRef.current = settings;
+    }, [settings]);
+
     // Cache of <audio> elements per role so we don't re-create/re-fetch
     // the file on every single notification — created lazily the first
     // time each role's sound is needed.
     const notificationAudioCacheRef = useRef({});
 
-    // Actual sound file per role, served as static assets from
-    // public/sounds/notifications/. Drop replacement .mp3/.wav files in
-    // that folder (same filenames) to change the sound — no code change
-    // needed.
-    const NOTIFICATION_SOUND_FILES = {
-        admin: "/sounds/notifications/admin.wav",
-        alumni: "/sounds/notifications/alumni.wav",
-        department_head: "/sounds/notifications/department_head.wav",
-        default: "/sounds/notifications/default.wav",
-    };
+    // Chrome/Firefox/Safari all block audio playback that isn't tied to
+    // a user gesture (click/tap/keypress) until the page has been
+    // "unlocked" once. playNotificationSound() is only ever called from
+    // the 30s polling setInterval — never from a click — so without
+    // this, audio.play() silently rejects (NotAllowedError, swallowed
+    // by the existing .catch()), producing no audible sound even
+    // though nothing visibly errors. This is why sound can appear
+    // completely silent for every user regardless of the
+    // sound_enabled toggle: the toggle was never the only gate.
+    //
+    // Fix: the first time the user clicks/taps/presses a key anywhere
+    // on the page, prime every cached notification sound and resume
+    // the shared AudioContext, once per browser session.
+    const audioUnlockedRef = useRef(false);
+    useEffect(() => {
+        if (audioUnlockedRef.current) return;
 
-    // Fallback tone "profiles" (synthesized via WebAudio) used only if
-    // the audio file for a role fails to load/play — e.g. missing file,
-    // blocked network request, or an unsupported browser. Keeps sound
-    // notifications working even if the static assets aren't in place.
-    const NOTIFICATION_SOUND_PROFILES = {
-        admin: [
-            { frequency: 660, start: 0, duration: 0.15 },
-            { frequency: 990, start: 0.17, duration: 0.2 },
-        ],
-        alumni: [{ frequency: 880, start: 0, duration: 0.35 }],
-        department_head: [
-            { frequency: 523, start: 0, duration: 0.12 },
-            { frequency: 659, start: 0.14, duration: 0.12 },
-            { frequency: 784, start: 0.28, duration: 0.16 },
-        ],
-        default: [{ frequency: 880, start: 0, duration: 0.35 }],
-    };
+        const unlock = () => {
+            if (audioUnlockedRef.current) return;
+            audioUnlockedRef.current = true;
 
-    const playGeneratedNotificationTone = (activeRole) => {
-        try {
-            const AudioCtx = window.AudioContext || window.webkitAudioContext;
-            if (!AudioCtx) return;
-
-            const profile =
-                NOTIFICATION_SOUND_PROFILES[activeRole] ||
-                NOTIFICATION_SOUND_PROFILES.default;
-
-            const ctx = new AudioCtx();
-            let notesRemaining = profile.length;
-
-            profile.forEach(({ frequency, start, duration }) => {
-                const oscillator = ctx.createOscillator();
-                const gain = ctx.createGain();
-                const noteStart = ctx.currentTime + start;
-                const noteEnd = noteStart + duration;
-
-                oscillator.type = "sine";
-                oscillator.frequency.value = frequency;
-                gain.gain.setValueAtTime(0.0001, noteStart);
-                gain.gain.exponentialRampToValueAtTime(
-                    0.15,
-                    noteStart + 0.01,
-                );
-                gain.gain.exponentialRampToValueAtTime(0.0001, noteEnd);
-
-                oscillator.connect(gain);
-                gain.connect(ctx.destination);
-                oscillator.start(noteStart);
-                oscillator.stop(noteEnd);
-                oscillator.onended = () => {
-                    notesRemaining -= 1;
-                    if (notesRemaining <= 0) {
-                        ctx.close();
+            // Prime each role's <audio> element with a muted play/pause
+            // cycle. This is what actually satisfies Safari's stricter
+            // per-element gesture requirement (unlocking one <audio>
+            // doesn't unlock another created later, so all four are
+            // primed up front here rather than lazily in
+            // playNotificationSound).
+            Object.entries(NOTIFICATION_SOUND_FILES).forEach(
+                ([roleKey, src]) => {
+                    try {
+                        let audio = notificationAudioCacheRef.current[roleKey];
+                        if (!audio) {
+                            audio = new Audio(src);
+                            audio.preload = "auto";
+                            audio.volume = 0.6;
+                            notificationAudioCacheRef.current[roleKey] = audio;
+                        }
+                        const wasMuted = audio.muted;
+                        audio.muted = true;
+                        const p = audio.play();
+                        if (p && typeof p.then === "function") {
+                            p.then(() => {
+                                audio.pause();
+                                audio.currentTime = 0;
+                                audio.muted = wasMuted;
+                            }).catch(() => {
+                                audio.muted = wasMuted;
+                            });
+                        } else {
+                            audio.pause();
+                            audio.currentTime = 0;
+                            audio.muted = wasMuted;
+                        }
+                    } catch (e) {
+                        console.error(
+                            `Failed to prime notification audio for ${roleKey}:`,
+                            e,
+                        );
                     }
-                };
-            });
-        } catch (e) {
-            console.error("Failed to play fallback notification tone:", e);
-        }
+                },
+            );
+
+            document.removeEventListener("click", unlock);
+            document.removeEventListener("keydown", unlock);
+            document.removeEventListener("touchstart", unlock);
+        };
+
+        document.addEventListener("click", unlock);
+        document.addEventListener("keydown", unlock);
+        document.addEventListener("touchstart", unlock);
+
+        return () => {
+            document.removeEventListener("click", unlock);
+            document.removeEventListener("keydown", unlock);
+            document.removeEventListener("touchstart", unlock);
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    // Actual sound file per role, served as static assets from
+    // public/sounds/notifications/. admin/alumni/default use the
+    // ElevenLabs-generated chimes the user supplied (see below); drop
+    // replacement files in that folder (same filenames) to change the
+    // sound again — no code change needed after that.
+    //   admin    -> "Airy social media chime, modern app alert"
+    //   alumni   -> "Soft chime new message notification, single bright tone"
+    //   default  -> "Subtle bell calendar reminder alert, gentle two-note"
+    const NOTIFICATION_SOUND_FILES = {
+        admin: "/sounds/notifications/admin.mp3",
+        alumni: "/sounds/notifications/alumni.mp3",
+        department_head: "/sounds/notifications/department_head.wav",
+        default: "/sounds/notifications/default.mp3",
     };
 
+    // Plays ONLY the org's own sound file for the role — no synthesized
+    // fallback tone. Previously a WebAudio "bell" tone would play
+    // whenever the mp3 failed or errored, and that generated tone could
+    // start milliseconds apart from (or on top of) the real mp3,
+    // producing the "overlap"/phased sound that wasn't the org's actual
+    // chime. If the mp3 can't play for some reason, we simply log it —
+    // no substitute sound is generated.
     const playNotificationSound = (forRole) => {
         const activeRole = forRole || secureLocalStorage.getItem("userRole");
         const src =
@@ -824,19 +906,14 @@ const MainLayout = ({ children, breadcrumb }) => {
             const playPromise = audio.play();
             if (playPromise && typeof playPromise.catch === "function") {
                 playPromise.catch((e) => {
-                    // Autoplay restrictions, missing file, decode error,
-                    // etc. — fall back to the synthesized tone so the
-                    // user still gets a sound.
                     console.error(
-                        "Failed to play notification sound file, falling back to tone:",
+                        "Failed to play notification sound file:",
                         e,
                     );
-                    playGeneratedNotificationTone(activeRole);
                 });
             }
         } catch (e) {
             console.error("Failed to play notification sound:", e);
-            playGeneratedNotificationTone(activeRole);
         }
     };
 
@@ -852,6 +929,15 @@ const MainLayout = ({ children, breadcrumb }) => {
             const pushNotif = new window.Notification(title, {
                 body,
                 tag: `notification-${notif.id}`,
+                // playNotificationSound() above already plays the
+                // org's own role-specific chime (admin.mp3/alumni.mp3/
+                // etc.) for this same event. Without `silent: true`
+                // here, the OS/browser also plays its own generic
+                // default notification sound on top of it — that's the
+                // "overlap" sound that isn't the org's sound. Muting
+                // the native sound leaves only the one intentional
+                // chime.
+                silent: true,
             });
             pushNotif.onclick = () => {
                 window.focus();
@@ -1294,24 +1380,63 @@ const MainLayout = ({ children, breadcrumb }) => {
                 // re-firing each 30s cycle. The first poll after mount
                 // only seeds the "seen" set (nothing should alert just
                 // because the page loaded with existing unread items).
+                //
+                // IMPORTANT: this must only consider notifications whose
+                // category is actually visible to this role in the bell
+                // (allowedNotificationCategoryKeys — same filter used by
+                // getFilteredNotifications below). Without this, a
+                // notification hidden from the bell for this role (e.g.
+                // "account_approved" isn't in ROLE_NOTIFICATION_CATEGORIES.alumni,
+                // even though notifyAlumniAboutApproval() sends it
+                // straight to that alumni's own user_id) still counted
+                // toward "newlyArrived" and fired the sound/push with
+                // nothing ever appearing in the bell to explain it —
+                // exactly the "I hear a sound but there's no
+                // notification" symptom. Filtering here makes what you
+                // hear match what you can actually see.
+                const isVisibleToRole = (n) => {
+                    const cat = getNotificationCategory(n);
+                    return (
+                        cat === "all" ||
+                        allowedNotificationCategoryKeys.includes(cat)
+                    );
+                };
+                const visibleNotificationsData =
+                    notificationsData.filter(isVisibleToRole);
+
                 const currentUnreadIds = new Set(
-                    notificationsData
+                    visibleNotificationsData
                         .filter((n) => !n.read)
                         .map((n) => n.id),
                 );
                 if (seenUnreadIdsRef.current === null) {
                     seenUnreadIdsRef.current = currentUnreadIds;
                 } else {
-                    const newlyArrived = notificationsData.filter(
+                    const newlyArrived = visibleNotificationsData.filter(
                         (n) =>
                             !n.read &&
                             !seenUnreadIdsRef.current.has(n.id),
                     );
-                    if (newlyArrived.length > 0) {
-                        if (settings.soundEnabled) {
+                    // If the tab was hidden since the last poll (see
+                    // suppressSoundOnNextFetchRef above), this fetch is a
+                    // silent resync: anything that arrived while the user
+                    // was away gets marked as "seen" below without
+                    // announcing it, so switching back to this window
+                    // never plays a sound for notifications that weren't
+                    // actually new to this check-in.
+                    const shouldSuppress = suppressSoundOnNextFetchRef.current;
+                    suppressSoundOnNextFetchRef.current = false;
+
+                    if (newlyArrived.length > 0 && !shouldSuppress) {
+                        // Read via the ref (see settingsRef above), not the
+                        // closed-over `settings` state — this function is
+                        // called from a setInterval closure created once on
+                        // mount, so `settings` here would otherwise always
+                        // reflect the very first render's defaults.
+                        if (settingsRef.current.soundEnabled) {
                             playNotificationSound(role);
                         }
-                        if (settings.pushNotifications) {
+                        if (settingsRef.current.pushNotifications) {
                             newlyArrived.forEach(showBrowserPushNotification);
                         }
                     }

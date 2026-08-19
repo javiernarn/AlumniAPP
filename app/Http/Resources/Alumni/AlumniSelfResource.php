@@ -48,6 +48,18 @@ class AlumniSelfResource extends JsonResource
             'continue_education' => (bool) $this->continue_education,
 
             'employment_status_id' => $this->employment_status_id,
+            // The alumnus's employment status as chosen at registration
+            // and/or last updated by an admin (Alumni::employmentStatus()).
+            // Only present when the caller eager-loaded the relation
+            // (Alumni::with('employmentStatus')) — otherwise omitted
+            // rather than sent as null, so the frontend can tell "not
+            // loaded" apart from "no status set" if it ever needs to.
+            'employment_status' => $this->whenLoaded('employmentStatus', function () {
+                return $this->employmentStatus ? [
+                    'id' => $this->employmentStatus->id,
+                    'status_name' => $this->employmentStatus->status_name,
+                ] : null;
+            }),
             'current_company' => $this->current_company,
             'job_title' => $this->job_title,
             'industry' => $this->industry,

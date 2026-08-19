@@ -146,6 +146,22 @@ const getEmploymentStatusTag = (status) => {
       icon: <ExclamationCircleOutlined />,
     },
   }
+
+  // No employment_status on the alumni record yet — either they didn't
+  // set one at registration, or an admin hasn't set one via the "Edit
+  // Status" modal. Previously this fell through to
+  // `{ color: "default", text: status }` with status === undefined,
+  // which rendered as a blank, unlabeled tag with no way to tell it
+  // apart from a loading glitch. Show an explicit "Not Set" tag instead
+  // so it's clear the value is genuinely unset, not a display bug.
+  if (!status) {
+    return (
+      <Tag color="default" icon={<ExclamationCircleOutlined />}>
+        Not Set
+      </Tag>
+    )
+  }
+
   const statusConfig = config[status] || {
     color: "default",
     text: status,

@@ -239,7 +239,7 @@ class AlumniRegistrationController extends Controller
                 'success' => true,
                 'message' => 'Alumni registration submitted successfully!',
                 'application_id' => $applicationId,
-                'data' => new \App\Http\Resources\Alumni\AlumniSelfResource($alumni->load('documents'))
+                'data' => new \App\Http\Resources\Alumni\AlumniSelfResource($alumni->load(['documents', 'employmentStatus']))
             ], 201);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -308,7 +308,10 @@ class AlumniRegistrationController extends Controller
 
     public function show($id)
     {
-        $alumni = Alumni::with('documents')->findOrFail($id);
+        // employmentStatus eager-loaded so AlumniSelfResource/AlumniAdminResource
+        // can expose the registered/admin-set employment status (status_name)
+        // instead of leaving the frontend with only the raw employment_status_id.
+        $alumni = Alumni::with(['documents', 'employmentStatus'])->findOrFail($id);
 
         // Previously unguarded: any authenticated user (including any
         // other alumnus) could fetch any alumni's full record, including
@@ -649,6 +652,12 @@ class AlumniRegistrationController extends Controller
         if ($request->status === 'approved' && $oldStatus !== 'approved') {
             $this->notifyAlumniAboutApproval($alumni);
         }
+
+        // Reload the (possibly just-changed) employment status relation so
+        // the response actually reflects the admin's edit — without this,
+        // AlumniAdminResource's whenLoaded('employmentStatus') has nothing
+        // to read and the field is silently omitted from the response.
+        $alumni->load('employmentStatus');
 
         return response()->json([
             'success' => true,
