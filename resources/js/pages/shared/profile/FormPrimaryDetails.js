@@ -111,10 +111,23 @@ const FormPrimaryDetails = React.memo(({ submitForm }) => {
             reader.onload = () => resolve(reader.result);
           });
         }
-        const image = new Image();
-        image.src = src;
-        const imgWindow = window.open(src);
-        imgWindow?.document.write(image.outerHTML);
+        // Phase 4 (audit §1 finding #2): open a blank window and append
+        // an <img> element directly instead of document.write()'ing
+        // outerHTML into it. The source here is always the user's own
+        // selected file (FileReader/local blob:/data: URL), never
+        // remote/attacker-controlled content, so this was low-risk as
+        // written — but document.write + outerHTML is a pattern that
+        // breaks (and becomes a real XSS vector) the moment this code
+        // is ever reused with server-supplied HTML, so it's replaced
+        // here rather than left as a precedent to copy from.
+        const imgWindow = window.open("", "_blank");
+        if (imgWindow) {
+          imgWindow.document.body.innerHTML = "";
+          const img = imgWindow.document.createElement("img");
+          img.src = src;
+          img.style.maxWidth = "100%";
+          imgWindow.document.body.appendChild(img);
+        }
     };
 
     return (

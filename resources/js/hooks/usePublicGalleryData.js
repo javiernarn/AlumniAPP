@@ -28,10 +28,19 @@
 //   } = usePublicGalleryData();
 // ============================================================
 
-import { useState, useEffect, useCallback, useRef, useMemo } from "react";
+// Phase 3 (audit §3 frontend): migrated onto react-query — see the
+// header comment in usePublicEventsData.js for why (de-duplication +
+// real staleTime instead of "always refetch on mount"). This hook is
+// mounted twice on the homepage alone (PublicHomePage.js uses both
+// usePublicHomeData's own gallery fetch AND this hook, just for the
+// year/month dropdown) plus again on /public-gallery — request
+// de-duplication actually matters here.
+import { useMemo } from "react";
+import { useQuery } from "react-query";
 import axiosConfig from "~/utils/axiosConfig";
 
 const PUBLIC_GALLERY_ENDPOINT = "/public/galleries";
+const PUBLIC_GALLERY_QUERY_KEY = ["public-galleries", "full"];
 
 const REQUEST_OPTS = {
     silent: true, // don't trigger the global error modal for anon visitors
@@ -68,44 +77,25 @@ const sortByDateDesc = (list, getDate) =>
     [...list].sort((a, b) => new Date(getDate(b) || 0) - new Date(getDate(a) || 0));
 
 export default function usePublicGalleryData() {
-    const [allGalleries, setAllGalleries] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [refreshToken, setRefreshToken] = useState(0);
-    const mountedRef = useRef(true);
-
-    useEffect(() => {
-        mountedRef.current = true;
-        return () => {
-            mountedRef.current = false;
-        };
-    }, []);
-
-    useEffect(() => {
-        let active = true;
-        (async () => {
-            try {
-                setLoading(true);
-                setError(null);
-                const response = await axiosConfig.get(PUBLIC_GALLERY_ENDPOINT, {
-                    ...REQUEST_OPTS,
-                    params: { per_page: 500 },
-                });
-                const list = unwrapList(response);
-                if (active && mountedRef.current) setAllGalleries(list);
-            } catch (err) {
-                if (active && mountedRef.current) {
-                    setAllGalleries([]);
-                    setError(err);
-                }
-            } finally {
-                if (active && mountedRef.current) setLoading(false);
-            }
-        })();
-        return () => {
-            active = false;
-        };
-    }, [refreshToken]);
+    const {
+        data: allGalleries = [],
+        isLoading: loading,
+        error,
+        refetch,
+    } = useQuery(
+        PUBLIC_GALLERY_QUERY_KEY,
+        async () => {
+            const response = await axiosConfig.get(PUBLIC_GALLERY_ENDPOINT, {
+                ...REQUEST_OPTS,
+                params: { per_page: 500 },
+            });
+            return unwrapList(response);
+        },
+        {
+            staleTime: 60000,
+            refetchOnWindowFocus: false,
+        },
+    );
 
     // Build the Year -> Month timeline. Recomputed only when the raw
     // list changes, not on every render.
@@ -157,10 +147,6 @@ export default function usePublicGalleryData() {
         () => years.map((y) => y.year).filter((y) => y !== "Undated"),
         [years],
     );
-
-    const refetch = useCallback(() => {
-        setRefreshToken((t) => t + 1);
-    }, []);
 
     return {
         years,

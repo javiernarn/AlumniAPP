@@ -44,10 +44,15 @@
 //   const sorted = sortJobs(fullTime, "date-desc");
 // ============================================================
 
-import { useState, useEffect, useCallback, useRef } from "react";
+// Phase 3 (audit §3 frontend): migrated onto react-query — see the
+// header comment in usePublicEventsData.js for why (de-duplication +
+// real staleTime instead of "always refetch on mount").
+import { useMemo } from "react";
+import { useQuery } from "react-query";
 import axiosConfig from "~/utils/axiosConfig";
 
 const PUBLIC_JOB_POSTS_ENDPOINT = "/public/job-posts";
+const PUBLIC_JOB_POSTS_QUERY_KEY = ["public-job-posts", "full"];
 
 const REQUEST_OPTS = {
     silent: true, // don't trigger the global error modal for anon visitors
@@ -107,56 +112,39 @@ export const sortJobs = (list, sortBy = "date-desc") => {
 };
 
 export default function usePublicJobPostsData() {
-    const [allJobs, setAllJobs] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [refreshToken, setRefreshToken] = useState(0);
-    const mountedRef = useRef(true);
+    const {
+        data: allJobs = [],
+        isLoading: loading,
+        error,
+        refetch,
+    } = useQuery(
+        PUBLIC_JOB_POSTS_QUERY_KEY,
+        async () => {
+            const response = await axiosConfig.get(PUBLIC_JOB_POSTS_ENDPOINT, {
+                ...REQUEST_OPTS,
+                params: { per_page: 200 },
+            });
+            return unwrapList(response).map((job) => ({
+                ...job,
+                _typeKey: normalizeJobType(job.job_type),
+            }));
+        },
+        {
+            staleTime: 60000,
+            refetchOnWindowFocus: false,
+        },
+    );
 
-    useEffect(() => {
-        mountedRef.current = true;
-        return () => {
-            mountedRef.current = false;
+    // Recomputed only when the raw list actually changes, not on every
+    // render.
+    const { fullTime, partTime, contract, other } = useMemo(() => {
+        return {
+            fullTime: allJobs.filter((j) => j._typeKey === "full-time"),
+            partTime: allJobs.filter((j) => j._typeKey === "part-time"),
+            contract: allJobs.filter((j) => j._typeKey === "contract"),
+            other: allJobs.filter((j) => j._typeKey === "other"),
         };
-    }, []);
-
-    useEffect(() => {
-        let active = true;
-        (async () => {
-            try {
-                setLoading(true);
-                setError(null);
-                const response = await axiosConfig.get(PUBLIC_JOB_POSTS_ENDPOINT, {
-                    ...REQUEST_OPTS,
-                    params: { per_page: 200 },
-                });
-                const list = unwrapList(response).map((job) => ({
-                    ...job,
-                    _typeKey: normalizeJobType(job.job_type),
-                }));
-                if (active && mountedRef.current) setAllJobs(list);
-            } catch (err) {
-                if (active && mountedRef.current) {
-                    setAllJobs([]);
-                    setError(err);
-                }
-            } finally {
-                if (active && mountedRef.current) setLoading(false);
-            }
-        })();
-        return () => {
-            active = false;
-        };
-    }, [refreshToken]);
-
-    const fullTime = allJobs.filter((j) => j._typeKey === "full-time");
-    const partTime = allJobs.filter((j) => j._typeKey === "part-time");
-    const contract = allJobs.filter((j) => j._typeKey === "contract");
-    const other = allJobs.filter((j) => j._typeKey === "other");
-
-    const refetch = useCallback(() => {
-        setRefreshToken((t) => t + 1);
-    }, []);
+    }, [allJobs]);
 
     return {
         fullTime,

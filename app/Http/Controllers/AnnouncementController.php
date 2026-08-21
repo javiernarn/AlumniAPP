@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Announcement;
 use App\Models\Notification;
 use App\Models\User;
+use App\Support\CacheHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -64,16 +65,39 @@ class AnnouncementController extends Controller
         // links / header dropdown) can ask for one category at a time
         // instead of always pulling everything and filtering client-side.
         // Mirrors EventController@publicIndex's `?category=` handling.
-        $query = Announcement::active();
+        //
+        // Phase 2 caching (audit §3): this used to hit the DB on every
+        // single visitor of every public page that shows announcements.
+        // Cached per category for 60s — short enough that a new/edited
+        // announcement shows up well within a minute, long enough that
+        // it stops being "one DB query per visitor". AnnouncementObserver
+        // forgets the 'all' key (the one the homepage/teaser actually
+        // uses) on every save/delete; on a tag-capable cache driver
+        // (Redis) it also flushes every category variant immediately —
+        // see CacheHelper's docblock for why non-tag drivers (file/
+        // database) fall back to just letting the other variants expire
+        // on their own within the 60s TTL instead.
+        $category = $request->filled('category') && $request->category !== 'all'
+            ? $request->category
+            : 'all';
 
-        if ($request->filled('category') && $request->category !== 'all') {
-            $query->where('category', $request->category);
-        }
+        $announcements = CacheHelper::remember(
+            "public:announcements:active:{$category}",
+            ['announcements'],
+            60,
+            function () use ($category) {
+                $query = Announcement::active();
 
-        $announcements = $query
-            ->orderByDesc('pinned')
-            ->orderByDesc('publish_date')
-            ->get(['id', 'title', 'content', 'category', 'images', 'pinned', 'publish_date', 'created_at']);
+                if ($category !== 'all') {
+                    $query->where('category', $category);
+                }
+
+                return $query
+                    ->orderByDesc('pinned')
+                    ->orderByDesc('publish_date')
+                    ->get(['id', 'title', 'content', 'category', 'images', 'pinned', 'publish_date', 'created_at']);
+            }
+        );
 
         return response()->json($announcements);
     }

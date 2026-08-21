@@ -12,6 +12,7 @@ export { default as GroupsAvatar } from "./GroupsAvatar";
 export { default as ImageUploadModal } from "./ImageUploadModal";
 export { default as UserAvatar } from "./UserAvatar";
 export { default as ImportPreviewModal } from "./ImportPreviewModal";
+export { default as CardSkeletonGrid, HeroSkeleton } from "./skeletons/CardSkeletonGrid";
 
 
 export { default as AlumniDetails } from "./alumni/AlumniDetails";

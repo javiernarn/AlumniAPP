@@ -40,10 +40,15 @@
 //   } = usePublicAnnouncementsData();
 // ============================================================
 
-import { useState, useEffect, useCallback, useRef } from "react";
+// Phase 3 (audit §3 frontend): migrated onto react-query — see the
+// header comment in usePublicEventsData.js for why (de-duplication +
+// real staleTime instead of "always refetch on mount").
+import { useMemo } from "react";
+import { useQuery } from "react-query";
 import axiosConfig from "~/utils/axiosConfig";
 
 const PUBLIC_ANNOUNCEMENTS_ENDPOINT = "/public/announcements";
+const PUBLIC_ANNOUNCEMENTS_QUERY_KEY = ["public-announcements", "full"];
 
 const REQUEST_OPTS = {
     silent: true, // don't trigger the global error modal for anon visitors
@@ -89,62 +94,47 @@ const sortPinnedThenLatest = (list) =>
     });
 
 export default function usePublicAnnouncementsData() {
-    const [allAnnouncements, setAllAnnouncements] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [refreshToken, setRefreshToken] = useState(0);
-    const mountedRef = useRef(true);
+    const {
+        data: allAnnouncements = [],
+        isLoading: loading,
+        error,
+        refetch,
+    } = useQuery(
+        PUBLIC_ANNOUNCEMENTS_QUERY_KEY,
+        async () => {
+            const response = await axiosConfig.get(
+                PUBLIC_ANNOUNCEMENTS_ENDPOINT,
+                REQUEST_OPTS,
+            );
+            return unwrapList(response);
+        },
+        {
+            staleTime: 60000,
+            refetchOnWindowFocus: false,
+        },
+    );
 
-    useEffect(() => {
-        mountedRef.current = true;
-        return () => {
-            mountedRef.current = false;
+    // Recomputed only when the raw list actually changes, not on every
+    // render.
+    const { categories, latest, sorted } = useMemo(() => {
+        const sortedList = sortPinnedThenLatest(allAnnouncements);
+
+        // One entry per known category, even when it currently has zero
+        // announcements — so the public page can always render an
+        // "empty" state under that category's heading instead of the
+        // whole section disappearing.
+        const categoriesList = ANNOUNCEMENT_CATEGORIES.map((c) => ({
+            ...c,
+            items: sortedList.filter((a) => (a.category || "general") === c.value),
+        }));
+
+        return {
+            categories: categoriesList,
+            // Homepage teaser: latest 6 across every category, pinned first.
+            latest: sortedList.slice(0, 6),
+            sorted: sortedList,
         };
-    }, []);
-
-    useEffect(() => {
-        let active = true;
-        (async () => {
-            try {
-                setLoading(true);
-                setError(null);
-                const response = await axiosConfig.get(
-                    PUBLIC_ANNOUNCEMENTS_ENDPOINT,
-                    REQUEST_OPTS,
-                );
-                const list = unwrapList(response);
-                if (active && mountedRef.current) setAllAnnouncements(list);
-            } catch (err) {
-                if (active && mountedRef.current) {
-                    setAllAnnouncements([]);
-                    setError(err);
-                }
-            } finally {
-                if (active && mountedRef.current) setLoading(false);
-            }
-        })();
-        return () => {
-            active = false;
-        };
-    }, [refreshToken]);
-
-    const sorted = sortPinnedThenLatest(allAnnouncements);
-
-    // One entry per known category, even when it currently has zero
-    // announcements — so the public page can always render an "empty"
-    // state under that category's heading instead of the whole
-    // section disappearing.
-    const categories = ANNOUNCEMENT_CATEGORIES.map((c) => ({
-        ...c,
-        items: sorted.filter((a) => (a.category || "general") === c.value),
-    }));
-
-    // Homepage teaser: latest 6 across every category, pinned first.
-    const latest = sorted.slice(0, 6);
-
-    const refetch = useCallback(() => {
-        setRefreshToken((t) => t + 1);
-    }, []);
+    }, [allAnnouncements]);
 
     return {
         categories,

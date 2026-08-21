@@ -7,20 +7,32 @@ use App\Models\EmploymentStatus;
 use App\Models\User;
 use App\Models\Alumni;
 use App\Models\AlumniQuizzes;
+use App\Support\CacheHelper;
 
 
 class GlobalAluminiController extends Controller
 {
 
+    // Phase 2 caching (audit §3): courses/employment statuses are
+    // near-static lookup tables (admin-managed, rarely change) but were
+    // being re-queried on every single page that renders a course or
+    // employment-status dropdown/filter. Long TTL (1 hour) — CourseObserver
+    // / EmploymentStatusObserver forget these keys immediately on any
+    // save/delete, so admin edits still show up right away instead of
+    // waiting out the TTL.
     function courses()
     {
-        $courses = Course::all();
+        $courses = CacheHelper::remember('lookup:courses', ['courses'], 3600, function () {
+            return Course::all();
+        });
         return response()->json($courses);
     }
 
     function employeeStatus()
     {
-        $status = EmploymentStatus::all();
+        $status = CacheHelper::remember('lookup:employment-statuses', ['employment-statuses'], 3600, function () {
+            return EmploymentStatus::all();
+        });
         return response()->json($status);
     }
 

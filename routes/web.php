@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\ScheduleController;
 use App\Http\Controllers\PwaManifestController;
 use App\Http\Controllers\SpaController;
 
@@ -26,9 +25,6 @@ use App\Http\Controllers\SpaController;
 // 	return view('app');
 // });
 
-
-// Route::get('/schedule-details-pdf/{id}', [ ScheduleController::class, 'schedDetailsPdf'] );
-// Route::get('/schedule-pdf/{sy}/{sem}/{category}/{college}/{dept}', [ ScheduleController::class, 'schedPdf'] );
 
 // Dynamic PWA manifest — must come before the catch-all route below,
 // since Route::get('/{path?}', ...) would otherwise swallow

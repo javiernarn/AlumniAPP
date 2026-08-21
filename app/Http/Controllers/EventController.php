@@ -7,6 +7,7 @@ use App\Models\EventRegistration;
 use App\Models\Notification;
 use App\Models\User;
 use App\Http\Requests\StoreEventRequest;
+use App\Support\CacheHelper;
 use Illuminate\Http\Request;
 use App\Mail\EventOrganizerRegistrationMail;
 use Illuminate\Support\Facades\Mail;
@@ -250,17 +251,33 @@ class EventController extends Controller
             ]);
         }
 
-        $query = Event::query()->select($columns);
+        // Phase 2 caching (audit §3): cached per type/category combo for
+        // 60s, same reasoning as AnnouncementController@publicIndex —
+        // every anonymous homepage/events-page visitor used to hit the
+        // DB directly. EventObserver forgets the 'all/all' key (the one
+        // the homepage teaser uses) on every save/delete, and flushes
+        // every type/category variant on a tag-capable driver (Redis).
+        $type = $request->has('type') && $request->type !== 'all' ? $request->type : 'all';
+        $category = $request->has('category') && $request->category !== 'all' ? $request->category : 'all';
 
-        if ($request->has('type') && $request->type !== 'all') {
-            $query->where('event_type', $request->type);
-        }
+        $events = CacheHelper::remember(
+            "public:events:{$type}:{$category}",
+            ['events'],
+            60,
+            function () use ($columns, $type, $category) {
+                $query = Event::query()->select($columns);
 
-        if ($request->has('category') && $request->category !== 'all') {
-            $query->where('category', $request->category);
-        }
+                if ($type !== 'all') {
+                    $query->where('event_type', $type);
+                }
 
-        $events = $query->orderBy('date')->get();
+                if ($category !== 'all') {
+                    $query->where('category', $category);
+                }
+
+                return $query->orderBy('date')->get();
+            }
+        );
 
         // registered_count / is_user_registered dropped too: nothing in
         // PublicHomePage.js reads either one, and computing them meant an

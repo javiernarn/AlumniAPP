@@ -92978,8 +92978,8 @@ if (role === "admin") {
   dashboardlink = "/admin-dashboard";
 } else if (role === "student") {
   dashboardlink = "/student/dashboard";
-} else if (role === "faculty") {
-  dashboardlink = "/faculty/dashboard";
+} else if (role === "department_head") {
+  dashboardlink = "/department-dashboard";
 }
 var SY = function SY() {
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_3__["default"], {
@@ -97908,14 +97908,16 @@ var AlumniDetails = function AlumniDetails(_ref) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   AlumniDetails: () => (/* reexport safe */ _alumni_AlumniDetails__WEBPACK_IMPORTED_MODULE_13__["default"]),
+/* harmony export */   AlumniDetails: () => (/* reexport safe */ _alumni_AlumniDetails__WEBPACK_IMPORTED_MODULE_14__["default"]),
 /* harmony export */   Breadcrumb: () => (/* reexport safe */ _Breadcrumb__WEBPACK_IMPORTED_MODULE_8__["default"]),
 /* harmony export */   Button: () => (/* reexport safe */ _shared_Button__WEBPACK_IMPORTED_MODULE_2__["default"]),
+/* harmony export */   CardSkeletonGrid: () => (/* reexport safe */ _skeletons_CardSkeletonGrid__WEBPACK_IMPORTED_MODULE_13__["default"]),
 /* harmony export */   DebounceSelect: () => (/* reexport safe */ _shared_DebounceSelect__WEBPACK_IMPORTED_MODULE_4__["default"]),
 /* harmony export */   FloatingButton: () => (/* reexport safe */ _shared_FloatingButton__WEBPACK_IMPORTED_MODULE_3__["default"]),
 /* harmony export */   Formlogin: () => (/* reexport safe */ _FormLogin__WEBPACK_IMPORTED_MODULE_0__["default"]),
 /* harmony export */   GroupsAvatar: () => (/* reexport safe */ _GroupsAvatar__WEBPACK_IMPORTED_MODULE_9__["default"]),
 /* harmony export */   HeaderTitle: () => (/* reexport safe */ _HeaderTitle__WEBPACK_IMPORTED_MODULE_7__["default"]),
+/* harmony export */   HeroSkeleton: () => (/* reexport safe */ _skeletons_CardSkeletonGrid__WEBPACK_IMPORTED_MODULE_13__.HeroSkeleton),
 /* harmony export */   ImageUploadModal: () => (/* reexport safe */ _ImageUploadModal__WEBPACK_IMPORTED_MODULE_10__["default"]),
 /* harmony export */   ImportPreviewModal: () => (/* reexport safe */ _ImportPreviewModal__WEBPACK_IMPORTED_MODULE_12__["default"]),
 /* harmony export */   Layout: () => (/* reexport safe */ _layout__WEBPACK_IMPORTED_MODULE_1__["default"]),
@@ -97936,7 +97938,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ImageUploadModal__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./ImageUploadModal */ "./resources/js/components/ImageUploadModal.js");
 /* harmony import */ var _UserAvatar__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./UserAvatar */ "./resources/js/components/UserAvatar.js");
 /* harmony import */ var _ImportPreviewModal__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./ImportPreviewModal */ "./resources/js/components/ImportPreviewModal.js");
-/* harmony import */ var _alumni_AlumniDetails__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./alumni/AlumniDetails */ "./resources/js/components/alumni/AlumniDetails.js");
+/* harmony import */ var _skeletons_CardSkeletonGrid__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./skeletons/CardSkeletonGrid */ "./resources/js/components/skeletons/CardSkeletonGrid.js");
+/* harmony import */ var _alumni_AlumniDetails__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./alumni/AlumniDetails */ "./resources/js/components/alumni/AlumniDetails.js");
+
 
 
 
@@ -103910,6 +103914,256 @@ var Tooltip = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.memo(function (_re
 
 /***/ }),
 
+/***/ "./resources/js/components/skeletons/CardSkeletonGrid.js":
+/*!***************************************************************!*\
+  !*** ./resources/js/components/skeletons/CardSkeletonGrid.js ***!
+  \***************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   HeroSkeleton: () => (/* binding */ HeroSkeleton),
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/card/index.js");
+/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/skeleton/index.js");
+/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/row/index.js");
+/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/col/index.js");
+/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/space/index.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+// Reusable loading-state skeletons, styled to match the antd Card/Row/Col
+// grids used across the admin & alumni pages. Goal: the loading state
+// should occupy roughly the same shape/space as the real content, so the
+// page doesn't visibly "jump" once data arrives.
+//
+// Usage:
+//   <CardSkeletonGrid variant="stat" count={4} columns={{ xs: 24, sm: 12, lg: 6 }} />
+//   <CardSkeletonGrid variant="chart" count={2} columns={{ xs: 24, lg: 12 }} />
+//   <CardSkeletonGrid variant="list" count={1} rows={5} />
+//   <CardSkeletonGrid variant="gallery" count={8} columns={{ xs: 12, sm: 8, md: 6 }} />
+
+
+
+var StatCardSkeleton = function StatCardSkeleton() {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    className: "skeleton-card skeleton-card--stat",
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(antd__WEBPACK_IMPORTED_MODULE_2__["default"].Input, {
+      active: true,
+      size: "small",
+      style: {
+        width: "60%",
+        marginBottom: 12
+      }
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(antd__WEBPACK_IMPORTED_MODULE_2__["default"].Input, {
+      active: true,
+      size: "large",
+      style: {
+        width: "45%",
+        display: "block",
+        marginBottom: 14
+      }
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(antd__WEBPACK_IMPORTED_MODULE_2__["default"].Button, {
+      active: true,
+      size: "small",
+      block: true,
+      style: {
+        height: 8
+      }
+    })]
+  });
+};
+var ChartCardSkeleton = function ChartCardSkeleton(_ref) {
+  var _ref$height = _ref.height,
+    height = _ref$height === void 0 ? 300 : _ref$height;
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    className: "skeleton-card skeleton-card--chart",
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(antd__WEBPACK_IMPORTED_MODULE_2__["default"].Input, {
+      active: true,
+      size: "small",
+      style: {
+        width: "35%",
+        marginBottom: 16
+      }
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(antd__WEBPACK_IMPORTED_MODULE_2__["default"].Node, {
+      active: true,
+      style: {
+        width: "100%",
+        height: height
+      },
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+        "aria-hidden": "true"
+      })
+    })]
+  });
+};
+var ListCardSkeleton = function ListCardSkeleton(_ref2) {
+  var _ref2$rows = _ref2.rows,
+    rows = _ref2$rows === void 0 ? 5 : _ref2$rows;
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    className: "skeleton-card skeleton-card--list",
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(antd__WEBPACK_IMPORTED_MODULE_2__["default"].Input, {
+      active: true,
+      size: "small",
+      style: {
+        width: "40%",
+        marginBottom: 16
+      }
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(antd__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      active: true,
+      title: false,
+      paragraph: {
+        rows: rows,
+        width: "100%"
+      }
+    })]
+  });
+};
+var GalleryCardSkeleton = function GalleryCardSkeleton() {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    className: "skeleton-card skeleton-card--gallery",
+    styles: {
+      body: {
+        padding: 0
+      }
+    },
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(antd__WEBPACK_IMPORTED_MODULE_2__["default"].Node, {
+      active: true,
+      style: {
+        width: "100%",
+        height: 160
+      },
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+        "aria-hidden": "true"
+      })
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+      style: {
+        padding: 12
+      },
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(antd__WEBPACK_IMPORTED_MODULE_2__["default"].Input, {
+        active: true,
+        size: "small",
+        style: {
+          width: "80%",
+          marginBottom: 8
+        }
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(antd__WEBPACK_IMPORTED_MODULE_2__["default"].Input, {
+        active: true,
+        size: "small",
+        style: {
+          width: "50%"
+        }
+      })]
+    })]
+  });
+};
+var VARIANTS = {
+  stat: StatCardSkeleton,
+  chart: ChartCardSkeleton,
+  list: ListCardSkeleton,
+  gallery: GalleryCardSkeleton
+};
+var DEFAULT_COLUMNS = {
+  stat: {
+    xs: 24,
+    sm: 12,
+    lg: 6
+  },
+  chart: {
+    xs: 24,
+    lg: 12
+  },
+  list: {
+    xs: 24
+  },
+  gallery: {
+    xs: 12,
+    sm: 8,
+    md: 6
+  }
+};
+
+/**
+ * @param {"stat"|"chart"|"list"|"gallery"} variant - which card shape to render
+ * @param {number} count - how many skeleton cards to render
+ * @param {object} columns - antd Col span props, e.g. { xs: 24, sm: 12, lg: 6 }
+ * @param {number} gutter - Row gutter, defaults to [24, 24]
+ * @param {number} height - chart variant only: placeholder chart height
+ * @param {number} rows - list variant only: number of skeleton rows per card
+ */
+var CardSkeletonGrid = function CardSkeletonGrid(_ref3) {
+  var _ref3$variant = _ref3.variant,
+    variant = _ref3$variant === void 0 ? "stat" : _ref3$variant,
+    _ref3$count = _ref3.count,
+    count = _ref3$count === void 0 ? 4 : _ref3$count,
+    columns = _ref3.columns,
+    _ref3$gutter = _ref3.gutter,
+    gutter = _ref3$gutter === void 0 ? [24, 24] : _ref3$gutter,
+    height = _ref3.height,
+    rows = _ref3.rows;
+  var SkeletonCard = VARIANTS[variant] || StatCardSkeleton;
+  var cols = columns || DEFAULT_COLUMNS[variant] || DEFAULT_COLUMNS.stat;
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(antd__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    gutter: gutter,
+    className: "card-skeleton-grid",
+    children: Array.from({
+      length: count
+    }).map(function (_, i) {
+      return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(antd__WEBPACK_IMPORTED_MODULE_4__["default"], _objectSpread(_objectSpread({}, cols), {}, {
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(SkeletonCard, {
+          height: height,
+          rows: rows
+        })
+      }), i);
+    })
+  });
+};
+
+/** A single skeleton "hero" bar — for the header/banner area above a metrics grid. */
+var HeroSkeleton = function HeroSkeleton() {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(antd__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    className: "skeleton-card skeleton-card--hero",
+    style: {
+      marginBottom: 24
+    },
+    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_5__["default"], {
+      direction: "vertical",
+      size: 12,
+      style: {
+        width: "100%"
+      },
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(antd__WEBPACK_IMPORTED_MODULE_2__["default"].Input, {
+        active: true,
+        size: "small",
+        style: {
+          width: 180
+        }
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(antd__WEBPACK_IMPORTED_MODULE_2__["default"].Input, {
+        active: true,
+        size: "large",
+        style: {
+          width: "55%"
+        }
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(antd__WEBPACK_IMPORTED_MODULE_2__["default"].Input, {
+        active: true,
+        size: "small",
+        style: {
+          width: "75%"
+        }
+      })]
+    })
+  });
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (CardSkeletonGrid);
+
+/***/ }),
+
 /***/ "./resources/js/hooks/useAdminDashboard.js":
 /*!*************************************************!*\
   !*** ./resources/js/hooks/useAdminDashboard.js ***!
@@ -104010,6 +104264,16 @@ function useAlumni() {
     return fetch();
   }, _objectSpread({
     keepPreviousData: true,
+    // Phase 4 (audit §2/§3): explicit staleTime instead of silently
+    // relying on the 5-minute global default in Main.js — makes the
+    // intent visible here and stops this from quietly changing
+    // behavior if someone bumps the global default later. 30s
+    // matches the plan's suggested 30-60s range for hot admin/alumni
+    // list queries; this is also the query the Phase 1 online-status
+    // poll merges live is_online/last_active deltas into via
+    // queryClient.setQueryData (AlumniList.js), so a fairly short
+    // staleTime keeps the rest of the row data reasonably fresh too.
+    staleTime: 30000,
     // GET /alumni is role:admin-gated on the backend. Callers that
     // render for both admins and alumni (e.g. the shared /home page)
     // must pass { enabled: isAdmin } or every alumni visiting that
@@ -104078,6 +104342,12 @@ function useAlumniDirectory() {
     return fetch();
   }, _objectSpread({
     keepPreviousData: true,
+    // Phase 4 (audit §2/§3): see useAlumni.js for the reasoning —
+    // same explicit staleTime instead of relying on the global
+    // 5-minute default, and this is the other query key the Phase 1
+    // online-status poll merges deltas into (the alumni-facing
+    // directory view in AlumniList.js).
+    staleTime: 30000,
     enabled: (_options$enabled = options.enabled) !== null && _options$enabled !== void 0 ? _options$enabled : true
   }, options));
 }
@@ -105242,7 +105512,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* binding */ usePublicAnnouncementsData)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var _utils_axiosConfig__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ~/utils/axiosConfig */ "./resources/js/utils/axiosConfig.js");
+/* harmony import */ var react_query__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-query */ "./node_modules/react-query/es/index.js");
+/* harmony import */ var _utils_axiosConfig__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ~/utils/axiosConfig */ "./resources/js/utils/axiosConfig.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
 function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
@@ -105253,10 +105524,6 @@ function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present,
 function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); } r ? i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n : (o("next", 0), o("throw", 1), o("return", 2)); }, _regeneratorDefine2(e, r, n, t); }
 function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
 function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
-function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
-function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
 function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
@@ -105305,9 +105572,14 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
 //   } = usePublicAnnouncementsData();
 // ============================================================
 
+// Phase 3 (audit §3 frontend): migrated onto react-query — see the
+// header comment in usePublicEventsData.js for why (de-duplication +
+// real staleTime instead of "always refetch on mount").
+
 
 
 var PUBLIC_ANNOUNCEMENTS_ENDPOINT = "/public/announcements";
+var PUBLIC_ANNOUNCEMENTS_QUERY_KEY = ["public-announcements", "full"];
 var REQUEST_OPTS = {
   silent: true,
   // don't trigger the global error modal for anon visitors
@@ -105366,88 +105638,54 @@ var sortPinnedThenLatest = function sortPinnedThenLatest(list) {
   });
 };
 function usePublicAnnouncementsData() {
-  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
-    _useState2 = _slicedToArray(_useState, 2),
-    allAnnouncements = _useState2[0],
-    setAllAnnouncements = _useState2[1];
-  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(true),
-    _useState4 = _slicedToArray(_useState3, 2),
-    loading = _useState4[0],
-    setLoading = _useState4[1];
-  var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null),
-    _useState6 = _slicedToArray(_useState5, 2),
-    error = _useState6[0],
-    setError = _useState6[1];
-  var _useState7 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(0),
-    _useState8 = _slicedToArray(_useState7, 2),
-    refreshToken = _useState8[0],
-    setRefreshToken = _useState8[1];
-  var mountedRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(true);
-  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
-    mountedRef.current = true;
-    return function () {
-      mountedRef.current = false;
-    };
-  }, []);
-  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
-    var active = true;
-    _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
-      var response, list, _t;
+  var _useQuery = (0,react_query__WEBPACK_IMPORTED_MODULE_1__.useQuery)(PUBLIC_ANNOUNCEMENTS_QUERY_KEY, /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
+      var response;
       return _regenerator().w(function (_context) {
-        while (1) switch (_context.p = _context.n) {
+        while (1) switch (_context.n) {
           case 0:
-            _context.p = 0;
-            setLoading(true);
-            setError(null);
             _context.n = 1;
-            return _utils_axiosConfig__WEBPACK_IMPORTED_MODULE_1__["default"].get(PUBLIC_ANNOUNCEMENTS_ENDPOINT, REQUEST_OPTS);
+            return _utils_axiosConfig__WEBPACK_IMPORTED_MODULE_2__["default"].get(PUBLIC_ANNOUNCEMENTS_ENDPOINT, REQUEST_OPTS);
           case 1:
             response = _context.v;
-            list = unwrapList(response);
-            if (active && mountedRef.current) setAllAnnouncements(list);
-            _context.n = 3;
-            break;
-          case 2:
-            _context.p = 2;
-            _t = _context.v;
-            if (active && mountedRef.current) {
-              setAllAnnouncements([]);
-              setError(_t);
-            }
-          case 3:
-            _context.p = 3;
-            if (active && mountedRef.current) setLoading(false);
-            return _context.f(3);
-          case 4:
-            return _context.a(2);
+            return _context.a(2, unwrapList(response));
         }
-      }, _callee, null, [[0, 2, 3, 4]]);
-    }))();
-    return function () {
-      active = false;
-    };
-  }, [refreshToken]);
-  var sorted = sortPinnedThenLatest(allAnnouncements);
+      }, _callee);
+    })), {
+      staleTime: 60000,
+      refetchOnWindowFocus: false
+    }),
+    _useQuery$data = _useQuery.data,
+    allAnnouncements = _useQuery$data === void 0 ? [] : _useQuery$data,
+    loading = _useQuery.isLoading,
+    error = _useQuery.error,
+    refetch = _useQuery.refetch;
 
-  // One entry per known category, even when it currently has zero
-  // announcements — so the public page can always render an "empty"
-  // state under that category's heading instead of the whole
-  // section disappearing.
-  var categories = ANNOUNCEMENT_CATEGORIES.map(function (c) {
-    return _objectSpread(_objectSpread({}, c), {}, {
-      items: sorted.filter(function (a) {
-        return (a.category || "general") === c.value;
-      })
-    });
-  });
+  // Recomputed only when the raw list actually changes, not on every
+  // render.
+  var _useMemo = (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(function () {
+      var sortedList = sortPinnedThenLatest(allAnnouncements);
 
-  // Homepage teaser: latest 6 across every category, pinned first.
-  var latest = sorted.slice(0, 6);
-  var refetch = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function () {
-    setRefreshToken(function (t) {
-      return t + 1;
-    });
-  }, []);
+      // One entry per known category, even when it currently has zero
+      // announcements — so the public page can always render an
+      // "empty" state under that category's heading instead of the
+      // whole section disappearing.
+      var categoriesList = ANNOUNCEMENT_CATEGORIES.map(function (c) {
+        return _objectSpread(_objectSpread({}, c), {}, {
+          items: sortedList.filter(function (a) {
+            return (a.category || "general") === c.value;
+          })
+        });
+      });
+      return {
+        categories: categoriesList,
+        // Homepage teaser: latest 6 across every category, pinned first.
+        latest: sortedList.slice(0, 6),
+        sorted: sortedList
+      };
+    }, [allAnnouncements]),
+    categories = _useMemo.categories,
+    latest = _useMemo.latest,
+    sorted = _useMemo.sorted;
   return {
     categories: categories,
     latest: latest,
@@ -105473,7 +105711,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   formatTimeDisplay: () => (/* binding */ formatTimeDisplay)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var _utils_axiosConfig__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ~/utils/axiosConfig */ "./resources/js/utils/axiosConfig.js");
+/* harmony import */ var react_query__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-query */ "./node_modules/react-query/es/index.js");
+/* harmony import */ var _utils_axiosConfig__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ~/utils/axiosConfig */ "./resources/js/utils/axiosConfig.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
 function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); } r ? i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n : (o("next", 0), o("throw", 1), o("return", 2)); }, _regeneratorDefine2(e, r, n, t); }
@@ -105529,9 +105768,17 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
 //   } = usePublicEventsData();
 // ============================================================
 
+// Phase 3 (audit §3 frontend): migrated off hand-rolled useEffect +
+// axios + mountedRef/active onto react-query, following the pattern
+// already used by useJobPosts.js/useDepartmentHeads.js. Gets automatic
+// request de-duplication (two components mounting this hook on one
+// page now share a single request instead of firing two), and a
+// staleTime instead of always refetching on every mount.
+
 
 
 var PUBLIC_EVENTS_ENDPOINT = "/public/events";
+var PUBLIC_EVENTS_QUERY_KEY = ["public-events", "full"];
 var REQUEST_OPTS = {
   silent: true,
   // don't trigger the global error modal for anon visitors
@@ -105643,93 +105890,59 @@ var sortByDateDesc = function sortByDateDesc(list, getDate) {
   });
 };
 function usePublicEventsData() {
-  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
-    _useState2 = _slicedToArray(_useState, 2),
-    allEvents = _useState2[0],
-    setAllEvents = _useState2[1];
-  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(true),
-    _useState4 = _slicedToArray(_useState3, 2),
-    loading = _useState4[0],
-    setLoading = _useState4[1];
-  var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null),
-    _useState6 = _slicedToArray(_useState5, 2),
-    error = _useState6[0],
-    setError = _useState6[1];
-  var _useState7 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(0),
-    _useState8 = _slicedToArray(_useState7, 2),
-    refreshToken = _useState8[0],
-    setRefreshToken = _useState8[1];
-  var mountedRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(true);
-  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
-    mountedRef.current = true;
-    return function () {
-      mountedRef.current = false;
-    };
-  }, []);
-  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
-    var active = true;
-    _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
-      var response, list, _t;
+  var _useQuery = (0,react_query__WEBPACK_IMPORTED_MODULE_1__.useQuery)(PUBLIC_EVENTS_QUERY_KEY, /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
+      var response;
       return _regenerator().w(function (_context) {
-        while (1) switch (_context.p = _context.n) {
+        while (1) switch (_context.n) {
           case 0:
-            _context.p = 0;
-            setLoading(true);
-            setError(null);
             _context.n = 1;
-            return _utils_axiosConfig__WEBPACK_IMPORTED_MODULE_1__["default"].get(PUBLIC_EVENTS_ENDPOINT, _objectSpread(_objectSpread({}, REQUEST_OPTS), {}, {
+            return _utils_axiosConfig__WEBPACK_IMPORTED_MODULE_2__["default"].get(PUBLIC_EVENTS_ENDPOINT, _objectSpread(_objectSpread({}, REQUEST_OPTS), {}, {
               params: {
                 per_page: 200
               }
             }));
           case 1:
             response = _context.v;
-            list = unwrapList(response).map(function (ev) {
+            return _context.a(2, unwrapList(response).map(function (ev) {
               return _objectSpread(_objectSpread({}, ev), {}, {
                 _computedStatus: computeEventStatus(ev)
               });
-            });
-            if (active && mountedRef.current) setAllEvents(list);
-            _context.n = 3;
-            break;
-          case 2:
-            _context.p = 2;
-            _t = _context.v;
-            if (active && mountedRef.current) {
-              setAllEvents([]);
-              setError(_t);
-            }
-          case 3:
-            _context.p = 3;
-            if (active && mountedRef.current) setLoading(false);
-            return _context.f(3);
-          case 4:
-            return _context.a(2);
+            }));
         }
-      }, _callee, null, [[0, 2, 3, 4]]);
-    }))();
-    return function () {
-      active = false;
-    };
-  }, [refreshToken]);
+      }, _callee);
+    })), {
+      staleTime: 60000,
+      refetchOnWindowFocus: false
+    }),
+    _useQuery$data = _useQuery.data,
+    allEvents = _useQuery$data === void 0 ? [] : _useQuery$data,
+    loading = _useQuery.isLoading,
+    error = _useQuery.error,
+    refetch = _useQuery.refetch;
   var getDate = function getDate(ev) {
     return ev.date || ev.event_date;
   };
-  var upcoming = sortByDateAsc(allEvents.filter(function (ev) {
-    return ev._computedStatus === "upcoming";
-  }), getDate);
-  var ongoing = sortByDateAsc(allEvents.filter(function (ev) {
-    return ev._computedStatus === "ongoing";
-  }), getDate);
-  var completed = sortByDateDesc(allEvents.filter(function (ev) {
-    return ev._computedStatus === "completed";
-  }), getDate);
-  var featured = sortByDateAsc(allEvents.filter(isFeatured), getDate);
-  var refetch = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function () {
-    setRefreshToken(function (t) {
-      return t + 1;
-    });
-  }, []);
+
+  // Recomputed only when the raw list actually changes, not on every
+  // render — same intent as the useMemo in usePublicGalleryData.js.
+  var _useMemo = (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(function () {
+      return {
+        upcoming: sortByDateAsc(allEvents.filter(function (ev) {
+          return ev._computedStatus === "upcoming";
+        }), getDate),
+        ongoing: sortByDateAsc(allEvents.filter(function (ev) {
+          return ev._computedStatus === "ongoing";
+        }), getDate),
+        completed: sortByDateDesc(allEvents.filter(function (ev) {
+          return ev._computedStatus === "completed";
+        }), getDate),
+        featured: sortByDateAsc(allEvents.filter(isFeatured), getDate)
+      };
+    }, [allEvents]),
+    upcoming = _useMemo.upcoming,
+    ongoing = _useMemo.ongoing,
+    completed = _useMemo.completed,
+    featured = _useMemo.featured;
   return {
     upcoming: upcoming,
     ongoing: ongoing,
@@ -105755,8 +105968,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* binding */ usePublicGalleryData)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var _utils_axiosConfig__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ~/utils/axiosConfig */ "./resources/js/utils/axiosConfig.js");
+/* harmony import */ var react_query__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-query */ "./node_modules/react-query/es/index.js");
+/* harmony import */ var _utils_axiosConfig__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ~/utils/axiosConfig */ "./resources/js/utils/axiosConfig.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
 function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
 function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); } r ? i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n : (o("next", 0), o("throw", 1), o("return", 2)); }, _regeneratorDefine2(e, r, n, t); }
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
@@ -105766,10 +105984,6 @@ function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" 
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
 function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
-function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
-function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
 function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
@@ -105806,9 +106020,18 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
 //   } = usePublicGalleryData();
 // ============================================================
 
+// Phase 3 (audit §3 frontend): migrated onto react-query — see the
+// header comment in usePublicEventsData.js for why (de-duplication +
+// real staleTime instead of "always refetch on mount"). This hook is
+// mounted twice on the homepage alone (PublicHomePage.js uses both
+// usePublicHomeData's own gallery fetch AND this hook, just for the
+// year/month dropdown) plus again on /public-gallery — request
+// de-duplication actually matters here.
+
 
 
 var PUBLIC_GALLERY_ENDPOINT = "/public/galleries";
+var PUBLIC_GALLERY_QUERY_KEY = ["public-galleries", "full"];
 var REQUEST_OPTS = {
   silent: true,
   // don't trigger the global error modal for anon visitors
@@ -105839,71 +106062,31 @@ var sortByDateDesc = function sortByDateDesc(list, getDate) {
   });
 };
 function usePublicGalleryData() {
-  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
-    _useState2 = _slicedToArray(_useState, 2),
-    allGalleries = _useState2[0],
-    setAllGalleries = _useState2[1];
-  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(true),
-    _useState4 = _slicedToArray(_useState3, 2),
-    loading = _useState4[0],
-    setLoading = _useState4[1];
-  var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null),
-    _useState6 = _slicedToArray(_useState5, 2),
-    error = _useState6[0],
-    setError = _useState6[1];
-  var _useState7 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(0),
-    _useState8 = _slicedToArray(_useState7, 2),
-    refreshToken = _useState8[0],
-    setRefreshToken = _useState8[1];
-  var mountedRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(true);
-  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
-    mountedRef.current = true;
-    return function () {
-      mountedRef.current = false;
-    };
-  }, []);
-  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
-    var active = true;
-    _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
-      var response, list, _t;
+  var _useQuery = (0,react_query__WEBPACK_IMPORTED_MODULE_1__.useQuery)(PUBLIC_GALLERY_QUERY_KEY, /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
+      var response;
       return _regenerator().w(function (_context) {
-        while (1) switch (_context.p = _context.n) {
+        while (1) switch (_context.n) {
           case 0:
-            _context.p = 0;
-            setLoading(true);
-            setError(null);
             _context.n = 1;
-            return _utils_axiosConfig__WEBPACK_IMPORTED_MODULE_1__["default"].get(PUBLIC_GALLERY_ENDPOINT, _objectSpread(_objectSpread({}, REQUEST_OPTS), {}, {
+            return _utils_axiosConfig__WEBPACK_IMPORTED_MODULE_2__["default"].get(PUBLIC_GALLERY_ENDPOINT, _objectSpread(_objectSpread({}, REQUEST_OPTS), {}, {
               params: {
                 per_page: 500
               }
             }));
           case 1:
             response = _context.v;
-            list = unwrapList(response);
-            if (active && mountedRef.current) setAllGalleries(list);
-            _context.n = 3;
-            break;
-          case 2:
-            _context.p = 2;
-            _t = _context.v;
-            if (active && mountedRef.current) {
-              setAllGalleries([]);
-              setError(_t);
-            }
-          case 3:
-            _context.p = 3;
-            if (active && mountedRef.current) setLoading(false);
-            return _context.f(3);
-          case 4:
-            return _context.a(2);
+            return _context.a(2, unwrapList(response));
         }
-      }, _callee, null, [[0, 2, 3, 4]]);
-    }))();
-    return function () {
-      active = false;
-    };
-  }, [refreshToken]);
+      }, _callee);
+    })), {
+      staleTime: 60000,
+      refetchOnWindowFocus: false
+    }),
+    _useQuery$data = _useQuery.data,
+    allGalleries = _useQuery$data === void 0 ? [] : _useQuery$data,
+    loading = _useQuery.isLoading,
+    error = _useQuery.error,
+    refetch = _useQuery.refetch;
 
   // Build the Year -> Month timeline. Recomputed only when the raw
   // list changes, not on every render.
@@ -105961,11 +106144,6 @@ function usePublicGalleryData() {
       return y !== "Undated";
     });
   }, [years]);
-  var refetch = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function () {
-    setRefreshToken(function (t) {
-      return t + 1;
-    });
-  }, []);
   return {
     years: years,
     yearList: yearList,
@@ -105989,7 +106167,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* binding */ usePublicHomeData)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var _utils_axiosConfig__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ~/utils/axiosConfig */ "./resources/js/utils/axiosConfig.js");
+/* harmony import */ var react_query__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-query */ "./node_modules/react-query/es/index.js");
+/* harmony import */ var _utils_axiosConfig__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ~/utils/axiosConfig */ "./resources/js/utils/axiosConfig.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
 function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
@@ -106000,10 +106179,6 @@ function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present,
 function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); } r ? i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n : (o("next", 0), o("throw", 1), o("return", 2)); }, _regeneratorDefine2(e, r, n, t); }
 function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
 function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
-function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
-function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
 function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
@@ -106058,6 +106233,18 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
 //               first, capped at 4.
 // ============================================================
 
+// Phase 3 (audit §3 frontend): migrated onto react-query — see the
+// header comment in usePublicEventsData.js for why (de-duplication +
+// real staleTime instead of "always refetch on mount"). Each of the
+// three fetches below uses its own query key with a "home" suffix,
+// distinct from the "full" list query keys used by
+// usePublicEventsData/usePublicGalleryData/usePublicJobPostsData —
+// those hooks request different params (this page wants per_page:8
+// galleries / status:approved jobs / the full events list pre-filter),
+// so they're genuinely different requests and shouldn't share a cache
+// entry, even though (as noted below) the gallery hook is *also*
+// mounted directly on this same page for the header dropdown.
+
 
 
 
@@ -106072,6 +106259,11 @@ var PUBLIC_ENDPOINTS = {
   events: "/public/events",
   gallery: "/public/galleries",
   jobs: "/public/job-posts"
+};
+var QUERY_KEYS = {
+  events: ["public-events", "home"],
+  gallery: ["public-galleries", "home"],
+  jobs: ["public-job-posts", "home"]
 };
 var REQUEST_OPTS = {
   silent: true,
@@ -106121,70 +106313,21 @@ var isUpcoming = function isUpcoming(event) {
 var isActiveJob = function isActiveJob(job) {
   return !(job !== null && job !== void 0 && job.is_full) && !(job !== null && job !== void 0 && job.is_expired);
 };
+var COMMON_OPTIONS = {
+  staleTime: 60000,
+  refetchOnWindowFocus: false
+};
 function usePublicHomeData() {
-  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
-    _useState2 = _slicedToArray(_useState, 2),
-    events = _useState2[0],
-    setEvents = _useState2[1];
-  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(true),
-    _useState4 = _slicedToArray(_useState3, 2),
-    eventsLoading = _useState4[0],
-    setEventsLoading = _useState4[1];
-  var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null),
-    _useState6 = _slicedToArray(_useState5, 2),
-    eventsError = _useState6[0],
-    setEventsError = _useState6[1];
-  var _useState7 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
-    _useState8 = _slicedToArray(_useState7, 2),
-    gallery = _useState8[0],
-    setGallery = _useState8[1];
-  var _useState9 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(true),
-    _useState0 = _slicedToArray(_useState9, 2),
-    galleryLoading = _useState0[0],
-    setGalleryLoading = _useState0[1];
-  var _useState1 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null),
-    _useState10 = _slicedToArray(_useState1, 2),
-    galleryError = _useState10[0],
-    setGalleryError = _useState10[1];
-  var _useState11 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
-    _useState12 = _slicedToArray(_useState11, 2),
-    jobs = _useState12[0],
-    setJobs = _useState12[1];
-  var _useState13 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(true),
-    _useState14 = _slicedToArray(_useState13, 2),
-    jobsLoading = _useState14[0],
-    setJobsLoading = _useState14[1];
-  var _useState15 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null),
-    _useState16 = _slicedToArray(_useState15, 2),
-    jobsError = _useState16[0],
-    setJobsError = _useState16[1];
-
-  // bumping this re-runs every fetch (see refetch() below)
-  var _useState17 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(0),
-    _useState18 = _slicedToArray(_useState17, 2),
-    refreshToken = _useState18[0],
-    setRefreshToken = _useState18[1];
-  var mountedRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(true);
-  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
-    mountedRef.current = true;
-    return function () {
-      mountedRef.current = false;
-    };
-  }, []);
+  var queryClient = (0,react_query__WEBPACK_IMPORTED_MODULE_1__.useQueryClient)();
 
   // ------------- Events -------------
-  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
-    var active = true;
-    _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
-      var response, list, upcoming, sorted, _t;
+  var _useQuery = (0,react_query__WEBPACK_IMPORTED_MODULE_1__.useQuery)(QUERY_KEYS.events, /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
+      var response, list, upcoming, sorted;
       return _regenerator().w(function (_context) {
-        while (1) switch (_context.p = _context.n) {
+        while (1) switch (_context.n) {
           case 0:
-            _context.p = 0;
-            setEventsLoading(true);
-            setEventsError(null);
             _context.n = 1;
-            return _utils_axiosConfig__WEBPACK_IMPORTED_MODULE_1__["default"].get(PUBLIC_ENDPOINTS.events, REQUEST_OPTS);
+            return _utils_axiosConfig__WEBPACK_IMPORTED_MODULE_2__["default"].get(PUBLIC_ENDPOINTS.events, REQUEST_OPTS);
           case 1:
             response = _context.v;
             list = unwrapList(response);
@@ -106192,43 +106335,23 @@ function usePublicHomeData() {
             sorted = sortByDateAsc(upcoming, function (ev) {
               return ev.date || ev.event_date;
             });
-            if (active && mountedRef.current) setEvents(sorted.slice(0, 4));
-            _context.n = 3;
-            break;
-          case 2:
-            _context.p = 2;
-            _t = _context.v;
-            if (active && mountedRef.current) {
-              setEvents([]);
-              setEventsError(_t);
-            }
-          case 3:
-            _context.p = 3;
-            if (active && mountedRef.current) setEventsLoading(false);
-            return _context.f(3);
-          case 4:
-            return _context.a(2);
+            return _context.a(2, sorted.slice(0, 4));
         }
-      }, _callee, null, [[0, 2, 3, 4]]);
-    }))();
-    return function () {
-      active = false;
-    };
-  }, [refreshToken]);
+      }, _callee);
+    })), COMMON_OPTIONS),
+    _useQuery$data = _useQuery.data,
+    events = _useQuery$data === void 0 ? [] : _useQuery$data,
+    eventsLoading = _useQuery.isLoading,
+    eventsError = _useQuery.error;
 
   // ------------- Gallery -------------
-  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
-    var active = true;
-    _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2() {
-      var response, list, sorted, _t2;
+  var _useQuery2 = (0,react_query__WEBPACK_IMPORTED_MODULE_1__.useQuery)(QUERY_KEYS.gallery, /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2() {
+      var response, list, sorted;
       return _regenerator().w(function (_context2) {
-        while (1) switch (_context2.p = _context2.n) {
+        while (1) switch (_context2.n) {
           case 0:
-            _context2.p = 0;
-            setGalleryLoading(true);
-            setGalleryError(null);
             _context2.n = 1;
-            return _utils_axiosConfig__WEBPACK_IMPORTED_MODULE_1__["default"].get(PUBLIC_ENDPOINTS.gallery, _objectSpread(_objectSpread({}, REQUEST_OPTS), {}, {
+            return _utils_axiosConfig__WEBPACK_IMPORTED_MODULE_2__["default"].get(PUBLIC_ENDPOINTS.gallery, _objectSpread(_objectSpread({}, REQUEST_OPTS), {}, {
               params: {
                 per_page: 8
               }
@@ -106239,47 +106362,27 @@ function usePublicHomeData() {
             sorted = sortByDateDesc(list, function (g) {
               return g.created_at;
             });
-            if (active && mountedRef.current) setGallery(sorted.slice(0, 8));
-            _context2.n = 3;
-            break;
-          case 2:
-            _context2.p = 2;
-            _t2 = _context2.v;
-            if (active && mountedRef.current) {
-              setGallery([]);
-              setGalleryError(_t2);
-            }
-          case 3:
-            _context2.p = 3;
-            if (active && mountedRef.current) setGalleryLoading(false);
-            return _context2.f(3);
-          case 4:
-            return _context2.a(2);
+            return _context2.a(2, sorted.slice(0, 8));
         }
-      }, _callee2, null, [[0, 2, 3, 4]]);
-    }))();
-    return function () {
-      active = false;
-    };
-  }, [refreshToken]);
+      }, _callee2);
+    })), COMMON_OPTIONS),
+    _useQuery2$data = _useQuery2.data,
+    gallery = _useQuery2$data === void 0 ? [] : _useQuery2$data,
+    galleryLoading = _useQuery2.isLoading,
+    galleryError = _useQuery2.error;
 
   // ------------- Job posts -------------
   // `status: "approved"` is sent for clarity/readability, but the real
   // enforcement now happens server-side: the /public/job-posts route in
   // api.php overwrites this param before it reaches the controller, so
   // it can't be tampered with client-side.
-  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
-    var active = true;
-    _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3() {
-      var response, list, active_jobs, sorted, _t3;
+  var _useQuery3 = (0,react_query__WEBPACK_IMPORTED_MODULE_1__.useQuery)(QUERY_KEYS.jobs, /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3() {
+      var response, list, active_jobs, sorted;
       return _regenerator().w(function (_context3) {
-        while (1) switch (_context3.p = _context3.n) {
+        while (1) switch (_context3.n) {
           case 0:
-            _context3.p = 0;
-            setJobsLoading(true);
-            setJobsError(null);
             _context3.n = 1;
-            return _utils_axiosConfig__WEBPACK_IMPORTED_MODULE_1__["default"].get(PUBLIC_ENDPOINTS.jobs, _objectSpread(_objectSpread({}, REQUEST_OPTS), {}, {
+            return _utils_axiosConfig__WEBPACK_IMPORTED_MODULE_2__["default"].get(PUBLIC_ENDPOINTS.jobs, _objectSpread(_objectSpread({}, REQUEST_OPTS), {}, {
               params: {
                 status: "approved"
               }
@@ -106291,34 +106394,22 @@ function usePublicHomeData() {
             sorted = sortByDateDesc(active_jobs, function (job) {
               return job.created_at;
             });
-            if (active && mountedRef.current) setJobs(sorted.slice(0, 4));
-            _context3.n = 3;
-            break;
-          case 2:
-            _context3.p = 2;
-            _t3 = _context3.v;
-            if (active && mountedRef.current) {
-              setJobs([]);
-              setJobsError(_t3);
-            }
-          case 3:
-            _context3.p = 3;
-            if (active && mountedRef.current) setJobsLoading(false);
-            return _context3.f(3);
-          case 4:
-            return _context3.a(2);
+            return _context3.a(2, sorted.slice(0, 4));
         }
-      }, _callee3, null, [[0, 2, 3, 4]]);
-    }))();
+      }, _callee3);
+    })), COMMON_OPTIONS),
+    _useQuery3$data = _useQuery3.data,
+    jobs = _useQuery3$data === void 0 ? [] : _useQuery3$data,
+    jobsLoading = _useQuery3.isLoading,
+    jobsError = _useQuery3.error;
+
+  // Refetches all three at once, same "one refetch() does everything"
+  // shape the old refreshToken-bump gave callers.
+  var refetch = (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(function () {
     return function () {
-      active = false;
+      return Promise.all([queryClient.refetchQueries(QUERY_KEYS.events), queryClient.refetchQueries(QUERY_KEYS.gallery), queryClient.refetchQueries(QUERY_KEYS.jobs)]);
     };
-  }, [refreshToken]);
-  var refetch = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function () {
-    setRefreshToken(function (t) {
-      return t + 1;
-    });
-  }, []);
+  }, [queryClient]);
   return {
     events: events,
     eventsLoading: eventsLoading,
@@ -106349,7 +106440,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   sortJobs: () => (/* binding */ sortJobs)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var _utils_axiosConfig__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ~/utils/axiosConfig */ "./resources/js/utils/axiosConfig.js");
+/* harmony import */ var react_query__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-query */ "./node_modules/react-query/es/index.js");
+/* harmony import */ var _utils_axiosConfig__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ~/utils/axiosConfig */ "./resources/js/utils/axiosConfig.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
 function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); } r ? i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n : (o("next", 0), o("throw", 1), o("return", 2)); }, _regeneratorDefine2(e, r, n, t); }
@@ -106360,10 +106452,6 @@ function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" 
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
 function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
-function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
-function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
 function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
@@ -106416,9 +106504,14 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
 //   const sorted = sortJobs(fullTime, "date-desc");
 // ============================================================
 
+// Phase 3 (audit §3 frontend): migrated onto react-query — see the
+// header comment in usePublicEventsData.js for why (de-duplication +
+// real staleTime instead of "always refetch on mount").
+
 
 
 var PUBLIC_JOB_POSTS_ENDPOINT = "/public/job-posts";
+var PUBLIC_JOB_POSTS_QUERY_KEY = ["public-job-posts", "full"];
 var REQUEST_OPTS = {
   silent: true,
   // don't trigger the global error modal for anon visitors
@@ -106476,92 +106569,58 @@ var sortJobs = function sortJobs(list) {
   }
 };
 function usePublicJobPostsData() {
-  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
-    _useState2 = _slicedToArray(_useState, 2),
-    allJobs = _useState2[0],
-    setAllJobs = _useState2[1];
-  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(true),
-    _useState4 = _slicedToArray(_useState3, 2),
-    loading = _useState4[0],
-    setLoading = _useState4[1];
-  var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null),
-    _useState6 = _slicedToArray(_useState5, 2),
-    error = _useState6[0],
-    setError = _useState6[1];
-  var _useState7 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(0),
-    _useState8 = _slicedToArray(_useState7, 2),
-    refreshToken = _useState8[0],
-    setRefreshToken = _useState8[1];
-  var mountedRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(true);
-  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
-    mountedRef.current = true;
-    return function () {
-      mountedRef.current = false;
-    };
-  }, []);
-  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
-    var active = true;
-    _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
-      var response, list, _t;
+  var _useQuery = (0,react_query__WEBPACK_IMPORTED_MODULE_1__.useQuery)(PUBLIC_JOB_POSTS_QUERY_KEY, /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
+      var response;
       return _regenerator().w(function (_context) {
-        while (1) switch (_context.p = _context.n) {
+        while (1) switch (_context.n) {
           case 0:
-            _context.p = 0;
-            setLoading(true);
-            setError(null);
             _context.n = 1;
-            return _utils_axiosConfig__WEBPACK_IMPORTED_MODULE_1__["default"].get(PUBLIC_JOB_POSTS_ENDPOINT, _objectSpread(_objectSpread({}, REQUEST_OPTS), {}, {
+            return _utils_axiosConfig__WEBPACK_IMPORTED_MODULE_2__["default"].get(PUBLIC_JOB_POSTS_ENDPOINT, _objectSpread(_objectSpread({}, REQUEST_OPTS), {}, {
               params: {
                 per_page: 200
               }
             }));
           case 1:
             response = _context.v;
-            list = unwrapList(response).map(function (job) {
+            return _context.a(2, unwrapList(response).map(function (job) {
               return _objectSpread(_objectSpread({}, job), {}, {
                 _typeKey: normalizeJobType(job.job_type)
               });
-            });
-            if (active && mountedRef.current) setAllJobs(list);
-            _context.n = 3;
-            break;
-          case 2:
-            _context.p = 2;
-            _t = _context.v;
-            if (active && mountedRef.current) {
-              setAllJobs([]);
-              setError(_t);
-            }
-          case 3:
-            _context.p = 3;
-            if (active && mountedRef.current) setLoading(false);
-            return _context.f(3);
-          case 4:
-            return _context.a(2);
+            }));
         }
-      }, _callee, null, [[0, 2, 3, 4]]);
-    }))();
-    return function () {
-      active = false;
-    };
-  }, [refreshToken]);
-  var fullTime = allJobs.filter(function (j) {
-    return j._typeKey === "full-time";
-  });
-  var partTime = allJobs.filter(function (j) {
-    return j._typeKey === "part-time";
-  });
-  var contract = allJobs.filter(function (j) {
-    return j._typeKey === "contract";
-  });
-  var other = allJobs.filter(function (j) {
-    return j._typeKey === "other";
-  });
-  var refetch = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function () {
-    setRefreshToken(function (t) {
-      return t + 1;
-    });
-  }, []);
+      }, _callee);
+    })), {
+      staleTime: 60000,
+      refetchOnWindowFocus: false
+    }),
+    _useQuery$data = _useQuery.data,
+    allJobs = _useQuery$data === void 0 ? [] : _useQuery$data,
+    loading = _useQuery.isLoading,
+    error = _useQuery.error,
+    refetch = _useQuery.refetch;
+
+  // Recomputed only when the raw list actually changes, not on every
+  // render.
+  var _useMemo = (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(function () {
+      return {
+        fullTime: allJobs.filter(function (j) {
+          return j._typeKey === "full-time";
+        }),
+        partTime: allJobs.filter(function (j) {
+          return j._typeKey === "part-time";
+        }),
+        contract: allJobs.filter(function (j) {
+          return j._typeKey === "contract";
+        }),
+        other: allJobs.filter(function (j) {
+          return j._typeKey === "other";
+        })
+      };
+    }, [allJobs]),
+    fullTime = _useMemo.fullTime,
+    partTime = _useMemo.partTime,
+    contract = _useMemo.contract,
+    other = _useMemo.other;
   return {
     fullTime: fullTime,
     partTime: partTime,
@@ -126324,58 +126383,59 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/typography/index.js");
-/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/select/index.js");
-/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/tabs/index.js");
-/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/input/index.js");
-/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/tag/index.js");
-/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/form/index.js");
-/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/modal/index.js");
-/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/space/index.js");
-/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/badge/index.js");
-/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/card/index.js");
-/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/tooltip/index.js");
-/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/checkbox/index.js");
-/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/avatar/index.js");
-/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/divider/index.js");
-/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_43__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/button/index.js");
-/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_45__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/row/index.js");
-/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_46__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/col/index.js");
-/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_48__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/statistic/index.js");
-/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_49__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/list/index.js");
-/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_50__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/table/index.js");
-/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_51__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/message/index.js");
-/* harmony import */ var _ant_design_icons__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! @ant-design/icons */ "./node_modules/@ant-design/icons/es/icons/CheckCircleOutlined.js");
-/* harmony import */ var _ant_design_icons__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! @ant-design/icons */ "./node_modules/@ant-design/icons/es/icons/ClockCircleOutlined.js");
-/* harmony import */ var _ant_design_icons__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! @ant-design/icons */ "./node_modules/@ant-design/icons/es/icons/StopOutlined.js");
-/* harmony import */ var _ant_design_icons__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! @ant-design/icons */ "./node_modules/@ant-design/icons/es/icons/CloseCircleOutlined.js");
-/* harmony import */ var _ant_design_icons__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! @ant-design/icons */ "./node_modules/@ant-design/icons/es/icons/UserOutlined.js");
-/* harmony import */ var _ant_design_icons__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! @ant-design/icons */ "./node_modules/@ant-design/icons/es/icons/ExclamationCircleOutlined.js");
-/* harmony import */ var _ant_design_icons__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! @ant-design/icons */ "./node_modules/@ant-design/icons/es/icons/EyeOutlined.js");
-/* harmony import */ var _ant_design_icons__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! @ant-design/icons */ "./node_modules/@ant-design/icons/es/icons/EditOutlined.js");
-/* harmony import */ var _ant_design_icons__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! @ant-design/icons */ "./node_modules/@ant-design/icons/es/icons/TeamOutlined.js");
-/* harmony import */ var _ant_design_icons__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! @ant-design/icons */ "./node_modules/@ant-design/icons/es/icons/EnvironmentOutlined.js");
-/* harmony import */ var _ant_design_icons__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! @ant-design/icons */ "./node_modules/@ant-design/icons/es/icons/DollarOutlined.js");
-/* harmony import */ var _ant_design_icons__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! @ant-design/icons */ "./node_modules/@ant-design/icons/es/icons/CalendarOutlined.js");
-/* harmony import */ var _ant_design_icons__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! @ant-design/icons */ "./node_modules/@ant-design/icons/es/icons/StarOutlined.js");
-/* harmony import */ var _ant_design_icons__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(/*! @ant-design/icons */ "./node_modules/@ant-design/icons/es/icons/UnorderedListOutlined.js");
-/* harmony import */ var _ant_design_icons__WEBPACK_IMPORTED_MODULE_41__ = __webpack_require__(/*! @ant-design/icons */ "./node_modules/@ant-design/icons/es/icons/BellOutlined.js");
-/* harmony import */ var _ant_design_icons__WEBPACK_IMPORTED_MODULE_42__ = __webpack_require__(/*! @ant-design/icons */ "./node_modules/@ant-design/icons/es/icons/FolderOutlined.js");
-/* harmony import */ var _ant_design_icons__WEBPACK_IMPORTED_MODULE_44__ = __webpack_require__(/*! @ant-design/icons */ "./node_modules/@ant-design/icons/es/icons/PrinterOutlined.js");
-/* harmony import */ var _ant_design_icons__WEBPACK_IMPORTED_MODULE_47__ = __webpack_require__(/*! @ant-design/icons */ "./node_modules/@ant-design/icons/es/icons/SearchOutlined.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _AlumniList_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./AlumniList.css */ "./resources/js/pages/admin/alumni/AlumniList.css");
-/* harmony import */ var _components__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ~/components */ "./resources/js/components/index.js");
-/* harmony import */ var _hooks_useAlumni__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ~/hooks/useAlumni */ "./resources/js/hooks/useAlumni.js");
-/* harmony import */ var _hooks_useAlumniDirectory__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ~/hooks/useAlumniDirectory */ "./resources/js/hooks/useAlumniDirectory.js");
-/* harmony import */ var _hooks_useEmployeeStatus__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ~/hooks/useEmployeeStatus */ "./resources/js/hooks/useEmployeeStatus.js");
-/* harmony import */ var _hooks_useQuizResult__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ~/hooks/useQuizResult */ "./resources/js/hooks/useQuizResult.js");
-/* harmony import */ var _utils_axiosConfig__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ~/utils/axiosConfig */ "./resources/js/utils/axiosConfig.js");
-/* harmony import */ var _utils_constant__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ~/utils/constant */ "./resources/js/utils/constant.js");
-/* harmony import */ var react_secure_storage__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! react-secure-storage */ "./node_modules/react-secure-storage/dist/index.js");
-/* harmony import */ var _assets_images_OCC_LOGO_png__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ~/assets/images/OCC_LOGO.png */ "./resources/js/assets/images/OCC_LOGO.png");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+/* harmony import */ var react_query__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-query */ "./node_modules/react-query/es/index.js");
+/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/typography/index.js");
+/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/select/index.js");
+/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/tabs/index.js");
+/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/input/index.js");
+/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/tag/index.js");
+/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/form/index.js");
+/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/modal/index.js");
+/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/space/index.js");
+/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/badge/index.js");
+/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/card/index.js");
+/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/tooltip/index.js");
+/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/checkbox/index.js");
+/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/avatar/index.js");
+/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/divider/index.js");
+/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_44__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/button/index.js");
+/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_46__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/row/index.js");
+/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_47__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/col/index.js");
+/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_49__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/statistic/index.js");
+/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_50__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/list/index.js");
+/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_51__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/table/index.js");
+/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_52__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/message/index.js");
+/* harmony import */ var _ant_design_icons__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! @ant-design/icons */ "./node_modules/@ant-design/icons/es/icons/CheckCircleOutlined.js");
+/* harmony import */ var _ant_design_icons__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! @ant-design/icons */ "./node_modules/@ant-design/icons/es/icons/ClockCircleOutlined.js");
+/* harmony import */ var _ant_design_icons__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! @ant-design/icons */ "./node_modules/@ant-design/icons/es/icons/StopOutlined.js");
+/* harmony import */ var _ant_design_icons__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! @ant-design/icons */ "./node_modules/@ant-design/icons/es/icons/CloseCircleOutlined.js");
+/* harmony import */ var _ant_design_icons__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! @ant-design/icons */ "./node_modules/@ant-design/icons/es/icons/UserOutlined.js");
+/* harmony import */ var _ant_design_icons__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! @ant-design/icons */ "./node_modules/@ant-design/icons/es/icons/ExclamationCircleOutlined.js");
+/* harmony import */ var _ant_design_icons__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! @ant-design/icons */ "./node_modules/@ant-design/icons/es/icons/EyeOutlined.js");
+/* harmony import */ var _ant_design_icons__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! @ant-design/icons */ "./node_modules/@ant-design/icons/es/icons/EditOutlined.js");
+/* harmony import */ var _ant_design_icons__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! @ant-design/icons */ "./node_modules/@ant-design/icons/es/icons/TeamOutlined.js");
+/* harmony import */ var _ant_design_icons__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! @ant-design/icons */ "./node_modules/@ant-design/icons/es/icons/EnvironmentOutlined.js");
+/* harmony import */ var _ant_design_icons__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! @ant-design/icons */ "./node_modules/@ant-design/icons/es/icons/DollarOutlined.js");
+/* harmony import */ var _ant_design_icons__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! @ant-design/icons */ "./node_modules/@ant-design/icons/es/icons/CalendarOutlined.js");
+/* harmony import */ var _ant_design_icons__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(/*! @ant-design/icons */ "./node_modules/@ant-design/icons/es/icons/StarOutlined.js");
+/* harmony import */ var _ant_design_icons__WEBPACK_IMPORTED_MODULE_41__ = __webpack_require__(/*! @ant-design/icons */ "./node_modules/@ant-design/icons/es/icons/UnorderedListOutlined.js");
+/* harmony import */ var _ant_design_icons__WEBPACK_IMPORTED_MODULE_42__ = __webpack_require__(/*! @ant-design/icons */ "./node_modules/@ant-design/icons/es/icons/BellOutlined.js");
+/* harmony import */ var _ant_design_icons__WEBPACK_IMPORTED_MODULE_43__ = __webpack_require__(/*! @ant-design/icons */ "./node_modules/@ant-design/icons/es/icons/FolderOutlined.js");
+/* harmony import */ var _ant_design_icons__WEBPACK_IMPORTED_MODULE_45__ = __webpack_require__(/*! @ant-design/icons */ "./node_modules/@ant-design/icons/es/icons/PrinterOutlined.js");
+/* harmony import */ var _ant_design_icons__WEBPACK_IMPORTED_MODULE_48__ = __webpack_require__(/*! @ant-design/icons */ "./node_modules/@ant-design/icons/es/icons/SearchOutlined.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _AlumniList_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./AlumniList.css */ "./resources/js/pages/admin/alumni/AlumniList.css");
+/* harmony import */ var _components__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ~/components */ "./resources/js/components/index.js");
+/* harmony import */ var _hooks_useAlumni__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ~/hooks/useAlumni */ "./resources/js/hooks/useAlumni.js");
+/* harmony import */ var _hooks_useAlumniDirectory__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ~/hooks/useAlumniDirectory */ "./resources/js/hooks/useAlumniDirectory.js");
+/* harmony import */ var _hooks_useEmployeeStatus__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ~/hooks/useEmployeeStatus */ "./resources/js/hooks/useEmployeeStatus.js");
+/* harmony import */ var _hooks_useQuizResult__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ~/hooks/useQuizResult */ "./resources/js/hooks/useQuizResult.js");
+/* harmony import */ var _utils_axiosConfig__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ~/utils/axiosConfig */ "./resources/js/utils/axiosConfig.js");
+/* harmony import */ var _utils_constant__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ~/utils/constant */ "./resources/js/utils/constant.js");
+/* harmony import */ var react_secure_storage__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! react-secure-storage */ "./node_modules/react-secure-storage/dist/index.js");
+/* harmony import */ var _assets_images_OCC_LOGO_png__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ~/assets/images/OCC_LOGO.png */ "./resources/js/assets/images/OCC_LOGO.png");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
 "use client";
 
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
@@ -126414,12 +126474,13 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
 
 
 
-var Title = antd__WEBPACK_IMPORTED_MODULE_13__["default"].Title,
-  Text = antd__WEBPACK_IMPORTED_MODULE_13__["default"].Text,
-  Paragraph = antd__WEBPACK_IMPORTED_MODULE_13__["default"].Paragraph;
-var Option = antd__WEBPACK_IMPORTED_MODULE_14__["default"].Option;
-var TabPane = antd__WEBPACK_IMPORTED_MODULE_15__["default"].TabPane;
-var TextArea = antd__WEBPACK_IMPORTED_MODULE_16__["default"].TextArea;
+
+var Title = antd__WEBPACK_IMPORTED_MODULE_14__["default"].Title,
+  Text = antd__WEBPACK_IMPORTED_MODULE_14__["default"].Text,
+  Paragraph = antd__WEBPACK_IMPORTED_MODULE_14__["default"].Paragraph;
+var Option = antd__WEBPACK_IMPORTED_MODULE_15__["default"].Option;
+var TabPane = antd__WEBPACK_IMPORTED_MODULE_16__["default"].TabPane;
+var TextArea = antd__WEBPACK_IMPORTED_MODULE_17__["default"].TextArea;
 var statusColors = {
   Employed: "green",
   Unemployed: "red",
@@ -126519,31 +126580,31 @@ var courseFolders = [{
 var getStatusIcon = function getStatusIcon(status) {
   switch (status) {
     case "approved":
-      return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_17__["default"], {
+      return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_18__["default"], {
         style: {
           color: "#52c41a"
         }
       });
     case "pending":
-      return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_18__["default"], {
+      return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_19__["default"], {
         style: {
           color: "#faad14"
         }
       });
     case "inactive":
-      return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_19__["default"], {
+      return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_20__["default"], {
         style: {
           color: "#ff4d4f"
         }
       });
     case "rejected":
-      return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_20__["default"], {
+      return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_21__["default"], {
         style: {
           color: "#ff4d4f"
         }
       });
     default:
-      return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_21__["default"], {});
+      return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_22__["default"], {});
   }
 };
 var getEmploymentStatusTag = function getEmploymentStatusTag(status) {
@@ -126551,17 +126612,17 @@ var getEmploymentStatusTag = function getEmploymentStatusTag(status) {
     Employed: {
       color: "green",
       text: "Employed",
-      icon: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_17__["default"], {})
+      icon: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_18__["default"], {})
     },
     Unemployed: {
       color: "red",
       text: "Seeking Work",
-      icon: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_18__["default"], {})
+      icon: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_19__["default"], {})
     },
     "Under Employed": {
       color: "orange",
       text: "Under Employed",
-      icon: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_22__["default"], {})
+      icon: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_23__["default"], {})
     }
   };
 
@@ -126573,9 +126634,9 @@ var getEmploymentStatusTag = function getEmploymentStatusTag(status) {
   // apart from a loading glitch. Show an explicit "Not Set" tag instead
   // so it's clear the value is genuinely unset, not a display bug.
   if (!status) {
-    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_23__["default"], {
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_24__["default"], {
       color: "default",
-      icon: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_22__["default"], {}),
+      icon: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_23__["default"], {}),
       children: "Not Set"
     });
   }
@@ -126583,15 +126644,15 @@ var getEmploymentStatusTag = function getEmploymentStatusTag(status) {
     color: "default",
     text: status
   };
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_23__["default"], {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_24__["default"], {
     color: statusConfig.color,
     icon: statusConfig.icon,
     children: statusConfig.text
   });
 };
 var getLastActiveStatus = function getLastActiveStatus(lastActive, isOnline) {
-  var now = moment__WEBPACK_IMPORTED_MODULE_1___default()();
-  var lastActiveTime = lastActive ? moment__WEBPACK_IMPORTED_MODULE_1___default()(lastActive) : null;
+  var now = moment__WEBPACK_IMPORTED_MODULE_2___default()();
+  var lastActiveTime = lastActive ? moment__WEBPACK_IMPORTED_MODULE_2___default()(lastActive) : null;
 
   // Grace period: heartbeat fires every 2 min, so we allow up to 5 min
   // before treating a stale is_online flag as unreliable.
@@ -126649,14 +126710,14 @@ var LastActiveIndicator = function LastActiveIndicator(_ref) {
   var lastActive = _ref.lastActive,
     isOnline = _ref.isOnline;
   var statusInfo = getLastActiveStatus(lastActive, isOnline);
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("div", {
     className: "last-active-indicator",
     style: {
       display: 'flex',
       alignItems: 'center',
       gap: '8px'
     },
-    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("span", {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)("span", {
       className: "status-dot",
       style: {
         width: '10px',
@@ -126667,7 +126728,7 @@ var LastActiveIndicator = function LastActiveIndicator(_ref) {
         boxShadow: statusInfo.status === 'active' ? "0 0 8px ".concat(statusInfo.dotColor, ", 0 0 12px ").concat(statusInfo.dotColor) : 'none',
         animation: statusInfo.status === 'active' ? 'pulse-green 2s infinite' : 'none'
       }
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(Text, {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(Text, {
       type: "secondary",
       style: {
         color: statusInfo.color,
@@ -126688,7 +126749,7 @@ var StatusUpdateModal = function StatusUpdateModal(_ref2) {
     alumnus = _ref2.alumnus,
     loading = _ref2.loading,
     statuses = _ref2.statuses;
-  var _Form$useForm = antd__WEBPACK_IMPORTED_MODULE_24__["default"].useForm(),
+  var _Form$useForm = antd__WEBPACK_IMPORTED_MODULE_25__["default"].useForm(),
     _Form$useForm2 = _slicedToArray(_Form$useForm, 1),
     form = _Form$useForm2[0];
   var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)("pending"),
@@ -126725,47 +126786,47 @@ var StatusUpdateModal = function StatusUpdateModal(_ref2) {
     };
     return descriptions[status] || "";
   };
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_25__["default"], {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_26__["default"], {
     title: "Update Status - ".concat((_alumnus$first_name = alumnus === null || alumnus === void 0 ? void 0 : alumnus.first_name) !== null && _alumnus$first_name !== void 0 ? _alumnus$first_name : "", " ").concat((_alumnus$last_name = alumnus === null || alumnus === void 0 ? void 0 : alumnus.last_name) !== null && _alumnus$last_name !== void 0 ? _alumnus$last_name : ""),
     open: visible,
     onCancel: handleClose,
     onOk: handleSubmit,
     confirmLoading: loading,
     width: 600,
-    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_24__["default"], {
+    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_25__["default"], {
       form: form,
       layout: "vertical",
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_24__["default"].Item, {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_25__["default"].Item, {
         label: "New Status",
         name: "status",
         rules: [{
           required: true,
           message: "Please select a status"
         }],
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_14__["default"], {
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_15__["default"], {
           onChange: setSelectedStatus,
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(Option, {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(Option, {
             value: "approved",
-            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_26__["default"], {
-              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_17__["default"], {
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_27__["default"], {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_18__["default"], {
                 style: {
                   color: "#52c41a"
                 }
               }), "Approved"]
             })
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(Option, {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(Option, {
             value: "pending",
-            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_26__["default"], {
-              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_18__["default"], {
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_27__["default"], {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_19__["default"], {
                 style: {
                   color: "#faad14"
                 }
               }), "Pending Review"]
             })
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(Option, {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(Option, {
             value: "rejected",
-            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_26__["default"], {
-              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_20__["default"], {
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_27__["default"], {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_21__["default"], {
                 style: {
                   color: "#ff4d4f"
                 }
@@ -126773,41 +126834,41 @@ var StatusUpdateModal = function StatusUpdateModal(_ref2) {
             })
           })]
         })
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_24__["default"].Item, {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_25__["default"].Item, {
         name: "employment_status_id",
         label: "Current Employment Status",
         rules: [{
           required: true,
           message: "Please select employment status"
         }],
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_14__["default"], {
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_15__["default"], {
           placeholder: "Select employment status",
           children: statuses === null || statuses === void 0 ? void 0 : statuses.map(function (status) {
-            return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(Option, {
+            return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(Option, {
               value: status.id,
               children: status.status_name
             }, status.id);
           })
         })
-      }), selectedStatus && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("div", {
+      }), selectedStatus && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)("div", {
         style: {
           padding: "12px",
           backgroundColor: "#f5f5f5",
           borderRadius: "6px",
           marginBottom: "16px"
         },
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(Text, {
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(Text, {
           type: "secondary",
           children: getStatusDescription(selectedStatus)
         })
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_24__["default"].Item, {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_25__["default"].Item, {
         label: "Admin Notes",
         name: "admin_notes",
         rules: [{
           required: true,
           message: "Please provide notes for this status change"
         }],
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(TextArea, {
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(TextArea, {
           rows: 4,
           maxLength: 500,
           showCount: true,
@@ -126826,7 +126887,7 @@ var BulkStatusUpdateModal = function BulkStatusUpdateModal(_ref3) {
     selectedAlumni = _ref3.selectedAlumni,
     loading = _ref3.loading,
     statuses = _ref3.statuses;
-  var _Form$useForm3 = antd__WEBPACK_IMPORTED_MODULE_24__["default"].useForm(),
+  var _Form$useForm3 = antd__WEBPACK_IMPORTED_MODULE_25__["default"].useForm(),
     _Form$useForm4 = _slicedToArray(_Form$useForm3, 1),
     form = _Form$useForm4[0];
   var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)("pending"),
@@ -126863,21 +126924,21 @@ var BulkStatusUpdateModal = function BulkStatusUpdateModal(_ref3) {
     };
     return descriptions[status] || "";
   };
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_25__["default"], {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_26__["default"], {
     title: "Bulk Update Status - ".concat(selectedAlumni.length, " Alumni Selected"),
     open: visible,
     onCancel: handleClose,
     onOk: handleSubmit,
     confirmLoading: loading,
     width: 600,
-    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("div", {
       style: {
         marginBottom: 16
       },
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(Text, {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(Text, {
         strong: true,
         children: "Selected Alumni:"
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("div", {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)("div", {
         style: {
           maxHeight: 100,
           overflowY: 'auto',
@@ -126887,7 +126948,7 @@ var BulkStatusUpdateModal = function BulkStatusUpdateModal(_ref3) {
           borderRadius: 6
         },
         children: selectedAlumni.map(function (alumnus, index) {
-          return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_23__["default"], {
+          return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_24__["default"], {
             style: {
               marginBottom: 4
             },
@@ -126895,40 +126956,40 @@ var BulkStatusUpdateModal = function BulkStatusUpdateModal(_ref3) {
           }, alumnus.id);
         })
       })]
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_24__["default"], {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_25__["default"], {
       form: form,
       layout: "vertical",
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_24__["default"].Item, {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_25__["default"].Item, {
         label: "New Status",
         name: "status",
         rules: [{
           required: true,
           message: "Please select a status"
         }],
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_14__["default"], {
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_15__["default"], {
           onChange: setSelectedStatus,
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(Option, {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(Option, {
             value: "approved",
-            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_26__["default"], {
-              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_17__["default"], {
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_27__["default"], {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_18__["default"], {
                 style: {
                   color: "#52c41a"
                 }
               }), "Approved"]
             })
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(Option, {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(Option, {
             value: "pending",
-            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_26__["default"], {
-              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_18__["default"], {
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_27__["default"], {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_19__["default"], {
                 style: {
                   color: "#faad14"
                 }
               }), "Pending Review"]
             })
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(Option, {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(Option, {
             value: "rejected",
-            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_26__["default"], {
-              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_20__["default"], {
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_27__["default"], {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_21__["default"], {
                 style: {
                   color: "#ff4d4f"
                 }
@@ -126936,41 +126997,41 @@ var BulkStatusUpdateModal = function BulkStatusUpdateModal(_ref3) {
             })
           })]
         })
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_24__["default"].Item, {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_25__["default"].Item, {
         name: "employment_status_id",
         label: "Current Employment Status",
         rules: [{
           required: true,
           message: "Please select employment status"
         }],
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_14__["default"], {
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_15__["default"], {
           placeholder: "Select employment status",
           children: statuses === null || statuses === void 0 ? void 0 : statuses.map(function (status) {
-            return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(Option, {
+            return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(Option, {
               value: status.id,
               children: status.status_name
             }, status.id);
           })
         })
-      }), selectedStatus && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("div", {
+      }), selectedStatus && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)("div", {
         style: {
           padding: "12px",
           backgroundColor: "#f5f5f5",
           borderRadius: "6px",
           marginBottom: "16px"
         },
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(Text, {
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(Text, {
           type: "secondary",
           children: getStatusDescription(selectedStatus)
         })
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_24__["default"].Item, {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_25__["default"].Item, {
         label: "Admin Notes",
         name: "admin_notes",
         rules: [{
           required: true,
           message: "Please provide notes for this status change"
         }],
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(TextArea, {
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(TextArea, {
           rows: 4,
           maxLength: 500,
           showCount: true,
@@ -127009,109 +127070,109 @@ var AlumniCard = function AlumniCard(_ref4) {
     isSelectable = _ref4.isSelectable,
     isSelected = _ref4.isSelected,
     onSelectChange = _ref4.onSelectChange;
-  var role = react_secure_storage__WEBPACK_IMPORTED_MODULE_10__["default"].getItem("userRole");
+  var role = react_secure_storage__WEBPACK_IMPORTED_MODULE_11__["default"].getItem("userRole");
   var isTouchDevice = useIsTouchDevice();
   var isRecentlyUpdated = (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(function () {
     if (!alumnus.updated_at) return false;
-    var updated = moment__WEBPACK_IMPORTED_MODULE_1___default()(alumnus.updated_at);
-    var now = moment__WEBPACK_IMPORTED_MODULE_1___default()();
+    var updated = moment__WEBPACK_IMPORTED_MODULE_2___default()(alumnus.updated_at);
+    var now = moment__WEBPACK_IMPORTED_MODULE_2___default()();
     return now.diff(updated, "seconds") < 30 && alumnus.created_at !== alumnus.updated_at;
   }, [alumnus.updated_at, alumnus.created_at]);
   var handleCheckboxChange = function handleCheckboxChange(e) {
     e.stopPropagation();
     onSelectChange(alumnus.id, e.target.checked);
   };
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_27__["default"].Ribbon, {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_28__["default"].Ribbon, {
     text: "Featured",
     color: "red",
     style: {
       display: alumnus.isFeatured ? "block" : "none"
     },
-    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_28__["default"], {
+    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_29__["default"], {
       className: "alumni-card ".concat(isSelected ? 'alumni-card-selected' : ''),
-      actions: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_29__["default"], {
+      actions: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_30__["default"], {
         onClick: function onClick() {
           return handleView(alumnus);
         },
         title: "View Profile",
         trigger: isTouchDevice ? [] : ["hover"],
         open: isTouchDevice ? false : undefined,
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_30__["default"], {})
-      }, "view")].concat(_toConsumableArray(role === "admin" ? [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_29__["default"], {
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_31__["default"], {})
+      }, "view")].concat(_toConsumableArray(role === "admin" ? [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_30__["default"], {
         title: "Edit Status",
         onClick: function onClick() {
           return handleStatusUpdate(alumnus, "approved");
         },
         trigger: isTouchDevice ? [] : ["hover"],
         open: isTouchDevice ? false : undefined,
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_31__["default"], {})
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_32__["default"], {})
       }, "edit")] : [])),
-      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("div", {
         className: "alumni-card-content",
-        children: [isSelectable && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("div", {
+        children: [isSelectable && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)("div", {
           className: "alumni-card-checkbox",
           onClick: function onClick(e) {
             return e.stopPropagation();
           },
-          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_32__["default"], {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_33__["default"], {
             checked: isSelected,
             onChange: handleCheckboxChange
           })
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("div", {
           className: "alumni-header",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_33__["default"], {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_34__["default"], {
             size: 64,
             src: alumnus.profile_image_url
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("div", {
             className: "alumni-basic-info",
-            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(Title, {
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)(Title, {
               level: 4,
               className: "alumni-name",
               children: [alumnus.first_name, " ", alumnus.last_name, getStatusIcon(alumnus.status)]
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(Text, {
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)(Text, {
               type: "secondary",
               children: [alumnus.major, " \u2022 Class of ", alumnus.graduation_year]
             })]
           })]
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_34__["default"], {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_35__["default"], {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("div", {
           className: "alumni-details",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("div", {
             className: "detail-item-alumini",
-            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_35__["default"], {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(Text, {
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_36__["default"], {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(Text, {
               strong: true,
               children: "Employment:"
             }), getEmploymentStatusTag(alumnus === null || alumnus === void 0 || (_alumnus$employment_s = alumnus.employment_status) === null || _alumnus$employment_s === void 0 ? void 0 : _alumnus$employment_s.status_name)]
-          }), alumnus.currentCompany && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+          }), alumnus.currentCompany && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("div", {
             className: "detail-item-alumini",
-            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_21__["default"], {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(Text, {
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_22__["default"], {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(Text, {
               children: alumnus.currentCompany
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(Text, {
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)(Text, {
               type: "secondary",
               children: ["\u2022 ", alumnus.position]
             })]
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("div", {
             className: "detail-item-alumini",
-            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_36__["default"], {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(Text, {
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_37__["default"], {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(Text, {
               children: alumnus.address
             })]
-          }), alumnus.salary && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+          }), alumnus.salary && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("div", {
             className: "detail-item-alumini",
-            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_37__["default"], {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(Text, {
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_38__["default"], {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)(Text, {
               strong: true,
               children: ["$", alumnus.salary.toLocaleString()]
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(Text, {
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(Text, {
               type: "secondary",
               children: "/year"
             })]
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("div", {
             className: "detail-item-alumini",
-            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_38__["default"], {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(LastActiveIndicator, {
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_39__["default"], {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(LastActiveIndicator, {
               lastActive: alumnus.last_active || alumnus.lastActive || null,
               isOnline: alumnus.is_online || false
             })]
-          }), role === "admin" && alumnus.admin_notes && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+          }), role === "admin" && alumnus.admin_notes && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("div", {
             className: "detail-item-alumini",
-            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_22__["default"], {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(Text, {
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_23__["default"], {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)(Text, {
               type: "secondary",
               style: {
                 fontStyle: "italic"
@@ -127119,18 +127180,18 @@ var AlumniCard = function AlumniCard(_ref4) {
               children: ["Note: ", alumnus.admin_notes]
             })]
           })]
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("div", {
           className: "alumni-skills",
           children: [Array.isArray(alumnus === null || alumnus === void 0 ? void 0 : alumnus.technical_skills) && (alumnus === null || alumnus === void 0 || (_alumnus$technical_sk = alumnus.technical_skills) === null || _alumnus$technical_sk === void 0 ? void 0 : _alumnus$technical_sk.slice(0, 4).map(function (skill) {
-            return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_23__["default"], {
+            return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_24__["default"], {
               className: "skill-tag",
               children: skill
             }, skill);
-          })), Array.isArray(alumnus === null || alumnus === void 0 ? void 0 : alumnus.technical_skills) && (alumnus === null || alumnus === void 0 ? void 0 : alumnus.technical_skills.length) > 4 && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_23__["default"], {
+          })), Array.isArray(alumnus === null || alumnus === void 0 ? void 0 : alumnus.technical_skills) && (alumnus === null || alumnus === void 0 ? void 0 : alumnus.technical_skills.length) > 4 && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_24__["default"], {
             className: "skill-tag",
             children: ["+", (alumnus === null || alumnus === void 0 ? void 0 : alumnus.technical_skills.length) - 4, " more"]
           })]
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(Paragraph, {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(Paragraph, {
           ellipsis: {
             rows: 2
           },
@@ -127165,7 +127226,7 @@ var getAlumniQuizStatus = function getAlumniQuizStatus(alumnus, quizResults) {
       label: type === "abcd" ? "ABCD Quiz" : type === "rate" ? "Rating Quiz" : type,
       taken: takenTypes.includes(type),
       color: takenTypes.includes(type) ? "green" : "orange",
-      icon: type === "rate" ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_39__["default"], {}) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_40__["default"], {})
+      icon: type === "rate" ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_40__["default"], {}) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_41__["default"], {})
     };
   });
 };
@@ -127177,7 +127238,7 @@ var NewRegisteredCard = function NewRegisteredCard(_ref5) {
     handleView = _ref5.handleView,
     handleStatusUpdate = _ref5.handleStatusUpdate,
     quizResults = _ref5.quizResults;
-  var role = react_secure_storage__WEBPACK_IMPORTED_MODULE_10__["default"].getItem("userRole");
+  var role = react_secure_storage__WEBPACK_IMPORTED_MODULE_11__["default"].getItem("userRole");
   var isTouchDevice = useIsTouchDevice();
   var quizStatuses = getAlumniQuizStatus(alumnus, quizResults);
 
@@ -127185,46 +127246,46 @@ var NewRegisteredCard = function NewRegisteredCard(_ref5) {
   // Example: registered today at 1:00 PM → badge disappears tomorrow at 1:00 PM.
   var showNewBadge = (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(function () {
     if (!alumnus.created_at) return false;
-    var created = moment__WEBPACK_IMPORTED_MODULE_1___default()(alumnus.created_at);
+    var created = moment__WEBPACK_IMPORTED_MODULE_2___default()(alumnus.created_at);
     if (!created.isValid()) return false;
-    return moment__WEBPACK_IMPORTED_MODULE_1___default()().diff(created, "hours", true) < 24;
+    return moment__WEBPACK_IMPORTED_MODULE_2___default()().diff(created, "hours", true) < 24;
   }, [alumnus.created_at]);
-  var CardInner = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_28__["default"], {
+  var CardInner = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_29__["default"], {
     className: "alumni-card new-registered-card",
-    actions: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_29__["default"], {
+    actions: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_30__["default"], {
       onClick: function onClick() {
         return handleView(alumnus);
       },
       title: "View Profile",
       trigger: isTouchDevice ? [] : ["hover"],
       open: isTouchDevice ? false : undefined,
-      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_30__["default"], {})
-    }, "view")].concat(_toConsumableArray(role === "admin" ? [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_29__["default"], {
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_31__["default"], {})
+    }, "view")].concat(_toConsumableArray(role === "admin" ? [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_30__["default"], {
       title: "Edit Status",
       onClick: function onClick() {
         return handleStatusUpdate(alumnus, "approved");
       },
       trigger: isTouchDevice ? [] : ["hover"],
       open: isTouchDevice ? false : undefined,
-      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_31__["default"], {})
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_32__["default"], {})
     }, "edit")] : [])),
-    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("div", {
       className: "alumni-card-content",
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("div", {
         className: "alumni-header",
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_33__["default"], {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_34__["default"], {
           size: 56,
           src: alumnus.profile_image_url
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("div", {
           className: "alumni-basic-info",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(Title, {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)(Title, {
             level: 5,
             className: "alumni-name",
             style: {
               marginBottom: 2
             },
             children: [alumnus.first_name, " ", alumnus.last_name, getStatusIcon(alumnus.status)]
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(Text, {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)(Text, {
             type: "secondary",
             style: {
               fontSize: 12
@@ -127232,16 +127293,16 @@ var NewRegisteredCard = function NewRegisteredCard(_ref5) {
             children: [alumnus.major, " \u2022 ", alumnus.graduation_year]
           })]
         })]
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_34__["default"], {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_35__["default"], {
         style: {
           margin: "8px 0"
         }
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("div", {
         className: "nr-quiz-status",
         style: {
           marginBottom: 8
         },
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(Text, {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(Text, {
           strong: true,
           style: {
             fontSize: 11,
@@ -127249,75 +127310,75 @@ var NewRegisteredCard = function NewRegisteredCard(_ref5) {
             marginBottom: 5
           },
           children: "Quiz Status:"
-        }), quizStatuses.length === 0 ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_23__["default"], {
+        }), quizStatuses.length === 0 ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_24__["default"], {
           color: "default",
           style: {
             fontSize: 11
           },
           children: "No quizzes available"
-        }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_26__["default"], {
+        }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_27__["default"], {
           wrap: true,
           size: [4, 4],
           children: quizStatuses.map(function (qs) {
-            return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_29__["default"], {
+            return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_30__["default"], {
               title: qs.taken ? "".concat(qs.label, " completed") : "".concat(qs.label, " not taken"),
               trigger: isTouchDevice ? [] : ["hover"],
               open: isTouchDevice ? false : undefined,
-              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_23__["default"], {
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_24__["default"], {
                 color: qs.taken ? "green" : "orange",
                 icon: qs.icon,
                 style: {
                   fontSize: 11,
                   margin: 0
                 },
-                children: [qs.label, ": ", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("strong", {
+                children: [qs.label, ": ", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)("strong", {
                   children: qs.taken ? "Completed ✓" : "Not Taken"
                 })]
               })
             }, qs.type);
           })
         })]
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_34__["default"], {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_35__["default"], {
         style: {
           margin: "8px 0"
         }
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("div", {
         className: "alumni-details",
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("div", {
           className: "detail-item-alumini",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_35__["default"], {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(Text, {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_36__["default"], {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(Text, {
             strong: true,
             style: {
               fontSize: 12
             },
             children: "Employment:"
           }), getEmploymentStatusTag(alumnus === null || alumnus === void 0 || (_alumnus$employment_s2 = alumnus.employment_status) === null || _alumnus$employment_s2 === void 0 ? void 0 : _alumnus$employment_s2.status_name)]
-        }), alumnus.address && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+        }), alumnus.address && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("div", {
           className: "detail-item-alumini",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_36__["default"], {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(Text, {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_37__["default"], {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(Text, {
             style: {
               fontSize: 12
             },
             children: alumnus.address
           })]
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("div", {
           className: "detail-item-alumini",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_38__["default"], {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(LastActiveIndicator, {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_39__["default"], {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(LastActiveIndicator, {
             lastActive: alumnus.last_active || alumnus.lastActive || null,
             isOnline: alumnus.is_online || false
           })]
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("div", {
           className: "detail-item-alumini",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_18__["default"], {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(Text, {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_19__["default"], {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)(Text, {
             type: "secondary",
             style: {
               fontSize: 12
             },
-            children: ["Registered: ", alumnus.created_at ? moment__WEBPACK_IMPORTED_MODULE_1___default()(alumnus.created_at).fromNow() : "N/A"]
+            children: ["Registered: ", alumnus.created_at ? moment__WEBPACK_IMPORTED_MODULE_2___default()(alumnus.created_at).fromNow() : "N/A"]
           })]
-        }), role === "admin" && alumnus.admin_notes && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+        }), role === "admin" && alumnus.admin_notes && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("div", {
           className: "detail-item-alumini",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_22__["default"], {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(Text, {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_23__["default"], {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)(Text, {
             type: "secondary",
             style: {
               fontStyle: "italic",
@@ -127326,7 +127387,7 @@ var NewRegisteredCard = function NewRegisteredCard(_ref5) {
             children: ["Note: ", alumnus.admin_notes]
           })]
         })]
-      }), alumnus.bio && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(Paragraph, {
+      }), alumnus.bio && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(Paragraph, {
         ellipsis: {
           rows: 2
         },
@@ -127338,14 +127399,14 @@ var NewRegisteredCard = function NewRegisteredCard(_ref5) {
   if (!showNewBadge) {
     return CardInner;
   }
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_27__["default"].Ribbon, {
-    text: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("span", {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_28__["default"].Ribbon, {
+    text: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("span", {
       style: {
         fontSize: 11,
         fontWeight: 700,
         letterSpacing: 0.3
       },
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_41__["default"], {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_42__["default"], {
         style: {
           marginRight: 4
         }
@@ -127417,42 +127478,42 @@ var CourseFolderModal = function CourseFolderModal(_ref6) {
       window.print();
     }, 100);
   };
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.Fragment, {
-    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_25__["default"], {
-      title: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_26__["default"], {
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_42__["default"], {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.Fragment, {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_26__["default"], {
+      title: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_27__["default"], {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_43__["default"], {
           style: {
             color: course.color
           }
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("span", {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("span", {
           children: [course.code, " - ", course.name]
         })]
       }),
       open: visible,
       onCancel: onCancel,
       width: 1200,
-      footer: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_43__["default"], {
+      footer: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_44__["default"], {
         type: "primary",
-        icon: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_44__["default"], {}),
+        icon: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_45__["default"], {}),
         onClick: handlePrint,
         children: "Print Preview"
-      }, "print"), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_43__["default"], {
+      }, "print"), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_44__["default"], {
         onClick: onCancel,
         children: "Close"
       }, "close")],
-      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_26__["default"], {
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_27__["default"], {
         direction: "vertical",
         style: {
           width: "100%"
         },
         size: "large",
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_45__["default"], {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_46__["default"], {
           gutter: 16,
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_46__["default"], {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_47__["default"], {
             span: 12,
-            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_16__["default"], {
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_17__["default"], {
               placeholder: "Search alumni by name...",
-              prefix: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_47__["default"], {}),
+              prefix: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_48__["default"], {}),
               value: folderSearch,
               onChange: function onChange(e) {
                 return setFolderSearch(e.target.value);
@@ -127460,9 +127521,9 @@ var CourseFolderModal = function CourseFolderModal(_ref6) {
               size: "large",
               allowClear: true
             })
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_46__["default"], {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_47__["default"], {
             span: 12,
-            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_14__["default"], {
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_15__["default"], {
               value: folderEmploymentFilter,
               onChange: setFolderEmploymentFilter,
               style: {
@@ -127470,46 +127531,46 @@ var CourseFolderModal = function CourseFolderModal(_ref6) {
               },
               size: "large",
               placeholder: "Employment Status",
-              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(Option, {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(Option, {
                 value: "all",
-                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_23__["default"], {
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_24__["default"], {
                   color: "default",
                   children: "All Employment"
                 })
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(Option, {
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(Option, {
                 value: "employed",
-                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_23__["default"], {
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_24__["default"], {
                   color: "green",
                   children: "Employed"
                 })
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(Option, {
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(Option, {
                 value: "unemployed",
-                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_23__["default"], {
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_24__["default"], {
                   color: "red",
                   children: "Unemployed"
                 })
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(Option, {
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(Option, {
                 value: "under_employed",
-                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_23__["default"], {
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_24__["default"], {
                   color: "orange",
                   children: "Under Employed"
                 })
               })]
             })
           })]
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_28__["default"], {
-          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_45__["default"], {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_29__["default"], {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_46__["default"], {
             gutter: 16,
-            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_46__["default"], {
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_47__["default"], {
               span: 6,
-              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_48__["default"], {
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_49__["default"], {
                 title: "Total Alumni",
                 value: filteredCourseAlumni.length,
-                prefix: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_35__["default"], {})
+                prefix: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_36__["default"], {})
               })
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_46__["default"], {
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_47__["default"], {
               span: 6,
-              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_48__["default"], {
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_49__["default"], {
                 title: "Employed",
                 value: filteredCourseAlumni.filter(function (a) {
                   return a.employment_status_id === 1;
@@ -127518,9 +127579,9 @@ var CourseFolderModal = function CourseFolderModal(_ref6) {
                   color: "#52c41a"
                 }
               })
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_46__["default"], {
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_47__["default"], {
               span: 6,
-              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_48__["default"], {
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_49__["default"], {
                 title: "Unemployed",
                 value: filteredCourseAlumni.filter(function (a) {
                   return a.employment_status_id === 2;
@@ -127529,9 +127590,9 @@ var CourseFolderModal = function CourseFolderModal(_ref6) {
                   color: "#ff4d4f"
                 }
               })
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_46__["default"], {
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_47__["default"], {
               span: 6,
-              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_48__["default"], {
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_49__["default"], {
                 title: "Under Employed",
                 value: filteredCourseAlumni.filter(function (a) {
                   return a.employment_status_id === 3;
@@ -127542,55 +127603,55 @@ var CourseFolderModal = function CourseFolderModal(_ref6) {
               })
             })]
           })
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("div", {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)("div", {
           style: {
             maxHeight: "500px",
             overflowY: "auto"
           },
-          children: filteredCourseAlumni.length === 0 ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_28__["default"], {
-            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+          children: filteredCourseAlumni.length === 0 ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_29__["default"], {
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("div", {
               style: {
                 textAlign: "center",
                 padding: "40px 0"
               },
-              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(Title, {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(Title, {
                 level: 4,
                 children: "No alumni found"
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(Text, {
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(Text, {
                 type: "secondary",
                 children: "No alumni match your search criteria for this course"
               })]
             })
-          }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_49__["default"], {
+          }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_50__["default"], {
             dataSource: filteredCourseAlumni,
             renderItem: function renderItem(alumnus) {
               var _alumnus$employment_s3;
-              return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_49__["default"].Item, {
-                actions: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_43__["default"], {
+              return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_50__["default"].Item, {
+                actions: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_44__["default"], {
                   type: "link",
-                  icon: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_30__["default"], {}),
+                  icon: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_31__["default"], {}),
                   onClick: function onClick() {
                     return handleView(alumnus);
                   },
                   children: "View"
                 }, "view")],
-                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_49__["default"].Item.Meta, {
-                  avatar: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_33__["default"], {
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_50__["default"].Item.Meta, {
+                  avatar: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_34__["default"], {
                     size: 50,
                     src: alumnus.profile_image_url
                   }),
-                  title: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_26__["default"], {
-                    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("span", {
+                  title: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_27__["default"], {
+                    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("span", {
                       children: [alumnus.first_name, " ", alumnus.last_name]
                     }), getStatusIcon(alumnus.status)]
                   }),
-                  description: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_26__["default"], {
+                  description: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_27__["default"], {
                     direction: "vertical",
                     size: "small",
-                    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(Text, {
+                    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)(Text, {
                       type: "secondary",
                       children: ["Class of ", alumnus.graduation_year]
-                    }), getEmploymentStatusTag(alumnus === null || alumnus === void 0 || (_alumnus$employment_s3 = alumnus.employment_status) === null || _alumnus$employment_s3 === void 0 ? void 0 : _alumnus$employment_s3.status_name), alumnus.current_company && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(Text, {
+                    }), getEmploymentStatusTag(alumnus === null || alumnus === void 0 || (_alumnus$employment_s3 = alumnus.employment_status) === null || _alumnus$employment_s3 === void 0 ? void 0 : _alumnus$employment_s3.status_name), alumnus.current_company && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)(Text, {
                       children: [alumnus.job_title, " at ", alumnus.current_company]
                     })]
                   })
@@ -127600,7 +127661,7 @@ var CourseFolderModal = function CourseFolderModal(_ref6) {
           })
         })]
       })
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_25__["default"], {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_26__["default"], {
       title: "Print Preview - A4 Layout",
       open: printPreviewVisible,
       onCancel: function onCancel() {
@@ -127609,18 +127670,18 @@ var CourseFolderModal = function CourseFolderModal(_ref6) {
       width: 900,
       wrapClassName: "print-preview-modal",
       className: "print-preview-modal",
-      footer: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_43__["default"], {
+      footer: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_44__["default"], {
         onClick: function onClick() {
           return setPrintPreviewVisible(false);
         },
         children: "Cancel"
-      }, "cancel"), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_43__["default"], {
+      }, "cancel"), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_44__["default"], {
         type: "primary",
-        icon: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_44__["default"], {}),
+        icon: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_45__["default"], {}),
         onClick: handleActualPrint,
         children: "Print"
       }, "print")],
-      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("div", {
         id: "printable-area",
         "data-print-theme": "light",
         style: {
@@ -127632,15 +127693,15 @@ var CourseFolderModal = function CourseFolderModal(_ref6) {
           margin: "0 auto",
           boxSizing: "border-box"
         },
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("div", {
           style: {
             textAlign: "center",
             marginBottom: "30px",
             borderBottom: "2px solid #000",
             paddingBottom: "20px"
           },
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("img", {
-            src: _assets_images_OCC_LOGO_png__WEBPACK_IMPORTED_MODULE_11__["default"] || "/placeholder.svg",
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)("img", {
+            src: _assets_images_OCC_LOGO_png__WEBPACK_IMPORTED_MODULE_12__["default"] || "/placeholder.svg",
             alt: "OCC Logo",
             style: {
               width: "80px",
@@ -127648,60 +127709,60 @@ var CourseFolderModal = function CourseFolderModal(_ref6) {
               marginBottom: "10px",
               objectFit: "contain"
             }
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(Title, {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(Title, {
             level: 2,
             style: {
               margin: 0,
               color: "#000"
             },
             children: "Alumni Directory Report"
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(Title, {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)(Title, {
             level: 4,
             style: {
               margin: "10px 0",
               color: course.color
             },
             children: [course.code, " - ", course.name]
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(Text, {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)(Text, {
             type: "secondary",
             style: {
               color: "#666"
             },
-            children: ["Generated on: ", moment__WEBPACK_IMPORTED_MODULE_1___default()().format("MMMM DD, YYYY")]
+            children: ["Generated on: ", moment__WEBPACK_IMPORTED_MODULE_2___default()().format("MMMM DD, YYYY")]
           })]
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_28__["default"], {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_29__["default"], {
           style: {
             marginBottom: "20px",
             border: "1px solid #d9d9d9"
           },
-          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_45__["default"], {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_46__["default"], {
             gutter: 16,
-            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_46__["default"], {
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_47__["default"], {
               span: 6,
-              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("div", {
                 style: {
                   textAlign: "center"
                 },
-                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(Title, {
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(Title, {
                   level: 3,
                   style: {
                     color: "#000"
                   },
                   children: filteredCourseAlumni.length
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(Text, {
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(Text, {
                   style: {
                     color: "#000"
                   },
                   children: "Total Alumni"
                 })]
               })
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_46__["default"], {
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_47__["default"], {
               span: 6,
-              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("div", {
                 style: {
                   textAlign: "center"
                 },
-                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(Title, {
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(Title, {
                   level: 3,
                   style: {
                     color: "#52c41a"
@@ -127709,20 +127770,20 @@ var CourseFolderModal = function CourseFolderModal(_ref6) {
                   children: filteredCourseAlumni.filter(function (a) {
                     return a.employment_status_id === 1;
                   }).length
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(Text, {
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(Text, {
                   style: {
                     color: "#000"
                   },
                   children: "Employed"
                 })]
               })
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_46__["default"], {
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_47__["default"], {
               span: 6,
-              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("div", {
                 style: {
                   textAlign: "center"
                 },
-                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(Title, {
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(Title, {
                   level: 3,
                   style: {
                     color: "#ff4d4f"
@@ -127730,20 +127791,20 @@ var CourseFolderModal = function CourseFolderModal(_ref6) {
                   children: filteredCourseAlumni.filter(function (a) {
                     return a.employment_status_id === 2;
                   }).length
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(Text, {
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(Text, {
                   style: {
                     color: "#000"
                   },
                   children: "Unemployed"
                 })]
               })
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_46__["default"], {
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_47__["default"], {
               span: 6,
-              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("div", {
                 style: {
                   textAlign: "center"
                 },
-                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(Title, {
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(Title, {
                   level: 3,
                   style: {
                     color: "#faad14"
@@ -127751,7 +127812,7 @@ var CourseFolderModal = function CourseFolderModal(_ref6) {
                   children: filteredCourseAlumni.filter(function (a) {
                     return a.employment_status_id === 3;
                   }).length
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(Text, {
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(Text, {
                   style: {
                     color: "#000"
                   },
@@ -127760,7 +127821,7 @@ var CourseFolderModal = function CourseFolderModal(_ref6) {
               })
             })]
           })
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_50__["default"], {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_51__["default"], {
           dataSource: filteredCourseAlumni,
           pagination: false,
           size: "small",
@@ -127809,14 +127870,14 @@ var CourseFolderModal = function CourseFolderModal(_ref6) {
               return text || "N/A";
             }
           }]
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("div", {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)("div", {
           style: {
             marginTop: "40px",
             paddingTop: "20px",
             borderTop: "1px solid #d9d9d9",
             textAlign: "center"
           },
-          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(Text, {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(Text, {
             type: "secondary",
             style: {
               color: "#666"
@@ -127825,7 +127886,7 @@ var CourseFolderModal = function CourseFolderModal(_ref6) {
           })
         })]
       })
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("style", {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)("style", {
       jsx: true,
       global: true,
       children: "\n        @media print {\n          /* Printing must always be on a white page, even when the app is\n             in black theme \u2014 the dark theme's html/body background rule\n             has no print exception, and this block only hides the body's\n             *contents* (body *), never the body element itself, so that\n             dark background can otherwise bleed through around the\n             printable area. This is the actual cause of the \"black page\"\n             some admins see when printing while in dark mode. */\n          html,\n          body {\n            background: #ffffff !important;\n            color: #0f172a !important;\n          }\n\n          /* Hide everything except printable area */\n          body * {\n            visibility: hidden !important;\n          }\n          \n          /* Make printable area and its contents visible */\n          #printable-area,\n          #printable-area * {\n            visibility: visible !important;\n          }\n          \n          /* Position and size the printable area correctly */\n          #printable-area {\n            position: absolute !important;\n            left: 0 !important;\n            top: 0 !important;\n            width: 210mm !important;\n            min-height: 297mm !important;\n            padding: 15mm !important;\n            margin: 0 !important;\n            background: #fff !important;\n            box-sizing: border-box !important;\n            z-index: 999999 !important;\n          }\n          \n          /* Hide all modal elements */\n          .ant-modal-mask,\n          .ant-modal-wrap {\n            position: static !important;\n            background: none !important;\n          }\n          \n          .ant-modal,\n          .ant-modal-content {\n            position: static !important;\n            box-shadow: none !important;\n            border: none !important;\n            background: transparent !important;\n          }\n          \n          .ant-modal-header,\n          .ant-modal-footer,\n          .ant-modal-close {\n            display: none !important;\n          }\n          \n          .ant-modal-body {\n            padding: 0 !important;\n          }\n          \n          /* Ensure colors print correctly */\n          * {\n            -webkit-print-color-adjust: exact !important;\n            print-color-adjust: exact !important;\n            color-adjust: exact !important;\n          }\n          \n          /* Print header styling */\n          #printable-area > div:first-child {\n            text-align: center !important;\n            margin-bottom: 20px !important;\n            border-bottom: 2px solid #000 !important;\n            padding-bottom: 15px !important;\n          }\n          \n          #printable-area img {\n            width: 80px !important;\n            height: 80px !important;\n            display: block !important;\n            margin: 0 auto 10px auto !important;\n          }\n          \n          /* Statistics card styling */\n          #printable-area .ant-card {\n            border: 1px solid #d9d9d9 !important;\n            box-shadow: none !important;\n            background: #fff !important;\n            margin-bottom: 15px !important;\n            page-break-inside: avoid !important;\n          }\n          \n          #printable-area .ant-card-body {\n            padding: 16px !important;\n          }\n          \n          /* Row and column layout for statistics */\n          #printable-area .ant-row {\n            display: flex !important;\n            flex-wrap: wrap !important;\n            width: 100% !important;\n          }\n          \n          #printable-area .ant-col {\n            display: block !important;\n            float: left !important;\n          }\n          \n          #printable-area .ant-col-6 {\n            width: 25% !important;\n            flex: 0 0 25% !important;\n            max-width: 25% !important;\n          }\n          \n          /* Typography colors */\n          #printable-area h1,\n          #printable-area h2,\n          #printable-area h3,\n          #printable-area h4,\n          #printable-area .ant-typography {\n            color: #000 !important;\n            margin: 0 !important;\n          }\n          \n          /* Preserve colored statistics text */\n          #printable-area h3[style*=\"color: rgb(82, 196, 26)\"],\n          #printable-area h3[style*=\"color: #52c41a\"] {\n            color: #52c41a !important;\n          }\n          \n          #printable-area h3[style*=\"color: rgb(245, 34, 45)\"],\n          #printable-area h3[style*=\"color: #f5222d\"] {\n            color: #f5222d !important;\n          }\n          \n          #printable-area h3[style*=\"color: rgb(250, 173, 20)\"],\n          #printable-area h3[style*=\"color: #faad14\"] {\n            color: #faad14 !important;\n          }\n          \n          /* Table styling */\n          #printable-area table {\n            width: 100% !important;\n            border-collapse: collapse !important;\n            table-layout: fixed !important;\n          }\n          \n          #printable-area .ant-table {\n            font-size: 10px !important;\n          }\n          \n          #printable-area .ant-table-container {\n            border: 1px solid #d9d9d9 !important;\n          }\n          \n          #printable-area .ant-table-thead > tr > th {\n            background: #fafafa !important;\n            border-bottom: 1px solid #d9d9d9 !important;\n            padding: 8px 6px !important;\n            font-weight: 600 !important;\n            font-size: 10px !important;\n            color: #000 !important;\n          }\n          \n          #printable-area .ant-table-tbody > tr > td {\n            border-bottom: 1px solid #d9d9d9 !important;\n            padding: 6px !important;\n            font-size: 9px !important;\n            color: #000 !important;\n            background: #fff !important;\n          }\n          \n          #printable-area .ant-table-tbody > tr {\n            page-break-inside: avoid !important;\n          }\n          \n          /* Tags styling */\n          #printable-area .ant-tag {\n            font-size: 8px !important;\n            padding: 0 4px !important;\n            line-height: 16px !important;\n            border: 1px solid !important;\n          }\n          \n          /* Page setup */\n          @page {\n            size: A4 portrait;\n            margin: 10mm;\n          }\n          \n          html, body {\n            width: 210mm !important;\n            height: 297mm !important;\n            margin: 0 !important;\n            padding: 0 !important;\n            background: #fff !important;\n          }\n        }\n      "
@@ -127833,7 +127894,7 @@ var CourseFolderModal = function CourseFolderModal(_ref6) {
   });
 };
 var AlumniList = function AlumniList() {
-  var role = react_secure_storage__WEBPACK_IMPORTED_MODULE_10__["default"].getItem("userRole");
+  var role = react_secure_storage__WEBPACK_IMPORTED_MODULE_11__["default"].getItem("userRole");
   // GET /alumni (useAlumni) is role:admin-gated on the backend by
   // design (see routes/api.php — regular alumni are not authorized to
   // enumerate every other alumni's full record). This page is reused
@@ -127842,10 +127903,11 @@ var AlumniList = function AlumniList() {
   // data source per role: admins get the full admin record set, everyone
   // else gets the minimized public-safe directory.
   var isAdminRole = role === "admin";
-  var adminAlumniQuery = (0,_hooks_useAlumni__WEBPACK_IMPORTED_MODULE_4__["default"])({
+  var queryClient = (0,react_query__WEBPACK_IMPORTED_MODULE_1__.useQueryClient)();
+  var adminAlumniQuery = (0,_hooks_useAlumni__WEBPACK_IMPORTED_MODULE_5__["default"])({
     enabled: isAdminRole
   });
-  var directoryQuery = (0,_hooks_useAlumniDirectory__WEBPACK_IMPORTED_MODULE_5__["default"])({
+  var directoryQuery = (0,_hooks_useAlumniDirectory__WEBPACK_IMPORTED_MODULE_6__["default"])({
     enabled: !isAdminRole
   });
   var _ref7 = isAdminRole ? adminAlumniQuery : directoryQuery,
@@ -127854,9 +127916,9 @@ var AlumniList = function AlumniList() {
     alumni = _ref7$data === void 0 ? [] : _ref7$data,
     isFetching = _ref7.isFetching,
     refetch = _ref7.refetch;
-  var _useEmployeeStatus = (0,_hooks_useEmployeeStatus__WEBPACK_IMPORTED_MODULE_6__["default"])(),
+  var _useEmployeeStatus = (0,_hooks_useEmployeeStatus__WEBPACK_IMPORTED_MODULE_7__["default"])(),
     statuses = _useEmployeeStatus.data;
-  var _useQuizResult = (0,_hooks_useQuizResult__WEBPACK_IMPORTED_MODULE_7__["default"])(),
+  var _useQuizResult = (0,_hooks_useQuizResult__WEBPACK_IMPORTED_MODULE_8__["default"])(),
     _useQuizResult$data = _useQuizResult.data,
     quizResults = _useQuizResult$data === void 0 ? [] : _useQuizResult$data;
   var _useState11 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)("grid"),
@@ -127919,7 +127981,7 @@ var AlumniList = function AlumniList() {
     setBulkStatusUpdateLoading = _useState38[1];
   // ============ END MULTI-SELECT STATES ============
 
-  var _Form$useForm5 = antd__WEBPACK_IMPORTED_MODULE_24__["default"].useForm(),
+  var _Form$useForm5 = antd__WEBPACK_IMPORTED_MODULE_25__["default"].useForm(),
     _Form$useForm6 = _slicedToArray(_Form$useForm5, 1),
     form = _Form$useForm6[0];
 
@@ -127944,22 +128006,48 @@ var AlumniList = function AlumniList() {
   // ============ END HEARTBEAT EFFECT ============
 
   // ============ ONLINE STATUS POLLING ============
+  // Phase 1 fix (see audit §2, finding "Main finding — wasteful duplicate
+  // fetch, polled every 30s"): this used to throw away the online-statuses
+  // response and call refetch() instead, which re-ran the full paginated
+  // /alumni (or /alumni/directory) query — with all its eager loads — every
+  // 30 seconds per open tab, for every admin. Now we merge the small
+  // {id, is_online, last_active} deltas directly into the existing
+  // react-query cache with setQueryData, so no extra full-table request
+  // ever fires from this poll.
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+    var queryKey = isAdminRole ? ["alumini"] : ["alumni-directory"];
     var fetchOnlineStatuses = /*#__PURE__*/function () {
       var _ref8 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
-        var response, _t;
+        var response, statusById, _t;
         return _regenerator().w(function (_context) {
           while (1) switch (_context.p = _context.n) {
             case 0:
               _context.p = 0;
               _context.n = 1;
-              return _utils_axiosConfig__WEBPACK_IMPORTED_MODULE_8__["default"].get(_utils_constant__WEBPACK_IMPORTED_MODULE_9__.BASE_URL + "api/alumni/online-statuses");
+              return _utils_axiosConfig__WEBPACK_IMPORTED_MODULE_9__["default"].get(_utils_constant__WEBPACK_IMPORTED_MODULE_10__.BASE_URL + "api/alumni/online-statuses");
             case 1:
               response = _context.v;
               if (response.data.success) {
-                // The statuses are already included in the alumni data from the API
-                // This is just for real-time updates
-                refetch();
+                statusById = new Map(response.data.data.map(function (s) {
+                  return [s.id, s];
+                }));
+                queryClient.setQueryData(queryKey, function () {
+                  var previous = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+                  if (!Array.isArray(previous)) return previous;
+                  return previous.map(function (alumnus) {
+                    var status = statusById.get(alumnus.id);
+                    if (!status) return alumnus;
+                    // Only touch the two fields the poll actually knows about;
+                    // leave the rest of the cached alumnus record untouched.
+                    if (alumnus.is_online === status.is_online && alumnus.last_active === status.last_active) {
+                      return alumnus;
+                    }
+                    return _objectSpread(_objectSpread({}, alumnus), {}, {
+                      is_online: status.is_online,
+                      last_active: status.last_active
+                    });
+                  });
+                });
               }
               _context.n = 3;
               break;
@@ -127982,7 +128070,7 @@ var AlumniList = function AlumniList() {
     return function () {
       return clearInterval(statusInterval);
     };
-  }, [refetch]);
+  }, [isAdminRole, queryClient]);
   // ============ END ONLINE STATUS POLLING ============
 
   var _useState41 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)("name-asc"),
@@ -128079,10 +128167,10 @@ var AlumniList = function AlumniList() {
             });
           case 2:
             _context2.n = 3;
-            return _utils_axiosConfig__WEBPACK_IMPORTED_MODULE_8__["default"].post(_utils_constant__WEBPACK_IMPORTED_MODULE_9__.BASE_URL + "api/alumni/update-stastus", formData);
+            return _utils_axiosConfig__WEBPACK_IMPORTED_MODULE_9__["default"].post(_utils_constant__WEBPACK_IMPORTED_MODULE_10__.BASE_URL + "api/alumni/update-stastus", formData);
           case 3:
             response = _context2.v;
-            antd__WEBPACK_IMPORTED_MODULE_51__["default"].success("Successfully updated ".concat(selectedAlumnus.first_name, "'s status to ").concat(formData.status));
+            antd__WEBPACK_IMPORTED_MODULE_52__["default"].success("Successfully updated ".concat(selectedAlumnus.first_name, "'s status to ").concat(formData.status));
             setIsStatusModalVisible(false);
             setSelectedAlumnus(null);
             setSelectedStatus(null);
@@ -128095,7 +128183,7 @@ var AlumniList = function AlumniList() {
             _context2.p = 4;
             _t2 = _context2.v;
             console.error(_t2);
-            antd__WEBPACK_IMPORTED_MODULE_51__["default"].error("Failed to update status. Please try again.");
+            antd__WEBPACK_IMPORTED_MODULE_52__["default"].error("Failed to update status. Please try again.");
           case 5:
             _context2.p = 5;
             setStatusUpdateLoading(false);
@@ -128141,7 +128229,7 @@ var AlumniList = function AlumniList() {
   };
   var handleBulkEditStatus = function handleBulkEditStatus() {
     if (selectedAlumniIds.length === 0) {
-      antd__WEBPACK_IMPORTED_MODULE_51__["default"].warning("Please select at least one alumni");
+      antd__WEBPACK_IMPORTED_MODULE_52__["default"].warning("Please select at least one alumni");
       return;
     }
     setIsBulkStatusModalVisible(true);
@@ -128168,7 +128256,7 @@ var AlumniList = function AlumniList() {
               id: alumniId
             });
             _context3.n = 4;
-            return _utils_axiosConfig__WEBPACK_IMPORTED_MODULE_8__["default"].post(_utils_constant__WEBPACK_IMPORTED_MODULE_9__.BASE_URL + "api/alumni/update-stastus", payload);
+            return _utils_axiosConfig__WEBPACK_IMPORTED_MODULE_9__["default"].post(_utils_constant__WEBPACK_IMPORTED_MODULE_10__.BASE_URL + "api/alumni/update-stastus", payload);
           case 4:
             _context3.n = 3;
             break;
@@ -128184,7 +128272,7 @@ var AlumniList = function AlumniList() {
             _iterator.f();
             return _context3.f(7);
           case 8:
-            antd__WEBPACK_IMPORTED_MODULE_51__["default"].success("Successfully updated ".concat(selectedAlumniIds.length, " alumni to ").concat(formData.status));
+            antd__WEBPACK_IMPORTED_MODULE_52__["default"].success("Successfully updated ".concat(selectedAlumniIds.length, " alumni to ").concat(formData.status));
             setIsBulkStatusModalVisible(false);
             setSelectedAlumniIds([]);
             setIsSelectMode(false);
@@ -128195,7 +128283,7 @@ var AlumniList = function AlumniList() {
             _context3.p = 9;
             _t4 = _context3.v;
             console.error(_t4);
-            antd__WEBPACK_IMPORTED_MODULE_51__["default"].error("Failed to update status. Please try again.");
+            antd__WEBPACK_IMPORTED_MODULE_52__["default"].error("Failed to update status. Please try again.");
           case 10:
             _context3.p = 10;
             setBulkStatusUpdateLoading(false);
@@ -128234,8 +128322,8 @@ var AlumniList = function AlumniList() {
       if (activeTab === "new_registered") {
         // Show only approved alumni registered in the last 7 days
         if (!alumnus.created_at) return false;
-        var created = moment__WEBPACK_IMPORTED_MODULE_1___default()(alumnus.created_at);
-        var now = moment__WEBPACK_IMPORTED_MODULE_1___default()();
+        var created = moment__WEBPACK_IMPORTED_MODULE_2___default()(alumnus.created_at);
+        var now = moment__WEBPACK_IMPORTED_MODULE_2___default()();
         if (now.diff(created, "days") > 7 || alumnus.status !== "approved") return false;
       } else if (activeTab !== "all" && alumnus.status !== activeTab) {
         return false;
@@ -128296,7 +128384,7 @@ var AlumniList = function AlumniList() {
         case "salary-asc":
           return ((a === null || a === void 0 ? void 0 : a.salary) || 0) - ((b === null || b === void 0 ? void 0 : b.salary) || 0);
         case "lastActive-desc":
-          return moment__WEBPACK_IMPORTED_MODULE_1___default()(b === null || b === void 0 ? void 0 : b.lastActive).diff(moment__WEBPACK_IMPORTED_MODULE_1___default()(a === null || a === void 0 ? void 0 : a.lastActive));
+          return moment__WEBPACK_IMPORTED_MODULE_2___default()(b === null || b === void 0 ? void 0 : b.lastActive).diff(moment__WEBPACK_IMPORTED_MODULE_2___default()(a === null || a === void 0 ? void 0 : a.lastActive));
         default:
           return 0;
       }
@@ -128323,8 +128411,8 @@ var AlumniList = function AlumniList() {
   var newRegisteredAlumni = (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(function () {
     return alumni.filter(function (a) {
       if (!a.created_at) return false;
-      var created = moment__WEBPACK_IMPORTED_MODULE_1___default()(a.created_at);
-      var now = moment__WEBPACK_IMPORTED_MODULE_1___default()();
+      var created = moment__WEBPACK_IMPORTED_MODULE_2___default()(a.created_at);
+      var now = moment__WEBPACK_IMPORTED_MODULE_2___default()();
       return now.diff(created, "days") <= 7 && a.status === "approved";
     });
   }, [alumni]);
@@ -128356,109 +128444,109 @@ var AlumniList = function AlumniList() {
     }).length
     // inactive: alumni.filter((a) => a.status === "inactive").length,
   };
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_components__WEBPACK_IMPORTED_MODULE_3__.Layout, {
-    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_components__WEBPACK_IMPORTED_MODULE_4__.Layout, {
+    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("div", {
       className: "alumni-list-container",
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("section", {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("section", {
         className: "ae-hero",
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("div", {
           className: "ae-hero__bg",
           "aria-hidden": true,
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("span", {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)("span", {
             className: "blob blob-1"
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("span", {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)("span", {
             className: "blob blob-2"
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("span", {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)("span", {
             className: "blob blob-3"
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("div", {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)("div", {
             className: "dot-grid"
           })]
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("div", {
           className: "ae-hero__content",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("div", {
             className: "ae-hero__brand",
-            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("img", {
-              src: _assets_images_OCC_LOGO_png__WEBPACK_IMPORTED_MODULE_11__["default"],
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)("img", {
+              src: _assets_images_OCC_LOGO_png__WEBPACK_IMPORTED_MODULE_12__["default"],
               alt: "OCC Logo",
               className: "ae-hero__logo"
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("div", {
               className: "ae-hero__brand-meta",
-              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_23__["default"], {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_24__["default"], {
                 className: "ae-chip",
-                icon: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_35__["default"], {}),
+                icon: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_36__["default"], {}),
                 children: "ALUMNI DIRECTORY"
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(Text, {
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(Text, {
                 className: "ae-hero__eyebrow",
                 children: "Alumni Tracing Management System"
               })]
             })]
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(Title, {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)(Title, {
             className: "ae-hero__title",
-            children: ["Alumni", " ", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("span", {
+            children: ["Alumni", " ", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)("span", {
               className: "grad-text",
               children: " Directory"
             })]
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(Paragraph, {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(Paragraph, {
             className: "ae-hero__lead",
             children: role === "admin" ? "Manage and connect with OCC alumni. Track employment status, engagement, and graduate outcomes across every batch." : "Browse the OCC Alumni Directory, connect with fellow graduates, and build meaningful professional relationships within the alumni community."
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("div", {
             className: "ae-hero__stats",
-            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("div", {
               className: "ae-stat",
-              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("span", {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)("span", {
                 className: "ae-stat__icon",
-                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_35__["default"], {})
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_36__["default"], {})
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("div", {
                 className: "ae-stat__body",
-                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("span", {
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)("span", {
                   className: "ae-stat__value",
                   children: stats.total
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("span", {
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)("span", {
                   className: "ae-stat__label",
                   children: "Total Alumni"
                 })]
               })]
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("div", {
               className: "ae-stat",
-              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("span", {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)("span", {
                 className: "ae-stat__icon ae-stat__icon--green",
-                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_17__["default"], {})
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_18__["default"], {})
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("div", {
                 className: "ae-stat__body",
-                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("span", {
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)("span", {
                   className: "ae-stat__value",
                   children: stats.employed
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("span", {
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)("span", {
                   className: "ae-stat__label",
                   children: "Employed"
                 })]
               })]
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("div", {
               className: "ae-stat",
-              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("span", {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)("span", {
                 className: "ae-stat__icon ae-stat__icon--gray",
-                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_19__["default"], {})
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_20__["default"], {})
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("div", {
                 className: "ae-stat__body",
-                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("span", {
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)("span", {
                   className: "ae-stat__value",
                   children: stats.unemployed
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("span", {
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)("span", {
                   className: "ae-stat__label",
                   children: "Seeking Work"
                 })]
               })]
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("div", {
               className: "ae-stat",
-              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("span", {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)("span", {
                 className: "ae-stat__icon ae-stat__icon--blue",
-                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_18__["default"], {})
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_19__["default"], {})
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("div", {
                 className: "ae-stat__body",
-                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("span", {
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)("span", {
                   className: "ae-stat__value",
                   children: stats.underEmployed
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("span", {
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)("span", {
                   className: "ae-stat__label",
                   children: "Under Employed"
                 })]
@@ -128466,10 +128554,10 @@ var AlumniList = function AlumniList() {
             })]
           })]
         })]
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("br", {}), role === "admin" && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.Fragment, {
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_28__["default"], {
-          title: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_26__["default"], {
-            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_42__["default"], {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("span", {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)("br", {}), role === "admin" && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.Fragment, {
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_29__["default"], {
+          title: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_27__["default"], {
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_43__["default"], {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)("span", {
               className: "ant-typography",
               children: "Course Folders"
             })]
@@ -128477,7 +128565,7 @@ var AlumniList = function AlumniList() {
           style: {
             marginBottom: "20px"
           },
-          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_45__["default"], {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_46__["default"], {
             gutter: [16, 16],
             children: courseFolders.map(function (course) {
               var courseAlumniCount = alumni.filter(function (a) {
@@ -128492,11 +128580,11 @@ var AlumniList = function AlumniList() {
               var underEmployedCount = alumni.filter(function (a) {
                 return a.course_id === course.id && a.status !== "rejected" && a.employment_status_id === 3;
               }).length;
-              return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_46__["default"], {
+              return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_47__["default"], {
                 xs: 24,
                 sm: 12,
                 md: 6,
-                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_28__["default"], {
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_29__["default"], {
                   hoverable: true,
                   onClick: function onClick() {
                     return handleOpenCourseFolder(course);
@@ -128505,22 +128593,22 @@ var AlumniList = function AlumniList() {
                     borderLeft: "4px solid ".concat(course.color),
                     cursor: "pointer"
                   },
-                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_26__["default"], {
+                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_27__["default"], {
                     direction: "vertical",
                     style: {
                       width: "100%"
                     },
-                    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("div", {
+                    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)("div", {
                       style: {
                         textAlign: "center"
                       },
-                      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_42__["default"], {
+                      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_43__["default"], {
                         style: {
                           fontSize: "48px",
                           color: course.color
                         }
                       })
-                    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(Title, {
+                    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(Title, {
                       level: 4,
                       style: {
                         margin: 0,
@@ -128528,7 +128616,7 @@ var AlumniList = function AlumniList() {
                         color: course.color
                       },
                       children: course.code
-                    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(Text, {
+                    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(Text, {
                       type: "secondary",
                       style: {
                         textAlign: "center",
@@ -128536,68 +128624,68 @@ var AlumniList = function AlumniList() {
                         fontSize: "12px"
                       },
                       children: course.name
-                    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_34__["default"], {
+                    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_35__["default"], {
                       style: {
                         margin: "8px 0"
                       }
-                    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("div", {
-                      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_26__["default"], {
+                    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)("div", {
+                      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_27__["default"], {
                         direction: "vertical",
                         size: "small",
                         style: {
                           width: "100%"
                         },
-                        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+                        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("div", {
                           style: {
                             display: "flex",
                             justifyContent: "space-between"
                           },
-                          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(Text, {
+                          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(Text, {
                             strong: true,
                             children: "Total:"
-                          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_27__["default"], {
+                          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_28__["default"], {
                             count: courseAlumniCount,
                             style: {
                               backgroundColor: course.color
                             }
                           })]
-                        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+                        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("div", {
                           style: {
                             display: "flex",
                             justifyContent: "space-between"
                           },
-                          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(Text, {
+                          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(Text, {
                             type: "secondary",
                             children: "Employed:"
-                          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(Text, {
+                          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(Text, {
                             style: {
                               color: "#52c41a"
                             },
                             children: employedCount
                           })]
-                        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+                        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("div", {
                           style: {
                             display: "flex",
                             justifyContent: "space-between"
                           },
-                          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(Text, {
+                          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(Text, {
                             type: "secondary",
                             children: "Unemployed:"
-                          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(Text, {
+                          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(Text, {
                             style: {
                               color: "#ff4d4f"
                             },
                             children: unemployedCount
                           })]
-                        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+                        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("div", {
                           style: {
                             display: "flex",
                             justifyContent: "space-between"
                           },
-                          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(Text, {
+                          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(Text, {
                             type: "secondary",
                             children: "Under Emp:"
-                          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(Text, {
+                          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(Text, {
                             style: {
                               color: "#faad14"
                             },
@@ -128612,15 +128700,15 @@ var AlumniList = function AlumniList() {
             })
           })
         })
-      }), role === "admin" && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_28__["default"], {
+      }), role === "admin" && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_29__["default"], {
         className: "tabs-card",
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_15__["default"], {
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_16__["default"], {
           activeKey: activeTab,
           onChange: setActiveTab,
           className: "status-tabs",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(TabPane, {
-            tab: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("span", {
-              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_35__["default"], {}), "All Alumni", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_27__["default"], {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(TabPane, {
+            tab: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("span", {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_36__["default"], {}), "All Alumni", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_28__["default"], {
                 count: stats.total,
                 style: {
                   backgroundColor: "#52c41a",
@@ -128628,9 +128716,9 @@ var AlumniList = function AlumniList() {
                 }
               })]
             })
-          }, "all"), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(TabPane, {
-            tab: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("span", {
-              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_18__["default"], {}), "Pending Review", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_27__["default"], {
+          }, "all"), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(TabPane, {
+            tab: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("span", {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_19__["default"], {}), "Pending Review", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_28__["default"], {
                 count: stats.pending,
                 style: {
                   backgroundColor: "#faad14",
@@ -128638,9 +128726,9 @@ var AlumniList = function AlumniList() {
                 }
               })]
             })
-          }, "pending"), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(TabPane, {
-            tab: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("span", {
-              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_17__["default"], {}), "Approved", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_27__["default"], {
+          }, "pending"), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(TabPane, {
+            tab: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("span", {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_18__["default"], {}), "Approved", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_28__["default"], {
                 count: stats.approved,
                 style: {
                   backgroundColor: "#52c41a",
@@ -128648,9 +128736,9 @@ var AlumniList = function AlumniList() {
                 }
               })]
             })
-          }, "approved"), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(TabPane, {
-            tab: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("span", {
-              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_41__["default"], {}), "New Registered", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_27__["default"], {
+          }, "approved"), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(TabPane, {
+            tab: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("span", {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_42__["default"], {}), "New Registered", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_28__["default"], {
                 count: stats.newRegistered,
                 style: {
                   backgroundColor: "#1890ff",
@@ -128658,9 +128746,9 @@ var AlumniList = function AlumniList() {
                 }
               })]
             })
-          }, "new_registered"), role === "admin" && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(TabPane, {
-            tab: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("span", {
-              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_20__["default"], {}), "Account Rejected", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_27__["default"], {
+          }, "new_registered"), role === "admin" && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(TabPane, {
+            tab: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("span", {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_21__["default"], {}), "Account Rejected", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_28__["default"], {
                 count: stats.rejected,
                 style: {
                   backgroundColor: "#ff4d4f",
@@ -128670,15 +128758,15 @@ var AlumniList = function AlumniList() {
             })
           }, "rejected")]
         })
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_28__["default"], {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_29__["default"], {
         className: "controls-card",
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("div", {
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)("div", {
           className: "controls-section",
-          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("div", {
             className: "controls-left",
-            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_16__["default"], {
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_17__["default"], {
               placeholder: "Search alumni by name, email, major, skills...",
-              prefix: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_47__["default"], {}),
+              prefix: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_48__["default"], {}),
               value: filters.search,
               onChange: function onChange(e) {
                 return handleFilterChange("search", e.target.value);
@@ -128687,7 +128775,7 @@ var AlumniList = function AlumniList() {
                 width: 300
               },
               size: "large"
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_14__["default"], {
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_15__["default"], {
               value: filters.employmentStatus,
               onChange: function onChange(value) {
                 return handleFilterChange("employmentStatus", value);
@@ -128697,27 +128785,27 @@ var AlumniList = function AlumniList() {
               },
               placeholder: "Employment Status",
               children: employmentStatusOptions.map(function (option) {
-                return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(Option, {
+                return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(Option, {
                   value: option.value,
-                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_23__["default"], {
+                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_24__["default"], {
                     color: option.color,
                     children: option.label
                   })
                 }, option.value);
               })
-            }), role === "admin" && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+            }), role === "admin" && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("div", {
               className: "select-mode-controls",
-              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_43__["default"], {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_44__["default"], {
                 type: isSelectMode ? "primary" : "default",
                 onClick: handleSelectModeToggle,
                 children: isSelectMode ? "Cancel Select" : "Select"
-              }), isSelectMode && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.Fragment, {
-                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_43__["default"], {
+              }), isSelectMode && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.Fragment, {
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_44__["default"], {
                   onClick: handleSelectAll,
                   children: selectedAlumniIds.length === filteredAndSortedAlumni.length ? "Deselect All" : "Select All"
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_43__["default"], {
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_44__["default"], {
                   type: "primary",
-                  icon: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_31__["default"], {}),
+                  icon: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_32__["default"], {}),
                   onClick: handleBulkEditStatus,
                   disabled: selectedAlumniIds.length === 0,
                   children: ["Edit Status (", selectedAlumniIds.length, ")"]
@@ -128726,26 +128814,26 @@ var AlumniList = function AlumniList() {
             })]
           })
         })
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("div", {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)("div", {
         className: "alumni-display",
-        children: filteredAndSortedAlumni.length === 0 ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_28__["default"], {
+        children: filteredAndSortedAlumni.length === 0 ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_29__["default"], {
           className: "no-alumni-card",
-          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)("div", {
             className: "no-alumni-content",
-            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(Title, {
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(Title, {
               level: 3,
               children: activeTab === "new_registered" ? "No new registrations found" : "No alumni found"
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(Text, {
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(Text, {
               type: "secondary",
               children: activeTab === "new_registered" ? "There are no newly approved alumni accounts registered in the last 7 days." : "Try adjusting your filters or search terms to find alumni"
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("br", {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_43__["default"], {
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)("br", {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_44__["default"], {
               type: "primary",
               onClick: clearAllFilters,
               children: "Clear All Filters"
             })]
           })
-        }) : activeTab === "new_registered" ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.Fragment, {
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_28__["default"], {
+        }) : activeTab === "new_registered" ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.Fragment, {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_29__["default"], {
             style: {
               marginBottom: 16,
               borderLeft: "4px solid #1890ff",
@@ -128754,30 +128842,30 @@ var AlumniList = function AlumniList() {
             bodyStyle: {
               padding: "10px 16px"
             },
-            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_26__["default"], {
-              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_41__["default"], {
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_27__["default"], {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_42__["default"], {
                 style: {
                   color: "#1890ff",
                   fontSize: 16
                 }
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(Text, {
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)(Text, {
                 style: {
                   color: "#1890ff"
                 },
-                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("strong", {
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)("strong", {
                   children: "New Registered Alumni"
                 }), " \u2014 Showing approved accounts registered within the last 7 days. Quiz badges indicate which quizzes each alumni has completed."]
               })]
             })
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_45__["default"], {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_46__["default"], {
             gutter: [24, 24],
             children: filteredAndSortedAlumni.map(function (alumnus) {
-              return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_46__["default"], {
+              return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_47__["default"], {
                 xs: 24,
                 sm: 12,
                 lg: 8,
                 xl: 6,
-                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(NewRegisteredCard, {
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(NewRegisteredCard, {
                   alumnus: alumnus,
                   handleView: handleView,
                   handleStatusUpdate: handleStatusUpdate,
@@ -128786,15 +128874,15 @@ var AlumniList = function AlumniList() {
               }, alumnus.id);
             })
           })]
-        }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_45__["default"], {
+        }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_46__["default"], {
           gutter: [24, 24],
           children: filteredAndSortedAlumni.map(function (alumnus) {
-            return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(antd__WEBPACK_IMPORTED_MODULE_46__["default"], {
+            return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(antd__WEBPACK_IMPORTED_MODULE_47__["default"], {
               xs: 24,
               sm: 12,
               lg: 8,
               xl: 6,
-              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(AlumniCard, {
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(AlumniCard, {
                 alumnus: alumnus,
                 handleView: handleView,
                 handleStatusUpdate: handleStatusUpdate,
@@ -128805,7 +128893,7 @@ var AlumniList = function AlumniList() {
             }, alumnus.id);
           })
         })
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_components__WEBPACK_IMPORTED_MODULE_3__.AlumniDetails, {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_components__WEBPACK_IMPORTED_MODULE_4__.AlumniDetails, {
         visible: isModalVisible,
         onCancel: function onCancel() {
           setIsModalVisible(false);
@@ -128814,7 +128902,7 @@ var AlumniList = function AlumniList() {
         previewData: previewData,
         refetchAlumni: refetch,
         viewOnly: true
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(StatusUpdateModal, {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(StatusUpdateModal, {
         visible: isStatusModalVisible,
         onCancel: function onCancel() {
           setIsStatusModalVisible(false);
@@ -128825,7 +128913,7 @@ var AlumniList = function AlumniList() {
         alumnus: selectedAlumnus,
         loading: statusUpdateLoading,
         statuses: statuses
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(BulkStatusUpdateModal, {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(BulkStatusUpdateModal, {
         visible: isBulkStatusModalVisible,
         onCancel: function onCancel() {
           setIsBulkStatusModalVisible(false);
@@ -128834,7 +128922,7 @@ var AlumniList = function AlumniList() {
         selectedAlumni: getSelectedAlumniData(),
         loading: bulkStatusUpdateLoading,
         statuses: statuses
-      }), selectedCourse && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(CourseFolderModal, {
+      }), selectedCourse && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(CourseFolderModal, {
         visible: courseFolderVisible,
         onCancel: function onCancel() {
           setCourseFolderVisible(false);
@@ -129438,15 +129526,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/list/index.js");
 /* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/avatar/index.js");
 /* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/tag/index.js");
-/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/card/index.js");
-/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/button/index.js");
-/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/row/index.js");
-/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/col/index.js");
+/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/button/index.js");
+/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/row/index.js");
+/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/col/index.js");
+/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/card/index.js");
 /* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_41__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/statistic/index.js");
 /* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_45__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/rate/index.js");
 /* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_46__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/modal/index.js");
-/* harmony import */ var _ant_design_icons__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! @ant-design/icons */ "./node_modules/@ant-design/icons/es/icons/CheckCircleOutlined.js");
-/* harmony import */ var _ant_design_icons__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! @ant-design/icons */ "./node_modules/@ant-design/icons/es/icons/PrinterOutlined.js");
+/* harmony import */ var _ant_design_icons__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! @ant-design/icons */ "./node_modules/@ant-design/icons/es/icons/CheckCircleOutlined.js");
+/* harmony import */ var _ant_design_icons__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! @ant-design/icons */ "./node_modules/@ant-design/icons/es/icons/PrinterOutlined.js");
 /* harmony import */ var _ant_design_icons__WEBPACK_IMPORTED_MODULE_42__ = __webpack_require__(/*! @ant-design/icons */ "./node_modules/@ant-design/icons/es/icons/TeamOutlined.js");
 /* harmony import */ var _ant_design_icons__WEBPACK_IMPORTED_MODULE_43__ = __webpack_require__(/*! @ant-design/icons */ "./node_modules/@ant-design/icons/es/icons/UserOutlined.js");
 /* harmony import */ var _ant_design_icons__WEBPACK_IMPORTED_MODULE_44__ = __webpack_require__(/*! @ant-design/icons */ "./node_modules/@ant-design/icons/es/icons/TrophyOutlined.js");
@@ -130519,22 +130607,51 @@ var AlumniDashboard = function AlumniDashboard() {
   var yoYChange = latestTrend && earliestTrend ? latestTrend.employed - earliestTrend.employed : 0;
   if (isLoading) {
     return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_components__WEBPACK_IMPORTED_MODULE_3__.Layout, {
-      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("div", {
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("div", {
         className: "alumni-dashboard-container",
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_35__["default"], {
-          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("div", {
-            style: {
-              textAlign: "center"
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_components__WEBPACK_IMPORTED_MODULE_3__.HeroSkeleton, {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_components__WEBPACK_IMPORTED_MODULE_3__.CardSkeletonGrid, {
+          variant: "stat",
+          count: 4
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("div", {
+          style: {
+            marginTop: 20
+          },
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_components__WEBPACK_IMPORTED_MODULE_3__.CardSkeletonGrid, {
+            variant: "chart",
+            count: 1,
+            columns: {
+              xs: 24
             },
-            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_31__["default"], {
-              type: "circle",
-              percent: 30
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(Title, {
-              level: 3,
-              children: "Loading Alumni Data..."
-            })]
+            height: 260
           })
-        })
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("div", {
+          style: {
+            marginTop: 20
+          },
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_components__WEBPACK_IMPORTED_MODULE_3__.CardSkeletonGrid, {
+            variant: "chart",
+            count: 2,
+            height: 300
+          })
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("div", {
+          style: {
+            marginTop: 20
+          },
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_components__WEBPACK_IMPORTED_MODULE_3__.CardSkeletonGrid, {
+            variant: "chart",
+            count: 2,
+            height: 300
+          })
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("div", {
+          style: {
+            marginTop: 20
+          },
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_components__WEBPACK_IMPORTED_MODULE_3__.CardSkeletonGrid, {
+            variant: "list",
+            count: 2,
+            rows: 6
+          })
+        })]
       })
     });
   }
@@ -130569,7 +130686,7 @@ var AlumniDashboard = function AlumniDashboard() {
                 className: "dashboard-hero__brand-meta",
                 children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_34__["default"], {
                   className: "dashboard-chip",
-                  icon: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_36__["default"], {}),
+                  icon: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_35__["default"], {}),
                   children: "Live Analytics Dashboard"
                 }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(Text, {
                   className: "dashboard-hero__eyebrow",
@@ -130606,23 +130723,23 @@ var AlumniDashboard = function AlumniDashboard() {
                   children: yearValue
                 }, yearValue);
               })]
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_37__["default"], {
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_36__["default"], {
               type: "primary",
-              icon: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_38__["default"], {}),
+              icon: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_37__["default"], {}),
               onClick: handlePrint,
               className: "dashboard-hero__print-btn",
               children: "Print Preview"
             })]
           })]
         })]
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_39__["default"], {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_38__["default"], {
         gutter: [24, 24],
         className: "metrics-row",
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_40__["default"], {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_39__["default"], {
           xs: 24,
           sm: 12,
           lg: 6,
-          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_35__["default"], {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_40__["default"], {
             className: "metric-card",
             children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_41__["default"], {
               title: "Total Alumni",
@@ -130637,11 +130754,11 @@ var AlumniDashboard = function AlumniDashboard() {
               status: "active"
             })]
           })
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_40__["default"], {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_39__["default"], {
           xs: 24,
           sm: 12,
           lg: 6,
-          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_35__["default"], {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_40__["default"], {
             className: "metric-card",
             children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_41__["default"], {
               title: "Active This Year",
@@ -130656,11 +130773,11 @@ var AlumniDashboard = function AlumniDashboard() {
               status: "active"
             })]
           })
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_40__["default"], {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_39__["default"], {
           xs: 24,
           sm: 12,
           lg: 6,
-          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_35__["default"], {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_40__["default"], {
             className: "metric-card",
             children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_41__["default"], {
               title: "Average Salary",
@@ -130676,11 +130793,11 @@ var AlumniDashboard = function AlumniDashboard() {
               children: "Based on reported salaries"
             })]
           })
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_40__["default"], {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_39__["default"], {
           xs: 24,
           sm: 12,
           lg: 6,
-          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_35__["default"], {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_40__["default"], {
             className: "metric-card",
             children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_41__["default"], {
               title: "Overall Employment Rate",
@@ -130697,50 +130814,50 @@ var AlumniDashboard = function AlumniDashboard() {
             })]
           })
         })]
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_39__["default"], {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_38__["default"], {
         gutter: [24, 24],
         style: {
           marginTop: 20
         },
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_40__["default"], {
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_39__["default"], {
           xs: 24,
           children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(EmploymentByCourseChart, {})
         })
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_39__["default"], {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_38__["default"], {
         gutter: [24, 24],
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_40__["default"], {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_39__["default"], {
           xs: 24,
           lg: 12,
           children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(EmploymentPieChart, {})
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_40__["default"], {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_39__["default"], {
           xs: 24,
           lg: 12,
           children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(EmploymentTrendChart, {})
         })]
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_39__["default"], {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_38__["default"], {
         gutter: [24, 24],
         style: {
           marginTop: 20
         },
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_40__["default"], {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_39__["default"], {
           xs: 24,
           lg: 12,
           children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(IndustryDistributionChart, {})
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_40__["default"], {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_39__["default"], {
           xs: 24,
           lg: 12,
           children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(SalaryProgressionChart, {})
         })]
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_39__["default"], {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_38__["default"], {
         gutter: [24, 24],
         style: {
           marginTop: 20
         },
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_40__["default"], {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_39__["default"], {
           xs: 24,
           lg: 12,
           children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(EmploymentByMajorTable, {})
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_40__["default"], {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_39__["default"], {
           xs: 24,
           lg: 12,
           children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(TopEmployersList, {})
@@ -130764,12 +130881,12 @@ var AlumniDashboard = function AlumniDashboard() {
       },
       wrapClassName: "print-preview-modal",
       className: "print-preview-modal",
-      footer: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_37__["default"], {
+      footer: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_36__["default"], {
         onClick: handleClosePreview,
         children: "Cancel"
-      }, "cancel"), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_37__["default"], {
+      }, "cancel"), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_36__["default"], {
         type: "primary",
-        icon: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_38__["default"], {}),
+        icon: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_37__["default"], {}),
         onClick: handleActualPrint,
         children: "Print"
       }, "print")],
@@ -130825,7 +130942,7 @@ var AlumniDashboard = function AlumniDashboard() {
               },
               children: ["Report Reference: ADR-", moment__WEBPACK_IMPORTED_MODULE_1___default()().format("YYYYMMDD-HHmmss")]
             })]
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_35__["default"], {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_40__["default"], {
             className: "print-block",
             children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(Title, {
               level: 4,
@@ -130974,15 +131091,15 @@ var AlumniDashboard = function AlumniDashboard() {
                 })]
               })]
             })]
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_35__["default"], {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_40__["default"], {
             className: "print-block",
             children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(Title, {
               level: 4,
               className: "print-section-title",
               children: "Key Metrics"
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_39__["default"], {
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_38__["default"], {
               gutter: 16,
-              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_40__["default"], {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_39__["default"], {
                 span: 6,
                 children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("div", {
                   style: {
@@ -131002,7 +131119,7 @@ var AlumniDashboard = function AlumniDashboard() {
                     children: "Total Alumni"
                   })]
                 })
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_40__["default"], {
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_39__["default"], {
                 span: 6,
                 children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("div", {
                   style: {
@@ -131022,7 +131139,7 @@ var AlumniDashboard = function AlumniDashboard() {
                     children: ["Employed (", overallEmploymentRate, "%)"]
                   })]
                 })
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_40__["default"], {
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_39__["default"], {
                 span: 6,
                 children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("div", {
                   style: {
@@ -131042,7 +131159,7 @@ var AlumniDashboard = function AlumniDashboard() {
                     children: ["Unemployed (", overallUnemploymentRate, "%)"]
                   })]
                 })
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_40__["default"], {
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_39__["default"], {
                 span: 6,
                 children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("div", {
                   style: {
@@ -131064,15 +131181,15 @@ var AlumniDashboard = function AlumniDashboard() {
                 })
               })]
             })]
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_35__["default"], {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_40__["default"], {
             className: "print-block",
             children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(Title, {
               level: 4,
               className: "print-section-title",
               children: "Engagement & Salary Snapshot"
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_39__["default"], {
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_38__["default"], {
               gutter: 16,
-              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_40__["default"], {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_39__["default"], {
                 span: 8,
                 children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("div", {
                   style: {
@@ -131092,7 +131209,7 @@ var AlumniDashboard = function AlumniDashboard() {
                     children: "Active This Year"
                   })]
                 })
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_40__["default"], {
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_39__["default"], {
                 span: 8,
                 children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("div", {
                   style: {
@@ -131112,7 +131229,7 @@ var AlumniDashboard = function AlumniDashboard() {
                     children: "Average Salary"
                   })]
                 })
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_40__["default"], {
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_39__["default"], {
                 span: 8,
                 children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("div", {
                   style: {
@@ -131133,12 +131250,12 @@ var AlumniDashboard = function AlumniDashboard() {
                   })]
                 })
               })]
-            }), salaryValues.length > 0 && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_39__["default"], {
+            }), salaryValues.length > 0 && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_38__["default"], {
               gutter: 16,
               style: {
                 marginTop: 16
               },
-              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_40__["default"], {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_39__["default"], {
                 span: 8,
                 children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("div", {
                   className: "print-insight-item",
@@ -131150,7 +131267,7 @@ var AlumniDashboard = function AlumniDashboard() {
                     children: ["\u20B1", minSalary.toLocaleString()]
                   })]
                 })
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_40__["default"], {
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_39__["default"], {
                 span: 8,
                 children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("div", {
                   className: "print-insight-item",
@@ -131162,7 +131279,7 @@ var AlumniDashboard = function AlumniDashboard() {
                     children: ["\u20B1", medianSalary.toLocaleString()]
                   })]
                 })
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_40__["default"], {
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_39__["default"], {
                 span: 8,
                 children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("div", {
                   className: "print-insight-item",
@@ -131176,7 +131293,7 @@ var AlumniDashboard = function AlumniDashboard() {
                 })
               })]
             })]
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_35__["default"], {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_40__["default"], {
             className: "print-block",
             children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(Title, {
               level: 4,
@@ -131246,15 +131363,15 @@ var AlumniDashboard = function AlumniDashboard() {
                 })
               })
             })]
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_35__["default"], {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_40__["default"], {
             className: "print-block",
             children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(Title, {
               level: 4,
               className: "print-section-title",
               children: "Overall Employment Status"
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_39__["default"], {
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_38__["default"], {
               gutter: 16,
-              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_40__["default"], {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_39__["default"], {
                 span: 12,
                 children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("div", {
                   className: "print-chart-box",
@@ -131287,7 +131404,7 @@ var AlumniDashboard = function AlumniDashboard() {
                     })
                   })
                 })
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_40__["default"], {
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(antd__WEBPACK_IMPORTED_MODULE_39__["default"], {
                 span: 12,
                 children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("div", {
                   style: {
@@ -131340,7 +131457,7 @@ var AlumniDashboard = function AlumniDashboard() {
                 })
               })]
             })]
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_35__["default"], {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_40__["default"], {
             className: "print-block",
             children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(Title, {
               level: 4,
@@ -131431,7 +131548,7 @@ var AlumniDashboard = function AlumniDashboard() {
                 }
               }]
             })]
-          }), industryDistribution.length > 0 && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_35__["default"], {
+          }), industryDistribution.length > 0 && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_40__["default"], {
             className: "print-block",
             children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(Title, {
               level: 4,
@@ -131475,7 +131592,7 @@ var AlumniDashboard = function AlumniDashboard() {
                 })
               })
             })]
-          }), salaryProgression.length > 0 && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_35__["default"], {
+          }), salaryProgression.length > 0 && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_40__["default"], {
             className: "print-block",
             children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(Title, {
               level: 4,
@@ -131520,7 +131637,7 @@ var AlumniDashboard = function AlumniDashboard() {
               },
               children: ["Reported salary range: \u20B1", minSalary.toLocaleString(), " \u2013 \u20B1", maxSalary.toLocaleString(), " \xB7 Median \u20B1", medianSalary.toLocaleString(), " \xB7 Mean \u20B1", ((alumniMetrics === null || alumniMetrics === void 0 ? void 0 : alumniMetrics.averageSalary) || 0).toLocaleString()]
             })]
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_35__["default"], {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_40__["default"], {
             className: "print-block",
             children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(Title, {
               level: 4,
@@ -131628,7 +131745,7 @@ var AlumniDashboard = function AlumniDashboard() {
                 });
               }
             })]
-          }), (employmentData === null || employmentData === void 0 ? void 0 : employmentData.byMajor) && employmentData.byMajor.length > 0 && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_35__["default"], {
+          }), (employmentData === null || employmentData === void 0 ? void 0 : employmentData.byMajor) && employmentData.byMajor.length > 0 && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_40__["default"], {
             className: "print-block",
             children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(Title, {
               level: 4,
@@ -131677,7 +131794,7 @@ var AlumniDashboard = function AlumniDashboard() {
                 key: "totalGraduates"
               }]
             })]
-          }), industryDistribution.length > 0 && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_35__["default"], {
+          }), industryDistribution.length > 0 && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_40__["default"], {
             className: "print-block",
             children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(Title, {
               level: 4,
@@ -131715,7 +131832,7 @@ var AlumniDashboard = function AlumniDashboard() {
                 }
               }]
             })]
-          }), topEmployers.length > 0 && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_35__["default"], {
+          }), topEmployers.length > 0 && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_40__["default"], {
             className: "print-block",
             children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(Title, {
               level: 4,
@@ -131749,7 +131866,7 @@ var AlumniDashboard = function AlumniDashboard() {
                 }
               }]
             })]
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_35__["default"], {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_40__["default"], {
             className: "print-block",
             children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(Title, {
               level: 4,
@@ -159050,194 +159167,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
 /* harmony export */   refreshAuthToken: () => (/* binding */ refreshAuthToken)
 /* harmony export */ });
-/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/modal/index.js");
+/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/notification/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! axios */ "./node_modules/axios/lib/axios.js");
 /* harmony import */ var react_secure_storage__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react-secure-storage */ "./node_modules/react-secure-storage/dist/index.js");
 /* harmony import */ var _states_loadingState__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ~/states/loadingState */ "./resources/js/states/loadingState.js");
 /* harmony import */ var _constant__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./constant */ "./resources/js/utils/constant.js");
-// import { message, Modal } from "antd";
-// import axios from "axios";
-// import secureLocalStorage from "react-secure-storage";
-// import { useLoadingStore } from "~/states/loadingState";
-// import { BASE_URL } from "./constant";
-
-// const instance = axios.create({
-//     baseURL: BASE_URL + "api/",
-// });
-
-// // Track if a modal is already open
-// let isModalOpen = false;
-// let currentModal = null;
-
-// // // Add request interceptor for loading effects
-// // instance.interceptors.request.use(
-// //     (config) => {
-// //         const loadingStore = useLoadingStore.getState();
-// //         // Prevent crash if function doesn't exist
-// //         loadingStore?.showLoading?.();
-// //         return config;
-// //     },
-// //     (error) => {
-// //         const loadingStore = useLoadingStore.getState();
-// //         loadingStore?.hideLoading?.();
-// //         return Promise.reject(error);
-// //     }
-// // );
-// // =========================================
-// // GET CURRENT THEME
-// // =========================================
-// const getThemeClass = (darkClass, lightClass) => {
-//     const currentTheme =
-//         secureLocalStorage.getItem("app-theme") || "white";
-
-//     return currentTheme === "black"
-//         ? darkClass
-//         : lightClass;
-// };
-
-// // =========================================
-// // RESPONSE INTERCEPTOR
-// // =========================================
-// instance.interceptors.response.use(
-//     (response) => {
-//         const loadingStore = useLoadingStore.getState();
-
-//         // 🔕 SILENT REQUEST → NO LOADING
-//         if (!response.config?.silent) {
-//             loadingStore?.hideLoading?.();
-//         }
-
-//         return response;
-//     },
-
-//     (error) => {
-//         const loadingStore = useLoadingStore.getState();
-
-//         // 🔕 SILENT REQUEST → NO LOADING
-//         if (!error.config?.silent) {
-//             loadingStore?.hideLoading?.();
-//         }
-
-//         const statusCode =
-//             error.response?.status || null;
-
-//         // =========================================
-//         // SESSION EXPIRED
-//         // =========================================
-//         if (statusCode === 401) {
-//             window.location.href =
-//                 `/login?type=session-expired&link=${window.location.href}`;
-
-//             return Promise.reject(error);
-//         }
-
-//         // =========================================
-//         // SILENT REQUEST
-//         // =========================================
-//         if (error.config?.silent) {
-//             return Promise.reject(error);
-//         }
-
-//         // =========================================
-//         // VALIDATION ERRORS (422)
-//         // =========================================
-//         if (statusCode === 422) {
-//             let validationMessage =
-//                 "Validation error.";
-
-//             if (error.response?.data?.errors) {
-//                 validationMessage = Object.values(
-//                     error.response.data.errors
-//                 )
-//                     .flat()
-//                     .join("\n");
-//             }
-
-//             message.error({
-//                 content: validationMessage,
-//                 duration: 5,
-
-//                 className: getThemeClass(
-//                     "dark-theme-message",
-//                     "light-theme-message"
-//                 ),
-//             });
-
-//             return Promise.reject(error);
-//         }
-
-//         // =========================================
-//         // OTHER BACKEND ERRORS
-//         // =========================================
-//      let errorMessage = "Your Laravel isn't running.";
-
-// if (error.response?.data?.message) {
-//     errorMessage = error.response.data.message;
-// }
-
-// message.error({
-//     content: errorMessage,
-//     duration: 5,
-//     className: getThemeClass(
-//         "dark-theme-message",
-//         "light-theme-message"
-//     ),
-// });
-//         // =========================================
-//         // SINGLE MODAL INSTANCE
-//         // =========================================
-//         if (isModalOpen && currentModal) {
-//             currentModal.update({
-//                 title: `Error: ${statusCode}`,
-//                 content: errorMessage,
-//             });
-//         } else {
-//             currentModal = Modal.error({
-//                 title: `Error: ${statusCode}`,
-//                 content: errorMessage,
-
-//                 className: getThemeClass(
-//                     "dark-theme-modal",
-//                     "light-theme-modal"
-//                 ),
-
-//                 onOk: () => {
-//                     isModalOpen = false;
-//                     currentModal = null;
-//                 },
-
-//                 onCancel: () => {
-//                     isModalOpen = false;
-//                     currentModal = null;
-//                 },
-//             });
-
-//             isModalOpen = true;
-//         }
-
-//         return Promise.reject(error);
-//     }
-// );
-
-// // Set auth token
-// const updateAuthToken = () => {
-//     const access_token = secureLocalStorage.getItem("access_token");
-
-//     if (access_token) {
-//         instance.defaults.headers.common["Authorization"] = `Bearer ${access_token}`;
-//     }
-// };
-
-// // Initialize auth token
-// updateAuthToken();
-
-// // Optional: Add a method to refresh token when needed
-// export const refreshAuthToken = (newToken) => {
-//     secureLocalStorage.setItem("access_token", newToken);
-//     updateAuthToken();
-// };
-
-// export default instance;
 
 
 
@@ -159300,33 +159234,108 @@ var getThemeClass = function getThemeClass(darkClass, lightClass) {
 };
 
 // =========================================
-// SINGLE ERROR MODAL INSTANCE
+// ERROR TOAST (antd notification)
 // =========================================
-// Prevents multiple Modal.error() dialogs from stacking on top of each
-// other when several requests fail around the same time (e.g. a slow
-// backend causing a batch of polling requests to time out together).
-// Instead of opening a new modal per failure, later errors update the
-// modal that's already open.
-var activeErrorModal = null;
-var showErrorModal = function showErrorModal(title, content, className) {
-  if (activeErrorModal) {
-    activeErrorModal.update({
-      title: title,
-      content: content
-    });
-    return;
-  }
-  activeErrorModal = antd__WEBPACK_IMPORTED_MODULE_4__["default"].error({
-    title: title,
-    content: content,
-    className: className,
-    onOk: function onOk() {
-      activeErrorModal = null;
-    },
-    onCancel: function onCancel() {
-      activeErrorModal = null;
-    }
+// Every failed request that reaches this point is surfaced as a small,
+// auto-dismissing toast in the corner of the screen instead of a blocking
+// Modal.error() dialog. Each HTTP status gets its own clear title +
+// description so alumni, admins, and department heads can tell at a
+// glance *what* went wrong (permissions? bad input? server down?) rather
+// than a bare "Error" with no context.
+//
+// A stable `key` per status code means if several requests fail with the
+// same kind of error around the same time (e.g. a batch of polling calls
+// during an outage), later failures update the existing toast in place
+// instead of stacking duplicates on top of each other.
+var showErrorToast = function showErrorToast(_ref) {
+  var key = _ref.key,
+    title = _ref.message,
+    description = _ref.description,
+    statusCode = _ref.statusCode;
+  antd__WEBPACK_IMPORTED_MODULE_4__["default"].error({
+    key: key,
+    message: title,
+    description: description,
+    placement: "topRight",
+    duration: statusCode && statusCode >= 500 ? 6 : 4.5,
+    className: getThemeClass("dark-theme-notification", "light-theme-notification")
   });
+};
+
+// Maps a status code (or connection failure) to a specific { title, description }
+// pair. Falls back to the backend-provided message when we have one, since
+// that's usually more precise than any generic copy we could write here.
+var describeError = function describeError(error, statusCode) {
+  var _error$response;
+  var backendMessage = (_error$response = error.response) === null || _error$response === void 0 || (_error$response = _error$response.data) === null || _error$response === void 0 ? void 0 : _error$response.message;
+  if (error.code === "ECONNABORTED") {
+    // A timeout fired — either a per-request `timeout` option set at
+    // the call site, or the browser's own network timeout. Not
+    // necessarily a sign the backend is down.
+    return {
+      title: "Request Timed Out",
+      description: backendMessage || "That took too long to respond. Please try again."
+    };
+  }
+  if (!error.response) {
+    // Request never got a response at all (network drop, CORS block,
+    // connection refused, etc.) — the only case where it's fair to
+    // suggest the server itself might be unreachable.
+    return {
+      title: "Connection Problem",
+      description: "Could not reach the server. Please check your internet connection and try again."
+    };
+  }
+  switch (statusCode) {
+    case 400:
+      return {
+        title: "Invalid Request",
+        description: backendMessage || "That request couldn't be processed. Please check your input and try again."
+      };
+    case 403:
+      return {
+        title: "Access Denied",
+        description: backendMessage || "You don't have permission to perform this action."
+      };
+    case 404:
+      return {
+        title: "Not Found",
+        description: backendMessage || "The item you're looking for couldn't be found. It may have been moved or deleted."
+      };
+    case 409:
+      return {
+        title: "Conflict",
+        description: backendMessage || "This action conflicts with existing data. Please refresh and try again."
+      };
+    case 419:
+      return {
+        title: "Session Expired",
+        description: "Your session has expired for security reasons. Please refresh the page and try again."
+      };
+    case 429:
+      return {
+        title: "Too Many Requests",
+        description: backendMessage || "You're doing that a bit too fast. Please wait a moment and try again."
+      };
+    case 502:
+    case 503:
+    case 504:
+      return {
+        title: "Service Unavailable",
+        description: backendMessage || "The server is temporarily unavailable. Please try again in a few minutes."
+      };
+    default:
+      if (statusCode >= 500) {
+        return {
+          title: "Server Error",
+          description: backendMessage || "Something went wrong on our end. Please try again, and contact support if it keeps happening."
+        };
+      }
+      return {
+        title: "Error".concat(statusCode ? " ".concat(statusCode) : ""),
+        description: backendMessage || "An unexpected error occurred."
+      };
+  }
 };
 
 // =========================================
@@ -159341,13 +159350,13 @@ instance.interceptors.response.use(function (response) {
   }
   return response;
 }, function (error) {
-  var _error$config, _error$response, _error$config2, _error$config3, _error$config4;
+  var _error$config, _error$response2, _error$config2, _error$config3, _error$config5;
   var loadingStore = _states_loadingState__WEBPACK_IMPORTED_MODULE_1__.useLoadingStore.getState();
   if (!((_error$config = error.config) !== null && _error$config !== void 0 && _error$config.silent)) {
     var _loadingStore$hideLoa2;
     loadingStore === null || loadingStore === void 0 || (_loadingStore$hideLoa2 = loadingStore.hideLoading) === null || _loadingStore$hideLoa2 === void 0 || _loadingStore$hideLoa2.call(loadingStore);
   }
-  var statusCode = ((_error$response = error.response) === null || _error$response === void 0 ? void 0 : _error$response.status) || null;
+  var statusCode = ((_error$response2 = error.response) === null || _error$response2 === void 0 ? void 0 : _error$response2.status) || null;
 
   // =========================================
   // SILENT REQUEST
@@ -159376,12 +159385,21 @@ instance.interceptors.response.use(function (response) {
   // VALIDATION ERROR (422)
   // =========================================
   if (statusCode === 422) {
-    var _error$response2;
-    var validationMessage = "Validation error.";
-    if ((_error$response2 = error.response) !== null && _error$response2 !== void 0 && (_error$response2 = _error$response2.data) !== null && _error$response2 !== void 0 && _error$response2.errors) {
+    var _error$response3, _error$response4, _error$config4;
+    var validationMessage = "Please check the highlighted fields and try again.";
+    if ((_error$response3 = error.response) !== null && _error$response3 !== void 0 && (_error$response3 = _error$response3.data) !== null && _error$response3 !== void 0 && _error$response3.errors) {
       validationMessage = Object.values(error.response.data.errors).flat().join("\n");
+    } else if ((_error$response4 = error.response) !== null && _error$response4 !== void 0 && (_error$response4 = _error$response4.data) !== null && _error$response4 !== void 0 && _error$response4.message) {
+      validationMessage = error.response.data.message;
     }
-    showErrorModal("Validation Error", validationMessage, getThemeClass("dark-theme-modal", "light-theme-modal"));
+    if (!((_error$config4 = error.config) !== null && _error$config4 !== void 0 && _error$config4.suppressGenericModal)) {
+      showErrorToast({
+        key: "http-error-422",
+        message: "Please Check Your Input",
+        description: validationMessage,
+        statusCode: statusCode
+      });
+    }
     return Promise.reject(error);
   }
 
@@ -159389,32 +159407,24 @@ instance.interceptors.response.use(function (response) {
   // OTHER ERRORS
   // =========================================
   // `suppressGenericModal` lets a call site that already shows its
-  // own specific, contextual error (a toast naming exactly what
-  // failed, a graceful timeout recovery, etc.) opt out of this
-  // generic modal so the admin isn't shown two different error
-  // messages for the same failure. Unlike `silent`, this still
-  // goes through the 401/422 handling above — it only skips the
-  // generic catch-all below.
-  if ((_error$config4 = error.config) !== null && _error$config4 !== void 0 && _error$config4.suppressGenericModal) {
+  // own specific, contextual toast (naming exactly what failed, a
+  // graceful timeout recovery, etc.) opt out of this generic toast
+  // so the user isn't shown two different error messages for the
+  // same failure. Unlike `silent`, this still goes through the
+  // 401/422 handling above — it only skips the generic catch-all
+  // below.
+  if ((_error$config5 = error.config) !== null && _error$config5 !== void 0 && _error$config5.suppressGenericModal) {
     return Promise.reject(error);
   }
-  var errorMessage;
-  if (error.code === "ECONNABORTED") {
-    // A timeout fired — either a per-request `timeout` option set at
-    // the call site (there's no default on this instance anymore),
-    // or the browser's own network timeout. Not necessarily a sign
-    // the backend is down.
-    errorMessage = "The request timed out. Please try again.";
-  } else if (!error.response) {
-    // Request never got a response at all (network drop, CORS block,
-    // connection refused, etc.) — this is the only case where it's
-    // fair to suggest the backend itself might be unreachable.
-    errorMessage = "Could not reach the server. Please check your connection and try again.";
-  } else {
-    var _error$response3;
-    errorMessage = ((_error$response3 = error.response) === null || _error$response3 === void 0 || (_error$response3 = _error$response3.data) === null || _error$response3 === void 0 ? void 0 : _error$response3.message) || "An unexpected error occurred.";
-  }
-  showErrorModal("Error ".concat(statusCode || ""), errorMessage, getThemeClass("dark-theme-modal", "light-theme-modal"));
+  var _describeError = describeError(error, statusCode),
+    title = _describeError.title,
+    description = _describeError.description;
+  showErrorToast({
+    key: "http-error-".concat(statusCode || "network"),
+    message: title,
+    description: description,
+    statusCode: statusCode
+  });
   return Promise.reject(error);
 });
 

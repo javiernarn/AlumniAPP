@@ -16,6 +16,12 @@ const fetch = async () => {
 export default function useAlumniDirectory(options = {}) {
     return useQuery(["alumni-directory"], () => fetch(), {
         keepPreviousData: true,
+        // Phase 4 (audit §2/§3): see useAlumni.js for the reasoning —
+        // same explicit staleTime instead of relying on the global
+        // 5-minute default, and this is the other query key the Phase 1
+        // online-status poll merges deltas into (the alumni-facing
+        // directory view in AlumniList.js).
+        staleTime: 30000,
         enabled: options.enabled ?? true,
         ...options,
     });

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Gallery;
+use App\Support\CacheHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -77,31 +78,59 @@ class GalleryController extends Controller
         // uploaded_by (an internal user id), original_name, file_type,
         // file_size, status, organization_name, and updated_at are
         // dropped entirely — not fetched, not hidden.
-        $query = Gallery::where('status', 'active')
-            ->select(['id', 'title', 'image_path', 'image_paths', 'event_date', 'created_at'])
-            ->orderBy('created_at', 'desc');
+        // Phase 2 caching (audit §3): cache key is per year:month (the
+        // dimension the plan calls out — most public-gallery navigation
+        // is "browse by month") plus a short hash of the remaining
+        // filters (search/per_page/page) so different filter/pagination
+        // combos don't collide. TTL 60s. Because the hash means there's
+        // no single fixed "default" key the observer could reliably
+        // forget(), GalleryObserver only does a tag-based flush — see
+        // GalleryObserver and CacheHelper's docblocks for why that means
+        // entries on a non-tag-capable driver (file/database) simply
+        // expire on their own within the 60s TTL after a write, instead
+        // of being forgotten immediately the way Announcement/Event are.
+        $year = $request->has('year') && $request->year ? $request->year : 'all';
+        $month = $request->has('month') && $request->month ? $request->month : 'all';
+        $filterHash = substr(md5(json_encode([
+            'search' => $request->get('search'),
+            'per_page' => $request->get('per_page', 12),
+            'page' => $request->get('page', 1),
+        ])), 0, 8);
 
-        if ($request->has('search') && $request->search) {
-            $searchTerm = $request->search;
-            $query->where(function ($q) use ($searchTerm) {
-                $q->where('title', 'like', '%' . $searchTerm . '%')
-                  ->orWhere('organization_name', 'like', '%' . $searchTerm . '%');
-            });
-        }
+        $galleries = CacheHelper::remember(
+            "public:gallery:{$year}:{$month}:{$filterHash}",
+            ['gallery'],
+            60,
+            function () use ($request) {
+                $query = Gallery::where('status', 'active')
+                    ->select(['id', 'title', 'image_path', 'image_paths', 'event_date', 'created_at'])
+                    ->orderBy('created_at', 'desc');
 
-        if ($request->has('year') && $request->year) {
-            $query->whereYear('event_date', $request->year);
-        }
+                if ($request->has('search') && $request->search) {
+                    $searchTerm = $request->search;
+                    $query->where(function ($q) use ($searchTerm) {
+                        $q->where('title', 'like', '%' . $searchTerm . '%')
+                          ->orWhere('organization_name', 'like', '%' . $searchTerm . '%');
+                    });
+                }
 
-        if ($request->has('month') && $request->month) {
-            $query->whereMonth('event_date', $request->month);
-        }
+                if ($request->has('year') && $request->year) {
+                    $query->whereYear('event_date', $request->year);
+                }
 
-        $galleries = $query->paginate($request->get('per_page', 12));
+                if ($request->has('month') && $request->month) {
+                    $query->whereMonth('event_date', $request->month);
+                }
 
-        $galleries->getCollection()->transform(function ($gallery) {
-            return $gallery->makeHidden(['image_path', 'image_paths']);
-        });
+                $galleries = $query->paginate($request->get('per_page', 12));
+
+                $galleries->getCollection()->transform(function ($gallery) {
+                    return $gallery->makeHidden(['image_path', 'image_paths']);
+                });
+
+                return $galleries;
+            }
+        );
 
         return response()->json([
             'success' => true,

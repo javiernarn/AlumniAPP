@@ -21,6 +21,7 @@ use App\Http\Requests\Alumni\UpdateAlumniRequest;
 use App\Http\Requests\Alumni\UploadAlumniDocumentRequest;
 use App\Http\Requests\Alumni\UpdateProfileImageRequest;
 use App\Support\ImageSanitizer;
+use App\Support\CacheHelper;
 use App\Support\UploadedFileNamer;
 use App\Mail\AlumniAccountApproved;
 
@@ -978,20 +979,30 @@ public function updateProfileImage(UpdateProfileImageRequest $request, $id)
 public function getOnlineStatuses()
 {
     try {
-        $alumni = Alumni::with('user:id,last_active_at,is_online')
-            ->select('id', 'user_id')
-            ->get()
-            ->map(function ($alumnus) {
-                // is_online / last_active_at live on the related `users`
-                // row, not on Alumni itself — reading $alumnus->is_online
-                // directly (as this used to) always resolved to null/false
-                // regardless of the alumnus's real status.
-                return [
-                    'id' => $alumnus->id,
-                    'is_online' => (bool) ($alumnus->user->is_online ?? false),
-                    'last_active' => $alumnus->user->last_active_at ?? null,
-                ];
-            });
+        // Phase 2 caching (audit §3 step 4): defense-in-depth on top of
+        // the Phase 1 frontend fix. This is still polled every 30s by
+        // every open AlumniList tab, so a short (5s) server-side cache
+        // means simultaneous admins share one DB hit instead of one
+        // each. No observer/invalidation needed — is_online/last_active
+        // are inherently "roughly current" values, not something that
+        // needs to be exact to the second, so just letting this expire
+        // on its own every 5s is enough.
+        $alumni = CacheHelper::remember('alumni:online-statuses', [], 5, function () {
+            return Alumni::with('user:id,last_active_at,is_online')
+                ->select('id', 'user_id')
+                ->get()
+                ->map(function ($alumnus) {
+                    // is_online / last_active_at live on the related `users`
+                    // row, not on Alumni itself — reading $alumnus->is_online
+                    // directly (as this used to) always resolved to null/false
+                    // regardless of the alumnus's real status.
+                    return [
+                        'id' => $alumnus->id,
+                        'is_online' => (bool) ($alumnus->user->is_online ?? false),
+                        'last_active' => $alumnus->user->last_active_at ?? null,
+                    ];
+                });
+        });
 
         return response()->json([
             'success' => true,

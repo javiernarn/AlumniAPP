@@ -46,7 +46,19 @@
 //               first, capped at 4.
 // ============================================================
 
-import { useState, useEffect, useCallback, useRef } from "react";
+// Phase 3 (audit §3 frontend): migrated onto react-query — see the
+// header comment in usePublicEventsData.js for why (de-duplication +
+// real staleTime instead of "always refetch on mount"). Each of the
+// three fetches below uses its own query key with a "home" suffix,
+// distinct from the "full" list query keys used by
+// usePublicEventsData/usePublicGalleryData/usePublicJobPostsData —
+// those hooks request different params (this page wants per_page:8
+// galleries / status:approved jobs / the full events list pre-filter),
+// so they're genuinely different requests and shouldn't share a cache
+// entry, even though (as noted below) the gallery hook is *also*
+// mounted directly on this same page for the header dropdown.
+import { useMemo } from "react";
+import { useQuery, useQueryClient } from "react-query";
 import axiosConfig from "~/utils/axiosConfig";
 
 // ------------------------------------------------------------
@@ -60,6 +72,12 @@ const PUBLIC_ENDPOINTS = {
     events: "/public/events",
     gallery: "/public/galleries",
     jobs: "/public/job-posts",
+};
+
+const QUERY_KEYS = {
+    events: ["public-events", "home"],
+    gallery: ["public-galleries", "home"],
+    jobs: ["public-job-posts", "home"],
 };
 
 const REQUEST_OPTS = {
@@ -111,126 +129,88 @@ const isUpcoming = (event) => {
 // same rule homePage.js applies to its "Latest Job Posts" widget.
 const isActiveJob = (job) => !job?.is_full && !job?.is_expired;
 
+const COMMON_OPTIONS = {
+    staleTime: 60000,
+    refetchOnWindowFocus: false,
+};
+
 export default function usePublicHomeData() {
-    const [events, setEvents] = useState([]);
-    const [eventsLoading, setEventsLoading] = useState(true);
-    const [eventsError, setEventsError] = useState(null);
-
-    const [gallery, setGallery] = useState([]);
-    const [galleryLoading, setGalleryLoading] = useState(true);
-    const [galleryError, setGalleryError] = useState(null);
-
-    const [jobs, setJobs] = useState([]);
-    const [jobsLoading, setJobsLoading] = useState(true);
-    const [jobsError, setJobsError] = useState(null);
-
-    // bumping this re-runs every fetch (see refetch() below)
-    const [refreshToken, setRefreshToken] = useState(0);
-    const mountedRef = useRef(true);
-
-    useEffect(() => {
-        mountedRef.current = true;
-        return () => {
-            mountedRef.current = false;
-        };
-    }, []);
+    const queryClient = useQueryClient();
 
     // ------------- Events -------------
-    useEffect(() => {
-        let active = true;
-        (async () => {
-            try {
-                setEventsLoading(true);
-                setEventsError(null);
-                const response = await axiosConfig.get(
-                    PUBLIC_ENDPOINTS.events,
-                    REQUEST_OPTS,
-                );
-                const list = unwrapList(response);
-                const upcoming = list.filter(isUpcoming);
-                const sorted = sortByDateAsc(
-                    upcoming,
-                    (ev) => ev.date || ev.event_date,
-                );
-                if (active && mountedRef.current) setEvents(sorted.slice(0, 4));
-            } catch (err) {
-                if (active && mountedRef.current) {
-                    setEvents([]);
-                    setEventsError(err);
-                }
-            } finally {
-                if (active && mountedRef.current) setEventsLoading(false);
-            }
-        })();
-        return () => {
-            active = false;
-        };
-    }, [refreshToken]);
+    const {
+        data: events = [],
+        isLoading: eventsLoading,
+        error: eventsError,
+    } = useQuery(
+        QUERY_KEYS.events,
+        async () => {
+            const response = await axiosConfig.get(
+                PUBLIC_ENDPOINTS.events,
+                REQUEST_OPTS,
+            );
+            const list = unwrapList(response);
+            const upcoming = list.filter(isUpcoming);
+            const sorted = sortByDateAsc(upcoming, (ev) => ev.date || ev.event_date);
+            return sorted.slice(0, 4);
+        },
+        COMMON_OPTIONS,
+    );
 
     // ------------- Gallery -------------
-    useEffect(() => {
-        let active = true;
-        (async () => {
-            try {
-                setGalleryLoading(true);
-                setGalleryError(null);
-                const response = await axiosConfig.get(
-                    PUBLIC_ENDPOINTS.gallery,
-                    { ...REQUEST_OPTS, params: { per_page: 8 } },
-                );
-                const list = unwrapList(response);
-                const sorted = sortByDateDesc(list, (g) => g.created_at);
-                if (active && mountedRef.current) setGallery(sorted.slice(0, 8));
-            } catch (err) {
-                if (active && mountedRef.current) {
-                    setGallery([]);
-                    setGalleryError(err);
-                }
-            } finally {
-                if (active && mountedRef.current) setGalleryLoading(false);
-            }
-        })();
-        return () => {
-            active = false;
-        };
-    }, [refreshToken]);
+    const {
+        data: gallery = [],
+        isLoading: galleryLoading,
+        error: galleryError,
+    } = useQuery(
+        QUERY_KEYS.gallery,
+        async () => {
+            const response = await axiosConfig.get(PUBLIC_ENDPOINTS.gallery, {
+                ...REQUEST_OPTS,
+                params: { per_page: 8 },
+            });
+            const list = unwrapList(response);
+            const sorted = sortByDateDesc(list, (g) => g.created_at);
+            return sorted.slice(0, 8);
+        },
+        COMMON_OPTIONS,
+    );
 
     // ------------- Job posts -------------
     // `status: "approved"` is sent for clarity/readability, but the real
     // enforcement now happens server-side: the /public/job-posts route in
     // api.php overwrites this param before it reaches the controller, so
     // it can't be tampered with client-side.
-    useEffect(() => {
-        let active = true;
-        (async () => {
-            try {
-                setJobsLoading(true);
-                setJobsError(null);
-                const response = await axiosConfig.get(PUBLIC_ENDPOINTS.jobs, {
-                    ...REQUEST_OPTS,
-                    params: { status: "approved" },
-                });
-                const list = unwrapList(response);
-                const active_jobs = list.filter(isActiveJob);
-                const sorted = sortByDateDesc(active_jobs, (job) => job.created_at);
-                if (active && mountedRef.current) setJobs(sorted.slice(0, 4));
-            } catch (err) {
-                if (active && mountedRef.current) {
-                    setJobs([]);
-                    setJobsError(err);
-                }
-            } finally {
-                if (active && mountedRef.current) setJobsLoading(false);
-            }
-        })();
-        return () => {
-            active = false;
-        };
-    }, [refreshToken]);
+    const {
+        data: jobs = [],
+        isLoading: jobsLoading,
+        error: jobsError,
+    } = useQuery(
+        QUERY_KEYS.jobs,
+        async () => {
+            const response = await axiosConfig.get(PUBLIC_ENDPOINTS.jobs, {
+                ...REQUEST_OPTS,
+                params: { status: "approved" },
+            });
+            const list = unwrapList(response);
+            const active_jobs = list.filter(isActiveJob);
+            const sorted = sortByDateDesc(active_jobs, (job) => job.created_at);
+            return sorted.slice(0, 4);
+        },
+        COMMON_OPTIONS,
+    );
 
-    const refetch = useCallback(() => {
-        setRefreshToken((t) => t + 1);
-    }, []);
+    // Refetches all three at once, same "one refetch() does everything"
+    // shape the old refreshToken-bump gave callers.
+    const refetch = useMemo(
+        () => () =>
+            Promise.all([
+                queryClient.refetchQueries(QUERY_KEYS.events),
+                queryClient.refetchQueries(QUERY_KEYS.gallery),
+                queryClient.refetchQueries(QUERY_KEYS.jobs),
+            ]),
+        [queryClient],
+    );
 
     return {
         events,

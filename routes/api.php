@@ -27,10 +27,6 @@ use App\Http\Controllers\AtmsFeedbackReportController;
 
 
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
 Route::post('/mobile/login', 'App\Http\Controllers\AuthController@login')->middleware('throttle:login');
 Route::post('/login', 'App\Http\Controllers\AuthController@login')->middleware('throttle:login');
 
@@ -328,8 +324,14 @@ Route::delete('/galleries/{id}/image', [GalleryController::class, 'deleteImage']
         Route::delete('/alumni/{id}/document/{documentId}', [AlumniRegistrationController::class, 'deleteDocument']);
     });
 
-    Route::delete('/admin/messages/{messageId}/delete', [MessagingController::class, 'deleteMessage']);
-    Route::put('/admin/messages/{messageId}/edit', [MessagingController::class, 'editMessage']);
+    // Moved inside an explicit role:admin check (route-layer defense in
+    // depth) to match the /admin/ URL semantics — previously these sat
+    // outside the role:admin group and relied solely on the controller's
+    // ownership check. Confirmed only called from AdminAlumniMessages.js.
+    Route::delete('/admin/messages/{messageId}/delete', [MessagingController::class, 'deleteMessage'])
+        ->middleware('role:admin');
+    Route::put('/admin/messages/{messageId}/edit', [MessagingController::class, 'editMessage'])
+        ->middleware('role:admin');
     Route::post('/messages/{messageId}/reactions', [MessagingController::class, 'addReaction']);
     Route::get('/messages/{messageId}/reactions', [MessagingController::class, 'getMessageReactions']);
     Route::get('/messages/{messageId}/image', [MessagingController::class, 'downloadImage'])

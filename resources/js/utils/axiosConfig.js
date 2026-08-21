@@ -1,188 +1,4 @@
-// import { message, Modal } from "antd";
-// import axios from "axios";
-// import secureLocalStorage from "react-secure-storage";
-// import { useLoadingStore } from "~/states/loadingState";
-// import { BASE_URL } from "./constant";
-
-// const instance = axios.create({
-//     baseURL: BASE_URL + "api/",
-// });
-
-// // Track if a modal is already open
-// let isModalOpen = false;
-// let currentModal = null;
-
-// // // Add request interceptor for loading effects
-// // instance.interceptors.request.use(
-// //     (config) => {
-// //         const loadingStore = useLoadingStore.getState();
-// //         // Prevent crash if function doesn't exist
-// //         loadingStore?.showLoading?.();
-// //         return config;
-// //     },
-// //     (error) => {
-// //         const loadingStore = useLoadingStore.getState();
-// //         loadingStore?.hideLoading?.();
-// //         return Promise.reject(error);
-// //     }
-// // );
-// // =========================================
-// // GET CURRENT THEME
-// // =========================================
-// const getThemeClass = (darkClass, lightClass) => {
-//     const currentTheme =
-//         secureLocalStorage.getItem("app-theme") || "white";
-
-//     return currentTheme === "black"
-//         ? darkClass
-//         : lightClass;
-// };
-
-// // =========================================
-// // RESPONSE INTERCEPTOR
-// // =========================================
-// instance.interceptors.response.use(
-//     (response) => {
-//         const loadingStore = useLoadingStore.getState();
-
-//         // 🔕 SILENT REQUEST → NO LOADING
-//         if (!response.config?.silent) {
-//             loadingStore?.hideLoading?.();
-//         }
-
-//         return response;
-//     },
-
-//     (error) => {
-//         const loadingStore = useLoadingStore.getState();
-
-//         // 🔕 SILENT REQUEST → NO LOADING
-//         if (!error.config?.silent) {
-//             loadingStore?.hideLoading?.();
-//         }
-
-//         const statusCode =
-//             error.response?.status || null;
-
-//         // =========================================
-//         // SESSION EXPIRED
-//         // =========================================
-//         if (statusCode === 401) {
-//             window.location.href =
-//                 `/login?type=session-expired&link=${window.location.href}`;
-
-//             return Promise.reject(error);
-//         }
-
-//         // =========================================
-//         // SILENT REQUEST
-//         // =========================================
-//         if (error.config?.silent) {
-//             return Promise.reject(error);
-//         }
-
-//         // =========================================
-//         // VALIDATION ERRORS (422)
-//         // =========================================
-//         if (statusCode === 422) {
-//             let validationMessage =
-//                 "Validation error.";
-
-//             if (error.response?.data?.errors) {
-//                 validationMessage = Object.values(
-//                     error.response.data.errors
-//                 )
-//                     .flat()
-//                     .join("\n");
-//             }
-
-//             message.error({
-//                 content: validationMessage,
-//                 duration: 5,
-
-//                 className: getThemeClass(
-//                     "dark-theme-message",
-//                     "light-theme-message"
-//                 ),
-//             });
-
-//             return Promise.reject(error);
-//         }
-
-//         // =========================================
-//         // OTHER BACKEND ERRORS
-//         // =========================================
-//      let errorMessage = "Your Laravel isn't running.";
-
-// if (error.response?.data?.message) {
-//     errorMessage = error.response.data.message;
-// }
-
-// message.error({
-//     content: errorMessage,
-//     duration: 5,
-//     className: getThemeClass(
-//         "dark-theme-message",
-//         "light-theme-message"
-//     ),
-// });
-//         // =========================================
-//         // SINGLE MODAL INSTANCE
-//         // =========================================
-//         if (isModalOpen && currentModal) {
-//             currentModal.update({
-//                 title: `Error: ${statusCode}`,
-//                 content: errorMessage,
-//             });
-//         } else {
-//             currentModal = Modal.error({
-//                 title: `Error: ${statusCode}`,
-//                 content: errorMessage,
-
-//                 className: getThemeClass(
-//                     "dark-theme-modal",
-//                     "light-theme-modal"
-//                 ),
-
-//                 onOk: () => {
-//                     isModalOpen = false;
-//                     currentModal = null;
-//                 },
-
-//                 onCancel: () => {
-//                     isModalOpen = false;
-//                     currentModal = null;
-//                 },
-//             });
-
-//             isModalOpen = true;
-//         }
-
-//         return Promise.reject(error);
-//     }
-// );
-
-
-// // Set auth token
-// const updateAuthToken = () => {
-//     const access_token = secureLocalStorage.getItem("access_token");
-
-//     if (access_token) {
-//         instance.defaults.headers.common["Authorization"] = `Bearer ${access_token}`;
-//     }
-// };
-
-// // Initialize auth token
-// updateAuthToken();
-
-// // Optional: Add a method to refresh token when needed
-// export const refreshAuthToken = (newToken) => {
-//     secureLocalStorage.setItem("access_token", newToken);
-//     updateAuthToken();
-// };
-
-// export default instance;
-import { message, Modal } from "antd";
+import { notification } from "antd";
 import axios from "axios";
 import secureLocalStorage from "react-secure-storage";
 import { useLoadingStore } from "~/states/loadingState";
@@ -255,32 +71,128 @@ const getThemeClass = (darkClass, lightClass) =>
     getCurrentTheme() === "black" ? darkClass : lightClass;
 
 // =========================================
-// SINGLE ERROR MODAL INSTANCE
+// ERROR TOAST (antd notification)
 // =========================================
-// Prevents multiple Modal.error() dialogs from stacking on top of each
-// other when several requests fail around the same time (e.g. a slow
-// backend causing a batch of polling requests to time out together).
-// Instead of opening a new modal per failure, later errors update the
-// modal that's already open.
-let activeErrorModal = null;
+// Every failed request that reaches this point is surfaced as a small,
+// auto-dismissing toast in the corner of the screen instead of a blocking
+// Modal.error() dialog. Each HTTP status gets its own clear title +
+// description so alumni, admins, and department heads can tell at a
+// glance *what* went wrong (permissions? bad input? server down?) rather
+// than a bare "Error" with no context.
+//
+// A stable `key` per status code means if several requests fail with the
+// same kind of error around the same time (e.g. a batch of polling calls
+// during an outage), later failures update the existing toast in place
+// instead of stacking duplicates on top of each other.
+const showErrorToast = ({ key, message: title, description, statusCode }) => {
+    notification.error({
+        key,
+        message: title,
+        description,
+        placement: "topRight",
+        duration: statusCode && statusCode >= 500 ? 6 : 4.5,
+        className: getThemeClass(
+            "dark-theme-notification",
+            "light-theme-notification"
+        ),
+    });
+};
 
-const showErrorModal = (title, content, className) => {
-    if (activeErrorModal) {
-        activeErrorModal.update({ title, content });
-        return;
+// Maps a status code (or connection failure) to a specific { title, description }
+// pair. Falls back to the backend-provided message when we have one, since
+// that's usually more precise than any generic copy we could write here.
+const describeError = (error, statusCode) => {
+    const backendMessage = error.response?.data?.message;
+
+    if (error.code === "ECONNABORTED") {
+        // A timeout fired — either a per-request `timeout` option set at
+        // the call site, or the browser's own network timeout. Not
+        // necessarily a sign the backend is down.
+        return {
+            title: "Request Timed Out",
+            description:
+                backendMessage ||
+                "That took too long to respond. Please try again.",
+        };
     }
 
-    activeErrorModal = Modal.error({
-        title,
-        content,
-        className,
-        onOk: () => {
-            activeErrorModal = null;
-        },
-        onCancel: () => {
-            activeErrorModal = null;
-        },
-    });
+    if (!error.response) {
+        // Request never got a response at all (network drop, CORS block,
+        // connection refused, etc.) — the only case where it's fair to
+        // suggest the server itself might be unreachable.
+        return {
+            title: "Connection Problem",
+            description:
+                "Could not reach the server. Please check your internet connection and try again.",
+        };
+    }
+
+    switch (statusCode) {
+        case 400:
+            return {
+                title: "Invalid Request",
+                description:
+                    backendMessage ||
+                    "That request couldn't be processed. Please check your input and try again.",
+            };
+        case 403:
+            return {
+                title: "Access Denied",
+                description:
+                    backendMessage ||
+                    "You don't have permission to perform this action.",
+            };
+        case 404:
+            return {
+                title: "Not Found",
+                description:
+                    backendMessage ||
+                    "The item you're looking for couldn't be found. It may have been moved or deleted.",
+            };
+        case 409:
+            return {
+                title: "Conflict",
+                description:
+                    backendMessage ||
+                    "This action conflicts with existing data. Please refresh and try again.",
+            };
+        case 419:
+            return {
+                title: "Session Expired",
+                description:
+                    "Your session has expired for security reasons. Please refresh the page and try again.",
+            };
+        case 429:
+            return {
+                title: "Too Many Requests",
+                description:
+                    backendMessage ||
+                    "You're doing that a bit too fast. Please wait a moment and try again.",
+            };
+        case 502:
+        case 503:
+        case 504:
+            return {
+                title: "Service Unavailable",
+                description:
+                    backendMessage ||
+                    "The server is temporarily unavailable. Please try again in a few minutes.",
+            };
+        default:
+            if (statusCode >= 500) {
+                return {
+                    title: "Server Error",
+                    description:
+                        backendMessage ||
+                        "Something went wrong on our end. Please try again, and contact support if it keeps happening.",
+                };
+            }
+            return {
+                title: `Error${statusCode ? ` ${statusCode}` : ""}`,
+                description:
+                    backendMessage || "An unexpected error occurred.",
+            };
+    }
 };
 
 // =========================================
@@ -333,7 +245,7 @@ instance.interceptors.response.use(
         // VALIDATION ERROR (422)
         // =========================================
         if (statusCode === 422) {
-            let validationMessage = "Validation error.";
+            let validationMessage = "Please check the highlighted fields and try again.";
 
             if (error.response?.data?.errors) {
                 validationMessage = Object.values(
@@ -341,13 +253,18 @@ instance.interceptors.response.use(
                 )
                     .flat()
                     .join("\n");
+            } else if (error.response?.data?.message) {
+                validationMessage = error.response.data.message;
             }
 
-            showErrorModal(
-                "Validation Error",
-                validationMessage,
-                getThemeClass("dark-theme-modal", "light-theme-modal")
-            );
+            if (!error.config?.suppressGenericModal) {
+                showErrorToast({
+                    key: "http-error-422",
+                    message: "Please Check Your Input",
+                    description: validationMessage,
+                    statusCode,
+                });
+            }
 
             return Promise.reject(error);
         }
@@ -356,41 +273,24 @@ instance.interceptors.response.use(
         // OTHER ERRORS
         // =========================================
         // `suppressGenericModal` lets a call site that already shows its
-        // own specific, contextual error (a toast naming exactly what
-        // failed, a graceful timeout recovery, etc.) opt out of this
-        // generic modal so the admin isn't shown two different error
-        // messages for the same failure. Unlike `silent`, this still
-        // goes through the 401/422 handling above — it only skips the
-        // generic catch-all below.
+        // own specific, contextual toast (naming exactly what failed, a
+        // graceful timeout recovery, etc.) opt out of this generic toast
+        // so the user isn't shown two different error messages for the
+        // same failure. Unlike `silent`, this still goes through the
+        // 401/422 handling above — it only skips the generic catch-all
+        // below.
         if (error.config?.suppressGenericModal) {
             return Promise.reject(error);
         }
 
-        let errorMessage;
+        const { title, description } = describeError(error, statusCode);
 
-        if (error.code === "ECONNABORTED") {
-            // A timeout fired — either a per-request `timeout` option set at
-            // the call site (there's no default on this instance anymore),
-            // or the browser's own network timeout. Not necessarily a sign
-            // the backend is down.
-            errorMessage = "The request timed out. Please try again.";
-        } else if (!error.response) {
-            // Request never got a response at all (network drop, CORS block,
-            // connection refused, etc.) — this is the only case where it's
-            // fair to suggest the backend itself might be unreachable.
-            errorMessage =
-                "Could not reach the server. Please check your connection and try again.";
-        } else {
-            errorMessage =
-                error.response?.data?.message ||
-                "An unexpected error occurred.";
-        }
-
-        showErrorModal(
-            `Error ${statusCode || ""}`,
-            errorMessage,
-            getThemeClass("dark-theme-modal", "light-theme-modal")
-        );
+        showErrorToast({
+            key: `http-error-${statusCode || "network"}`,
+            message: title,
+            description,
+            statusCode,
+        });
 
         return Promise.reject(error);
     }

@@ -33,10 +33,18 @@
 //   } = usePublicEventsData();
 // ============================================================
 
-import { useState, useEffect, useCallback, useRef } from "react";
+// Phase 3 (audit §3 frontend): migrated off hand-rolled useEffect +
+// axios + mountedRef/active onto react-query, following the pattern
+// already used by useJobPosts.js/useDepartmentHeads.js. Gets automatic
+// request de-duplication (two components mounting this hook on one
+// page now share a single request instead of firing two), and a
+// staleTime instead of always refetching on every mount.
+import { useMemo } from "react";
+import { useQuery } from "react-query";
 import axiosConfig from "~/utils/axiosConfig";
 
 const PUBLIC_EVENTS_ENDPOINT = "/public/events";
+const PUBLIC_EVENTS_QUERY_KEY = ["public-events", "full"];
 
 const REQUEST_OPTS = {
     silent: true, // don't trigger the global error modal for anon visitors
@@ -145,67 +153,50 @@ const sortByDateDesc = (list, getDate) =>
     [...list].sort((a, b) => new Date(getDate(b) || 0) - new Date(getDate(a) || 0));
 
 export default function usePublicEventsData() {
-    const [allEvents, setAllEvents] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [refreshToken, setRefreshToken] = useState(0);
-    const mountedRef = useRef(true);
-
-    useEffect(() => {
-        mountedRef.current = true;
-        return () => {
-            mountedRef.current = false;
-        };
-    }, []);
-
-    useEffect(() => {
-        let active = true;
-        (async () => {
-            try {
-                setLoading(true);
-                setError(null);
-                const response = await axiosConfig.get(PUBLIC_EVENTS_ENDPOINT, {
-                    ...REQUEST_OPTS,
-                    params: { per_page: 200 },
-                });
-                const list = unwrapList(response).map((ev) => ({
-                    ...ev,
-                    _computedStatus: computeEventStatus(ev),
-                }));
-                if (active && mountedRef.current) setAllEvents(list);
-            } catch (err) {
-                if (active && mountedRef.current) {
-                    setAllEvents([]);
-                    setError(err);
-                }
-            } finally {
-                if (active && mountedRef.current) setLoading(false);
-            }
-        })();
-        return () => {
-            active = false;
-        };
-    }, [refreshToken]);
+    const {
+        data: allEvents = [],
+        isLoading: loading,
+        error,
+        refetch,
+    } = useQuery(
+        PUBLIC_EVENTS_QUERY_KEY,
+        async () => {
+            const response = await axiosConfig.get(PUBLIC_EVENTS_ENDPOINT, {
+                ...REQUEST_OPTS,
+                params: { per_page: 200 },
+            });
+            return unwrapList(response).map((ev) => ({
+                ...ev,
+                _computedStatus: computeEventStatus(ev),
+            }));
+        },
+        {
+            staleTime: 60000,
+            refetchOnWindowFocus: false,
+        },
+    );
 
     const getDate = (ev) => ev.date || ev.event_date;
 
-    const upcoming = sortByDateAsc(
-        allEvents.filter((ev) => ev._computedStatus === "upcoming"),
-        getDate,
-    );
-    const ongoing = sortByDateAsc(
-        allEvents.filter((ev) => ev._computedStatus === "ongoing"),
-        getDate,
-    );
-    const completed = sortByDateDesc(
-        allEvents.filter((ev) => ev._computedStatus === "completed"),
-        getDate,
-    );
-    const featured = sortByDateAsc(allEvents.filter(isFeatured), getDate);
-
-    const refetch = useCallback(() => {
-        setRefreshToken((t) => t + 1);
-    }, []);
+    // Recomputed only when the raw list actually changes, not on every
+    // render — same intent as the useMemo in usePublicGalleryData.js.
+    const { upcoming, ongoing, completed, featured } = useMemo(() => {
+        return {
+            upcoming: sortByDateAsc(
+                allEvents.filter((ev) => ev._computedStatus === "upcoming"),
+                getDate,
+            ),
+            ongoing: sortByDateAsc(
+                allEvents.filter((ev) => ev._computedStatus === "ongoing"),
+                getDate,
+            ),
+            completed: sortByDateDesc(
+                allEvents.filter((ev) => ev._computedStatus === "completed"),
+                getDate,
+            ),
+            featured: sortByDateAsc(allEvents.filter(isFeatured), getDate),
+        };
+    }, [allEvents]);
 
     return {
         upcoming,

@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useMemo, useEffect } from "react"
+import { useQueryClient } from "react-query"
 import {
   Card,
   Row,
@@ -1440,6 +1441,7 @@ const AlumniList = () => {
   // data source per role: admins get the full admin record set, everyone
   // else gets the minimized public-safe directory.
   const isAdminRole = role === "admin"
+  const queryClient = useQueryClient()
   const adminAlumniQuery = useAlumni({ enabled: isAdminRole })
   const directoryQuery = useAlumniDirectory({ enabled: !isAdminRole })
   const { isLoading, data: alumni = [], isFetching, refetch } = isAdminRole
@@ -1487,14 +1489,45 @@ const AlumniList = () => {
   // ============ END HEARTBEAT EFFECT ============
 
 // ============ ONLINE STATUS POLLING ============
+// Phase 1 fix (see audit §2, finding "Main finding — wasteful duplicate
+// fetch, polled every 30s"): this used to throw away the online-statuses
+// response and call refetch() instead, which re-ran the full paginated
+// /alumni (or /alumni/directory) query — with all its eager loads — every
+// 30 seconds per open tab, for every admin. Now we merge the small
+// {id, is_online, last_active} deltas directly into the existing
+// react-query cache with setQueryData, so no extra full-table request
+// ever fires from this poll.
 useEffect(() => {
+  const queryKey = isAdminRole ? ["alumini"] : ["alumni-directory"]
+
   const fetchOnlineStatuses = async () => {
     try {
       const response = await axiosConfig.get(BASE_URL + "api/alumni/online-statuses")
       if (response.data.success) {
-        // The statuses are already included in the alumni data from the API
-        // This is just for real-time updates
-        refetch()
+        const statusById = new Map(
+          response.data.data.map((s) => [s.id, s])
+        )
+
+        queryClient.setQueryData(queryKey, (previous = []) => {
+          if (!Array.isArray(previous)) return previous
+          return previous.map((alumnus) => {
+            const status = statusById.get(alumnus.id)
+            if (!status) return alumnus
+            // Only touch the two fields the poll actually knows about;
+            // leave the rest of the cached alumnus record untouched.
+            if (
+              alumnus.is_online === status.is_online &&
+              alumnus.last_active === status.last_active
+            ) {
+              return alumnus
+            }
+            return {
+              ...alumnus,
+              is_online: status.is_online,
+              last_active: status.last_active,
+            }
+          })
+        })
       }
     } catch (error) {
       console.error("Error fetching online statuses:", error)
@@ -1505,7 +1538,7 @@ useEffect(() => {
   const statusInterval = setInterval(fetchOnlineStatuses, 30 * 1000)
 
   return () => clearInterval(statusInterval)
-}, [refetch])
+}, [isAdminRole, queryClient])
 // ============ END ONLINE STATUS POLLING ============
 
 

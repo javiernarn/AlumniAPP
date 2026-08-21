@@ -42,7 +42,7 @@ import {
 } from "recharts"
 import moment from "moment"
 import logo from "~/assets/images/OCC_LOGO.png"
-import { Layout } from "~/components"
+import { Layout, CardSkeletonGrid, HeroSkeleton } from "~/components"
 import "./AlumniDashboard.css"
 import useAdminDashboard from "~/hooks/useAdminDashboard"
 import axios from "~/utils/axiosConfig"
@@ -741,12 +741,20 @@ const AlumniDashboard = () => {
     return (
       <Layout>
         <div className="alumni-dashboard-container">
-          <Card>
-            <div style={{ textAlign: "center"}}>
-              <Progress type="circle" percent={30} />
-              <Title level={3}>Loading Alumni Data...</Title>
-            </div>
-          </Card>
+          <HeroSkeleton />
+          <CardSkeletonGrid variant="stat" count={4} />
+          <div style={{ marginTop: 20 }}>
+            <CardSkeletonGrid variant="chart" count={1} columns={{ xs: 24 }} height={260} />
+          </div>
+          <div style={{ marginTop: 20 }}>
+            <CardSkeletonGrid variant="chart" count={2} height={300} />
+          </div>
+          <div style={{ marginTop: 20 }}>
+            <CardSkeletonGrid variant="chart" count={2} height={300} />
+          </div>
+          <div style={{ marginTop: 20 }}>
+            <CardSkeletonGrid variant="list" count={2} rows={6} />
+          </div>
         </div>
       </Layout>
     )

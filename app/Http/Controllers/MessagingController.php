@@ -1009,24 +1009,25 @@ public function deleteMessage($messageId)
 
         $message = Message::findOrFail($messageId);
 
-        // Check if user can delete this message
-        $alumni = Alumni::where('email', $user->email)->first();
-        if (!$alumni) {
-            $alumni = Alumni::where('user_id', $user->id)->first();
-        }
-
-        // Admin can delete admin messages, Alumni can delete alumni messages
-        if ($alumni) {
-            // User is alumni
-            if ($message->sender_type !== 'alumni' || $message->sender_id !== $alumni->id) {
+        // Check if user can delete this message.
+        // Fixed: identity was previously inferred from "does this user have
+        // an Alumni row", which silently treated any non-alumni account
+        // (e.g. a department_head) as "admin" and let it delete/edit ANY
+        // admin's message (only sender_type was checked, not sender_id).
+        // Branch on the real role instead, and require sender_id ownership
+        // in both branches.
+        if ($user->role === 'admin') {
+            if ($message->sender_type !== 'admin' || (int) $message->sender_id !== (int) $user->id) {
                 return response()->json([
                     'success' => false,
                     'message' => 'You can only delete your own messages',
                 ], 403);
             }
         } else {
-            // User is admin
-            if ($message->sender_type !== 'admin') {
+            $alumni = Alumni::where('user_id', $user->id)->first()
+                ?? Alumni::where('email', $user->email)->first();
+
+            if (!$alumni || $message->sender_type !== 'alumni' || (int) $message->sender_id !== (int) $alumni->id) {
                 return response()->json([
                     'success' => false,
                     'message' => 'You can only delete your own messages',
@@ -1075,24 +1076,22 @@ public function editMessage(Request $request, $messageId)
 
         $message = Message::findOrFail($messageId);
 
-        // Check if user can edit this message
-        $alumni = Alumni::where('email', $user->email)->first();
-        if (!$alumni) {
-            $alumni = Alumni::where('user_id', $user->id)->first();
-        }
-
-        // Admin can edit admin messages, Alumni can edit alumni messages
-        if ($alumni) {
-            // User is alumni
-            if ($message->sender_type !== 'alumni' || $message->sender_id !== $alumni->id) {
+        // Check if user can edit this message. Same fix as deleteMessage():
+        // branch on real role and require sender_id ownership in both
+        // branches (previously the admin branch only checked sender_type,
+        // and any non-alumni account was treated as "admin").
+        if ($user->role === 'admin') {
+            if ($message->sender_type !== 'admin' || (int) $message->sender_id !== (int) $user->id) {
                 return response()->json([
                     'success' => false,
                     'message' => 'You can only edit your own messages',
                 ], 403);
             }
         } else {
-            // User is admin
-            if ($message->sender_type !== 'admin') {
+            $alumni = Alumni::where('user_id', $user->id)->first()
+                ?? Alumni::where('email', $user->email)->first();
+
+            if (!$alumni || $message->sender_type !== 'alumni' || (int) $message->sender_id !== (int) $alumni->id) {
                 return response()->json([
                     'success' => false,
                     'message' => 'You can only edit your own messages',

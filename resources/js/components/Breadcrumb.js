@@ -9,8 +9,8 @@ if (role === "admin") {
     dashboardlink = "/admin-dashboard";
 } else if (role === "student") {
     dashboardlink = "/student/dashboard";
-} else if (role === "faculty") {
-    dashboardlink = "/faculty/dashboard";
+} else if (role === "department_head") {
+    dashboardlink = "/department-dashboard";
 }
 
 const SY = () => {
