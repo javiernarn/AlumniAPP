@@ -1173,7 +1173,7 @@ const AlumniQuestionsPage = () => {
                   </Select>
                 </div>
 
-                {filteredQuestions.length === 0 ? (
+                {filteredQuestions.length === 0 && !isLoading ? (
                   <Empty description="No questions found" image={Empty.PRESENTED_IMAGE_SIMPLE} />
                 ) : (
                   <Table
@@ -1183,6 +1183,7 @@ const AlumniQuestionsPage = () => {
                     pagination={false}
                     scroll={{ y: 400, x: 480 }}
                     size="small"
+                    loading={isLoading}
                   />
                 )}
               </Card>

@@ -11,7 +11,7 @@ import "./AdminAlumniMessages.css";
 import useEmployeeStatus from "~/hooks/useEmployeeStatus";
 import useCourses from "~/hooks/useCourses";
 import AlumniDetails from "~/components/alumni/AlumniDetails";
-import { message } from "antd";
+import { message, Skeleton } from "antd";
 
 const AdminAlumniMessages = () => {
     // Common state
@@ -2839,8 +2839,12 @@ const AdminAlumniMessages = () => {
                             className={`conversations-list ${activeTab === "alumni" ? "alumni-list-mode" : "conversations-list-mode"}`}
                         >
                             {loading && currentList.length === 0 ? (
-                                <div className="no-conversations">
-                                    <p>Loading...</p>
+                                <div className="conversation-skeleton-list">
+                                    {Array.from({ length: 6 }).map((_, i) => (
+                                        <div key={i} className="conversation-item">
+                                            <Skeleton avatar active title={false} paragraph={{ rows: 2, width: ["60%", "40%"] }} />
+                                        </div>
+                                    ))}
                                 </div>
                             ) : currentList.length === 0 ? (
                                 <div className="no-conversations">

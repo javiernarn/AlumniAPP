@@ -1799,6 +1799,7 @@ useEffect(() => {
                             placeholder="Select your course"
                             showSearch
                             optionFilterProp="children"
+                            loading={isLoading}
                         >
                             {Array.isArray(courses) &&
                                 courses.map((course) => (

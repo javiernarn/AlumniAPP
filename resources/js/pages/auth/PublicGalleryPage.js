@@ -1,6 +1,6 @@
 "use client"
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Typography, Row, Col, Spin, Empty, Select, Carousel } from "antd";
+import { Typography, Row, Col, Empty, Select, Carousel } from "antd";
 import {
     CalendarOutlined,
     PictureOutlined,
@@ -18,6 +18,7 @@ import {
     LockOutlined,
 } from "@ant-design/icons";
 import logo from "~/assets/images/site-logo.png";
+import { CardSkeletonGrid } from "~/components";
 import { useAppTheme } from "~/hooks/useAppTheme";
 import usePublicGalleryData from "~/hooks/usePublicGalleryData";
 import usePreventInspect, { guardImageEvents, ZoomWarningModal } from "~/hooks/usePreventInspect";
@@ -31,7 +32,7 @@ import "./PublicHomePage.css";
 import ScrollProgressOrb from "../admin/ScrollProgress/ScrollProgressOrb"
 import "./PublicGalleryPage.css";
 
-const { Title, Text, Paragraph } = Typography;
+const { Title, Paragraph } = Typography;
 const { Option } = Select;
 
 // ============================================================
@@ -570,10 +571,12 @@ const PublicGalleryPage = () => {
             {/* ============ TIMELINE: ONE SECTION PER YEAR ============ */}
             {loading ? (
                 <section className="ph-section pgal-section">
-                    <div className="ph-state-box">
-                        <Spin size="large" />
-                        <Text>Loading gallery…</Text>
-                    </div>
+                    <CardSkeletonGrid
+                        variant="gallery"
+                        count={6}
+                        columns={{ xs: 24, sm: 12, lg: 8 }}
+                        gutter={[22, 22]}
+                    />
                 </section>
             ) : years.length === 0 ? (
                 <section className="ph-section pgal-section">

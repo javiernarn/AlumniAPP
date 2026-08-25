@@ -1,6 +1,6 @@
 "use client"
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Typography, Row, Col, Spin, Empty, Select, Carousel } from "antd";
+import { Typography, Row, Col, Empty, Select, Carousel } from "antd";
 import {
     CalendarOutlined,
     ClockCircleOutlined,
@@ -22,6 +22,7 @@ import {
     LockOutlined,
 } from "@ant-design/icons";
 import logo from "~/assets/images/site-logo.png";
+import { CardSkeletonGrid } from "~/components";
 import { useAppTheme } from "~/hooks/useAppTheme";
 import usePublicEventsData, { formatTimeDisplay } from "~/hooks/usePublicEventsData";
 import usePreventInspect, { guardImageEvents, ZoomWarningModal } from "~/hooks/usePreventInspect";
@@ -35,7 +36,7 @@ import "./PublicHomePage.css";
 import ScrollProgressOrb from "../admin/ScrollProgress/ScrollProgressOrb"
 import "./PublicEventsPage.css";
 
-const { Title, Text, Paragraph } = Typography;
+const { Title, Paragraph } = Typography;
 const { Option } = Select;
 
 // ============================================================
@@ -440,10 +441,12 @@ const EventSection = ({ sectionKey, sectionRef, events, loading, onLogin, onRegi
             <Row gutter={[22, 22]}>
                 {loading ? (
                     <Col span={24}>
-                        <div className="ph-state-box">
-                            <Spin size="large" />
-                            <Text>Loading events…</Text>
-                        </div>
+                        <CardSkeletonGrid
+                            variant="gallery"
+                            count={6}
+                            columns={{ xs: 24, sm: 12, lg: 8 }}
+                            gutter={[22, 22]}
+                        />
                     </Col>
                 ) : events.length === 0 ? (
                     <Col span={24}>

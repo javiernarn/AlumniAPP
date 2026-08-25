@@ -1,0 +1,366 @@
+/* ==================================================
+   SHARED PRINT-PREVIEW / PDF-EXPORT STYLES
+   ==================================================
+   Single source of truth for every "Print Preview -> Download PDF"
+   modal in the app (Admin Dashboard report, Alumni Directory-by-course
+   report, Department Head report, Event Registrations report, etc).
+
+   WHY THIS FILE EXISTS
+   Each of those screens renders a `#printable-area` node that gets
+   captured by html2canvas + jsPDF (see resources/js/utils/exportPdf.js)
+   to produce the downloaded PDF. html2canvas snapshots the element
+   exactly as it is laid out on screen — it does NOT apply @media print
+   rules. That means the on-screen "preview" and the downloaded PDF are
+   ONLY guaranteed to match if #printable-area has one fixed, real-world
+   paper size (A4) that never changes, no matter:
+     - what the browser/phone viewport width is,
+     - whether a mobile phone is held in portrait or landscape,
+     - which admin screen the report was opened from.
+   Previously several pages set #printable-area to an ad hoc pixel/mm
+   width with no fixed rule enforced consistently, and no horizontal
+   scroll container, so on narrow phone screens the report content
+   would get visually clipped inside the modal ("cut off"), and — because
+   the surrounding modal chrome reflows between portrait and landscape —
+   the exact pixel width fed into html2canvas could differ between the
+   two, producing PDFs with a different layout depending on device
+   rotation. Giving every report the SAME fixed-size `.printable-area-surface`
+   class (real A4 minus real @page margins), inside the SAME scrollable
+   `.print-preview-canvas` wrapper, fixes both problems at once and keeps
+   every PDF in the app visually consistent with each other.
+
+   HOW TO USE
+     import "~/styles/printPreview.css";
+     ...
+     <div className="print-preview-canvas">
+       <div id="printable-area" className="printable-area-surface" data-print-theme="light">
+         ...report content, real data only...
+       </div>
+     </div>
+
+   Each page still needs its OWN small `@media print { ... }` block for
+   page MECHANICS (hide everything but #printable-area, lift it out of
+   the modal, set @page size/margin) — that part is inherently specific
+   to how many modals/how much chrome that particular page has. This
+   file only owns APPEARANCE (size, padding, colors, typography,
+   table/chart density), so appearance never has to be duplicated —
+   and never drifts — between pages.
+   ================================================== */
+
+/* ==================================================
+   PRINT PREVIEW & PRINTABLE AREA — ALWAYS WHITE / DEFAULT
+   These rules are unconditional (no [data-theme] selector at all),
+   so the preview modal and the printable report always render on
+   a plain white background with dark, legible text — regardless
+   of whether the rest of the app is in light or dark/black theme.
+   ================================================== */
+
+/* Modal shell */
+.print-preview-modal .ant-modal-content,
+.print-preview-modal .ant-modal-header,
+.print-preview-modal .ant-modal-body,
+.print-preview-modal .ant-modal-footer {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #e5e7eb !important;
+}
+.print-preview-modal .ant-modal-title,
+.print-preview-modal .ant-modal-close-x {
+  color: #0f172a !important;
+}
+
+/* Override app dark theme inside preview + printable area (belt-and-suspenders:
+   same effect as the unconditional rules above, kept explicit for dark theme
+   in case a more specific app-wide dark-modal rule loads after this file). */
+[data-theme="black"] .print-preview-modal .ant-modal-content,
+[data-theme="black"] .print-preview-modal .ant-modal-header,
+[data-theme="black"] .print-preview-modal .ant-modal-body,
+[data-theme="black"] .print-preview-modal .ant-modal-footer,
+[data-theme="black"] #printable-area,
+[data-theme="black"] #printable-area * {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #d9d9d9 !important;
+}
+[data-theme="black"] #printable-area .ant-table-thead > tr > th {
+  background: #f5f7fa !important;
+}
+
+/* ==================================================
+   PRINT PREVIEW HEADER — READABLE TITLE & CLOSE BUTTON
+   The title text and close (X) button must always read as
+   dark text on the white preview header, in every app theme,
+   and regardless of any gradient/opacity styling used
+   elsewhere in the app. Also normalizes the modal body's
+   scrollbar so it never renders as a dark/black bar.
+   ================================================== */
+.print-preview-modal .ant-modal-header .ant-modal-title,
+.print-preview-modal .ant-modal-title {
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+  opacity: 1 !important;
+  font-weight: 600 !important;
+}
+.print-preview-modal .ant-modal-close,
+.print-preview-modal .ant-modal-close-x {
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+  opacity: 1 !important;
+}
+.print-preview-modal .ant-modal-close .anticon,
+.print-preview-modal .ant-modal-close-x .anticon,
+.print-preview-modal .ant-modal-close svg {
+  color: #0f172a !important;
+  fill: #0f172a !important;
+}
+.print-preview-modal .ant-modal-close:hover,
+.print-preview-modal .ant-modal-close:hover .ant-modal-close-x {
+  color: #000000 !important;
+  background: rgba(15, 23, 42, 0.06) !important;
+}
+[data-theme="black"] .print-preview-modal .ant-modal-header .ant-modal-title,
+[data-theme="black"] .print-preview-modal .ant-modal-title,
+[data-theme="black"] .print-preview-modal .ant-modal-close,
+[data-theme="black"] .print-preview-modal .ant-modal-close-x {
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+  opacity: 1 !important;
+}
+[data-theme="black"] .print-preview-modal .ant-modal-close .anticon,
+[data-theme="black"] .print-preview-modal .ant-modal-close-x .anticon,
+[data-theme="black"] .print-preview-modal .ant-modal-close svg {
+  color: #0f172a !important;
+  fill: #0f172a !important;
+}
+
+/* Scrollbar inside the print preview modal — always light, never the
+   app's dark-theme scrollbar, so it doesn't look like a black bar
+   cutting through the white page. */
+.print-preview-modal .ant-modal-body {
+  scrollbar-color: #c1c1c1 #f1f1f1;
+}
+.print-preview-modal .ant-modal-body::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+.print-preview-modal .ant-modal-body::-webkit-scrollbar-track {
+  background: #f1f1f1 !important;
+  border-radius: 6px;
+}
+.print-preview-modal .ant-modal-body::-webkit-scrollbar-thumb {
+  background: #c1c1c1 !important;
+  border-radius: 6px;
+}
+.print-preview-modal .ant-modal-body::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8 !important;
+}
+
+/* Printable surface — light theme always */
+#printable-area,
+#printable-area * {
+  color: #0f172a !important;
+  border-color: #d9d9d9;
+}
+#printable-area {
+  background: #ffffff !important;
+}
+
+/* ==================================================
+   WYSIWYG PRINT PREVIEW
+   #printable-area is the exact same element that gets printed.
+   It now carries ONE fixed size (real A4 minus real @page margins)
+   and ONE set of spacing/typography rules that apply on screen and
+   on paper alike. Nothing about size, spacing or font-size changes
+   between "preview" and "print" any more — @media print (in
+   DashboardPage.js) only handles page mechanics (visibility,
+   absolute positioning, hiding the modal chrome), never appearance.
+   That's what keeps the admin's preview and the printed page
+   identical. ================================================== */
+.printable-area-surface {
+  width: 190mm;      /* A4 210mm minus the 10mm @page margin on each side */
+  min-height: 277mm; /* A4 297mm minus the 10mm @page margin on each side */
+  padding: 8mm;
+  box-sizing: border-box;
+}
+
+/* Screen-only "paper on a tray" wrapper so the fixed-size page reads as
+   a page, not a stretched block. Purely cosmetic — never printed. */
+.print-preview-canvas {
+  background: #e9edf2;
+  padding: 24px 12px;
+  overflow-x: auto; /* narrow screens scroll sideways instead of squashing
+                        the page — squashing would break the WYSIWYG promise */
+}
+.print-preview-canvas .printable-area-surface {
+  margin: 0 auto;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.18);
+}
+@media (max-width: 768px) {
+  .print-preview-canvas { padding: 16px 8px; }
+}
+
+/* Responsive modal shell for the print preview */
+@media (max-width: 768px) {
+  .print-preview-modal .ant-modal {
+    max-width: calc(100vw - 16px);
+    margin: 8px auto;
+  }
+  .print-preview-modal .ant-modal-header,
+  .print-preview-modal .ant-modal-footer {
+    padding: 12px 16px;
+  }
+}
+#printable-area .ant-card,
+#printable-area .ant-card-body,
+#printable-area .ant-card-head {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #d9d9d9 !important;
+}
+#printable-area .ant-typography,
+#printable-area .ant-typography-secondary {
+  color: #0f172a !important;
+}
+#printable-area .print-muted {
+  color: #64748b !important;
+}
+#printable-area .ant-table,
+#printable-area .ant-table-container,
+#printable-area .ant-table-content,
+#printable-area .ant-table-tbody > tr > td,
+#printable-area .ant-table-thead > tr > th {
+  background: #ffffff !important;
+  color: #0f172a !important;
+}
+#printable-area .ant-table-thead > tr > th {
+  background: #f5f7fa !important;
+  border-bottom: 1px solid #d9d9d9 !important;
+}
+#printable-area .ant-table-tbody > tr:hover > td {
+  background: #fafafa !important;
+}
+
+/* ==================================================
+   PRINT-ACCURATE SPACING & TYPOGRAPHY
+   These used to live only inside @media print, which is exactly
+   why the on-screen preview didn't match the printed page — cards
+   were 24px-padded and 16px apart on screen but 10px/8px the
+   moment you printed. Applying the same numbers always means the
+   preview shows precisely what will come out of the printer.
+   ================================================== */
+.print-block {
+  margin-bottom: 8mm;
+  border: 1px solid #d9d9d9;
+  background: #ffffff;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+#printable-area .ant-card-body {
+  padding: 10px 12px;
+}
+.print-report-header {
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+}
+#printable-area .ant-table {
+  font-size: 10px;
+}
+#printable-area .ant-table-thead > tr > th {
+  padding: 8px 6px;
+  font-weight: 600;
+  font-size: 10px;
+}
+#printable-area .ant-table-tbody > tr > td {
+  padding: 6px;
+  font-size: 9px;
+}
+.print-chart-box {
+  height: 210px;
+}
+#printable-area .recharts-wrapper,
+#printable-area .recharts-surface {
+  width: 100%;
+  height: auto;
+}
+#printable-area svg {
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  overflow: visible;
+}
+#printable-area .recharts-legend-item-text {
+  font-size: 10px;
+}
+#printable-area .recharts-cartesian-axis-tick-value {
+  font-size: 9px;
+}
+#printable-area .recharts-text,
+#printable-area .recharts-legend-item-text,
+#printable-area .recharts-cartesian-axis-tick-value {
+  fill: #0f172a !important;
+  color: #0f172a !important;
+}
+
+/* Enhanced print report blocks */
+.print-section-title {
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  color: #0f172a !important;
+  margin: 0 0 10px 0 !important;
+  padding-bottom: 6px;
+  border-bottom: 2px solid #1890ff;
+}
+.print-insight-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 8px;
+}
+.print-insight-item {
+  border: 1px solid #e5e7eb;
+  background: #fafbfc !important;
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+.print-insight-label {
+  font-size: 11px;
+  color: #64748b !important;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+.print-insight-value {
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f172a !important;
+  margin-top: 2px;
+}
+.print-signature {
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+  margin-top: 40px;
+}
+.print-signature .sig-block {
+  flex: 1;
+  text-align: center;
+}
+.print-signature .sig-line {
+  border-top: 1px solid #0f172a;
+  margin-top: 40px;
+  padding-top: 4px;
+  font-size: 11px;
+}
+
+/* ==================================================
+   WHERE PRINT RULES LIVE NOW
+   - Appearance (size, padding, margins, font-size, chart height) is
+     defined ONCE, above, unconditionally — it applies identically
+     on screen and on paper. Never duplicate an appearance rule
+     inside @media print again; that duplication is exactly what
+     caused preview/print drift before.
+   - @media print, inside the `<style jsx global>` block in
+     DashboardPage.js, is reserved strictly for page MECHANICS:
+     hiding everything except #printable-area, switching it to
+     position:absolute so it fills the physical page, hiding the
+     modal chrome, and the @page size/margin rule itself.
+   ================================================== */

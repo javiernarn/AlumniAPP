@@ -13,7 +13,6 @@ import {
   Form,
   Upload,
   message,
-  Spin,
   Empty,
   Tooltip,
   Statistic,
@@ -59,7 +58,7 @@ import {
 } from "@ant-design/icons"
 import moment from "moment"
 import dayjs from "dayjs"
-import { Layout } from "~/components"
+import { Layout, CardSkeletonGrid } from "~/components"
 import axiosConfig from "~/utils/axiosConfig"
 import secureLocalStorage from "react-secure-storage"
 import logo from "~/assets/images/OCC_LOGO.png"
@@ -1372,9 +1371,12 @@ const GalleryPage = () => {
             {/* ============ GALLERY GRID ============ */}
             <div className="gal-grid-container">
               {loading ? (
-                <div className="gal-loading">
-                  <Spin size="large" tip="Loading gallery..." />
-                </div>
+                <CardSkeletonGrid
+                  variant="gallery"
+                  count={8}
+                  columns={{ xs: 24, sm: 12, md: 8, lg: 6 }}
+                  gutter={[20, 20]}
+                />
               ) : galleries.length === 0 ? (
                 <Card className="gal-empty-card">
                   <Empty

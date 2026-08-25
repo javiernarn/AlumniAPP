@@ -40,6 +40,7 @@ import {
   DollarOutlined,
   FolderOutlined,
   PrinterOutlined,
+  FilePdfOutlined,
   BellOutlined,
   StarOutlined,
   UnorderedListOutlined,
@@ -47,7 +48,9 @@ import {
 } from "@ant-design/icons"
 import moment from "moment"
 import "./AlumniList.css"
-import { Layout, AlumniDetails } from "~/components"
+import "~/styles/printPreview.css"
+import { Layout, AlumniDetails, CardSkeletonGrid } from "~/components"
+import { exportElementToPdf } from "~/utils/exportPdf"
 import useAlumni from "~/hooks/useAlumni"
 import useAlumniDirectory from "~/hooks/useAlumniDirectory"
 import useEmployeeStatus from "~/hooks/useEmployeeStatus"
@@ -930,15 +933,27 @@ const CourseFolderModal = ({ visible, onCancel, course, alumni, handleView }) =>
     return filtered
   }, [alumni, course.id, folderSearch, folderEmploymentFilter])
 
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false)
+
   const handlePrint = () => {
     setPrintPreviewVisible(true)
   }
 
-  const handleActualPrint = () => {
-    // Small delay to ensure the printable area is fully rendered
-    setTimeout(() => {
-      window.print()
-    }, 100)
+  const handleActualPrint = async () => {
+    setIsGeneratingPdf(true)
+    try {
+      const courseLabel = course?.name
+        ? course.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")
+        : "course"
+      await exportElementToPdf("printable-area", {
+        filename: `alumni-list-${courseLabel}.pdf`,
+      })
+    } catch (err) {
+      console.error("Failed to generate PDF:", err)
+      message.error("Failed to generate PDF. Please try again.")
+    } finally {
+      setIsGeneratingPdf(false)
+    }
   }
 
   return (
@@ -955,6 +970,9 @@ const CourseFolderModal = ({ visible, onCancel, course, alumni, handleView }) =>
         open={visible}
         onCancel={onCancel}
         width={1200}
+        style={{ top: 24, maxWidth: "calc(100vw - 16px)" }}
+        styles={{ body: { maxHeight: "70vh", overflowY: "auto" } }}
+        className="course-folder-modal"
         footer={[
           <Button key="print" type="primary" icon={<PrinterOutlined />} onClick={handlePrint}>
             Print Preview
@@ -1082,38 +1100,43 @@ const CourseFolderModal = ({ visible, onCancel, course, alumni, handleView }) =>
         </Space>
       </Modal>
 
-      {/* Print Preview Modal — forced light theme via wrapClassName */}
+      {/* Print Preview Modal — forced light theme via wrapClassName.
+          #printable-area uses the shared .printable-area-surface (fixed
+          real A4 size, see ~/styles/printPreview.css) inside the shared
+          scrollable .print-preview-canvas wrapper, so this report is
+          pixel-consistent with every other PDF in the app and never
+          reflows or gets clipped between mobile portrait/landscape. */}
       <Modal
         title="Print Preview - A4 Layout"
         open={printPreviewVisible}
         onCancel={() => setPrintPreviewVisible(false)}
         width={900}
+        style={{ top: 16, maxWidth: "calc(100vw - 16px)" }}
+        styles={{ body: { maxHeight: "78vh", overflowY: "auto", padding: 0 } }}
         wrapClassName="print-preview-modal"
         className="print-preview-modal"
         footer={[
           <Button key="cancel" onClick={() => setPrintPreviewVisible(false)}>
             Cancel
           </Button>,
-          <Button key="print" type="primary" icon={<PrinterOutlined />} onClick={handleActualPrint}>
-            Print
+          <Button key="print" type="primary" icon={<FilePdfOutlined />} loading={isGeneratingPdf} onClick={handleActualPrint}>
+            {isGeneratingPdf ? "Generating PDF..." : "Download PDF"}
           </Button>,
         ]}
       >
+        <div className="print-preview-canvas">
         <div
           id="printable-area"
           data-print-theme="light"
+          className="printable-area-surface"
           style={{
-            padding: "40px",
             backgroundColor: "#fff",
             color: "#0f172a",
-            minHeight: "297mm",
-            width: "210mm",
-            margin: "0 auto",
-            boxSizing: "border-box",
           }}
         >
           <div
-            style={{ textAlign: "center", marginBottom: "30px", borderBottom: "2px solid #000", paddingBottom: "20px" }}
+            className="print-report-header"
+            style={{ textAlign: "center", borderBottom: "2px solid #000" }}
           >
             <img
               src={logo || "/placeholder.svg"}
@@ -1132,7 +1155,7 @@ const CourseFolderModal = ({ visible, onCancel, course, alumni, handleView }) =>
           </div>
 
           {/* Print Statistics */}
-          <Card style={{ marginBottom: "20px", border: "1px solid #d9d9d9" }}>
+          <Card className="print-block" style={{ border: "1px solid #d9d9d9" }}>
             <Row gutter={16}>
               <Col span={6}>
                 <div style={{ textAlign: "center" }}>
@@ -1171,6 +1194,7 @@ const CourseFolderModal = ({ visible, onCancel, course, alumni, handleView }) =>
 
           {/* Print Table */}
           <Table
+            className="print-block"
             dataSource={filteredCourseAlumni}
             pagination={false}
             size="small"
@@ -1222,55 +1246,44 @@ const CourseFolderModal = ({ visible, onCancel, course, alumni, handleView }) =>
             </Text>
           </div>
         </div>
+        </div>
       </Modal>
 
+      {/* Print mechanics only — appearance (size/padding/typography/table
+          density) lives once, unconditionally, in ~/styles/printPreview.css.
+          Duplicating appearance here is exactly what let the preview drift
+          from the downloaded PDF before. */}
       <style jsx global>{`
         @media print {
-          /* Printing must always be on a white page, even when the app is
-             in black theme — the dark theme's html/body background rule
-             has no print exception, and this block only hides the body's
-             *contents* (body *), never the body element itself, so that
-             dark background can otherwise bleed through around the
-             printable area. This is the actual cause of the "black page"
-             some admins see when printing while in dark mode. */
           html,
           body {
             background: #ffffff !important;
             color: #0f172a !important;
           }
 
-          /* Hide everything except printable area */
           body * {
             visibility: hidden !important;
           }
-          
-          /* Make printable area and its contents visible */
+
           #printable-area,
           #printable-area * {
             visibility: visible !important;
           }
-          
-          /* Position and size the printable area correctly */
+
           #printable-area {
             position: absolute !important;
             left: 0 !important;
             top: 0 !important;
-            width: 210mm !important;
-            min-height: 297mm !important;
-            padding: 15mm !important;
             margin: 0 !important;
-            background: #fff !important;
-            box-sizing: border-box !important;
             z-index: 999999 !important;
           }
-          
-          /* Hide all modal elements */
+
           .ant-modal-mask,
           .ant-modal-wrap {
             position: static !important;
             background: none !important;
           }
-          
+
           .ant-modal,
           .ant-modal-content {
             position: static !important;
@@ -1278,146 +1291,37 @@ const CourseFolderModal = ({ visible, onCancel, course, alumni, handleView }) =>
             border: none !important;
             background: transparent !important;
           }
-          
+
           .ant-modal-header,
           .ant-modal-footer,
           .ant-modal-close {
             display: none !important;
           }
-          
+
           .ant-modal-body {
             padding: 0 !important;
           }
-          
-          /* Ensure colors print correctly */
+
+          .print-preview-canvas {
+            background: none !important;
+            padding: 0 !important;
+            overflow: visible !important;
+          }
+          .print-preview-canvas .printable-area-surface {
+            box-shadow: none !important;
+          }
+
           * {
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
             color-adjust: exact !important;
           }
-          
-          /* Print header styling */
-          #printable-area > div:first-child {
-            text-align: center !important;
-            margin-bottom: 20px !important;
-            border-bottom: 2px solid #000 !important;
-            padding-bottom: 15px !important;
-          }
-          
-          #printable-area img {
-            width: 80px !important;
-            height: 80px !important;
-            display: block !important;
-            margin: 0 auto 10px auto !important;
-          }
-          
-          /* Statistics card styling */
-          #printable-area .ant-card {
-            border: 1px solid #d9d9d9 !important;
-            box-shadow: none !important;
-            background: #fff !important;
-            margin-bottom: 15px !important;
-            page-break-inside: avoid !important;
-          }
-          
-          #printable-area .ant-card-body {
-            padding: 16px !important;
-          }
-          
-          /* Row and column layout for statistics */
-          #printable-area .ant-row {
-            display: flex !important;
-            flex-wrap: wrap !important;
-            width: 100% !important;
-          }
-          
-          #printable-area .ant-col {
-            display: block !important;
-            float: left !important;
-          }
-          
-          #printable-area .ant-col-6 {
-            width: 25% !important;
-            flex: 0 0 25% !important;
-            max-width: 25% !important;
-          }
-          
-          /* Typography colors */
-          #printable-area h1,
-          #printable-area h2,
-          #printable-area h3,
-          #printable-area h4,
-          #printable-area .ant-typography {
-            color: #000 !important;
-            margin: 0 !important;
-          }
-          
-          /* Preserve colored statistics text */
-          #printable-area h3[style*="color: rgb(82, 196, 26)"],
-          #printable-area h3[style*="color: #52c41a"] {
-            color: #52c41a !important;
-          }
-          
-          #printable-area h3[style*="color: rgb(245, 34, 45)"],
-          #printable-area h3[style*="color: #f5222d"] {
-            color: #f5222d !important;
-          }
-          
-          #printable-area h3[style*="color: rgb(250, 173, 20)"],
-          #printable-area h3[style*="color: #faad14"] {
-            color: #faad14 !important;
-          }
-          
-          /* Table styling */
-          #printable-area table {
-            width: 100% !important;
-            border-collapse: collapse !important;
-            table-layout: fixed !important;
-          }
-          
-          #printable-area .ant-table {
-            font-size: 10px !important;
-          }
-          
-          #printable-area .ant-table-container {
-            border: 1px solid #d9d9d9 !important;
-          }
-          
-          #printable-area .ant-table-thead > tr > th {
-            background: #fafafa !important;
-            border-bottom: 1px solid #d9d9d9 !important;
-            padding: 8px 6px !important;
-            font-weight: 600 !important;
-            font-size: 10px !important;
-            color: #000 !important;
-          }
-          
-          #printable-area .ant-table-tbody > tr > td {
-            border-bottom: 1px solid #d9d9d9 !important;
-            padding: 6px !important;
-            font-size: 9px !important;
-            color: #000 !important;
-            background: #fff !important;
-          }
-          
-          #printable-area .ant-table-tbody > tr {
-            page-break-inside: avoid !important;
-          }
-          
-          /* Tags styling */
-          #printable-area .ant-tag {
-            font-size: 8px !important;
-            padding: 0 4px !important;
-            line-height: 16px !important;
-            border: 1px solid !important;
-          }
-          
-          /* Page setup */
+
           @page {
             size: A4 portrait;
             margin: 10mm;
           }
-          
+
           html, body {
             width: 210mm !important;
             height: 297mm !important;
@@ -2218,7 +2122,14 @@ useEffect(() => {
 
         {/* Alumni Display */}
         <div className="alumni-display">
-          {filteredAndSortedAlumni.length === 0 ? (
+          {isLoading ? (
+            <CardSkeletonGrid
+              variant="gallery"
+              count={8}
+              columns={{ xs: 24, sm: 12, lg: 8, xl: 6 }}
+              gutter={[24, 24]}
+            />
+          ) : filteredAndSortedAlumni.length === 0 ? (
             <Card className="no-alumni-card">
               <div className="no-alumni-content">
                 <Title level={3}>

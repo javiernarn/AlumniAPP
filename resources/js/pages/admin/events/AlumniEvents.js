@@ -84,6 +84,7 @@ import {
     InfoCircleOutlined,
     TagOutlined,
     PrinterOutlined,
+    FilePdfOutlined,
     UsergroupAddOutlined,
     WarningOutlined, // Added WarningOutlined icon for validation modal
     HomeOutlined,
@@ -95,7 +96,9 @@ import {
 } from "@ant-design/icons";
 import moment from "moment";
 import "./AlumniEvents.css";
-import { Layout } from "~/components";
+import "~/styles/printPreview.css";
+import { Layout, CardSkeletonGrid } from "~/components";
+import { exportElementToPdf } from "~/utils/exportPdf";
 import axiosConfig from "~/utils/axiosConfig";
 import useEvents from "~/hooks/useEvents";
 import secureLocalStorage from "react-secure-storage";
@@ -644,14 +647,27 @@ const RegistrationsModal = ({ event, visible, onClose }) => {
         }
     };
 
+    const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
+
     const handlePrint = () => {
         setPrintPreviewVisible(true);
     };
 
-    const handleActualPrint = () => {
-        setTimeout(() => {
-            window.print();
-        }, 100);
+    const handleActualPrint = async () => {
+        setIsGeneratingPdf(true);
+        try {
+            const eventLabel = event?.title
+                ? event.title.toLowerCase().replace(/[^a-z0-9]+/g, "-")
+                : "event";
+            await exportElementToPdf("printable-area", {
+                filename: `event-registrations-${eventLabel}.pdf`,
+            });
+        } catch (err) {
+            console.error("Failed to generate PDF:", err);
+            message.error("Failed to generate PDF. Please try again.");
+        } finally {
+            setIsGeneratingPdf(false);
+        }
     };
     const columns = [
         {
@@ -803,11 +819,20 @@ const RegistrationsModal = ({ event, visible, onClose }) => {
                 </div>
             </Modal>
 
+            {/* Print Preview Modal — #printable-area uses the shared
+                .printable-area-surface (fixed real A4 size, see
+                ~/styles/printPreview.css) inside the shared scrollable
+                .print-preview-canvas wrapper, so this report is
+                pixel-consistent with every other PDF in the app and
+                never reflows or gets clipped between mobile
+                portrait/landscape. */}
             <Modal
                 title="Print Preview - A4 Layout"
                 open={printPreviewVisible}
                 onCancel={() => setPrintPreviewVisible(false)}
                 width={900}
+                style={{ top: 16, maxWidth: "calc(100vw - 16px)" }}
+                styles={{ body: { maxHeight: "78vh", overflowY: "auto", padding: 0 } }}
                 wrapClassName="print-preview-modal"
                 className="print-preview-modal"
                 footer={[
@@ -820,31 +845,30 @@ const RegistrationsModal = ({ event, visible, onClose }) => {
                     <Button
                         key="print"
                         type="primary"
-                        icon={<PrinterOutlined />}
+                        icon={<FilePdfOutlined />}
+                        loading={isGeneratingPdf}
                         onClick={handleActualPrint}
                     >
-                        Print List
+                        {isGeneratingPdf ? "Generating PDF..." : "Download PDF"}
                     </Button>,
                 ]}
             >
+                <div className="print-preview-canvas">
                 <div
                     id="printable-area"
+                    data-print-theme="light"
+                    className="printable-area-surface"
                     style={{
-                        padding: "40px",
                         backgroundColor: "#fff",
-                        minHeight: "297mm",
-                        width: "210mm",
-                        margin: "0 auto",
-                        boxSizing: "border-box",
+                        color: "#0f172a",
                     }}
                 >
                     {/* Header with Logo */}
                     <div
+                        className="print-report-header"
                         style={{
                             textAlign: "center",
-                            marginBottom: "30px",
                             borderBottom: "2px solid #000",
-                            paddingBottom: "20px",
                         }}
                     >
                         <img
@@ -876,8 +900,8 @@ const RegistrationsModal = ({ event, visible, onClose }) => {
 
                     {/* Event Info */}
                     <Card
+                        className="print-block"
                         style={{
-                            marginBottom: "20px",
                             border: "1px solid #d9d9d9",
                         }}
                     >
@@ -914,8 +938,8 @@ const RegistrationsModal = ({ event, visible, onClose }) => {
 
                     {/* Print Statistics */}
                     <Card
+                        className="print-block"
                         style={{
-                            marginBottom: "20px",
                             border: "1px solid #d9d9d9",
                         }}
                     >
@@ -961,6 +985,7 @@ const RegistrationsModal = ({ event, visible, onClose }) => {
 
                     {/* Print Table */}
                     <Table
+                        className="print-block"
                         dataSource={registrations}
                         pagination={false}
                         size="small"
@@ -1027,8 +1052,7 @@ const RegistrationsModal = ({ event, visible, onClose }) => {
                     />
 
                     {/* Print Footer */}
-                    <div
-                        style={{
+                    <div style={{
                             marginTop: "40px",
                             paddingTop: "20px",
                             borderTop: "1px solid #d9d9d9",
@@ -1040,8 +1064,16 @@ const RegistrationsModal = ({ event, visible, onClose }) => {
                         </Text>
                     </div>
                 </div>
+                </div>
             </Modal>
 
+            {/* Print mechanics only — appearance (size/padding/typography/
+                table density) lives once, unconditionally, in
+                ~/styles/printPreview.css. Duplicating appearance here is
+                exactly what let the preview drift from the downloaded
+                PDF before, and what made the printable area's real width
+                depend on the current page rather than always being a
+                fixed A4 size. */}
             <style jsx global>{`
                 @media print {
                     html,
@@ -1063,12 +1095,7 @@ const RegistrationsModal = ({ event, visible, onClose }) => {
                         position: absolute !important;
                         left: 0 !important;
                         top: 0 !important;
-                        width: 210mm !important;
-                        min-height: 297mm !important;
-                        padding: 15mm !important;
                         margin: 0 !important;
-                        background: #fff !important;
-                        box-sizing: border-box !important;
                         z-index: 999999 !important;
                     }
 
@@ -1092,20 +1119,37 @@ const RegistrationsModal = ({ event, visible, onClose }) => {
                         display: none !important;
                     }
 
-                    .ant-table {
-                        border: 1px solid #000 !important;
+                    .ant-modal-body {
+                        padding: 0 !important;
                     }
 
-                    .ant-table-thead > tr > th {
-                        background: #f0f0f0 !important;
-                        color: #000 !important;
-                        border: 1px solid #000 !important;
+                    .print-preview-canvas {
+                        background: none !important;
+                        padding: 0 !important;
+                        overflow: visible !important;
+                    }
+                    .print-preview-canvas .printable-area-surface {
+                        box-shadow: none !important;
+                    }
+
+                    * {
                         -webkit-print-color-adjust: exact !important;
                         print-color-adjust: exact !important;
+                        color-adjust: exact !important;
                     }
 
-                    .ant-table-tbody > tr > td {
-                        border: 1px solid #000 !important;
+                    @page {
+                        size: A4 portrait;
+                        margin: 10mm;
+                    }
+
+                    html,
+                    body {
+                        width: 210mm !important;
+                        height: 297mm !important;
+                        margin: 0 !important;
+                        padding: 0 !important;
+                        background: #fff !important;
                     }
                 }
             `}</style>
@@ -3646,7 +3690,14 @@ const AlumniEvents = () => {
 
                 {/* Events Display */}
                 <div className="events-display">
-                    {filteredAndSortedEvents.length === 0 ? (
+                    {isLoading ? (
+                        <CardSkeletonGrid
+                            variant="gallery"
+                            count={8}
+                            columns={{ xs: 24, sm: 12, lg: 8, xl: 6 }}
+                            gutter={[24, 24]}
+                        />
+                    ) : filteredAndSortedEvents.length === 0 ? (
                         <Card className="no-events-card">
                             <div className="no-events-content">
                                 <Title level={3}>No events found</Title>

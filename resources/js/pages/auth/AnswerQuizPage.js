@@ -20,6 +20,7 @@ import {
     Badge,
     Avatar,
     notification,
+    Skeleton,
 } from "antd";
 import {
     StarOutlined,
@@ -733,6 +734,19 @@ useEffect(() => {
         0,
         Math.min(100, (expiryCountdown / LOGOUT_COUNTDOWN) * 100)
     );
+
+    if (isLoadingQuizzes) {
+        return (
+            <div className="quiz-page is-revealed">
+                <section className="quiz-section" style={{ marginTop: 40 }}>
+                    <Card className="quiz-card" bordered={false}>
+                        <Skeleton.Input active size="small" style={{ width: "40%", marginBottom: 16 }} />
+                        <Skeleton active title={false} paragraph={{ rows: 5 }} />
+                    </Card>
+                </section>
+            </div>
+        );
+    }
 
     return (
         <div

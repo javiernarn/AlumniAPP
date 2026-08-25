@@ -43,7 +43,7 @@ import {
     CalendarOutlined,
 } from "@ant-design/icons";
 import moment from "moment";
-import { Layout } from "~/components";
+import { Layout, CardSkeletonGrid } from "~/components";
 import axiosConfig from "~/utils/axiosConfig";
 import {
     useAtmsFeedbackReports,
@@ -824,6 +824,9 @@ const FeedbackReportsCardList = ({
 }) => {
     return (
         <Card className="fb-table-card fb-card-list-wrapper" bodyStyle={{ padding: 12 }}>
+            {loading && reports.length === 0 ? (
+                <CardSkeletonGrid variant="list" count={1} columns={{ xs: 24 }} rows={5} />
+            ) : (
             <Spin spinning={loading}>
                 {reports.length === 0 ? (
                     <Empty
@@ -937,6 +940,7 @@ const FeedbackReportsCardList = ({
                     </div>
                 )}
             </Spin>
+            )}
         </Card>
     );
 };

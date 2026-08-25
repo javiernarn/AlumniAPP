@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Layout, AlumniDetails } from "~/components";
+import { Layout, AlumniDetails, CardSkeletonGrid, HeroSkeleton } from "~/components";
 import useProfile from "~/hooks/useProfile";
 import {
     Card,
@@ -13,7 +13,6 @@ import {
     Space,
     Descriptions,
     Empty,
-    Spin,
     Input,
     DatePicker,
     Select,
@@ -197,15 +196,9 @@ const ProfilePage = () => {
                         className="profile-orb profile-orb-2"
                         aria-hidden="true"
                     />
-                    <div
-                        className="profile-page-loading"
-                        role="status"
-                        aria-live="polite"
-                    >
-                        <Spin size="large" />
-                        <Text className="profile-loading-text">
-                            Loading your profile…
-                        </Text>
+                    <div className="profile-page-loading-skeleton">
+                        <HeroSkeleton />
+                        <CardSkeletonGrid variant="list" count={4} columns={{ xs: 24, lg: 12 }} rows={4} />
                     </div>
                 </div>
             </Layout>

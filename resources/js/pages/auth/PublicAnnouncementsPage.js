@@ -1,6 +1,6 @@
 "use client"
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Typography, Row, Col, Spin, Empty, Select, Modal } from "antd";
+import { Typography, Row, Col, Empty, Select, Modal } from "antd";
 import {
     NotificationOutlined,
     CalendarOutlined,
@@ -18,6 +18,7 @@ import {
     CheckCircleOutlined,
 } from "@ant-design/icons";
 import logo from "~/assets/images/site-logo.png";
+import { CardSkeletonGrid } from "~/components";
 import { useAppTheme } from "~/hooks/useAppTheme";
 import usePreventInspect, { guardImageEvents, ZoomWarningModal } from "~/hooks/usePreventInspect";
 import usePublicAnnouncementsData, {
@@ -34,7 +35,7 @@ import "./PublicHomePage.css";
 import ScrollProgressOrb from "../admin/ScrollProgress/ScrollProgressOrb"
 import "./PublicAnnouncementsPage.css";
 
-const { Title, Text, Paragraph } = Typography;
+const { Title, Paragraph } = Typography;
 const { Option } = Select;
 
 // ============================================================
@@ -219,10 +220,12 @@ const AnnouncementCategorySection = ({ category, sectionRef, loading, onOpen }) 
             <Row gutter={[22, 22]}>
                 {loading ? (
                     <Col span={24}>
-                        <div className="ph-state-box">
-                            <Spin size="large" />
-                            <Text>Loading announcements…</Text>
-                        </div>
+                        <CardSkeletonGrid
+                            variant="gallery"
+                            count={6}
+                            columns={{ xs: 24, sm: 12, lg: 8 }}
+                            gutter={[22, 22]}
+                        />
                     </Col>
                 ) : category.items.length === 0 ? (
                     <Col span={24}>

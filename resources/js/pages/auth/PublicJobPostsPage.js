@@ -1,6 +1,6 @@
 "use client"
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
-import { Typography, Row, Col, Spin, Empty, Select } from "antd";
+import { Typography, Row, Col, Empty, Select } from "antd";
 import {
     BankOutlined,
     EnvironmentOutlined,
@@ -24,6 +24,7 @@ import {
     SortAscendingOutlined,
 } from "@ant-design/icons";
 import logo from "~/assets/images/site-logo.png";
+import { CardSkeletonGrid } from "~/components";
 import { useAppTheme } from "~/hooks/useAppTheme";
 import usePublicJobPostsData, { sortJobs, normalizeJobType } from "~/hooks/usePublicJobPostsData";
 import usePreventInspect, { guardImageEvents, ZoomWarningModal } from "~/hooks/usePreventInspect";
@@ -298,10 +299,12 @@ const JobSection = ({ sectionKey, sectionRef, jobs, loading, onLogin, onRegister
             <Row gutter={[22, 22]}>
                 {loading ? (
                     <Col span={24}>
-                        <div className="ph-state-box">
-                            <Spin size="large" />
-                            <Text>Loading job posts…</Text>
-                        </div>
+                        <CardSkeletonGrid
+                            variant="gallery"
+                            count={6}
+                            columns={{ xs: 24, sm: 12, lg: 8 }}
+                            gutter={[22, 22]}
+                        />
                     </Col>
                 ) : jobs.length === 0 ? (
                     <Col span={24}>

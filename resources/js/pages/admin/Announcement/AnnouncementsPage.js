@@ -15,7 +15,6 @@ import {
     Upload,
     message,
     Empty,
-    Spin,
     Popconfirm,
     Image,
     Badge,
@@ -41,7 +40,7 @@ import {
 import dayjs from "dayjs";
 import { useQueryClient } from "react-query";
 import secureLocalStorage from "react-secure-storage";
-import { Layout } from "~/components";
+import { Layout, CardSkeletonGrid } from "~/components";
 import axiosConfig from "~/utils/axiosConfig";
 import useAnnouncements from "~/hooks/useAnnouncements";
 import logo from "~/assets/images/OCC_LOGO.png";
@@ -539,9 +538,11 @@ export default function AnnouncementPage() {
                 </div>
 
                 {isLoading ? (
-                    <div className="ann-loading">
-                        <Spin size="large" />
-                    </div>
+                    <CardSkeletonGrid
+                        variant="gallery"
+                        count={6}
+                        containerClassName="ann-grid"
+                    />
                 ) : filtered.length === 0 ? (
                     <Empty
                         description="No announcements found"

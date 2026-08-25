@@ -1,6 +1,6 @@
 "use client"
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
-import { Typography, Row, Col, Spin, Empty, Dropdown } from "antd";
+import { Typography, Row, Col, Empty, Dropdown } from "antd";
 import {
     CalendarOutlined,
     EnvironmentOutlined,
@@ -33,6 +33,7 @@ import {
     ExportOutlined,
 } from "@ant-design/icons";
 import logo from "~/assets/images/site-logo.png";
+import { CardSkeletonGrid } from "~/components";
 
 
 import heroVisualEvents from "~/assets/images/feature-events.png";
@@ -52,7 +53,7 @@ import { BASE_URL } from "~/utils/constant";
 import "./PublicHomePage.css";
 import ScrollProgressOrb from "../admin/ScrollProgress/ScrollProgressOrb"
 
-const { Title, Text, Paragraph } = Typography;
+const { Title, Paragraph } = Typography;
 
 // ============================================================
 // Words that cycle inside the hero pill, mirrors the "Connect /
@@ -1088,10 +1089,12 @@ const PublicHomePage = () => {
                 <Row gutter={[22, 22]}>
                     {announcementsLoading ? (
                         <Col span={24}>
-                            <div className="ph-state-box">
-                                <Spin size="large" />
-                                <Text>Loading announcements…</Text>
-                            </div>
+                            <CardSkeletonGrid
+                                variant="gallery"
+                                count={3}
+                                columns={{ xs: 24, sm: 12, lg: 8 }}
+                                gutter={[22, 22]}
+                            />
                         </Col>
                     ) : latestAnnouncements.length === 0 ? (
                         <Col span={24}>
@@ -1185,10 +1188,12 @@ const PublicHomePage = () => {
                 <Row gutter={[22, 22]}>
                     {eventsLoading ? (
                         <Col span={24}>
-                            <div className="ph-state-box">
-                                <Spin size="large" />
-                                <Text>Loading events…</Text>
-                            </div>
+                            <CardSkeletonGrid
+                                variant="gallery"
+                                count={4}
+                                columns={{ xs: 24, sm: 12 }}
+                                gutter={[22, 22]}
+                            />
                         </Col>
                     ) : events.length === 0 ? (
                         <Col span={24}>
@@ -1266,10 +1271,11 @@ const PublicHomePage = () => {
                 </Reveal>
 
                 {galleryLoading ? (
-                    <div className="ph-state-box">
-                        <Spin size="large" />
-                        <Text>Loading gallery…</Text>
-                    </div>
+                    <CardSkeletonGrid
+                        variant="gallery"
+                        count={8}
+                        containerClassName="ph-gallery-grid"
+                    />
                 ) : gallery.length === 0 ? (
                     <div className="ph-state-box">
                         <Empty description="No photos uploaded yet." />
@@ -1363,10 +1369,12 @@ const PublicHomePage = () => {
                 <Row gutter={[22, 22]}>
                     {jobsLoading ? (
                         <Col span={24}>
-                            <div className="ph-state-box">
-                                <Spin size="large" />
-                                <Text>Loading job posts…</Text>
-                            </div>
+                            <CardSkeletonGrid
+                                variant="gallery"
+                                count={4}
+                                columns={{ xs: 24, sm: 12 }}
+                                gutter={[22, 22]}
+                            />
                         </Col>
                     ) : jobs.length === 0 ? (
                         <Col span={24}>

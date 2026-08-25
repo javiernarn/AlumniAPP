@@ -8,6 +8,7 @@ import {
     Button,
     Divider,
     Spin,
+    Skeleton,
     Badge,
     Progress,
     Tooltip,
@@ -285,7 +286,7 @@ const StatCard = ({ icon, value, label, color, loading }) => (
             </div>
             <div className="hp-stat-text">
                 {loading ? (
-                    <Spin size="small" />
+                    <Skeleton.Input active size="small" style={{ width: 48 }} />
                 ) : (
                     <span className="hp-stat-value">{value ?? "0"}</span>
                 )}
@@ -437,7 +438,7 @@ const WeatherWidget = ({ weather, loading, variant = "default" }) => {
                 <div className="hp-hero-weather-sep" />
                 <div className="hp-hero-weather-block hp-hero-weather-block--right">
                     {loading ? (
-                        <Spin size="small" />
+                        <Skeleton.Input active size="small" style={{ width: 70 }} />
                     ) : weather ? (
                         <>
                             <div className="hp-hero-weather-icon">
@@ -479,7 +480,7 @@ const WeatherWidget = ({ weather, loading, variant = "default" }) => {
                 <div className="hp-weather-divider" />
                 <div className="hp-weather-right">
                     {loading ? (
-                        <Spin size="small" />
+                        <Skeleton.Input active size="small" style={{ width: 70 }} />
                     ) : weather ? (
                         <>
                             <div className="hp-weather-icon">
@@ -508,9 +509,8 @@ const AchievementsPanel = ({ results, loading }) => {
     if (loading) {
         return (
             <Card className="hp-panel-card" bordered={false}>
-                <div className="hp-panel-loading">
-                    <Spin size="small" />
-                </div>
+                <Skeleton active avatar paragraph={{ rows: 1 }} />
+                <Skeleton active avatar paragraph={{ rows: 1 }} style={{ marginTop: 16 }} />
             </Card>
         );
     }

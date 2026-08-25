@@ -15,9 +15,9 @@ import {
     Tooltip,
     Image,
     Avatar,
-    Spin,
     Modal,
     notification,
+    Skeleton,
 } from "antd";
 import {
     CheckCircleOutlined,
@@ -971,9 +971,15 @@ useEffect(() => {
         return (
             <div className="quiz-page is-revealed">
                 {offlineBannerNode}
-                <div className="quiz-loading">
-                    <Spin size="large" />
-                </div>
+                <section className="quiz-section" style={{ marginTop: 40 }}>
+                    <Card className="quiz-card">
+                        <Skeleton.Input active size="small" style={{ width: "40%", marginBottom: 16 }} />
+                        <Skeleton.Node active style={{ width: "100%", height: 220, marginBottom: 20 }}>
+                            <span aria-hidden="true" />
+                        </Skeleton.Node>
+                        <Skeleton active title={false} paragraph={{ rows: 4 }} />
+                    </Card>
+                </section>
                 {resumeModalNode}
                 {expiredModalNode}
             </div>

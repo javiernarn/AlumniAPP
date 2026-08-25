@@ -611,3 +611,20 @@
 [data-theme="black"] #printable-area .ant-table-thead > tr > th {
   background: #f5f7fa !important;
 }
+/* Course folder modal: keep header + footer buttons on-screen in short
+   viewports (e.g. landscape mobile), where the default modal body has no
+   height cap and pushes the footer below the fold, forcing the whole page
+   to scroll instead of just the modal content. */
+.course-folder-modal .ant-modal-body {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+@media (max-height: 500px) {
+  .course-folder-modal {
+    top: 8px !important;
+  }
+  .course-folder-modal .ant-modal-body {
+    max-height: 55vh;
+  }
+}

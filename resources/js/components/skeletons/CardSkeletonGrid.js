@@ -71,6 +71,10 @@ const DEFAULT_COLUMNS = {
  * @param {number} gutter - Row gutter, defaults to [24, 24]
  * @param {number} height - chart variant only: placeholder chart height
  * @param {number} rows - list variant only: number of skeleton rows per card
+ * @param {string} containerClassName - if the page uses its own CSS grid/flex
+ *   class (not antd Row/Col) for its real cards, pass that class here and
+ *   the skeletons render inside a plain <div> with that class instead of a
+ *   Row/Col grid, so spacing/columns match the real layout exactly.
  */
 const CardSkeletonGrid = ({
   variant = "stat",
@@ -79,8 +83,20 @@ const CardSkeletonGrid = ({
   gutter = [24, 24],
   height,
   rows,
+  containerClassName,
 }) => {
   const SkeletonCard = VARIANTS[variant] || StatCardSkeleton;
+
+  if (containerClassName) {
+    return (
+      <div className={`${containerClassName} card-skeleton-grid`}>
+        {Array.from({ length: count }).map((_, i) => (
+          <SkeletonCard key={i} height={height} rows={rows} />
+        ))}
+      </div>
+    );
+  }
+
   const cols = columns || DEFAULT_COLUMNS[variant] || DEFAULT_COLUMNS.stat;
 
   return (

@@ -19,8 +19,9 @@ import {
   Rate,
   Button,
   Modal,
+  message,
 } from "antd"
-import { UserOutlined, TeamOutlined, TrophyOutlined, PrinterOutlined,CheckCircleOutlined } from "@ant-design/icons"
+import { UserOutlined, TeamOutlined, TrophyOutlined, PrinterOutlined, FilePdfOutlined, CheckCircleOutlined } from "@ant-design/icons"
 import {
   BarChart,
   Bar,
@@ -43,6 +44,7 @@ import {
 import moment from "moment"
 import logo from "~/assets/images/OCC_LOGO.png"
 import { Layout, CardSkeletonGrid, HeroSkeleton } from "~/components"
+import { exportElementToPdf } from "~/utils/exportPdf"
 import "./AlumniDashboard.css"
 import useAdminDashboard from "~/hooks/useAdminDashboard"
 import axios from "~/utils/axiosConfig"
@@ -455,10 +457,21 @@ const AlumniDashboard = () => {
     setPrintPreviewVisible(false)
   }
 
-  const handleActualPrint = () => {
-    setTimeout(() => {
-      window.print()
-    }, 100)
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false)
+
+  const handleActualPrint = async () => {
+    setIsGeneratingPdf(true)
+    try {
+      const yearLabel = year === "all" ? "all-years" : `year-${year}`
+      await exportElementToPdf("printable-area", {
+        filename: `alumni-dashboard-report-${yearLabel}.pdf`,
+      })
+    } catch (err) {
+      console.error("Failed to generate PDF:", err)
+      message.error("Failed to generate PDF. Please try again.")
+    } finally {
+      setIsGeneratingPdf(false)
+    }
   }
 
 
@@ -935,8 +948,8 @@ const AlumniDashboard = () => {
           <Button key="cancel" onClick={handleClosePreview}>
             Cancel
           </Button>,
-          <Button key="print" type="primary" icon={<PrinterOutlined />} onClick={handleActualPrint}>
-            Print
+          <Button key="print" type="primary" icon={<FilePdfOutlined />} loading={isGeneratingPdf} onClick={handleActualPrint}>
+            {isGeneratingPdf ? "Generating PDF..." : "Download PDF"}
           </Button>,
         ]}
       >
